@@ -1,0 +1,50 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "npm init -y en la carpeta api                       --> Crea el archivo package.json\r Crear el archivo index.ts dentro de \"src\"           --> Inicio del proyecto\r console.log('Server on PORT 3000');                 --> Console.log para probar\r npm install typescript --save-dev                   --> Crea el compilador de TypeScript\r npx tsc --init                                      --> Crea el archivo tsconfig.json\r Configurar el archivo tsconfig.json                 --> Se configura el archivo tsconfig.json\r Crear la carpeta \"src\"                              --> Inicio del proyecto\r Cerramos todas las terminales                       --> Cerramos todas las terminales de VS Code\r npx tsc                                             --> Compila y genera la carpeta \"dist\" con los archivos que compilan TypeScript a JavaScript\r node dist index.js                                  --> Probamos el funcionamiento de la carpeta \"dist\" ejecutando ese comando en la terminal para visualizar el console.log('Carlos');\r npm i tslint --save-dev                             --> Añadimos reglas adicionales a TypeScript según los estándares de desarrollo\r ./node_modules/.bin/tslint --init                   --> Ejecutamos este comando en la terminal para crear e inicilializar el archivo tslint.json\r Configuramos el archivo tslint.json                 --> Se configura para que no arroje errores la consola",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "nodemon dist/index.js",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.4",
+    "@types/cors": "^2.8.14",
+    "@types/express": "^4.17.17",
+    "@types/express-fileupload": "^1.4.4",
+    "@types/express-session": "^1.18.0",
+    "@types/jsonwebtoken": "^9.0.3",
+    "@types/morgan": "^1.9.5",
+    "@types/node-cron": "^3.0.11",
+    "nodemon": "^3.0.1",
+    "tslint": "^6.1.3",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/nodemailer": "^6.4.13",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "date-fns": "^2.30.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.3",
+    "express-session": "^1.18.0",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.6.1",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.7",
+    "path": "^0.12.7",
+    "sequelize": "^6.33.0",
+    "sequelize-typescript": "^2.1.5",
+    "zod": "^3.22.2"
+  }
+}
