@@ -4,10 +4,10 @@ import {
     verifyUserTokenService,
     getProfileUserService,
 } from '../../services/Auth/auth.service';
-import { authRequired } from '../../middlewares/Token.middleware';
-import { validateSchema } from '../../middlewares/Schema.middleware';
-import { loginSchema } from '../../validations/login.zod';
-import { ServiceError } from '../../types/responses.types';
+import { authRequired } from '../../middlewares/Token/Token.middleware';
+import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
+import { loginSchema } from '../../validations/Auth/login.zod';
+import { ServiceError } from '../../types/Responses/responses.types';
 const router = express.Router();
 
 //LOGIN DE USUARIOS

@@ -15,8 +15,8 @@ import {
     ServiceError,
     ILoginServiceLayerResponse,
     IUserServiceLayerResponse,
-} from '../../types/responses.types';
-import { IUser } from "../../types/users.types";
+} from '../../types/Responses/responses.types';
+import { IUser } from "../../types/User/users.types";
 const TOKEN_SECRET = process.env.TOKEN_SECRET || 'default_token_secret';
 
 //LOGIN DE USUARIOS

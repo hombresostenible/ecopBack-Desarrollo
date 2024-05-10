@@ -1,4 +1,4 @@
-import { z, ZodObject, ZodArray, ZodString, ZodBoolean } from 'zod';
+import { z, ZodObject, ZodString, ZodBoolean } from 'zod';
 
 // VERIFICACION ZOD PARA REGISTRO DE USUARIOS
 type RegisterUserSchemaType = ZodObject<{
