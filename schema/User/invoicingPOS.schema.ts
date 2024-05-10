@@ -1,9 +1,8 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
-import Branch from './branch.schema';
 import AccountsBook from './accountsBook.schema';
+import Branch from './branch.schema';
 import User from './user.schema';
-import Company from './company.schema';
 import {
     IParametros, 
     IExtensiones, 
@@ -27,10 +26,9 @@ class InvoicingPOS extends Model<IInvoicingPOS> {
     public Totales!: ITotales;
     
     //RELACION CON OTRAS TABLAS
-    public branchId!: string;
     public accountsBookId!: string;
+    public branchId!: string;
     public userId!: string | null;
-    public companyId!: string | null;
 }
 
 InvoicingPOS.init(
@@ -75,19 +73,15 @@ InvoicingPOS.init(
         },
 
         //RELACION CON OTRAS TABLAS
-        branchId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-        },
         accountsBookId: {
             type: DataTypes.UUID,
             allowNull: false,
         },
-        userId: {
+        branchId: {
             type: DataTypes.UUID,
-            allowNull: true,
+            allowNull: false,
         },
-        companyId: {
+        userId: {
             type: DataTypes.UUID,
             allowNull: true,
         },
@@ -111,11 +105,6 @@ InvoicingPOS.belongsTo(Branch, {
 InvoicingPOS.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user',
-});
-  
-InvoicingPOS.belongsTo(Company, {
-    foreignKey: 'companyId',
-    as: 'company',
 });
 
 export default InvoicingPOS;

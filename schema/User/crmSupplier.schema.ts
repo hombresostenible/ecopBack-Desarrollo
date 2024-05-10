@@ -1,15 +1,13 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
 import User from './user.schema';
-import Company from './company.schema';
 
 class CrmSupplier extends Model {
     public id!: string;
     public entityUserId!: string;
-    public entityCompanyId!: string;
     public name!: string;
     public lastName!: string;
-    public nameCompany!: string;
+    public corporateName!: string;
     public typeDocumentId!: 'NIT' | 'Cédula de Ciudadanía' | 'Cédula de Extranjería' | 'Pasaporte';
     public documentId!: string;
     public verificationDigit!: string;
@@ -23,7 +21,6 @@ class CrmSupplier extends Model {
 
     //RELACION CON OTRAS TABLAS
     public userId!: string;
-    public companyId!: string;
 };
 
 CrmSupplier.init(
@@ -38,10 +35,6 @@ CrmSupplier.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        entityCompanyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
         name: {
             type: DataTypes.STRING,
             allowNull: true,
@@ -50,7 +43,7 @@ CrmSupplier.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
-        nameCompany: {
+        corporateName: {
             type: DataTypes.STRING,
             allowNull: true,
         },
@@ -112,10 +105,6 @@ CrmSupplier.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        companyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
     },
     {
         sequelize: db,
@@ -126,11 +115,6 @@ CrmSupplier.init(
 CrmSupplier.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user',
-});
-
-CrmSupplier.belongsTo(Company, {
-    foreignKey: 'companyId',
-    as: 'company',
 });
 
 export default CrmSupplier;

@@ -8,7 +8,6 @@ import RawMaterial from './rawMaterial.schema';
 import Service from './service.schema';
 import Branch from './branch.schema';
 import User from './user.schema';
-import Company from './company.schema';
 
 class AccountsPayable extends Model {
     public id!: string;
@@ -36,7 +35,6 @@ class AccountsPayable extends Model {
     public serviceId!: string;
     public branchId!: string;
     public userId!: string;
-    public companyId!: string;
 };
 
 AccountsPayable.init(
@@ -144,10 +142,6 @@ AccountsPayable.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        companyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
     },
     {
         sequelize: db,
@@ -193,11 +187,6 @@ AccountsPayable.belongsTo(Branch, {
 AccountsPayable.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user',
-});
-  
-AccountsPayable.belongsTo(Company, {
-    foreignKey: 'companyId',
-    as: 'company',
 });
 
 export default AccountsPayable;

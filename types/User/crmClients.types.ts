@@ -1,10 +1,9 @@
 export interface ICrmClients {
     id: string;
     entityUserId?: string;
-    entityCompanyId?: string;
     name?: string;
     lastName?: string;
-    nameCompany?: string;
+    corporateName?: string;
     typeDocumentId: 'NIT' | 'Cédula de Ciudadanía' | 'Cédula de Extranjería' | 'Pasaporte';
     documentId: string;
     email: string;
@@ -18,5 +17,4 @@ export interface ICrmClients {
     //RELACION CON OTRAS TABLAS
     customerTrackingId?: string;
     userId?: string;
-    companyId?: string;
 };

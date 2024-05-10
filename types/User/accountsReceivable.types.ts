@@ -24,5 +24,4 @@ export interface IAccountsReceivable {
     serviceId?: string;
     branchId: string;
     userId?: string;
-    companyId?: string;  
 }

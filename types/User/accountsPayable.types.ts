@@ -24,5 +24,4 @@ export interface IAccountsPayable {
     serviceId?: string; 
     branchId: string;
     userId?: string;
-    companyId?: string;
 }

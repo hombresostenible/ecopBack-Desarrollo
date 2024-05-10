@@ -2,7 +2,6 @@ import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
 import Branch from './branch.schema';
 import User from './user.schema';
-import Company from './company.schema';
 
 class Product extends Model {
     public id!: string;
@@ -38,7 +37,6 @@ class Product extends Model {
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
     public userId!: string;
-    public companyId!: string;
 };
 
 Product.init(
@@ -223,10 +221,6 @@ Product.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        companyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
     },
     {
         sequelize: db,
@@ -242,11 +236,6 @@ Product.belongsTo(Branch, {
 Product.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user',
-});
-
-Product.belongsTo(Company, {
-    foreignKey: 'companyId',
-    as: 'company',
 });
 
 export default Product;

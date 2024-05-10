@@ -1,32 +1,32 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
+import ProjectFunder from '../projectFunder.schema';
 
 class User extends Model {
     public id!: string;
     public name!: string;
     public lastName!: string;
-    public typeDocumentId!: 'Cédula de Ciudadanía' | 'Cédula de Extranjería' | 'Pasaporte';
+    public corporateName!: string;
+    public typeDocumentId!: 'NIT' | 'Cedula de Ciudadania' | 'Cedula de Extranjeria' | 'Pasaporte';
     public documentId!: string;
     public verificationDigit!: string;
-    public profilePicture!: string;
-    public logo!: string;
     public commercialName!: string;
+    public logo!: string;
     public userType!: 'User';
     public typeRole!: 'CEO' | 'Moderador de atención al cliente' | 'CTO' | 'Desarrollador de software' | 'Financiador de programas' | 'Superadmin' | 'Administrador' | 'Vendedor' | 'Cajero' | 'Operativo' | 'Contador';
     public economicSector!: 'Agricultura' | 'Manufactura' | 'Comercio' | 'Servicios' | 'Construcción' | 'Turismo' | 'Otro';
     public codeCiiu!: string;
-    public email!: string;
-    public password!: string;
-    public phone!: string;
-    public department!: 'Bogotá D.C.' | 'Amazonas' | 'Antioquia' | 'Arauca' | 'Atlántico' | 'Bolívar' | 'Boyacá' | 'Caldas' | 'Caquetá' | 'Casanare' | 'Cauca' | 'Cesar' | 'Chocó' | 'Córdoba' | 'Cundinamarca' | 'Guainía' | 'Guaviare' | 'Huila' | 'La Guajira' | 'Magdalena' | 'Meta' | 'Nariño' | 'Norte de Santander' | 'Putumayo' | 'Quindío' | 'Risaralda' | 'San Andrés y Providencia' | 'Santander' | 'Sucre' | 'Tolima' | 'Valle del Cauca' | 'Vaupés' | 'Vichada';
+    public department!: 'Bogota D.C.' | 'Amazonas' | 'Antioquia' | 'Arauca' | 'Atlantico' | 'Bolivar' | 'Boyaca' | 'Caldas' | 'Caqueta' | 'Casanare' | 'Cauca' | 'Cesar' | 'Choco' | 'Cordoba' | 'Cundinamarca' | 'Guainia' | 'Guaviare' | 'Huila' | 'La Guajira' | 'Magdalena' | 'Meta' | 'Nariño' | 'Norte de Santander' | 'Putumayo' | 'Quindio' | 'Risaralda' | 'San Andres y Providencia' | 'Santander' | 'Sucre' | 'Tolima' | 'Valle del Cauca' | 'Vaupes' | 'Vichada';
     public city!: string;
     public codeDane!: string;
     public subregionCodeDane!: string;
     public address!: string;
-    public numberEmployees!: number;
-    public projectFunder!: string;
+    public postalCode!: string;
+    public phone!: string;
+    public email!: string;
+    public password!: string;
     //Responsable de IVA
-
+    
     //USER MANAGEMENT
     public passwordResetCode!: string;
     public passwordResetCodeDate!: Date;
@@ -36,6 +36,9 @@ class User extends Model {
     public expiresAt!: Date;
     public applicationPassword!: string;
     public isAceptedConditions!: boolean;
+    
+    //RELACION CON OTRAS TABLAS
+    public projectFunderId!: string | null;
 };
 
 User.init(
@@ -43,40 +46,44 @@ User.init(
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
-            allowNull: false,
             primaryKey: true,
+            allowNull: false,
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         lastName: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
+        },
+        corporateName: {
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         typeDocumentId: {
             type: DataTypes.STRING,
-            allowNull: false,
             validate: {
-                isIn: [[ 'Cédula de Ciudadanía', 'Cédula de Extranjería', 'Pasaporte' ]],
+                isIn: [[ 'NIT', 'Cedula de Ciudadania', 'Cedula de Extranjeria', 'Pasaporte' ]],
             },
+            allowNull: false,
         },
         documentId: {
             type: DataTypes.STRING,
-            allowNull: false,
             validate: {
                 // len: [10, 10], // Longitud únicamente de 9 dígitos
                 len: [1, 10], // Máximo de 9 dígitos   1110521285
             },
+            allowNull: false,
         },
         verificationDigit: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 len: [1, 1],
             },
+            allowNull: false,
         },
-        profilePicture: {
+        commercialName: {
             type: DataTypes.STRING,
             allowNull: true,
         },
@@ -84,55 +91,36 @@ User.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
-        commercialName: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
         userType: {
             type: DataTypes.ENUM('User'),
             defaultValue: 'User',
+            allowNull: false,
         },
         typeRole: {
             type: DataTypes.UUID,
-            allowNull: true,
             validate: {
                 isIn: [[ 'CEO', 'Moderador de atención al cliente', 'CTO', 'Desarrollador de software', 'Financiador de programas', 'Superadmin', 'Administrador', 'Vendedor', 'Cajero', 'Operativo', 'Contador' ]],
             },
             defaultValue: 'Superadmin',
+            allowNull: false,
         },
         economicSector: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'Agricultura', 'Manufactura', 'Comercio', 'Servicios', 'Construcción', 'Turismo', 'Otro' ]],
             },
+            allowNull: false,
         },
         codeCiiu: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: true,
-            validate: {
-                isEmail: true,
-            },
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        phone: {
             type: DataTypes.STRING,
             allowNull: false,
         },
         department: {
             type: DataTypes.STRING,
-            allowNull: false,
             validate: {
-                isIn: [[ 'Bogotá D.C.', 'Amazonas', 'Antioquia', 'Arauca', 'Atlántico', 'Bolívar', 'Boyacá', 'Caldas', 'Caquetá', 'Casanare', 'Cauca', 'Cesar', 'Chocó', 'Córdoba', 'Cundinamarca', 'Guainía', 'Guaviare', 'Huila', 'La Guajira', 'Magdalena', 'Meta', 'Nariño', 'Norte de Santander', 'Putumayo', 'Quindío', 'Risaralda', 'San Andrés y Providencia', 'Santander', 'Sucre', 'Tolima', 'Valle del Cauca', 'Vaupés', 'Vichada' ]],
+                isIn: [[ 'Bogota D.C.', 'Amazonas', 'Antioquia', 'Arauca', 'Atlantico', 'Bolivar', 'Boyaca', 'Caldas', 'Caqueta', 'Casanare', 'Cauca', 'Cesar', 'Choco', 'Cordoba', 'Cundinamarca', 'Guainia', 'Guaviare', 'Huila', 'La Guajira', 'Magdalena', 'Meta', 'Nariño', 'Norte de Santander', 'Putumayo', 'Quindio', 'Risaralda', 'San Andres y Providencia', 'Santander', 'Sucre', 'Tolima', 'Valle del Cauca', 'Vaupes', 'Vichada' ]],
             },
+            allowNull: false,
         },
         city: {
             type: DataTypes.STRING,
@@ -150,15 +138,27 @@ User.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        numberEmployees: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        projectFunder: {
+        postalCode: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
-
+        phone: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        email: {
+            type: DataTypes.STRING,
+            unique: true,
+            validate: {
+                isEmail: true,
+            },
+            allowNull: false,
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        
         //USER MANAGEMENT
         passwordResetCode: {
             type: DataTypes.STRING,
@@ -176,6 +176,7 @@ User.init(
         isBlocked: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
+            allowNull: true,
         },
         unlockCode: {
             type: DataTypes.STRING,
@@ -193,11 +194,22 @@ User.init(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+
+        //RELACION CON OTRAS TABLAS
+        projectFunderId: {
+            type: DataTypes.UUID,
+            allowNull: true,
+        },
     },
     {
         sequelize: db,
         modelName: 'User',
     }
 );
+
+User.belongsTo(ProjectFunder, {
+    foreignKey: 'projectFunderId',
+    as: 'projectFunder',
+});
 
 export default User;

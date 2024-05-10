@@ -1,10 +1,9 @@
 export interface ICrmSuppliers {
     id: string;
     entityUserId?: string;
-    entityCompanyId?: string;
     name?: string;
     lastName?: string;
-    nameCompany?: string;
+    corporateName?: string;
     typeDocumentId: 'NIT' | 'Cédula de Ciudadanía' | 'Cédula de Extranjería' | 'Pasaporte';
     documentId: string;
     verificationDigit: string;
@@ -18,5 +17,4 @@ export interface ICrmSuppliers {
 
     //RELACION CON OTRAS TABLAS
     userId?: string;
-    companyId?: string;
 };

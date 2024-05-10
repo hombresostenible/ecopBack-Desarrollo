@@ -2,7 +2,6 @@ import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
 import Branch from './branch.schema';
 import User from './user.schema';
-import Company from './company.schema';
 
 class RawMaterial extends Model {
     public id!: string;
@@ -31,7 +30,6 @@ class RawMaterial extends Model {
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
     public userId!: string;
-    public companyId!: string;
 }
 
 RawMaterial.init(
@@ -176,10 +174,6 @@ RawMaterial.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        companyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
     },
     {
         sequelize: db,
@@ -195,11 +189,6 @@ RawMaterial.belongsTo(Branch, {
 RawMaterial.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user',
-});
-
-RawMaterial.belongsTo(Company, {
-    foreignKey: 'companyId',
-    as: 'company',
 });
 
 export default RawMaterial;

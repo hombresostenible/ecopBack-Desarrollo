@@ -1,7 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
 import User from './user.schema';
-import Company from './company.schema';
 import Branch from './branch.schema';
 import AccountsBook from './accountsBook.schema';
 
@@ -33,7 +32,6 @@ class Sustainability extends Model {
     public accountsBookId!: string;
     public branchId!: string;
     public userId!: string;
-    public companyId!: string;
 };
 
 Sustainability.init(
@@ -151,10 +149,6 @@ Sustainability.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        companyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
     },
     {
         sequelize: db,
@@ -175,11 +169,6 @@ Sustainability.belongsTo(AccountsBook, {
 Sustainability.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user',
-});
-
-Sustainability.belongsTo(Company, {
-    foreignKey: 'companyId',
-    as: 'company',
 });
 
 export default Sustainability;

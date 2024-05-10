@@ -1,25 +1,21 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
 import User from './user.schema';
-import Company from './company.schema';
 
 class CustomerTracking extends Model {
-    public id!: string;                         // ID DEL CLIENTE
-    public ageRange!: string;                   // RANGO DE EDAD
-    public gender!: string;                     // GENERO   
-    public lastSale!: Date;                     // ULTIMA VENTA
-    public newsletterSubscriber!: 'Si' | 'No';  // SUSCRITO A NEWSLETTER
-    public lastCall!: Date;                     // ULTIMA LLAMADA HECHA
-    public lastEmail!: Date;                    // ULTIMO EMAIL ENVIADO
-    public lastQuotation!: Date;                // ULTIMA COTIZACION
-    public lastMeeting!: Date;                  // ULTIMO ENCUENTRO
-    public typeMeeting!: 'Personal' | 'Digital';// TIPO DE ENCUENTRO
-    public accumulatedSalesValue!: string;      // VALOR ACUMULADO DE VENTAS
-    public accumulatedSalesQuantity!: string;   // CANTIDAD ACUMULADA DE VENTAS
+    public id!: string;                             // ID DEL CLIENTE 
+    public lastSale!: Date;                         // ULTIMA VENTA
+    public newsletterSubscriber!: 'Si' | 'No';      // SUSCRITO A NEWSLETTER
+    public lastCall!: Date;                         // ULTIMA LLAMADA HECHA
+    public lastEmail!: Date;                        // ULTIMO EMAIL ENVIADO
+    public lastQuotation!: Date;                    // ULTIMA COTIZACION
+    public lastMeeting!: Date;                      // ULTIMO ENCUENTRO
+    public typeMeeting!: 'Personal' | 'Digital';    // TIPO DE ENCUENTRO
+    public accumulatedSalesValue!: string;          // VALOR ACUMULADO DE VENTAS
+    public accumulatedSalesQuantity!: string;       // CANTIDAD ACUMULADA DE VENTAS
     
     //RELACION CON OTRAS TABLAS
     public userId!: string;
-    public companyId!: string;
 };
     
 CustomerTracking.init(
@@ -30,20 +26,8 @@ CustomerTracking.init(
             allowNull: false,
             primaryKey: true,
         },
-        entityUserId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
-        entityCompanyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
-        ageRange: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        gender: {
-            type: DataTypes.STRING,
+        lastSale: {
+            type: DataTypes.DATE,
             allowNull: true,
         },
         newsletterSubscriber: {
@@ -76,10 +60,6 @@ CustomerTracking.init(
                 isIn: [[ 'Personal', 'Digital' ]],
             },
         },
-        lastSale: {
-            type: DataTypes.DATE,
-            allowNull: true,
-        },
         accumulatedSalesValue: {
             type: DataTypes.STRING,
             allowNull: true,
@@ -94,10 +74,6 @@ CustomerTracking.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        companyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
     },
     {
         sequelize: db,
@@ -108,11 +84,6 @@ CustomerTracking.init(
 CustomerTracking.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user',
-});
-
-CustomerTracking.belongsTo(Company, {
-    foreignKey: 'companyId',
-    as: 'company',
 });
 
 export default CustomerTracking;

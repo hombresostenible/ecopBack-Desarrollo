@@ -1,12 +1,12 @@
 export interface IAppointment {
     id: string;
     appointmentId?: number;
-    typeClient: 'User' | 'Company';
+    typeClient: 'User';
     nameClient?: string;
     lastNameClient?: string;
-    nameCompany?: string;
-    nameCompanyLeader?: string;
-    lastNameCompanyLeader?: string;
+    corporateName?: string;
+    corporateNameLeader?: string;
+    lastcorporateNameLeader?: string;
     email: string;
     phone: string;
     date: Date;

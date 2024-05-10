@@ -21,5 +21,4 @@ export interface IAssets {
     //RELACION CON OTRAS TABLAS
     branchId: string;
     userId?: string;
-    companyId?: string;
 }

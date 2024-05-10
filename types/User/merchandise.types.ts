@@ -27,5 +27,4 @@ export interface IMerchandise {
     //RELACION CON OTRAS TABLAS
     branchId: string;
     userId?: string;
-    companyId?: string;
 }
