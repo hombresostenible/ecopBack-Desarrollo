@@ -2,7 +2,6 @@ import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
 import Branch from './branch.schema';
 import User from './user.schema';
-import Company from './company.schema';
 
 class SalesFunnelCustomerDigital extends Model {
     public id!: string;
@@ -19,7 +18,6 @@ class SalesFunnelCustomerDigital extends Model {
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
     public userId!: string;
-    public companyId!: string;
 };
 
 SalesFunnelCustomerDigital.init(
@@ -76,10 +74,6 @@ SalesFunnelCustomerDigital.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        companyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
     },
     {
         sequelize: db,
@@ -95,11 +89,6 @@ SalesFunnelCustomerDigital.belongsTo(Branch, {
 SalesFunnelCustomerDigital.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user',
-});
-  
-SalesFunnelCustomerDigital.belongsTo(Company, {
-    foreignKey: 'companyId',
-    as: 'company',
 });
 
 export default SalesFunnelCustomerDigital;

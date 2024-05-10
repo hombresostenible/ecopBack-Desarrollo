@@ -8,7 +8,6 @@ import RawMaterial from './rawMaterial.schema';
 import Service from './service.schema';
 import Branch from './branch.schema';
 import User from './user.schema';
-import Company from './company.schema';
 
 class AccountsReceivable extends Model {
     public id!: string;
@@ -36,7 +35,6 @@ class AccountsReceivable extends Model {
     public serviceId!: string;
     public branchId!: string;
     public userId!: string;
-    public companyId!: string;
 };
 
 AccountsReceivable.init(
@@ -145,10 +143,6 @@ AccountsReceivable.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        companyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
     },
     {
         sequelize: db,
@@ -194,11 +188,6 @@ AccountsReceivable.belongsTo(Branch, {
 AccountsReceivable.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user',
-});
-  
-AccountsReceivable.belongsTo(Company, {
-    foreignKey: 'companyId',
-    as: 'company',
 });
 
 export default AccountsReceivable;

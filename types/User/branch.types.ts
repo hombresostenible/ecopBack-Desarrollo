@@ -15,5 +15,4 @@ export interface IBranch {
 
     //RELACION CON OTRAS TABLAS
     userId?: string;
-    companyId?: string;
 }

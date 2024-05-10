@@ -668,6 +668,5 @@ export interface IInvoicingPOS {
     //RELACION CON OTRAS TABLAS
     branchId: string;
     accountsBookId: string;
-    userId: string | null;
-    companyId: string | null;    
+    userId: string | null; 
 };

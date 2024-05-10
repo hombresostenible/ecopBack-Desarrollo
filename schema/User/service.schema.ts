@@ -1,7 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
 import User from './user.schema';
-import Company from './company.schema';
 import Branch from './branch.schema';
 
 class Service extends Model {
@@ -20,7 +19,6 @@ class Service extends Model {
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
     public userId!: string | null;
-    public companyId!: string | null;
 }
 
 Service.init(
@@ -89,10 +87,6 @@ Service.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        companyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
     },
     {
         sequelize: db,
@@ -108,11 +102,6 @@ Service.belongsTo(Branch, {
 Service.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user',
-});
-
-Service.belongsTo(Company, {
-    foreignKey: 'companyId',
-    as: 'company',
 });
 
 export default Service;

@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import sequelize from '../../db';
-import User from '../../schema/user.schema';
+import User from '../../schema/User/user.schema';
 import {
     transporterZoho,
     mailUserWelcome,

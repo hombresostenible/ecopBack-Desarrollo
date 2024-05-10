@@ -4,12 +4,12 @@ import db from '../../db';
 class Appointment extends Model {
     public id!: string;
     public appointmentId!: number;
-    public typeClient!: 'User' | 'Company';
+    public typeClient!: 'User';
     public nameClient!: string;
     public lastNameClient!: string;
-    public nameCompany!: string;
-    public nameCompanyLeader!: string;
-    public lastNameCompanyLeader!: string;
+    public corporateName!: string;
+    public corporateNameLeader!: string;
+    public lastcorporateNameLeader!: string;
     public email!: string;
     public phone!: string;
     public date!: Date;
@@ -41,7 +41,7 @@ Appointment.init(
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-              isIn: [[ 'User', 'Company' ]],
+              isIn: [[ 'User' ]],
             },
         },
         nameClient: {
@@ -52,15 +52,15 @@ Appointment.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
-        nameCompany: {
+        corporateName: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        nameCompanyLeader: {
+        corporateNameLeader: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        lastNameCompanyLeader: {
+        lastcorporateNameLeader: {
             type: DataTypes.STRING,
             allowNull: true,
         },

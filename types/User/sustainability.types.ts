@@ -23,8 +23,7 @@ export interface ISustainability {
     numberSustainabilityTrainings?: number;
     
     //RELACION CON OTRAS TABLAS
-    branchId: string;
     accountsBookId?: string;
+    branchId: string;
     userId?: string;
-    companyId?: string;
 }

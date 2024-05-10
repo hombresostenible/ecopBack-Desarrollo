@@ -12,7 +12,6 @@ export interface ISalesFunnelCustomerAcq {
     //RELACION CON OTRAS TABLAS
     branchId: string;
     userId?: string;
-    companyId?: string;
 }
 
 
@@ -33,7 +32,6 @@ export interface ISalesFunnelCustomerRet {
     //RELACION CON OTRAS TABLAS
     branchId: string;
     userId?: string;
-    companyId?: string;
 }
 
 
@@ -52,5 +50,4 @@ export interface ISalesFunnelSalesDigital {
     //RELACION CON OTRAS TABLAS
     branchId: string;
     userId?: string;
-    companyId?: string;
 }

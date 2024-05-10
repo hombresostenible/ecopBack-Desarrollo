@@ -31,5 +31,4 @@ export interface IAccountsBook {
     //RELACION CON OTRAS TABLAS 
     branchId: string;
     userId?: string;
-    companyId?: string;
 }

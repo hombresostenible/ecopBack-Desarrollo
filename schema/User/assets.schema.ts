@@ -3,7 +3,6 @@ import db from '../../db';
 import { InventoryOffItem } from '../../types/User/assets.types';
 import Branch from './branch.schema';
 import User from './user.schema';
-import Company from './company.schema';
 
 class Assets extends Model {
     public id!: string;
@@ -22,7 +21,6 @@ class Assets extends Model {
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
     public userId!: string;
-    public companyId!: string;
 };
 
 Assets.init(
@@ -98,10 +96,6 @@ Assets.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        companyId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
     },
     {
         sequelize: db,
@@ -117,11 +111,6 @@ Assets.belongsTo(Branch, {
 Assets.belongsTo(User, {
     foreignKey: 'userId',
     as: 'user',
-});
-
-Assets.belongsTo(Company, {
-    foreignKey: 'companyId',
-    as: 'company',
 });
 
 export default Assets;
