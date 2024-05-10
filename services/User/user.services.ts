@@ -6,8 +6,8 @@ import { createAccessToken } from '../../libs/jwt';
 import {
     ServiceError,
     IUserServiceLayerResponse,
-} from '../../types/responses.types';
-import { IUser } from '../../types/users.types';
+} from '../../types/Responses/responses.types';
+import { IUser } from '../../types/User/users.types';
 
 //REGISTRO DE UN USUARIO
 export const postRegisterUserService = async (body: IUser): Promise<IUserServiceLayerResponse> => {

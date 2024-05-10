@@ -5,8 +5,8 @@ import {
     transporterZoho,
     mailUserWelcome,
 } from '../../libs/nodemailer';
-import { IUser } from '../../types/users.types';
-import { ServiceError } from '../../types/responses.types';
+import { IUser } from '../../types/User/users.types';
+import { ServiceError } from '../../types/Responses/responses.types';
 
 //REGISTRO DE UN USUARIO
 export const postRegisterUserData = async (body: IUser): Promise<User | null> => {

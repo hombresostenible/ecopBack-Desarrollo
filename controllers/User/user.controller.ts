@@ -2,9 +2,9 @@ import express, { Request, Response } from "express";
 import {
     postRegisterUserService,
 } from "../../services/User/user.services";
-import { validateSchema } from '../../middlewares/Schema.middleware.js';
-import { registerUserSchema } from '../../validations/user.zod';
-import { ServiceError } from '../../types/responses.types';
+import { validateSchema } from '../../middlewares/Schema/Schema.middleware.js';
+import { registerUserSchema } from '../../validations/User/user.zod';
+import { ServiceError } from '../../types/Responses/responses.types';
 const router = express.Router();
 
 //REGISTRO DE UN USUARIO
