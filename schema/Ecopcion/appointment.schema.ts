@@ -39,10 +39,10 @@ Appointment.init(
         },
         typeClient: {
             type: DataTypes.STRING,
-            allowNull: false,
             validate: {
-              isIn: [[ 'User' ]],
+                isIn: [[ 'User' ]],
             },
+            allowNull: false,
         },
         nameClient: {
             type: DataTypes.STRING,
@@ -82,10 +82,10 @@ Appointment.init(
         },
         stateAppointment: {
             type: DataTypes.STRING,
-            allowNull: false,
             validate: {
                 isIn: [[ 'Programada', 'Cancelada', 'Completada', 'Reagendada' ]],
             },
+            allowNull: false,
         },
         acceptPersonalDataPolicy: {
             type: DataTypes.BOOLEAN,
@@ -93,49 +93,49 @@ Appointment.init(
         },
         typeAppointment: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'Negocio', 'Funcionamiento de la plataforma', 'Otro' ]],
             },
+            allowNull: true,
         },
         typeAppointmentIndicator: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'Finanzas', 'Marketing', 'Sostenibilidad' ]],
             },
+            allowNull: true,
         },
         typeAppointmentIndicatorFinantial: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'VentasPeriodo', 'GastosPeriodo', 'UtilidadPeriodo', 'ClienteValor', 'ClienteCantidad', 'TicketPromedio', 'CuentasXPagar', 'CuentasXCobrar', 'InventarioProductos', 'InventarioMateriasPrimas', 'InventarioMercancia', 'InventarioActivos' ]],
             },
+            allowNull: true,
         },
         typeAppointmentIndicatorMarketing: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'AdquisicionClientes', 'RetencionClientes', 'CampañaDigital', 'VisualizacionImpresiones', 'ProspectosGenerados', 'NumeroVentasCampañaDigital', 'NumeroTotalVentasCanalesDigitales', 'ValorVentasCampañaDigital', 'ValorTotalVentasDigitales', 'TasaConversion' ]],
             },
+            allowNull: true,
         },
         typeAppointmentIndicatorSustainability: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'TipoResiduosGeneradoProduccion', 'CantidadMaterialUsadoProduccion', 'ResiduosAprovechablesProduccion', 'CantidadMaterialRecicladoProduccion', 'TipoResiduosGonsumo', 'CantidadMaterialConsumo', 'ConsumoEnergia', 'VariacionConsumoEnergia', 'CostosEnergia', 'ConsumoEnergiaProductoServicio', 'ConsumoAgua', 'VariacionConsumoAgua', 'ReutilizacionAgua', 'CostoAgua', 'ConsumoAguaProducto/Servicio', 'EstrategiaSostenibilidad', 'NumeroInformesSostenibilidadEmpresaHistoria', 'MiembrosEquipoGerencialSostenibilidad', 'NumeroColaboradoresEquipoTrabajanSostenibilidad', 'NumeroTalleresEntrenamietosGerentes' ]],
             },
+            allowNull: true,
         },
         typeAppointmentPlatform: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'RegistroProducto', 'MateriaPrima', 'LibroDiario', 'RegistroInformacionEmbudoVentas', 'RegistroInformacionIndicadores', 'CalcularIndicadores', 'VisualizarReportes', 'DescargarReportesPDFExcel' ]],
             },
+            allowNull: true,
         },
         typeAppointmentOthers: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
     },
     {
