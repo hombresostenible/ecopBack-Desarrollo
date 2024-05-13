@@ -1,7 +1,6 @@
 import {
     postBranchData,
     postManyBranchData,
-    getBranchsData,
     getBranchsByUserIdData,
     getBranchByIdData,
     putBranchData,
@@ -40,21 +39,6 @@ export const postManyBranchService = async (branches: IBranch[], userId: string,
         };
         // Devolver una respuesta adecuada
         return { code: 201, result: uniqueBranches };
-    } catch (error) {
-        if (error instanceof Error) {
-            const customErrorMessage = error.message;
-            throw new ServiceError(500, customErrorMessage, error);
-        } else throw error;
-    };
-};
-
-
-
-//SERVICE PARA OBTENER TODAS LAS SEDES TODOS LOS USER - CEO PLATATORMA
-export const getBranchsService = async (): Promise<IServiceLayerResponseBranch> => {
-    try {
-        const dataLayerResponse = await getBranchsData();
-        return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
