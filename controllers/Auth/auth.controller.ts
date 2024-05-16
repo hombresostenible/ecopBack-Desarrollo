@@ -13,6 +13,7 @@ const router = express.Router();
 //LOGIN DE USUARIOS
 router.post("/login", validateSchema(loginSchema), async (req: Request, res: Response): Promise<void> => {
     try {
+        console.log('Entra')
         const { email, password } = req.body;
         const user = await loginService(email, password);
         if (!user) {

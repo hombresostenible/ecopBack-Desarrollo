@@ -35,36 +35,24 @@ export const postBranchData = async (body: IBranch, userId: string, userType: st
 export const postManyBranchData = async (body: IBranch, userId: string, userType: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        const existingAsset = await Branch.findOne({
+        const existingBranch = await Branch.findOne({
             where: { nameBranch: body.nameBranch },
             transaction: t,
         });
-        if (existingAsset) {
+        if (existingBranch) {
             await t.rollback();
             return null;
         }
         // Si la sede no existe, crearla en la base de datos
-        const newAsset = await Branch.create({
+        const newBranch = await Branch.create({
             ...body,
             userId: userType === 'User' ? userId : null,
         }, { transaction: t });
 
         await t.commit();
-        return newAsset;
+        return newBranch;
     } catch (error) {
         await t.rollback();
-        throw error;
-    }
-};
-
-
-
-//DATA PARA OBTENER TODAS LAS SEDES TODOS LOS USER - CEO PLATATORMA
-export const getBranchsData = async (): Promise<any> => {
-    try {
-        const mySQLResponse = await Branch.findAll();
-        return mySQLResponse;
-    } catch (error) {
         throw error;
     }
 };
