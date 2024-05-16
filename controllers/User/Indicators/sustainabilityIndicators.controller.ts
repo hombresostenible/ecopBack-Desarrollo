@@ -32,7 +32,7 @@ router.post("/userSustainability", authRequired, async (req: Request, res: Respo
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD DE UN USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD DE UN USER
 router.get("/userSustainability", authRequired, async (req: Request, res: Response) => {
     try {
         const { id, userType, employerId, typeRole, userBranchId } = req.user;
@@ -50,7 +50,7 @@ router.get("/userSustainability", authRequired, async (req: Request, res: Respon
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD POR SEDE DE UN USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD POR SEDE DE UN USER
 router.get("/userSustainabilityBranch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
@@ -69,7 +69,7 @@ router.get("/userSustainabilityBranch/:idBranch", authRequired, async (req: Requ
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA DEL USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA DEL USER
 router.get("/energyConsumption", authRequired,async (req: Request, res: Response) => {
     try {
         const { id, userType, employerId, typeRole, userBranchId } = req.user;
@@ -102,7 +102,7 @@ router.get("/verifyEnergyConsumption/:idSustainability", authRequired, async (re
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER
 router.get("/energyConsumptionBranch/:idBranch", authRequired,async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
@@ -121,7 +121,7 @@ router.get("/energyConsumptionBranch/:idBranch", authRequired,async (req: Reques
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE AGUA USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE AGUA USER
 router.get("/waterConsumption", authRequired,async (req: Request, res: Response) => {
     try {
         const { id, userType, employerId, typeRole, userBranchId } = req.user;
@@ -139,7 +139,7 @@ router.get("/waterConsumption", authRequired,async (req: Request, res: Response)
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE AGUA POR SEDE DEL USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE AGUA POR SEDE DEL USER
 router.get("/waterConsumptionBranch/:idBranch", authRequired,async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
@@ -158,7 +158,7 @@ router.get("/waterConsumptionBranch/:idBranch", authRequired,async (req: Request
 
 
 
-//CONTROLLER PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER O COMPANY
+//CONTROLLER PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER
 router.put("/userSustainability/:idSustainability", authRequired, async (req: Request, res: Response) => {
     try {
         const { idSustainability } = req.params;
@@ -174,7 +174,7 @@ router.put("/userSustainability/:idSustainability", authRequired, async (req: Re
 
 
 
-//CONTROLLER PARA ELIMINAR UN REGISTRO DE SOSTENIBILIDAD PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA ELIMINAR UN REGISTRO DE SOSTENIBILIDAD PERTENECIENTE AL USER
 router.delete('/userSustainability/:idSustainability', authRequired, async (req: Request, res: Response) => {
     try {
         const { idSustainability } = req.params;

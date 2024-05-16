@@ -10,7 +10,7 @@ import { IAppointment } from "../../types/Ecopcion/appointment.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 import { IServiceLayerResponseAppointment } from '../../types/Ecopcion/responsesEcopcion.types';
 
-//SERVICE PARA CREAR UNA CITA PARA USER O COMPANY
+//SERVICE PARA CREAR UNA CITA PARA USER
 export const postAppointmentService = async (body: IAppointment): Promise<IServiceLayerResponseAppointment> => {
     try {
         const dataLayerResponse = await postAppointmentData(body);
@@ -26,7 +26,7 @@ export const postAppointmentService = async (body: IAppointment): Promise<IServi
 
 
 
-//SERVICE PARA OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER Y COMPANY - CEO PLATATORMA
+//SERVICE PARA OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER - CEO PLATATORMA
 export const getAppointmentService = async (): Promise<IServiceLayerResponseAppointment> => {
     try {
         const dataLayerResponse = await getAppointmentData();
@@ -56,7 +56,7 @@ export const getConsultAdAppointmentService = async (appointmentId: string): Pro
 
 
 
-//SERVICE PARA OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER Y COMPANY - CEO PLATATORMA
+//SERVICE PARA OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER - CEO PLATATORMA
 export const getIdAppointmentService = async (appointmentId: string): Promise<IServiceLayerResponseAppointment> => {
     try {
         const dataLayerResponse = await getIdAppointmentData(appointmentId);
@@ -71,7 +71,7 @@ export const getIdAppointmentService = async (appointmentId: string): Promise<IS
 
 
 
-//SERVICE PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER O COMPANY
+//SERVICE PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
 export const putAppointmentService = async (appointmentId: string, body: IAppointment): Promise<IServiceLayerResponseAppointment> => {
     try {
         const updateAppointment = await putAppointmentData(appointmentId, body);
@@ -87,7 +87,7 @@ export const putAppointmentService = async (appointmentId: string, body: IAppoin
 
 
 
-//SERVICE PARA ELIMINAR UNA CITA PARA USER O COMPANY
+//SERVICE PARA ELIMINAR UNA CITA PARA USER
 export const deleteAppointmentService = async (appointmentId: string): Promise<IServiceLayerResponseAppointment> => {
     try {
         await deleteAppointmentData(appointmentId);

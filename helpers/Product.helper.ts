@@ -4,12 +4,12 @@ import {
 } from "../data/User/product.data";
 import { ServiceError } from '../types/Responses/responses.types';
 
-//CHEQUEA SI LOS PRODUCTS PERTENECEN A LA SEDE DE USER O COMPANY
+//CHEQUEA SI LOS PRODUCTS PERTENECEN A LA SEDE DE USER
 export const checkPermissionForBranchProduct = async (idBranch: string, userId: string, userType: string): Promise<boolean> => {
     try {
         const products = await getProductsBranchByIdData(idBranch);
         if (!products) return false;
-        for (const product of products) if ((userType === 'User' && product.userId !== userId) || (userType === 'Company' && product.companyId !== userId)) return false;
+        for (const product of products) if (product.userId !== userId) return false;
         return true;
     } catch (error) {
         if (error instanceof Error) {
@@ -21,13 +21,12 @@ export const checkPermissionForBranchProduct = async (idBranch: string, userId: 
 
 
 
-//CHEQUEA SI EL PRODUCT PERTENECE A LA SEDE DE USER O COMPANY
+//CHEQUEA SI EL PRODUCT PERTENECE A LA SEDE DE USER
 export const checkPermissionForProduct = async (idProduct: string, userId: string, userType: string): Promise<boolean> => {
     try {
         const product = await getProductByIdData(idProduct);
         if (!product) return false;
-        if (userType === 'User' && product.userId !== userId) return false; 
-        if (userType === 'Company' && product.companyId !== userId) return false;
+        if (product.userId !== userId) return false;
         return true;
     } catch (error) {
         if (error instanceof Error) {

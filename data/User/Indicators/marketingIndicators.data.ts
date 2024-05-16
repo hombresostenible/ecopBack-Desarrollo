@@ -4,7 +4,7 @@ import SalesFunnelSalesDigital from '../../../schema/User//salesFunnelCustomerDi
 import { ISalesFunnelCustomerAcq, ISalesFunnelCustomerRet, ISalesFunnelSalesDigital } from "../../../types/User/salesFunnel.types";
 
 //^ SALESFUNNELCUSTOMERACQUISITION
-//DATA PARA CREAR UN CUSTOMERACQUISITION EN LA SEDE DE USER O COMPANY
+//DATA PARA CREAR UN CUSTOMERACQUISITION EN LA SEDE DE USER
 export const postSalesFunnelCustomerAcqData = async (body: ISalesFunnelCustomerAcq, userId: string, userType: string): Promise<any> => {
     try {
         const newSalesFunnelCustomerAcq = new SalesFunnelCustomerAcq({
@@ -34,7 +34,7 @@ export const getSalesFunnelCustomerAcqUserIdData = async (userId: string): Promi
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERACQUISITION DE UN USER O COMPANY
+//DATA PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERACQUISITION DE UN USER
 export const getCustomerAcqBranchByIdData = async (idBranch: string): Promise<any> => {
     try {
         const customerAcquisitionFound = await SalesFunnelCustomerAcq.findAll({
@@ -49,7 +49,7 @@ export const getCustomerAcqBranchByIdData = async (idBranch: string): Promise<an
 
 
 
-//DATA PARA OBTENER UN CUSTOMERACQUISITION POR ID PERTENECIENTE AL USER O COMPANY
+//DATA PARA OBTENER UN CUSTOMERACQUISITION POR ID PERTENECIENTE AL USER
 export const getCustomerAcqByIdData = async (idAccountsBook: string): Promise<any> => {
     try {
         const customerAcquisitionFound = await SalesFunnelCustomerAcq.findOne({ where: { id: idAccountsBook } });
@@ -61,7 +61,7 @@ export const getCustomerAcqByIdData = async (idAccountsBook: string): Promise<an
 
 
 
-//DATA PARA ACTUALIZAR UN CUSTOMERACQUISITION PERTENECIENTE AL USER O COMPANY
+//DATA PARA ACTUALIZAR UN CUSTOMERACQUISITION PERTENECIENTE AL USER
 export const putSalesFunnelCustomerAcqData = async (id: string, body: ISalesFunnelCustomerAcq): Promise<ISalesFunnelCustomerAcq | null> => {
     try {
         const [rowsUpdated] = await SalesFunnelCustomerAcq.update(body, { where: { id } });
@@ -76,7 +76,7 @@ export const putSalesFunnelCustomerAcqData = async (id: string, body: ISalesFunn
 
 
 
-//CONTROLLER PARA ELIMINAR UN REGISTRO DEL CUSTOMERACQUISITION PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA ELIMINAR UN REGISTRO DEL CUSTOMERACQUISITION PERTENECIENTE AL USER
 export const deleteSalesFunnelCustomerAcqData = async (idCustomerAcquisition: string): Promise<void> => {
     try {
         const salesFunnelCustomerAcqFound = await SalesFunnelCustomerAcq.findOne({ where: { id: idCustomerAcquisition } });
@@ -97,7 +97,7 @@ export const deleteSalesFunnelCustomerAcqData = async (idCustomerAcquisition: st
 
 
 //^ SALESFUNNELCUSTOMERRETENTION
-//DATA PARA CREAR UN CUSTOMERRETENTION EN LA SEDE DE USER O COMPANY
+//DATA PARA CREAR UN CUSTOMERRETENTION EN LA SEDE DE USER
 export const postSalesFunnelCustomerRetData = async (body: ISalesFunnelCustomerRet, userId: string, userType: string): Promise<any> => {
     try {
         const newSalesFunnelCustomerRet = new SalesFunnelCustomerRet({
@@ -127,7 +127,7 @@ export const getSalesFunnelCustomerRetUserIdData = async (userId: string): Promi
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERRETENTION DE UN USER O COMPANY
+//DATA PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERRETENTION DE UN USER
 export const getCustomerRetBranchByIdData = async (idBranch: string): Promise<any> => {
     try {
         const customerRetentionFound = await SalesFunnelCustomerRet.findAll({
@@ -141,7 +141,7 @@ export const getCustomerRetBranchByIdData = async (idBranch: string): Promise<an
 
 
 
-//DATA PARA OBTENER UN CUSTOMERRETENTION POR ID PERTENECIENTE AL USER O COMPANY
+//DATA PARA OBTENER UN CUSTOMERRETENTION POR ID PERTENECIENTE AL USER
 export const getCustomerRetByIdData = async (idAccountsBook: string): Promise<any> => {
     try {
         const customerRetentionFound = await SalesFunnelCustomerRet.findOne({ where: { id: idAccountsBook } });
@@ -153,7 +153,7 @@ export const getCustomerRetByIdData = async (idAccountsBook: string): Promise<an
 
 
 
-//SERVICE PARA ACTUALIZAR UN CUSTOMERRETENTION PERTENECIENTE AL USER O COMPANY
+//SERVICE PARA ACTUALIZAR UN CUSTOMERRETENTION PERTENECIENTE AL USER
 export const putSalesFunnelCustomerRetData = async (idCustomerRetention: string, body: ISalesFunnelCustomerRet): Promise<ISalesFunnelCustomerRet | null> => {
     try {
         const [rowsUpdated] = await SalesFunnelCustomerRet.update(body, { where: { id: idCustomerRetention } });
@@ -168,7 +168,7 @@ export const putSalesFunnelCustomerRetData = async (idCustomerRetention: string,
 
 
 
-//DATA PARA ELIMINAR UN REGISTRO DEL CUSTOMERRETENTION PERTENECIENTE AL USER O COMPANY
+//DATA PARA ELIMINAR UN REGISTRO DEL CUSTOMERRETENTION PERTENECIENTE AL USER
 export const deleteSalesFunnelCustomerRetData = async (idCustomerRetention: string): Promise<void> => {
     try {
         const salesFunnelCustomerRetFound = await SalesFunnelCustomerRet.findOne({ where: { id: idCustomerRetention } });
@@ -189,7 +189,7 @@ export const deleteSalesFunnelCustomerRetData = async (idCustomerRetention: stri
 
 
 //^ SALESFUNNELCUSTOMERDIGITAL
-//DATA PARA CREAR UN CUSTOMERDIGITAL EN LA SEDE DE USER O COMPANY
+//DATA PARA CREAR UN CUSTOMERDIGITAL EN LA SEDE DE USER
 export const postSalesFunnelSalesDigitalData = async (body: ISalesFunnelSalesDigital, userId: string, userType: string): Promise<any> => {
     try {
         const newSalesFunnelSalesDigital = new SalesFunnelSalesDigital({
@@ -219,7 +219,7 @@ export const getSalesFunnelSalesDigitalUserIdData = async (userId: string): Prom
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERDIGITAL DE UN USER O COMPANY
+//DATA PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERDIGITAL DE UN USER
 export const getCustomerDigitalBranchByIdData = async (idBranch: string): Promise<any> => {
     try {
         const customerDigitalFound = await SalesFunnelSalesDigital.findAll({
@@ -233,7 +233,7 @@ export const getCustomerDigitalBranchByIdData = async (idBranch: string): Promis
 
 
 
-//DATA PARA OBTENER UN CUSTOMERACQUISITION POR ID PERTENECIENTE AL USER O COMPANY
+//DATA PARA OBTENER UN CUSTOMERACQUISITION POR ID PERTENECIENTE AL USER
 export const getCustomerDigitalByIdData = async (idAccountsBook: string): Promise<any> => {
     try {
         const customerDigitalFound = await SalesFunnelSalesDigital.findOne({ where: { id: idAccountsBook } });
@@ -245,7 +245,7 @@ export const getCustomerDigitalByIdData = async (idAccountsBook: string): Promis
 
 
 
-//DATA PARA ACTUALIZAR UN CUSTOMERDIGITAL PERTENECIENTE AL USER O COMPANY
+//DATA PARA ACTUALIZAR UN CUSTOMERDIGITAL PERTENECIENTE AL USER
 export const putSalesFunnelSalesDigitalData = async (idCustomerDigital: string, body: ISalesFunnelSalesDigital): Promise<ISalesFunnelSalesDigital | null> => {
     try {
         const [rowsUpdated] = await SalesFunnelSalesDigital.update(body, { where: { id: idCustomerDigital } });
@@ -260,7 +260,7 @@ export const putSalesFunnelSalesDigitalData = async (idCustomerDigital: string, 
 
 
 
-//DATA PARA ELIMINAR UN REGISTRO DEL CUSTOMERDIGITAL PERTENECIENTE AL USER O COMPANY
+//DATA PARA ELIMINAR UN REGISTRO DEL CUSTOMERDIGITAL PERTENECIENTE AL USER
 export const deleteSalesFunnelSalesDigitalData = async (idCustomerDigital: string): Promise<void> => {
     try {
         const salesFunnelSalesDigitalFound = await SalesFunnelSalesDigital.findOne({ where: { id: idCustomerDigital } });

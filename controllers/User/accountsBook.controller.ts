@@ -97,7 +97,7 @@ router.get("/userItem/:idBranch/query?", authRequired, async (req: Request, res:
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS ACTIVOS, MERCANCIAS, PRODUCTOS, MATERIAS PRIMAS Y SERVICIOS POR SEDE DE UN USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS ACTIVOS, MERCANCIAS, PRODUCTOS, MATERIAS PRIMAS Y SERVICIOS POR SEDE DE UN USER
 router.get("/userItem/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
@@ -116,7 +116,7 @@ router.get("/userItem/:idBranch", authRequired, async (req: Request, res: Respon
 
 
 
-//CONTROLLER PARA ACTUALIZAR UN REGISTRO EN EL LIBRO DIARIO PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA ACTUALIZAR UN REGISTRO EN EL LIBRO DIARIO PERTENECIENTE AL USER
 router.put("/userAccountsBook/:idAccountsBook", authRequired, checkRole, validateSchema(accountsBookSchemaZod), async (req: Request, res: Response) => {
     try {
         const { idAccountsBook } = req.params;
@@ -132,7 +132,7 @@ router.put("/userAccountsBook/:idAccountsBook", authRequired, checkRole, validat
 
 
 
-//CONTROLLER PARA ELIMINAR UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA ELIMINAR UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER
 router.delete('/userAccountsBook/:idAccountsBook', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idAccountsBook } = req.params;

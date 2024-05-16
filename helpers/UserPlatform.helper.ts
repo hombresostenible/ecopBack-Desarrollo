@@ -9,7 +9,7 @@ export const checkPermissionForUserPlatformBranch = async (idBranch: string, use
     try {
         const usersPlatform = await getUserPlatformBranchByIdData(idBranch);
         if (!usersPlatform) return false;
-        for (const userPlatform of usersPlatform) if ((userType === 'User' && userPlatform.entityUserId !== userId) || (userType === 'Company' && userPlatform.entityCompanyId !== userId)) return false;
+        for (const userPlatform of usersPlatform) if (userPlatform.entityUserId !== userId) return false;
         return true;
     } catch (error) {
         if (error instanceof Error) {
@@ -26,8 +26,7 @@ export const checkPermissionForUserPlatform = async (idUserPlatform: string, use
     try {
         const userPlatform = await getUserPlatformByIdData(idUserPlatform, userId);
         if (!userPlatform) return false;
-        if (userType === 'User' && userPlatform.id !== idUserPlatform) return false; 
-        if (userType === 'Company' && userPlatform.id !== idUserPlatform) return false;
+        if (userPlatform.id !== idUserPlatform) return false;
         return true;
     } catch (error) {
         if (error instanceof Error) {

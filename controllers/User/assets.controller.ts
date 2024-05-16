@@ -17,8 +17,8 @@ import { assetsSchemaZod, manyAssetsSchemaZod } from '../../validations/User/ass
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 
-//CONTROLLER PARA CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER O COMPANY
-router.post("/userAssets", authRequired, checkRole, validateSchema(assetsSchemaZod), async (req: Request, res: Response) => {
+//CONTROLLER PARA CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
+router.post("", authRequired, checkRole, validateSchema(assetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
         const { id, userType, employerId, typeRole, userBranchId } = req.user;
@@ -28,12 +28,12 @@ router.post("/userAssets", authRequired, checkRole, validateSchema(assetsSchemaZ
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/assets/userAssets con { "branchId": "28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0", "nameItem": "Bicicleta", "barCode": null, "inventory": 1, "brandAssets": "Specialized", "referenceAssets": "Modelo 2010", "conditionAssets": "Nuevo", "stateAssets": "Funciona correctamente", "assetStatus": "Activo en uso" }
+}); // POST - http://localhost:3000/api/assets con { "branchId": "28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0", "nameItem": "Bicicleta", "barCode": null, "inventory": 1, "brandAssets": "Specialized", "referenceAssets": "Modelo 2010", "conditionAssets": "Nuevo", "stateAssets": "Funciona correctamente", "assetStatus": "Activo en uso" }
 
 
 
-//CONTROLLER PARA CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER O COMPANY DESDE EL EXCEL
-router.post("/userAssets/createMany", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
+//CONTROLLER PARA CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER DESDE EL EXCEL
+router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
         const { id, userType, employerId, typeRole, userBranchId } = req.user;
@@ -45,12 +45,12 @@ router.post("/userAssets/createMany", authRequired, checkRoleArray, validateSche
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/assets/userAssets/createMany con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
+}); // POST - http://localhost:3000/api/assets/createMany con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER O COMPANY
-router.get("/userAssets", authRequired, async (req: Request, res: Response) => {
+//CONTROLLER PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
+router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
         const { id, userType } = req.user;
         const serviceLayerResponse = await getAssetsUserService(id, userType);      
@@ -61,12 +61,12 @@ router.get("/userAssets", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/assets/userAssets
+}); // GET - http://localhost:3000/api/assets
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER O COMPANY
-router.get("/userAssetsBranch/:idBranch", authRequired, async (req: Request, res: Response) => {
+//CONTROLLER PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
+router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id, userType } = req.user;
@@ -78,12 +78,12 @@ router.get("/userAssetsBranch/:idBranch", authRequired, async (req: Request, res
         const rawMaterialError = error as ServiceError;
         res.status(rawMaterialError.code).json(rawMaterialError.message);
     }
-}); //GET - http://localhost:3000/api/assets/userAssetsBranch/:idBranch
+}); //GET - http://localhost:3000/api/assets/:idBranch
 
 
 
-//CONTROLLER PARA OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER O COMPANY
-router.get("/userAssets/:idAssets", authRequired, async (req: Request, res: Response) => {
+//CONTROLLER PARA OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
+router.get("/:idAssets", authRequired, async (req: Request, res: Response) => {
     try {
         const { idAssets } = req.params;
         const { id, userType } = req.user;
@@ -93,12 +93,12 @@ router.get("/userAssets/:idAssets", authRequired, async (req: Request, res: Resp
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/assets/userAssets/:idAssets
+}); // GET - http://localhost:3000/api/assets/:idAssets
 
 
 
-//CONTROLLER PARA ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER O COMPANY
-router.put("/userAssets/:idAssets", authRequired, checkRole, validateSchema(assetsSchemaZod), async (req: Request, res: Response) => {
+//CONTROLLER PARA ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+router.put("/:idAssets", authRequired, checkRole, validateSchema(assetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const { idAssets } = req.params;
         const body = req.body;
@@ -109,12 +109,12 @@ router.put("/userAssets/:idAssets", authRequired, checkRole, validateSchema(asse
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/assets/userAssets/:idAssets con { "branchId": "13c403d6-23c0-42bf-a815-0949e43c3540", "nameAssets": "Tractor", "brandAssets": "John Dere", "referenceAssets": "Modelo 2010", "conditionAssets": "Usada/De segunda", "stateAssets": "Funciona correctamente" }
+}); // PUT - http://localhost:3000/api/assets/:idAssets con { "branchId": "13c403d6-23c0-42bf-a815-0949e43c3540", "nameAssets": "Tractor", "brandAssets": "John Dere", "referenceAssets": "Modelo 2010", "conditionAssets": "Usada/De segunda", "stateAssets": "Funciona correctamente" }
 
 
 
-//CONTROLLER PARA ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER O COMPANY
-router.put("/userAssetsMany/update", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
+//CONTROLLER PARA ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER
+router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
         const { id, userType, employerId, typeRole, userBranchId } = req.user;
@@ -126,12 +126,12 @@ router.put("/userAssetsMany/update", authRequired, checkRoleArray, validateSchem
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/assets/userAssetsMany/update con [{"id":"6fd572e5-683f-4c6d-a421-dbb86f64d48a","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"id":"88667153-4fec-40d5-9ff9-e04cb0f1fee7","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9 ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
+}); // PUT - http://localhost:3000/api/assets/update con [{"id":"6fd572e5-683f-4c6d-a421-dbb86f64d48a","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"id":"88667153-4fec-40d5-9ff9-e04cb0f1fee7","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9 ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
 
 
 
-//CONTROLLER PARA DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER O COMPANY
-router.patch("/userAssets/:idAssets", authRequired, checkRole, async (req: Request, res: Response) => {
+//CONTROLLER PARA DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+router.patch("/:idAssets", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idAssets } = req.params;
         const body = req.body;
@@ -142,12 +142,12 @@ router.patch("/userAssets/:idAssets", authRequired, checkRole, async (req: Reque
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PATCH - http://localhost:3000/api/assets/userAssets/:idAssets con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "assetStatus": "" }
+}); // PATCH - http://localhost:3000/api/assets/:idAssets con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "assetStatus": "" }
 
 
 
-//CONTROLLER PARA ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER O COMPANY
-router.delete('/userAssets/:idAssets', authRequired, checkRole, async (req: Request, res: Response) => {
+//CONTROLLER PARA ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+router.delete('/:idAssets', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idAssets } = req.params;
         const { id, userType } = req.user;
@@ -157,7 +157,7 @@ router.delete('/userAssets/:idAssets', authRequired, checkRole, async (req: Requ
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // DELETE - http://localhost:3000/api/assets/userAssets/:idAssets
+}); // DELETE - http://localhost:3000/api/assets/:idAssets
 
 
 

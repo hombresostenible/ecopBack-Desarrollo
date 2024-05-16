@@ -42,7 +42,7 @@ export const postProductService = async (body: IProduct, userId: string, userTyp
 //     product.inventory += product.automaticInventoryIncrease || 0;
   
 //     // Guarda los cambios en la base de datos
-//     await postProductsData(product, product.userId || '', product.companyId || '', product.branchId);
+//     await postProductsData(product, product.userId || '');
 //   }
   
 //   // Función para iniciar la tarea cron según la periodicidad especificada
