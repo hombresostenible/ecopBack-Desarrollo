@@ -2,7 +2,7 @@ import AccountsReceivable from '../../../schema/User/accountsReceivable.schema';
 import { IAccountsBook } from "../../../types/User/accountsBook.types";
 
 // SE HACE EL PAGO A LA CXC EN LA TABLA ACCOUNTSRECEIVABLE PARA USER
-export const paymentsAccountsReceivableUser = async (body: IAccountsBook, userId: string): Promise<any> => {
+export const paymentsAccountsReceivable = async (body: IAccountsBook, userId: string): Promise<any> => {
     if (body.creditDescription) {
         //Busca la CXC
         const accountReceivableFound = await AccountsReceivable.findOne({ where: { creditDescription: body.creditDescription, transactionCounterpartId: body.transactionCounterpartId, userId: userId, stateAccount: 'Activo' } });

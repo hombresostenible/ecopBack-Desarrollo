@@ -1,7 +1,6 @@
 import {
     postSustainabilityData,
     getSustainabilitiesByUserIdData,
-    getSustainabilitiesByCompanyIdData,
     getSustainabilityBranchByIdData,
     getEnergyConsumptionData,
     getSustainabilityByIdData,
@@ -18,10 +17,8 @@ import { ServiceError, IServiceLayerResponseSustainabilityIndicators, IServiceLa
 //SERVICE PARA CREAR REGISTROS DE SOSTENIBILIDAD
 export const postSustainabilityService = async (body: ISustainability, userId: string, userType: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseSustainability> => {
     try {
-        if (userType === 'User') {
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
-            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en esta sede");
-        }
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en esta sede");
         const dataLayerResponse = await postSustainabilityData(body, userId, userType);
         if (!dataLayerResponse) throw new ServiceError(400, "No se puede registrar");
         return { code: 201, result: dataLayerResponse };
@@ -37,13 +34,10 @@ export const postSustainabilityService = async (body: ISustainability, userId: s
 
 
 
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD DE UN USER O COMPANY
+//SERVICE PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD DE UN USER
 export const getSustainabilityUserService = async (userId: string, userType: string): Promise<IServiceLayerResponseSustainability> => {
     try {
-        let dataLayerResponse;
-        if (userType === 'User') {
-            dataLayerResponse = await getSustainabilitiesByUserIdData(userId);
-        }
+        const dataLayerResponse = await getSustainabilitiesByUserIdData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -57,7 +51,7 @@ export const getSustainabilityUserService = async (userId: string, userType: str
 
 
 
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD POR SEDE DE UN USER O COMPANY
+//SERVICE PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD POR SEDE DE UN USER
 export const getSustainabilityBranchService = async (idBranch: string, userId: string, userType: string): Promise<IServiceLayerResponseSustainability> => {
     try {
         const sustainabilitysFound = await getSustainabilityBranchByIdData(idBranch);
@@ -75,7 +69,7 @@ export const getSustainabilityBranchService = async (idBranch: string, userId: s
 
 
 
-//SERVICE PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA DEL USER O COMPANY DE LA TABLA ACCOUNTSBOOK SCHEMA
+//SERVICE PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA DEL USER DE LA TABLA ACCOUNTSBOOK SCHEMA
 export const getEnergyConsumptionService = async (userId: string, userType: string): Promise<IServiceLayerResponseSustainabilityIndicators> => {
     try {
         const energyConsumptionFound = await getEnergyConsumptionData(userId, userType);
@@ -110,7 +104,7 @@ export const getSustainabilityByIdService = async (idSustainability: string, use
 
 
 
-//SERVICE PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER O COMPANY DE LA TABLA ACCOUNTSBOOK SCHEMA
+//SERVICE PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER DE LA TABLA ACCOUNTSBOOK SCHEMA
 export const getEnergyConsumptionBranchService = async (idBranch: string, userId: string, userType: string): Promise<IServiceLayerResponseSustainabilityIndicators> => {
     try {
         const energyConsumptionFound = await getEnergyConsumptionBranchData(idBranch, userId, userType);
@@ -128,7 +122,7 @@ export const getEnergyConsumptionBranchService = async (idBranch: string, userId
 
 
 
-//SERVICE PARA OBTENER TODOS LOS SERVICIOS DE AGUA DEL USER O COMPANY DE LA TABLA ACCOUNTSBOOK SCHEMA
+//SERVICE PARA OBTENER TODOS LOS SERVICIOS DE AGUA DEL USER DE LA TABLA ACCOUNTSBOOK SCHEMA
 export const getWaterConsumptionService = async (userId: string, userType: string): Promise<IServiceLayerResponseSustainabilityIndicators> => {
     try {
         const waterConsumptionFound = await getWaterConsumptionData(userId, userType);
@@ -146,7 +140,7 @@ export const getWaterConsumptionService = async (userId: string, userType: strin
 
 
 
-//SERVICE PARA OBTENER TODOS LOS SERVICIOS DE AGUA POR SEDE DEL USER O COMPANY DE LA TABLA ACCOUNTSBOOK SCHEMA
+//SERVICE PARA OBTENER TODOS LOS SERVICIOS DE AGUA POR SEDE DEL USER DE LA TABLA ACCOUNTSBOOK SCHEMA
 export const getWaterConsumptionBranchService = async (idBranch: string, userId: string, userType: string): Promise<IServiceLayerResponseSustainabilityIndicators> => {
     try {
         const energyConsumptionFound = await getWaterConsumptionBranchData(idBranch, userId, userType);
@@ -164,7 +158,7 @@ export const getWaterConsumptionBranchService = async (idBranch: string, userId:
 
 
 
-//SERVICE PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER O COMPANY
+//SERVICE PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER
 export const putSustainabilityService = async (idSustainability: string, body: ISustainability, userId: string, userType: string): Promise<IServiceLayerResponseSustainability> => {
     try {
         const updateSustainability = await putSustainabilityData(idSustainability, body, userId, userType);
@@ -182,7 +176,7 @@ export const putSustainabilityService = async (idSustainability: string, body: I
 
 
 
-//SERVICE PARA ELIMINAR UN REGISTRO DE SOSTENIBILIDAD PERTENECIENTE AL USER O COMPANY
+//SERVICE PARA ELIMINAR UN REGISTRO DE SOSTENIBILIDAD PERTENECIENTE AL USER
 export const deleteSustainabilityService = async (idSustainability: string, userId: string, userType: string): Promise<IServiceLayerResponseSustainability> => {
     try {
         await deleteSustainabilityData(idSustainability, userId, userType);

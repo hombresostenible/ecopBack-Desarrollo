@@ -3,7 +3,7 @@ import { IAccountsBook } from '../../../types/User/accountsBook.types';
 import { IAccountsReceivable } from "../../../types/User/accountsReceivable.types";
 import { ServiceError } from '../../../types/Responses/responses.types';
 
-export const incomeAccountsReceivableUser = async (body: IAccountsBook, newTransactionId: string, userId: string): Promise<any> => {
+export const incomeAccountsReceivable = async (body: IAccountsBook, newTransactionId: string, userId: string): Promise<any> => {
     if (body.creditDescription) {
         //Buscamos la CXC
         const accountReceivableFound = await AccountsReceivable.findOne({ where: { creditDescription: body.creditDescription, transactionCounterpartId: body.transactionCounterpartId, userId: userId, stateAccount: 'Activo' } });
