@@ -127,7 +127,7 @@ export const getAccountsBooksData = async (userId: string): Promise<any> => {
 
 
 
-//Chequea si la sede pertenece a User o Company
+//Chequea si la sede pertenece a User
 export const getAccountsBookByBranch = async (idAccountsBook: string): Promise<any> => {
     try {
         const accountsBookFound = await AccountsBook.findOne({
@@ -139,7 +139,7 @@ export const getAccountsBookByBranch = async (idAccountsBook: string): Promise<a
     };
 };
 
-//Chequea si el registro del libro diario pertenece al User o Company
+//Chequea si el registro del libro diario pertenece al User
 export const getAccountsBookByIdData = async (idAccountsBook: string): Promise<any> => {
     try {
         const transactionFound = await AccountsBook.findOne({ where: { id: idAccountsBook } });
@@ -154,30 +154,27 @@ export const getAccountsBookByIdData = async (idAccountsBook: string): Promise<a
 //DATA PARA BUSCAR UN ITEM DE MERCHANDISE, ASSETS, PRODUCT O RAWMATERIAL POR CODIGO DE BARRAS
 export const getItemBarCodeData = async (idBranch: string, barCode: string, userId: string, userType: string): Promise<any> => {
     try {
-        if (userType === 'User') {
-            let itemFound;
-
-            const merchandiseFound = await Merchandise.findOne({
-                where: { branchId: idBranch, barCode: barCode, userId: userId }
-            });
-            if (merchandiseFound) itemFound = merchandiseFound;
-            
-            const productFound = await Product.findOne({
-                where: { branchId: idBranch, barCode: barCode, userId: userId }
-            });
-            if (productFound) itemFound = productFound;
-            
-            const rawMaterialFound = await RawMaterial.findOne({
-                where: { branchId: idBranch, barCode: barCode, userId: userId }
-            });
-            if (rawMaterialFound) itemFound = rawMaterialFound;
-            
-            const assetsFound = await Assets.findOne({
-                where: { branchId: idBranch, barCode: barCode, userId: userId }
-            });
-            if (assetsFound) itemFound = assetsFound;
-            return itemFound;
-        };
+        let itemFound;
+        const merchandiseFound = await Merchandise.findOne({
+            where: { branchId: idBranch, barCode: barCode, userId: userId }
+        });
+        if (merchandiseFound) itemFound = merchandiseFound;
+        
+        const productFound = await Product.findOne({
+            where: { branchId: idBranch, barCode: barCode, userId: userId }
+        });
+        if (productFound) itemFound = productFound;
+        
+        const rawMaterialFound = await RawMaterial.findOne({
+            where: { branchId: idBranch, barCode: barCode, userId: userId }
+        });
+        if (rawMaterialFound) itemFound = rawMaterialFound;
+        
+        const assetsFound = await Assets.findOne({
+            where: { branchId: idBranch, barCode: barCode, userId: userId }
+        });
+        if (assetsFound) itemFound = assetsFound;
+        return itemFound;
     } catch (error) {
         throw error;
     };
@@ -266,7 +263,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
 
 
 
-//DATA PARA OBTENER TODOS LOS ACTIVOS, MERCANCIAS, PRODUCTOS, MATERIAS PRIMAS Y SERVICIOS POR SEDE DE UN USER O COMPANY
+//DATA PARA OBTENER TODOS LOS ACTIVOS, MERCANCIAS, PRODUCTOS, MATERIAS PRIMAS Y SERVICIOS POR SEDE DE UN USER
 export const getAllItemsData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
     try {
         let whereClause: any = { branchId: idBranch };
@@ -293,11 +290,7 @@ export const getAllItemsData = async (idBranch: string, userId: string, userType
 
 
 
-
-
-
-
-//ACTUALIZA UN REGISTRO EN EL LIBRO DIARIO PERTENECIENTE AL USER O COMPANY
+//ACTUALIZA UN REGISTRO EN EL LIBRO DIARIO PERTENECIENTE AL USER
 export const putAccountsBookData = async (idAccountsBook: string, body: IAccountsBook): Promise<IAccountsBook | null> => {
     try {
         const [rowsUpdated] = await AccountsBook.update(body, { where: { id: idAccountsBook } });
@@ -310,7 +303,7 @@ export const putAccountsBookData = async (idAccountsBook: string, body: IAccount
     };
 };
 
-//Función para revertir la operación en el inIngresorio según el tipo de transacción anterior
+//Función para revertir la operación en el ingresorio según el tipo de transacción anterior
 export const reverseInventoryOperation = async (existingTransaction: IAccountsBook): Promise<void> => {
     try {
         const product = await Product.findOne({
@@ -330,7 +323,7 @@ export const reverseInventoryOperation = async (existingTransaction: IAccountsBo
 };
 
 
-//Función para aplicar la operación correcta en el inIngresorio según el nuevo tipo de transacción
+//Función para aplicar la operación correcta en el ingresorio según el nuevo tipo de transacción
 export const applyInventoryOperation = async (transaction: IAccountsBook): Promise<void> => {
     try {
         const product = await Product.findOne({
@@ -364,7 +357,7 @@ export const updateProduct = async (productId: string, newProductId: string, bra
 
 
 
-//ELIMINA UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER O COMPANY
+//ELIMINA UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER
 export const deleteAccountsBookData = async (idAccountsBook: string): Promise<void> => {
     try {
         const transactionFound = await AccountsBook.findOne({ where: { id: idAccountsBook } });

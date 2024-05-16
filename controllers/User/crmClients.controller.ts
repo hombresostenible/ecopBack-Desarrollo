@@ -25,7 +25,7 @@ router.post("/", authRequired, validateSchema(crmClientsSchema), async (req: Req
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/CrmClients con { "entityUserId": null, "entityCompanyId": "1ecd49f4-f6b7-4d49-a000-0d9b58147a32", "fullName": "Carlos Mario Reyes", "typeDocumentId": "Cédula de Ciudadanía", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
+}); // POST - http://localhost:3000/api/CrmClients con { "entityUserId": "1ecd49f4-f6b7-4d49-a000-0d9b58147a32", "fullName": "Carlos Mario Reyes", "typeDocumentId": "Cédula de Ciudadanía", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
 
 
 
@@ -93,7 +93,7 @@ router.put("/:idCRMClient", authRequired, validateSchema(crmClientsSchema), asyn
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/CrmClients/:idCRMClient con { "entityUserId": null, "entityCompanyId": "1ecd49f4-f6b7-4d49-a000-0d9b58147a32", "fullName": "Carlos Mario Reyes", "typeDocumentId": "Cédula de Ciudadanía", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
+}); // PUT - http://localhost:3000/api/CrmClients/:idCRMClient con { "entityUserId": "1ecd49f4-f6b7-4d49-a000-0d9b58147a32", "fullName": "Carlos Mario Reyes", "typeDocumentId": "Cédula de Ciudadanía", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
 
 
 

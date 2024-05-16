@@ -35,7 +35,7 @@ const router = express.Router();
 
 
 //^ SALESFUNNELCUSTOMERACQUISITION
-//CONTROLLER PARA CREAR UN CUSTOMERACQUISITION EN LA SEDE DE USER O COMPANY
+//CONTROLLER PARA CREAR UN CUSTOMERACQUISITION EN LA SEDE DE USER
 router.post("/customerAcquisition", authRequired, validateSchema(salesFunnelCustomerAcqSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
@@ -50,7 +50,7 @@ router.post("/customerAcquisition", authRequired, validateSchema(salesFunnelCust
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS CUSTOMERACQUISITION DE UN USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS CUSTOMERACQUISITION DE UN USER
 router.get("/customerAcquisition", authRequired, async (req: Request, res: Response) => {
     try {
         console.log('Hola')
@@ -69,7 +69,7 @@ router.get("/customerAcquisition", authRequired, async (req: Request, res: Respo
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERACQUISITION DE UN USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERACQUISITION DE UN USER
 router.get("/customerAcquisitionBranch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
@@ -88,7 +88,7 @@ router.get("/customerAcquisitionBranch/:idBranch", authRequired, async (req: Req
 
 
 
-//CONTROLLER PARA OBTENER UN CUSTOMERACQUISITION POR ID PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA OBTENER UN CUSTOMERACQUISITION POR ID PERTENECIENTE AL USER
 router.get("/customerAcquisition/:idCustomerAcquisition", authRequired, async (req: Request, res: Response) => {
     try {
         const { idCustomerAcquisition } = req.params;
@@ -103,7 +103,7 @@ router.get("/customerAcquisition/:idCustomerAcquisition", authRequired, async (r
 
 
 
-//CONTROLLER PARA ACTUALIZAR UN CUSTOMERACQUISITION PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA ACTUALIZAR UN CUSTOMERACQUISITION PERTENECIENTE AL USER
 router.put("/customerAcquisition/:idCustomerAcquisition", authRequired, validateSchema(salesFunnelCustomerAcqSchemaZod), async (req: Request, res: Response) => {
     try {
         const { idCustomerAcquisition } = req.params;
@@ -119,7 +119,7 @@ router.put("/customerAcquisition/:idCustomerAcquisition", authRequired, validate
 
 
 
-//CONTROLLER PARA ELIMINAR UN REGISTRO DEL CUSTOMERACQUISITION PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA ELIMINAR UN REGISTRO DEL CUSTOMERACQUISITION PERTENECIENTE AL USER
 router.delete('/customerAcquisition/:idCustomerAcquisition', authRequired, async (req: Request, res: Response) => {
     try {
         const { idCustomerAcquisition } = req.params;
@@ -142,7 +142,7 @@ router.delete('/customerAcquisition/:idCustomerAcquisition', authRequired, async
 
 
 //^ SALESFUNNELCUSTOMERRETENTION
-//CONTROLLER PARA CREAR UN CUSTOMERRETENTION EN LA SEDE DE USER O COMPANY
+//CONTROLLER PARA CREAR UN CUSTOMERRETENTION EN LA SEDE DE USER
 router.post("/customerRetention", authRequired, validateSchema(salesFunnelCustomerRetSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
@@ -156,7 +156,7 @@ router.post("/customerRetention", authRequired, validateSchema(salesFunnelCustom
 }); //POST - http://localhost:3000/api/marketingIndicators/customerRetention con { "crcRegistrationDate": "2023-09-28T19:45:10.000Z", "crcPeriodOfAnalysis": "NOVIEMBRE USER", "crcDiscountsInvestment": 8000, "crcGuarranteesCosts": 100, "crcAdvertisingInvestment": 15000, "crcSalesTeamCost": 100, "crcSalesComissions": 7000, "crcTransportCosts": 100, "crcEventsCost": 4051, "crcCurrentClients": 100, "branchId": "8fa90b7a-aaa4-4147-b813-aa5f5f7a7735" }
 
 
-//CONTROLLER PARA OBTENER TODOS LOS CUSTOMERRETENTION DE UN USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS CUSTOMERRETENTION DE UN USER
 router.get("/customerRetention", authRequired, async (req: Request, res: Response) => {
     try {
         console.log('Hola')
@@ -176,7 +176,7 @@ router.get("/customerRetention", authRequired, async (req: Request, res: Respons
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERRETENTION DE UN USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERRETENTION DE UN USER
 router.get("/customerRetentionBranch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
@@ -196,7 +196,7 @@ router.get("/customerRetentionBranch/:idBranch", authRequired, async (req: Reque
 
 
 
-//CONTROLLER PARA OBTENER UN CUSTOMERRETENTION POR ID PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA OBTENER UN CUSTOMERRETENTION POR ID PERTENECIENTE AL USER
 router.get("/customerRetention/:idCustomerRetention", authRequired, async (req: Request, res: Response) => {
     try {
         const { idCustomerRetention } = req.params;
@@ -211,7 +211,7 @@ router.get("/customerRetention/:idCustomerRetention", authRequired, async (req: 
 
 
 
-//CONTROLLER PARA ACTUALIZAR UN CUSTOMERRETENTION PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA ACTUALIZAR UN CUSTOMERRETENTION PERTENECIENTE AL USER
 router.put("/customerRetention/:idCustomerRetention", authRequired, validateSchema(salesFunnelCustomerRetSchemaZod), async (req: Request, res: Response) => {
     try {
         const { idCustomerRetention } = req.params;
@@ -228,7 +228,7 @@ router.put("/customerRetention/:idCustomerRetention", authRequired, validateSche
 
 
 
-//CONTROLLER PARA ELIMINAR UN REGISTRO DEL CUSTOMERACQUISITION PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA ELIMINAR UN REGISTRO DEL CUSTOMERACQUISITION PERTENECIENTE AL USER
 router.delete('/customerRetention/:idCustomerRetention', authRequired, async (req: Request, res: Response) => {
     try {
         const { idCustomerRetention } = req.params;
@@ -251,7 +251,7 @@ router.delete('/customerRetention/:idCustomerRetention', authRequired, async (re
 
 
 //^ SALESFUNNELCUSTOMERDIGITAL
-//CONTROLLER PARA CREAR UN CUSTOMERDIGITAL EN LA SEDE DE USER O COMPANY
+//CONTROLLER PARA CREAR UN CUSTOMERDIGITAL EN LA SEDE DE USER
 router.post("/customerDigital", authRequired, validateSchema(salesFunnelCustomerDigitalSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
@@ -266,7 +266,7 @@ router.post("/customerDigital", authRequired, validateSchema(salesFunnelCustomer
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS CUSTOMERDIGITAL DE UN USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS CUSTOMERDIGITAL DE UN USER
 router.get("/customerDigital", authRequired, async (req: Request, res: Response) => {
     try {
         console.log('Hola')
@@ -286,7 +286,7 @@ router.get("/customerDigital", authRequired, async (req: Request, res: Response)
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERDIGITAL DE UN USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERDIGITAL DE UN USER
 router.get("/customerDigitalBranch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
@@ -305,7 +305,7 @@ router.get("/customerDigitalBranch/:idBranch", authRequired, async (req: Request
 
 
 
-//CONTROLLER PARA OBTENER UN CUSTOMERDIGITAL POR ID PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA OBTENER UN CUSTOMERDIGITAL POR ID PERTENECIENTE AL USER
 router.get("/customerDigital/:idCustomerDigital", authRequired, async (req: Request, res: Response) => {
     try {
         const { idCustomerDigital } = req.params;
@@ -320,7 +320,7 @@ router.get("/customerDigital/:idCustomerDigital", authRequired, async (req: Requ
 
 
 
-//CONTROLLER PARA ACTUALIZAR UN CUSTOMERDIGITAL PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA ACTUALIZAR UN CUSTOMERDIGITAL PERTENECIENTE AL USER
 router.put("/customerDigital/:idCustomerDigital", authRequired, validateSchema(salesFunnelCustomerDigitalSchemaZod), async (req: Request, res: Response) => {
     try {
         const { idCustomerDigital } = req.params;
@@ -336,7 +336,7 @@ router.put("/customerDigital/:idCustomerDigital", authRequired, validateSchema(s
 
 
 
-//CONTROLLER PARA ELIMINAR UN REGISTRO DEL CUSTOMERDIGITAL PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA ELIMINAR UN REGISTRO DEL CUSTOMERDIGITAL PERTENECIENTE AL USER
 router.delete('/customerDigital/:idCustomerDigital', authRequired, async (req: Request, res: Response) => {
     try {
         const { idCustomerDigital } = req.params;

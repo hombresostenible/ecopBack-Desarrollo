@@ -32,7 +32,7 @@ export const postAccountsBookService = async (body: IAccountsBook, userId: strin
 
 
 
-//SERVICE PARA OBTENER LOS REGISTROS DE TODAS LAS SEDES DE UN USER O COMPANY
+//SERVICE PARA OBTENER LOS REGISTROS DE TODAS LAS SEDES DE UN USER
 export const getAccountsBooksService = async (userId: string, userType: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
         const dataLayerResponse = await getAccountsBooksData(userId);
@@ -63,7 +63,7 @@ export const getAccountsBookService = async (idBranch: string, userId: string, u
     };
 };
 
-//Chequea si las sedes pertenecen a User o Company, por eso usamos el "for", para iterar cada sede
+//Chequea si las sedes pertenecen a User, por eso usamos el "for", para iterar cada sede
 const checkPermissionForAccountsBook = async (idBranch: string, userId: string, userType: string): Promise<boolean> => {
     try {
         const transactions = await getAccountsBookByBranch(idBranch);
@@ -115,7 +115,7 @@ export const getNameItemService = async (nameItem: string, userId: string): Prom
 
 
 
-//SERVICE PARA OBTENER TODOS LOS ACTIVOS, MERCANCIAS, PRODUCTOS, MATERIAS PRIMAS Y SERVICIOS POR SEDE DE UN USER O COMPANY
+//SERVICE PARA OBTENER TODOS LOS ACTIVOS, MERCANCIAS, PRODUCTOS, MATERIAS PRIMAS Y SERVICIOS POR SEDE DE UN USER
 export const getAllItemsService = async (idBranch: string, userId: string, userType: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
         const dataLayerResponse = await getAllItemsData(idBranch, userId, userType);
@@ -130,7 +130,7 @@ export const getAllItemsService = async (idBranch: string, userId: string, userT
 
 
 
-//SERVICE PARA ACTUALIZAR UN REGISTRO EN EL LIBRO DIARIO PERTENECIENTE AL USER O COMPANY
+//SERVICE PARA ACTUALIZAR UN REGISTRO EN EL LIBRO DIARIO PERTENECIENTE AL USER
 export const putAccountsBookService = async (idAccountsBook: string, body: IAccountsBook, userId: string, userType: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
         const hasPermission = await checkPermissionForAccountsBookBranch(idAccountsBook, userId, userType);
@@ -149,7 +149,7 @@ export const putAccountsBookService = async (idAccountsBook: string, body: IAcco
     };
 };
 
-//Chequea si el registro del libro diario pertenece al User o Company
+//Chequea si el registro del libro diario pertenece al User
 const checkPermissionForAccountsBookBranch = async (idAccountsBook: string, userId: string, userType: string): Promise<boolean> => {
     try {
         const rawMaterial = await getAccountsBookByIdData(idAccountsBook);
@@ -166,7 +166,7 @@ const checkPermissionForAccountsBookBranch = async (idAccountsBook: string, user
 
 
 
-//SERVICE PARA ELIMINAR UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER O COMPANY
+//SERVICE PARA ELIMINAR UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER
 export const deleteAccountsBookService = async (idAccountsBook: string, userId: string, userType: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
         const hasPermission = await checkPermissionForAccountsBookBranch(idAccountsBook, userId, userType);

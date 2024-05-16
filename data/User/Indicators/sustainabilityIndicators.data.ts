@@ -35,7 +35,7 @@ export const getSustainabilitiesByUserIdData = async (userId: string): Promise<a
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD POR SEDE DE UN USER O COMPANY
+//DATA PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD POR SEDE DE UN USER
 export const getSustainabilityBranchByIdData = async (idBranch: string): Promise<any> => {
     try {
         const sustainabilityFound = await Sustainability.findAll({
@@ -49,7 +49,7 @@ export const getSustainabilityBranchByIdData = async (idBranch: string): Promise
 
 
 
-//DATA PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA DEL USER O COMPANY DE LA TABLA ACCOUNTSBOOK SCHEMA
+//DATA PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA DEL USER DE LA TABLA ACCOUNTSBOOK SCHEMA
 export const getEnergyConsumptionData = async (userId: string, userType: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
@@ -77,7 +77,7 @@ export const getSustainabilityByIdData = async (idSustainability: string, userId
 
 
 
-//DATA PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER O COMPANY
+//DATA PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER
 export const getEnergyConsumptionBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
@@ -91,7 +91,7 @@ export const getEnergyConsumptionBranchData = async (idBranch: string, userId: s
 
 
 
-//DATA PARA OBTENER TODOS LOS SERVICIOS DE AGUA DEL USER O COMPANY DE LA TABLA ACCOUNTSBOOK SCHEMA
+//DATA PARA OBTENER TODOS LOS SERVICIOS DE AGUA DEL USER DE LA TABLA ACCOUNTSBOOK SCHEMA
 export const getWaterConsumptionData = async (userId: string, userType: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
@@ -105,7 +105,7 @@ export const getWaterConsumptionData = async (userId: string, userType: string):
 
 
 
-//DATA PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER O COMPANY DE LA TABLA ACCOUNTSBOOK SCHEMA
+//DATA PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER DE LA TABLA ACCOUNTSBOOK SCHEMA
 export const getWaterConsumptionBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
@@ -119,7 +119,7 @@ export const getWaterConsumptionBranchData = async (idBranch: string, userId: st
 
 
 
-//DATA PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER O COMPANY
+//DATA PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER
 export const putSustainabilityData = async (idSustainability: string, body: ISustainability, userId: string, userType: string): Promise<ISustainability | null> => {
     try {
         const existingSustainability = await Sustainability.findOne({
@@ -138,7 +138,7 @@ export const putSustainabilityData = async (idSustainability: string, body: ISus
 
 
 
-//DATA PARA ELIMINAR UN REGISTRO DE SOSTENIBILIDAD PERTENECIENTE AL USER O COMPANY
+//DATA PARA ELIMINAR UN REGISTRO DE SOSTENIBILIDAD PERTENECIENTE AL USER
 export const deleteSustainabilityData = async (idSustainability: string, userId: string, userType: string): Promise<void> => {
     try {
         const sustainabilityFound = await Sustainability.findOne({

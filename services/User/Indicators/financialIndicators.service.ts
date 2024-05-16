@@ -107,16 +107,13 @@ export const getSalesPerPeriodBranchService = async (idBranch: string, userId: s
     }
 };
 
-//Chequea si las sedes pertenecen a User o Company, por eso usamos el "for", para iterar cada sede
+//Chequea si las sedes pertenecen a User, por eso usamos el "for", para iterar cada sede
 const checkPermissionForBranch = async (idBranch: string, userId: string, userType: string): Promise<boolean> => {
     try {
         const transactions = await getPermissionSalesBranchData(idBranch);
         if (!transactions) return false;        
         for (const transaction of transactions) {
-            if ((userType === 'User' && transaction.userId !== userId) ||
-                (userType === 'Company' && transaction.companyId !== userId)) {
-                return false;
-            }
+            if (transaction.userId !== userId) return false;
         }
         return true;
     } catch (error) {

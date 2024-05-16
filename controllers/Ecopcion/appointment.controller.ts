@@ -12,7 +12,7 @@ import { appointmentSchemaZod } from '../../validations/Ecopcion/appointment.zod
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 
-//CONTROLLER PARA CREAR UNA CITA PARA USER O COMPANY
+//CONTROLLER PARA CREAR UNA CITA PARA USER
 router.post("/", validateSchema(appointmentSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
@@ -75,7 +75,7 @@ router.get("/:appointmentId", async (req: Request, res: Response) => {
 
 
 
-//CONTROLLER PARA ACTUALIZAR UNA CITA PARA USER O COMPANY
+//CONTROLLER PARA ACTUALIZAR UNA CITA PARA USER
 router.put("/:appointmentId", validateSchema(appointmentSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
@@ -90,7 +90,7 @@ router.put("/:appointmentId", validateSchema(appointmentSchemaZod), async (req: 
 
 
 
-//CONTROLLER PARA ELIMINAR UNA CITA PARA USER O COMPANY
+//CONTROLLER PARA ELIMINAR UNA CITA PARA USER
 router.delete('/:appointmentId', async (req: Request, res: Response) => {
     try {
         const { appointmentId } = req.params;

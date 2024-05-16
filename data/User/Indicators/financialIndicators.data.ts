@@ -35,7 +35,7 @@ export const getSalesPerPeriodBranchData = async (idBranch: string, userId: stri
 
 
 
-//Chequea si las sedes pertenecen a User o Company, por eso usamos el "for", para iterar cada sede
+//Chequea si las sedes pertenecen a User, por eso usamos el "for", para iterar cada sede
 export const getPermissionSalesBranchData = async (idBranch: string): Promise<any> => {
     try {
         const branch = await Branch.findAll({ 
