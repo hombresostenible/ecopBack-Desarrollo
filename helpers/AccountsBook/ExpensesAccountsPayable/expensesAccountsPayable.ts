@@ -3,8 +3,8 @@ import { IAccountsBook } from "../../../types/User/accountsBook.types";
 import { IAccountsPayable } from "../../../types/User/accountsPayable.types";
 import { ServiceError } from '../../../types/Responses/responses.types';
 
-// SE CREA LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA COMPANY
-export const expenseAccountsPayableCompany = async (body: IAccountsBook, newTransactionId: string, userId: string): Promise<any> => {
+// SE CREA LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA USER
+export const expensesAccountsPayable = async (body: IAccountsBook, newTransactionId: string, userId: string): Promise<any> => {
     if (body.creditDescription) {
         //Buscamos la CXP
         const accountPayableFound = await AccountsPayable.findOne({ where: { creditDescription: body.creditDescription, transactionCounterpartId: body.transactionCounterpartId, userId: userId, stateAccount: 'Activo' } });
@@ -27,6 +27,7 @@ export const expenseAccountsPayableCompany = async (body: IAccountsBook, newTran
                 currentBalance: body.totalValue,
                 seller: body.seller,
                 accountsBookId: newTransactionId,
+                userId: userId,
             };
 
             //Relaciones con los modelos de Assets, Merchandise, Product, RawMaterial y Service

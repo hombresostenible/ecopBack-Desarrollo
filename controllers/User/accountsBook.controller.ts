@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import {
     postAccountsBookService,
     getAccountsBooksService,
-    getAccountsBooksUserService,
     getAccountsBookService,
     getItemBarCodeService,
     getNameItemService,
@@ -18,7 +17,7 @@ import { ServiceError } from '../../types/Responses/responses.types';
 const router = express.Router();
 
 //CONTROLLER PARA CREAR EL REGISTRO EN EL LIBRO DIARIO
-router.post("/userAccountsBook", authRequired, validateSchema(accountsBookSchemaZod), async (req: Request, res: Response) => {
+router.post("/", authRequired, validateSchema(accountsBookSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
         const { id, userType } = req.user;
@@ -28,28 +27,15 @@ router.post("/userAccountsBook", authRequired, validateSchema(accountsBookSchema
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //POST - http://localhost:3000/api/accountsBook/userAccountsBook con { "registrationDate": "2023-09-19T12:00:00.000Z", "transactionType": "Venta", "item": "Arroz", "productId": "f0f4f10b-449e-46cf-b462-a08d5f37a9ce", "unitValue": 15000, "quantity": 10, "totalValue": 150000, "creditCash": "Crédito", "numberOfPayments": 0, "paymentValue": 0, "paymentNumber": 0, "accountsReceivable": 0, "accountsPayable": 0, "seller": "Mario", "branchId": "9da61ca8-eb13-4062-987a-83b7d3b89ca1", "transactionDate": "2023-09-19T12:00:00.000Z" }
+}); //POST - http://localhost:3000/api/accountsBook con { "registrationDate": "2023-09-19T12:00:00.000Z", "transactionType": "Venta", "item": "Arroz", "productId": "f0f4f10b-449e-46cf-b462-a08d5f37a9ce", "unitValue": 15000, "quantity": 10, "totalValue": 150000, "creditCash": "Crédito", "numberOfPayments": 0, "paymentValue": 0, "paymentNumber": 0, "accountsReceivable": 0, "accountsPayable": 0, "seller": "Mario", "branchId": "9da61ca8-eb13-4062-987a-83b7d3b89ca1", "transactionDate": "2023-09-19T12:00:00.000Z" }
 
 
 
-//CONTROLLER PARA OBTENER LOS REGISTROS DE TODOS LOS USER Y COMPANY DE LA PLATAFORMA - CEO PLATATORMA
+//CONTROLLER PARA OBTENER LOS REGISTROS DE TODAS LAS SEDES DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const serviceLayerResponse = await getAccountsBooksService();
-        res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); //GET - http://localhost:3000/api/accountsBook
-
-
-
-//CONTROLLER PARA OBTENER LOS REGISTROS DE TODAS LAS SEDES DE UN USER O COMPANY
-router.get("/userAccountsBook", authRequired, async (req: Request, res: Response) => {
-    try {
         const { id, userType } = req.user;
-        const serviceLayerResponse = await getAccountsBooksUserService(id, userType);
+        const serviceLayerResponse = await getAccountsBooksService(id, userType);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -59,11 +45,11 @@ router.get("/userAccountsBook", authRequired, async (req: Request, res: Response
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook/userAccountsBook
+}); // GET - http://localhost:3000/api/accountsBook
 
 
 
-//CONTROLLER PARA OBTENER UN LIBRO DIARIO POR ID PERTENECIENTE AL USUARIO
+//CONTROLLER PARA OBTENER UN REGISTRO DEL LIBRO DIARIO POR ID PERTENECIENTE AL USER
 router.get("/userAccountsBookBranch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;

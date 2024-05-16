@@ -18,20 +18,16 @@ import { incomeFromCashSaleRawMaterials } from '../../helpers/AccountsBook/Incom
 import { incomeFromCashSaleServices } from '../../helpers/AccountsBook/IncomeFromCashSale/incomeFromCashSaleServices';
 
 //INGRESOS POR VENTAS A CREDITO - CUENTAS POR COBRAR
-import { incomeAccountsReceivableUser } from '../../helpers/AccountsBook/AccountsReceivable/incomeAccountsReceivableUser';
-import { incomeAccountsReceivableCompany } from '../../helpers/AccountsBook/AccountsReceivable/incomeAccountsReceivableCompany';
+import { incomeAccountsReceivable } from '../../helpers/AccountsBook/AccountsReceivable/incomeAccountsReceivable';
 
 //PAGOS A CUENTAS POR COBRAR
-import { paymentsAccountsReceivableUser } from '../../helpers/AccountsBook/AccountsReceivable/paymentsAccountsReceivableUser';
-import { paymentsAccountsReceivableCompany } from '../../helpers/AccountsBook/AccountsReceivable/paymentsAccountsReceivableCompany';
+import { paymentsAccountsReceivable } from '../../helpers/AccountsBook/AccountsReceivable/paymentsAccountsReceivable';
 
 //GASTOS A CREDITO - CUENTAS POR PAGAR
-import { expensesAccountsPayableUser } from '../../helpers/AccountsBook/ExpensesAccountsPayable/expensesAccountsPayableUser';
-import { expenseAccountsPayableCompany } from '../../helpers/AccountsBook/ExpensesAccountsPayable/expenseAccountsPayableCompany';
+import { expensesAccountsPayable } from '../../helpers/AccountsBook/ExpensesAccountsPayable/expensesAccountsPayable';
 
 //PAGOS A CUENTAS POR PAGAR
-import { paymentsAccountsPayableUser } from '../../helpers/AccountsBook/ExpensesAccountsPayable/paymentsAccountsPayableUser';
-import { paymentsAccountsPayableCompany } from '../../helpers/AccountsBook/ExpensesAccountsPayable/paymentsAccountsPayableCompany';
+import { paymentsAccountsPayable } from '../../helpers/AccountsBook/ExpensesAccountsPayable/paymentsAccountsPayable';
 
 import { IAccountsBook } from "../../types/User/accountsBook.types";
 import { ServiceError } from "../../types/Responses/responses.types";
@@ -48,8 +44,7 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string, 
         //PRIMERO SE GUARDA LA TRANSACCION EN ACCOUNTSBOOK
         const newTransaction = new AccountsBook({
             ...body,
-            userId: userType === 'User' ? userId : null,
-            companyId: userType === 'Company' ? userId : null,
+            userId: userId,
         });
         await newTransaction.save();
 
@@ -74,74 +69,41 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string, 
         
         //^INGRESOS POR VENTAS A CREDITO - CUENTAS POR COBRAR
         // SE CREA LA CXC EN LA TABLA ACCOUNTSRECEIVABLE PARA USER
-        if (userType === 'User' && body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Crédito") incomeAccountsReceivableUser(body, newTransaction.id, userId)
-            
-        // SE CREA LA CXC EN LA TABLA ACCOUNTSRECEIVABLE PARA COMPANY
-        if (userType === 'Company' && body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Crédito") incomeAccountsReceivableCompany(body, newTransaction.id, userId);
+        if (body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Crédito") incomeAccountsReceivable(body, newTransaction.id, userId)
 
 
         //^PAGOS A CUENTAS POR COBRAR
         // SE HACE EL PAGO A LA CXC EN LA TABLA ACCOUNTSRECEIVABLE PARA USER
-        if (userType === 'User' && body.pay === 'Si' && body.transactionType === 'Ingreso' && body.creditCash === "Contado") paymentsAccountsReceivableUser(body, userId);
-        
-        // SE HACE EL PAGO A LA CXC EN LA TABLA ACCOUNTSRECEIVABLE PARA COMPANY
-        if (userType === 'Company' && body.pay === 'Si' && body.transactionType === 'Ingreso' && body.creditCash === "Contado") paymentsAccountsReceivableCompany(body, userId);
-            
-        
+        if (body.pay === 'Si' && body.transactionType === 'Ingreso' && body.creditCash === "Contado") paymentsAccountsReceivable(body, userId);
+
 
         //^GASTOS A CREDITO - CUENTAS POR PAGAR
         // SE CREA LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA USER
-        if (userType === 'User' && body.pay === 'No' && body.transactionType === 'Gasto' && body.creditCash === "Crédito") expensesAccountsPayableUser(body, newTransaction.id, userId);
-        
-        // SE CREA LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA COMPANY
-        if (userType === 'Company' && body.pay === 'No' && body.transactionType === 'Gasto' && body.creditCash === "Crédito") expenseAccountsPayableCompany(body, newTransaction.id, userId);
-        
+        if (body.pay === 'No' && body.transactionType === 'Gasto' && body.creditCash === "Crédito") expensesAccountsPayable(body, newTransaction.id, userId);
+
 
         //^PAGOS A CUENTAS POR PAGAR
         // SE HACE EL PAGO A LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA USER
-        if (userType === 'User' && body.pay === 'Si' && body.transactionType === 'Gasto' && body.creditCash === "Contado") paymentsAccountsPayableUser(body, userId);
-        
-        // SE HACE EL PAGO A LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA COMPANY
-        if (userType === 'Company' && body.pay === 'Si' && body.transactionType === 'Gasto' && body.creditCash === "Contado") paymentsAccountsPayableCompany(body, userId);
-        
+        if (body.pay === 'Si' && body.transactionType === 'Gasto' && body.creditCash === "Contado") paymentsAccountsPayable(body, userId);
         
         
         //^CREAR DATOS EN LA TABLA DE SUSTAINABILITY PARA INDICADORES DE SOSTENIBILIDAD
         // PASAR LOS DATOS DEL LIBRO DIARIO A LA TABLA DE SOSTENIBILIDAD
         const isSustainabilityExpense = body.typeExpenses !== undefined && [ 'Acueducto', 'Energía', 'Gas', 'Internet', 'Celular/Plan de datos' ].includes(body.typeExpenses);
-        if (userType === 'User') {
-            if (isSustainabilityExpense) {
-                const sustainabilityData = {
-                    branchId: body.branchId,
-                    registrationDate: body.registrationDate,
-                    transactionDate: body.transactionDate,
-                    typeExpenses: body.typeExpenses,
-                    periodPayService: body.periodPayService,
-                    totalValue: body.totalValue,
-                    accountsBookId: newTransaction.id,
-                    userId: userId
-                    // ... (otras propiedades que se necesiten)
-                };
-                const newSustainabilityTransaction = new Sustainability(sustainabilityData);
-                await newSustainabilityTransaction.save();
+        if (isSustainabilityExpense) {
+            const sustainabilityData = {
+                branchId: body.branchId,
+                registrationDate: body.registrationDate,
+                transactionDate: body.transactionDate,
+                typeExpenses: body.typeExpenses,
+                periodPayService: body.periodPayService,
+                totalValue: body.totalValue,
+                accountsBookId: newTransaction.id,
+                userId: userId
+                // ... (otras propiedades que se necesiten)
             };
-        };
-        if (userType === 'Company') {
-            if (isSustainabilityExpense) {
-                const sustainabilityData = {
-                    branchId: body.branchId,
-                    registrationDate: body.registrationDate,
-                    transactionDate: body.transactionDate,
-                    typeExpenses: body.typeExpenses,
-                    periodPayService: body.periodPayService,
-                    totalValue: body.totalValue,
-                    accountsBookId: newTransaction.id,
-                    companyId: userId
-                    // ... (otras propiedades que se necesiten)
-                };
-                const newSustainabilityTransaction = new Sustainability(sustainabilityData);
-                await newSustainabilityTransaction.save();
-            };
+            const newSustainabilityTransaction = new Sustainability(sustainabilityData);
+            await newSustainabilityTransaction.save();
         };
         return newTransaction;
     } catch (error) {
@@ -151,20 +113,8 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string, 
 
 
 
-//DATA PARA OBTENER LOS REGISTROS DE TODOS LOS USER Y COMPANY DE LA PLATAFORMA- CEO PLATATORMA
-export const getAccountsBooksData = async (): Promise<any> => {
-    try {
-        const mySQLResponse = await AccountsBook.findAll();
-        return mySQLResponse;
-    } catch (error) {
-        throw error;
-    };
-};
-
-
-
 //DATA PARA OBTENER LOS REGISTROS DE TODAS LAS SEDES DE UN USER
-export const getAccountsBooksByUserIdData = async (userId: string): Promise<any> => {
+export const getAccountsBooksData = async (userId: string): Promise<any> => {
     try {
         const userProducts = await AccountsBook.findAll({
             where: { userId: userId },
@@ -176,18 +126,6 @@ export const getAccountsBooksByUserIdData = async (userId: string): Promise<any>
 };
 
 
-
-//DATA PARA OBTENER LOS REGISTROS DE TODAS LAS SEDES DE UNA COMPANY
-export const getAccountsBooksByCompanyIdData = async (companyId: string): Promise<any> => {
-    try {
-        const companyProducts = await AccountsBook.findAll({
-            where: { companyId: companyId },
-        });
-        return companyProducts;
-    } catch (error) {
-        throw error;
-    };
-};
 
 //Chequea si la sede pertenece a User o Company
 export const getAccountsBookByBranch = async (idAccountsBook: string): Promise<any> => {
@@ -217,31 +155,6 @@ export const getAccountsBookByIdData = async (idAccountsBook: string): Promise<a
 export const getItemBarCodeData = async (idBranch: string, barCode: string, userId: string, userType: string): Promise<any> => {
     try {
         if (userType === 'User') {
-            let itemFound;
-
-            const merchandiseFound = await Merchandise.findOne({
-                where: { branchId: idBranch, barCode: barCode, userId: userId }
-            });
-            if (merchandiseFound) itemFound = merchandiseFound;
-            
-            const productFound = await Product.findOne({
-                where: { branchId: idBranch, barCode: barCode, userId: userId }
-            });
-            if (productFound) itemFound = productFound;
-            
-            const rawMaterialFound = await RawMaterial.findOne({
-                where: { branchId: idBranch, barCode: barCode, userId: userId }
-            });
-            if (rawMaterialFound) itemFound = rawMaterialFound;
-            
-            const assetsFound = await Assets.findOne({
-                where: { branchId: idBranch, barCode: barCode, userId: userId }
-            });
-            if (assetsFound) itemFound = assetsFound;
-            return itemFound;
-        };
-
-        if (userType === 'Company') {
             let itemFound;
 
             const merchandiseFound = await Merchandise.findOne({
@@ -304,7 +217,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
                 null as returnablePackaging, null as unitMeasure, null as quantityPerPackage, 
                 null as individualPackaging, null as secondaryPackageType, null as inventoryChanges, 
                 null as purchasePriceBeforeTax, null as sellingPrice, null as IVA, null as expirationDate, 
-                null as reasonManualDiscountingInventory, null as quantityManualDiscountingInventory, null as salesCount, userId, companyId
+                null as reasonManualDiscountingInventory, null as quantityManualDiscountingInventory, null as salesCount, userId
             FROM merchandises 
             WHERE nameItem LIKE :nameItemPattern AND userId = :userId
             UNION ALL            
@@ -315,7 +228,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
                 packaged, primaryPackageType, returnablePackaging, unitMeasure, quantityPerPackage, 
                 null as individualPackaging, null as secondaryPackageType, inventoryChanges, 
                 null as purchasePriceBeforeTax, sellingPrice, IVA, expirationDate, null as reasonManualDiscountingInventory, 
-                null as quantityManualDiscountingInventory, salesCount, userId, companyId
+                null as quantityManualDiscountingInventory, salesCount, userId
             FROM products 
             WHERE nameItem LIKE :nameItemPattern AND userId = :userId
             UNION ALL
@@ -326,7 +239,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
                 packaged, primaryPackageType, returnablePackaging, unitMeasure, quantityPerPackage, 
                 individualPackaging, secondaryPackageType, inventoryChanges, 
                 purchasePriceBeforeTax, sellingPrice, IVA, expirationDate, reasonManualDiscountingInventory, 
-                quantityManualDiscountingInventory, salesCount, userId, companyId
+                quantityManualDiscountingInventory, salesCount, userId
             FROM rawMaterials 
             WHERE nameItem LIKE :nameItemPattern AND userId = :userId
             UNION ALL            
@@ -338,7 +251,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
                 null as returnablePackaging, null as unitMeasure, null as quantityPerPackage, 
                 null as individualPackaging, null as secondaryPackageType, null as inventoryChanges, 
                 purchasePriceBeforeTax, sellingPrice, IVA, null as expirationDate, null as reasonManualDiscountingInventory, 
-                null as quantityManualDiscountingInventory, null as salesCount, userId, companyId
+                null as quantityManualDiscountingInventory, null as salesCount, userId
             FROM assets 
             WHERE nameItem LIKE :nameItemPattern AND userId = :userId
         `, {
@@ -359,8 +272,6 @@ export const getAllItemsData = async (idBranch: string, userId: string, userType
         let whereClause: any = { branchId: idBranch };
         if (userType === 'User') {
             whereClause.userId = userId;
-        } else if (userType === 'Company') {
-            whereClause.companyId = userId;
         } else throw new Error('Tipo de usuario no válido');
 
         const [merchandises, products, rawMaterials, services, assets] = await Promise.all([

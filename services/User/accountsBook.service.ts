@@ -1,8 +1,6 @@
 import {  
     postAccountsBookData, 
-    getAccountsBooksData, 
-    getAccountsBooksByUserIdData,
-    getAccountsBooksByCompanyIdData,
+    getAccountsBooksData,
     getAccountsBookByIdData,
     getAccountsBookByBranch,
     getItemBarCodeData,
@@ -19,10 +17,8 @@ import { ServiceError } from '../../types/Responses/responses.types';
 //SERVICE PARA CREAR EL REGISTRO EN EL LIBRO DIARIO
 export const postAccountsBookService = async (body: IAccountsBook, userId: string, userType: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        if (userType === 'User') {
-            const isBranchAssociatedWithUser: any = await isRegisterTransactionAssociatedWithUser(userId, body.branchId);
-            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en el libro diario de esta sede");
-        }
+        const isBranchAssociatedWithUser: any = await isRegisterTransactionAssociatedWithUser(userId, body.branchId);
+        if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en el libro diario de esta sede");
         const dataLayerResponse = await postAccountsBookData(body, userId, userType);
         if (!dataLayerResponse) throw new ServiceError(400, "No se puede registrar en el libro diario");
         return { code: 201, result: dataLayerResponse };
@@ -36,28 +32,10 @@ export const postAccountsBookService = async (body: IAccountsBook, userId: strin
 
 
 
-//SERVICE PARA OBTENER LOS REGISTROS DE TODOS LOS USER Y COMPANY DE LA PLATAFORMA- CEO PLATATORMA
-export const getAccountsBooksService = async (): Promise<IServiceLayerResponseAccountsBook> => {
-    try {
-        const dataLayerResponse = await getAccountsBooksData();
-        return { code: 200, result: dataLayerResponse };
-    } catch (error) {
-        if (error instanceof Error) {
-            const customErrorMessage = error.message;
-            throw new ServiceError(500, customErrorMessage, error);
-        } else throw error;
-    };
-};
-
-
-
 //SERVICE PARA OBTENER LOS REGISTROS DE TODAS LAS SEDES DE UN USER O COMPANY
-export const getAccountsBooksUserService = async (userId: string, userType: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const getAccountsBooksService = async (userId: string, userType: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        let dataLayerResponse;
-        if (userType === 'User') {
-            dataLayerResponse = await getAccountsBooksByUserIdData(userId);
-        }
+        const dataLayerResponse = await getAccountsBooksData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -69,7 +47,7 @@ export const getAccountsBooksUserService = async (userId: string, userType: stri
 
 
 
-//OBTENER UN LIBRO DIARIO POR ID PERTENECIENTE AL USUARIO
+//CONTROLLER PARA OBTENER UN REGISTRO DEL LIBRO DIARIO POR ID PERTENECIENTE AL USER
 export const getAccountsBookService = async (idBranch: string, userId: string, userType: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
         const hasPermission = await checkPermissionForAccountsBook(idBranch, userId, userType);
@@ -91,7 +69,7 @@ const checkPermissionForAccountsBook = async (idBranch: string, userId: string, 
         const transactions = await getAccountsBookByBranch(idBranch);
         if (!transactions) return false;        
         for (const transaction of transactions) {
-            if (userType === 'User' && transaction.userId !== userId) {
+            if (transaction.userId !== userId) {
                 return false;
             };
         };
@@ -157,11 +135,8 @@ export const putAccountsBookService = async (idAccountsBook: string, body: IAcco
     try {
         const hasPermission = await checkPermissionForAccountsBookBranch(idAccountsBook, userId, userType);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar registro");
-
-        if (userType === 'User') {
-            const isBranchAssociatedWithUser: any = await isRegisterTransactionAssociatedWithUser(userId, body.branchId);
-            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualizar el libro diario de esta sede");
-        };
+        const isBranchAssociatedWithUser: any = await isRegisterTransactionAssociatedWithUser(userId, body.branchId);
+        if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualizar el libro diario de esta sede");
         const existingTransaction = await getAccountsBookByBranch(idAccountsBook);
         if (!existingTransaction) throw new ServiceError(404, 'Libro de cuentas no encontrado');
         else await putAccountsBookData(idAccountsBook, body);
@@ -179,7 +154,7 @@ const checkPermissionForAccountsBookBranch = async (idAccountsBook: string, user
     try {
         const rawMaterial = await getAccountsBookByIdData(idAccountsBook);
         if (!rawMaterial) return false;
-        if (userType === 'User' && rawMaterial.userId !== userId) return false;
+        if (rawMaterial.userId !== userId) return false;
         return true;
     } catch (error) {
         if (error instanceof Error) {

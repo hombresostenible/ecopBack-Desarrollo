@@ -2,7 +2,6 @@ import {
     //Data para CUSTOMERACQUISITION
     postSalesFunnelCustomerAcqData,
     getSalesFunnelCustomerAcqUserIdData,
-    getSalesFunnelCustomerAcqCompanyIdData,
     getCustomerAcqBranchByIdData,
     getCustomerAcqByIdData,
     putSalesFunnelCustomerAcqData,
@@ -12,7 +11,6 @@ import {
     //Data para CUSTOMERRETENTION
     postSalesFunnelCustomerRetData,
     getSalesFunnelCustomerRetUserIdData,
-    getSalesFunnelCustomerRetCompanyIdData,
     getCustomerRetBranchByIdData,
     getCustomerRetByIdData,
     putSalesFunnelCustomerRetData,
@@ -22,13 +20,12 @@ import {
     //Data para CUSTOMERDIGITAL
     postSalesFunnelSalesDigitalData,
     getSalesFunnelSalesDigitalUserIdData,
-    getSalesFunnelSalesDigitalCompanyIdData,
     getCustomerDigitalBranchByIdData,
     getCustomerDigitalByIdData,
     putSalesFunnelSalesDigitalData,
     deleteSalesFunnelSalesDigitalData
 } from '../../../data/User/Indicators/marketingIndicators.data';
-import { isBranchAssociatedWithUserRole, isBranchAssociatedWithCompanyRole } from '../../../helpers/Branch.helper';
+import { isBranchAssociatedWithUserRole } from '../../../helpers/Branch.helper';
 import { ISalesFunnelCustomerAcq, ISalesFunnelCustomerRet, ISalesFunnelSalesDigital } from '../../../types/User/salesFunnel.types';
 import { ServiceError, IServiceLayerResponseSalesFunnelCustomerAcq, IServiceLayerResponseSalesFunnelCustomerRet, IServiceLayerResponseSalesFunnelCustomerDigital } from '../../../types/Responses/responses.types';
 
@@ -36,14 +33,8 @@ import { ServiceError, IServiceLayerResponseSalesFunnelCustomerAcq, IServiceLaye
 //SERVICE PARA CREAR UN CUSTOMERACQUISITION EN LA SEDE DE USER O COMPANY
 export const postSalesFunnelCustomerAcqService = async (body: ISalesFunnelCustomerAcq, userId: string, userType: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
     try {
-        if (userType === 'User') {
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
-            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERACQUISITION de esta sede");
-        }
-        if (userType === 'Company') {
-            const isBranchAssociatedWithCompany: any = await isBranchAssociatedWithCompanyRole(body.branchId, userId, employerId, typeRole, userBranchId);
-            if (!isBranchAssociatedWithCompany) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERACQUISITION de esta sede");
-        }
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERACQUISITION de esta sede");
         const dataLayerResponse = await postSalesFunnelCustomerAcqData(body, userId, userType);
         if (!dataLayerResponse) throw new ServiceError(400, "CUSTOMERACQUISITION ya existe");
         return { code: 201, result: dataLayerResponse };
@@ -62,12 +53,7 @@ export const postSalesFunnelCustomerAcqService = async (body: ISalesFunnelCustom
 //SERVICE PARA OBTENER TODOS LOS CUSTOMERACQUISITION DE UN USER O COMPANY
 export const getSalesFunnelCustomerAcqUserService = async (userId: string, userType: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
     try {
-        let dataLayerResponse;
-        if (userType === 'User') {
-            dataLayerResponse = await getSalesFunnelCustomerAcqUserIdData(userId);
-        } else if (userType === 'Company') {
-            dataLayerResponse = await getSalesFunnelCustomerAcqCompanyIdData(userId);
-        }
+        const dataLayerResponse = await getSalesFunnelCustomerAcqUserIdData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -105,10 +91,7 @@ const checkPermissionForBranchCustomerAcq = async (idBranch: string, userId: str
         const customerAcquisitions = await getCustomerAcqBranchByIdData(idBranch);
         if (!customerAcquisitions) return false;
         for (const customerAcquisition of customerAcquisitions) {
-            if ((userType === 'User' && customerAcquisition.userId !== userId) ||
-                (userType === 'Company' && customerAcquisition.companyId !== userId)) {
-                return false;
-            }
+            if (customerAcquisition.userId !== userId) return false;
         }
         return true;
     } catch (error) {
@@ -166,8 +149,7 @@ const checkPermissionForCustomerAcq = async (idCustomerAcquisition: string, user
     try {
         const customerAcq = await getCustomerAcqByIdData(idCustomerAcquisition);
         if (!customerAcq) return false;
-        if (userType === 'User' && customerAcq.userId !== userId) return false; 
-        if (userType === 'Company' && customerAcq.companyId !== userId) return false;
+        if (customerAcq.userId !== userId) return false;
         return true;
     } catch (error) {
         if (error instanceof Error) {
@@ -211,14 +193,8 @@ export const deleteSalesFunnelCustomerAcqService = async (idCustomerAcquisition:
 //SERVICE PARA CREAR UN CUSTOMERRETENTION EN LA SEDE DE USER O COMPANY
 export const postSalesFunnelCustomerRetService = async (body: ISalesFunnelCustomerRet, userId: string, userType: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseSalesFunnelCustomerRet> => {
     try {
-        if (userType === 'User') {
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
-            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERRETENTION de esta sede");
-        }
-        if (userType === 'Company') {
-            const isBranchAssociatedWithCompany: any = await isBranchAssociatedWithCompanyRole(body.branchId, userId, employerId, typeRole, userBranchId);
-            if (!isBranchAssociatedWithCompany) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERRETENTION de esta sede");
-        }
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERRETENTION de esta sede");
         const dataLayerResponse = await postSalesFunnelCustomerRetData(body, userId, userType);
         if (!dataLayerResponse) throw new ServiceError(400, "CUSTOMERRETENTION ya existe");
         return { code: 201, result: dataLayerResponse };
@@ -237,12 +213,7 @@ export const postSalesFunnelCustomerRetService = async (body: ISalesFunnelCustom
 //SERVICE PARA OBTENER TODOS LOS CUSTOMERRETENTION DE UN USER O COMPANY
 export const getSalesFunnelCustomerRetUserService = async (userId: string, userType: string): Promise<IServiceLayerResponseSalesFunnelCustomerRet> => {
     try {
-        let dataLayerResponse;
-        if (userType === 'User') {
-            dataLayerResponse = await getSalesFunnelCustomerRetUserIdData(userId);
-        } else if (userType === 'Company') {
-            dataLayerResponse = await getSalesFunnelCustomerRetCompanyIdData(userId);
-        }
+        const dataLayerResponse = await getSalesFunnelCustomerRetUserIdData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -280,10 +251,7 @@ const checkPermissionForBranchCustomerRet = async (idBranch: string, userId: str
         const customerRetentions = await getCustomerRetBranchByIdData(idBranch);
         if (!customerRetentions) return false;
         for (const customerRetention of customerRetentions) {
-            if ((userType === 'User' && customerRetention.userId !== userId) ||
-                (userType === 'Company' && customerRetention.companyId !== userId)) {
-                return false;
-            }
+            if (customerRetention.userId !== userId) return false;
         }
         return true;
     } catch (error) {
@@ -345,8 +313,7 @@ const checkPermissionForCustomerRet = async (idCustomerAcquisition: string, user
     try {
         const rawMaterial = await getCustomerRetByIdData(idCustomerAcquisition);
         if (!rawMaterial) return false;
-        if (userType === 'User' && rawMaterial.userId !== userId) return false; 
-        if (userType === 'Company' && rawMaterial.companyId !== userId) return false;
+        if (rawMaterial.userId !== userId) return false;
         return true;
     } catch (error) {
         if (error instanceof Error) {
@@ -390,14 +357,8 @@ export const deleteSalesFunnelCustomerRetService = async (idCustomerRetention: s
 //SERVICE PARA CREAR UN CUSTOMERDIGITAL EN LA SEDE DE USER O COMPANY
 export const postSalesFunnelCustomerDigitalService = async (body: ISalesFunnelSalesDigital, userId: string, userType: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
     try {
-        if (userType === 'User') {
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
-            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERDIGITAL de esta sede");
-        }
-        if (userType === 'Company') {
-            const isBranchAssociatedWithCompany: any = await isBranchAssociatedWithCompanyRole(body.branchId, userId, employerId, typeRole, userBranchId);
-            if (!isBranchAssociatedWithCompany) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERDIGITAL de esta sede");
-        }
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERDIGITAL de esta sede");
         const dataLayerResponse = await postSalesFunnelSalesDigitalData(body, userId, userType);
         if (!dataLayerResponse) throw new ServiceError(400, "CUSTOMERDIGITAL ya existe");
         return { code: 201, result: dataLayerResponse };
@@ -416,12 +377,7 @@ export const postSalesFunnelCustomerDigitalService = async (body: ISalesFunnelSa
 //SERVICE PARA OBTENER TODOS LOS CUSTOMERDIGITAL DE UN USER O COMPANY
 export const getSalesFunnelCustomerDigitalUserService = async (userId: string, userType: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
     try {
-        let dataLayerResponse;
-        if (userType === 'User') {
-            dataLayerResponse = await getSalesFunnelSalesDigitalUserIdData(userId);
-        } else if (userType === 'Company') {
-            dataLayerResponse = await getSalesFunnelSalesDigitalCompanyIdData(userId);
-        }
+        const dataLayerResponse = await getSalesFunnelSalesDigitalUserIdData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -459,10 +415,7 @@ const checkPermissionForBranchCustomerDigital = async (idBranch: string, userId:
         const customerDigitals = await getCustomerDigitalBranchByIdData(idBranch);
         if (!customerDigitals) return false;
         for (const customerDigital of customerDigitals) {
-            if ((userType === 'User' && customerDigital.userId !== userId) ||
-                (userType === 'Company' && customerDigital.companyId !== userId)) {
-                return false;
-            }
+            if (customerDigital.userId !== userId) return false;
         }
         return true;
     } catch (error) {
@@ -522,8 +475,7 @@ const checkPermissionForCustomerDigital = async (idCustomerDigital: string, user
     try {
         const customerDigital = await getCustomerDigitalByIdData(idCustomerDigital);
         if (!customerDigital) return false;
-        if (userType === 'User' && customerDigital.userId !== userId) return false; 
-        if (userType === 'Company' && customerDigital.companyId !== userId) return false;
+        if (customerDigital.userId !== userId) return false;
         return true;
     } catch (error) {
         if (error instanceof Error) {
