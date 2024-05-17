@@ -21,8 +21,8 @@ const router = express.Router();
 router.post("/", authRequired, checkRole, validateSchema(rawMaterialSchema), async (req: Request, res: Response) => {
     try {
         const body = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await postRawMaterialService(body, id, employerId, typeRole, userBranchId);
+        const { id, typeRole } = req.user;
+        const serviceLayerResponse = await postRawMaterialService(body, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -36,8 +36,8 @@ router.post("/", authRequired, checkRole, validateSchema(rawMaterialSchema), asy
 router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyRawMaterialSchema), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await postManyRawMaterialService(bodyArray, id, employerId, typeRole, userBranchId);
+        const { id, typeRole } = req.user;
+        const serviceLayerResponse = await postManyRawMaterialService(bodyArray, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -119,8 +119,8 @@ router.put("/:idRawMaterial", authRequired, checkRole, validateSchema(rawMateria
 router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyRawMaterialSchema), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await putUpdateManyRawMaterialService(bodyArray, id, employerId, typeRole, userBranchId);
+        const { id, typeRole } = req.user;
+        const serviceLayerResponse = await putUpdateManyRawMaterialService(bodyArray, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;

@@ -21,8 +21,8 @@ const router = express.Router();
 router.post("/", authRequired, checkRole, validateSchema(merchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await postMerchandiseService(body, id, employerId, typeRole, userBranchId);
+        const { id, typeRole } = req.user;
+        const serviceLayerResponse = await postMerchandiseService(body, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -36,8 +36,8 @@ router.post("/", authRequired, checkRole, validateSchema(merchandiseSchemaZod), 
 router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await postManyMerchandiseService(bodyArray, id, employerId, typeRole, userBranchId);
+        const { id, typeRole } = req.user;
+        const serviceLayerResponse = await postManyMerchandiseService(bodyArray, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -119,8 +119,8 @@ router.put("/:idMerchandise", authRequired, checkRole, validateSchema(merchandis
 router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await putUpdateManyMerchandiseService(bodyArray, id, employerId, typeRole, userBranchId);
+        const { id, typeRole } = req.user;
+        const serviceLayerResponse = await putUpdateManyMerchandiseService(bodyArray, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;

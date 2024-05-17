@@ -1,4 +1,5 @@
 import User from '../../schema/User/user.schema';
+import UserPlatform from '../../schema/User/userPlatform.schema';
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //BUSCA EL CORREO DEL USER QUE SE DESEA LOGEAR
@@ -7,6 +8,10 @@ export const searchUserByEmail = async (email: string) => {
         let userFound;
         // Busca en User
         userFound = await User.findOne({ where: { email } });
+        if (userFound) {
+            return userFound;
+        }
+        userFound = await UserPlatform.findOne({ where: { email } });
         if (userFound) {
             return userFound;
         }

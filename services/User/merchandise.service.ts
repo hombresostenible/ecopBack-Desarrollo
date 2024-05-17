@@ -15,11 +15,11 @@ import { IMerchandise } from "../../types/User/merchandise.types";
 import { ServiceError, IServiceLayerResponseMerchandise } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UNA MERCANCIA POR SEDE PARA USER
-export const postMerchandiseService = async (body: IMerchandise, userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const postMerchandiseService = async (body: IMerchandise, userId: string, typeRole: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
-        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
         if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear una mercancía en esta sede");
-        const dataLayerResponse = await postMerchandiseData(body, userId, employerId, typeRole);
+        const dataLayerResponse = await postMerchandiseData(body, userId, typeRole);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe una mercancía con el mismo nombre en esta sede, cámbialo");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -33,17 +33,17 @@ export const postMerchandiseService = async (body: IMerchandise, userId: string,
 
 
 //SERVICE PARA CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyMerchandiseService = async (merchandises: IMerchandise[], userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const postManyMerchandiseService = async (merchandises: IMerchandise[], userId: string, typeRole: string): Promise<IServiceLayerResponseMerchandise> => {
     const uniqueMerchandises: IMerchandise[] = [];
     const duplicatedMerchandises: IMerchandise[] = [];
 
     try {
         for (const merchandise of merchandises) {
             // Verificar los permisos del usuario para crear mercancías en la sede específica
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(merchandise.branchId, userId, employerId, typeRole, userBranchId);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(merchandise.branchId, userId, typeRole);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear mercancías en esta sede");
             // Crear la mercancía
-            const createdMerchandise = await postManyMerchandiseData(merchandise, userId, employerId, typeRole);
+            const createdMerchandise = await postManyMerchandiseData(merchandise, userId, typeRole);
             if (createdMerchandise) {
                 uniqueMerchandises.push(createdMerchandise);
             } else duplicatedMerchandises.push(merchandise);
@@ -130,12 +130,12 @@ export const putMerchandiseService = async (idMerchandise: string, body: IMercha
 
 
 //SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIAS MERCANCIAS
-export const putUpdateManyMerchandiseService = async (merchandises: IMerchandise[], userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const putUpdateManyMerchandiseService = async (merchandises: IMerchandise[], userId: string, typeRole: string): Promise<IServiceLayerResponseMerchandise> => {
     const uniqueMerchandises: IMerchandise[] = [];
     const duplicatedMerchandises: IMerchandise[] = [];
     try {
         for (const merchandise of merchandises) {
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(merchandise.branchId, userId, employerId, typeRole, userBranchId);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(merchandise.branchId, userId, typeRole);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar las mercancías en esta sede");
             const updatedMerchandise = await putUpdateManyMerchandiseData(merchandise, userId,);
             if (updatedMerchandise) {

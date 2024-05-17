@@ -1,14 +1,30 @@
 import express, { Request, Response } from "express";
 import {
+    postUserPlatformService,
     getUserPlatformService,
     getUserPlatformBranchService,
     putProfileUserPlatformService,
     deleteUserPlatformService,
 } from "../../services/User/userPlatform.services";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
-import { checkRole } from '../../middlewares/User/Role.middleware';
+import { checkRole, checkRoleCreateUserPlatform } from '../../middlewares/User/Role.middleware';
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
+
+//CREAR UN USUARIO DE PLATAFORMA
+router.post("/", authRequired, checkRoleCreateUserPlatform, async (req: Request, res: Response) => {
+    try {
+        const body = req.body;
+        const { id } = req.user;
+        const serviceLayerResponse = await postUserPlatformService(body, id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // POST - http://localhost:3000/api/userPlatform con {"branchId":"450df933-b11b-4279-b992-701cc16a15b5","name":"Mario","lastName":"Reyes","typeDocumentId":"Cédula de Ciudadanía","documentId":"1110111222","logo":null,"userType":"User","typeRole":"Administrador","economicSector":null,"email":"mario_cr07@hotmail.es","password":"password","phone":"3001002020","department":"Tolima","city":"Ibagué","address":"Cra 10 # 3 - 20","isBlocked":true,"isAceptedConditions":true}
+
+
 
 //CONTROLLER PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {

@@ -5,7 +5,7 @@ import { IAssets } from "../../types/User/assets.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
-export const postAssetData = async (body: IAssets, userId: string, employerId: string, typeRole: string): Promise<any> => {
+export const postAssetData = async (body: IAssets, userId: string): Promise<any> => {
     try {
         const existingMachinery = await Assets.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
@@ -17,6 +17,7 @@ export const postAssetData = async (body: IAssets, userId: string, employerId: s
         // Si el activo no existe, crearlo en la base de datos
         const newAsset = await Assets.create({
             ...body,
+            userId: userId,
         });
         return newAsset;
     } catch (error) {
@@ -27,7 +28,7 @@ export const postAssetData = async (body: IAssets, userId: string, employerId: s
 
 
 //DATA PARA CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER DESDE EL EXCEL
-export const postManyAssetData = async (body: IAssets, userId: string, employerId: string, typeRole: string): Promise<any> => {
+export const postManyAssetData = async (body: IAssets, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         // Verificar si el activo ya existe en la sede proporcionada

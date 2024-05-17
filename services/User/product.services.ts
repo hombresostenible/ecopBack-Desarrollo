@@ -17,11 +17,11 @@ import { IProduct } from "../../types/User/products.types";
 import { ServiceError, IServiceLayerResponseProduct } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UN PRODUCTO POR SEDE PARA USER
-export const postProductService = async (body: IProduct, userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseProduct> => {
+export const postProductService = async (body: IProduct, userId: string, typeRole: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
         if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear un producto en esta sede");
-        const dataLayerResponse = await postProductsData(body, userId, employerId, typeRole);
+        const dataLayerResponse = await postProductsData(body, userId, typeRole);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe un producto con el mismo nombre en esta sede, cámbialo");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -70,17 +70,17 @@ export const postProductService = async (body: IProduct, userId: string, employe
 
 
 //DATA PARA CREAR MUCHOS PRODUCTOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyProductService = async (products: IProduct[], userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseProduct> => {
+export const postManyProductService = async (products: IProduct[], userId: string, typeRole: string): Promise<IServiceLayerResponseProduct> => {
     const uniqueProducts: IProduct[] = [];
     const duplicatedProducts: IProduct[] = [];
 
     try {
         for (const product of products) {
             // Verificar los permisos del usuario para crear productos en la sede específica
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(product.branchId, userId, employerId, typeRole, userBranchId);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(product.branchId, userId, typeRole);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear productos en esta sede");
             // Crear el producto
-            const createdProduct = await postManyProductsData(product, userId, employerId, typeRole);
+            const createdProduct = await postManyProductsData(product, userId, typeRole);
             if (createdProduct) {
                 uniqueProducts.push(createdProduct);
             } else duplicatedProducts.push(product);
@@ -182,13 +182,13 @@ export const putProductService = async (idProduct: string, body: IProduct, userI
 
 
 //SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIOS PRODUCTOS
-export const putUpdateManyProductService = async (products: IProduct[], userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseProduct> => {
+export const putUpdateManyProductService = async (products: IProduct[], userId: string, typeRole: string): Promise<IServiceLayerResponseProduct> => {
     const uniqueProducts: IProduct[] = [];
     const duplicatedProducts: IProduct[] = [];
 
     try {
         for (const product of products) {
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(product.branchId, userId, employerId, typeRole, userBranchId);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(product.branchId, userId, typeRole);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar los productos en esta sede");
             const updatedProduct = await putUpdateManyProductData(product, userId,);
             if (updatedProduct) {

@@ -13,7 +13,6 @@ const router = express.Router();
 //LOGIN DE USUARIOS
 router.post("/login", validateSchema(loginSchema), async (req: Request, res: Response): Promise<void> => {
     try {
-        console.log('Entra')
         const { email, password } = req.body;
         const user = await loginService(email, password);
         if (!user) {
@@ -22,7 +21,6 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
         }
         if (user.result) {
             const { serResult, token } = user.result;
-
             res.cookie("token", token, {
                 httpOnly: false,
                 secure: process.env.NODE_ENV === "production",

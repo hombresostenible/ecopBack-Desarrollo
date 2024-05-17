@@ -5,7 +5,7 @@ import { IRawMaterial } from "../../types/User/rawMaterial.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR MATERIA PRIMA POR SEDE PARA USER
-export const postRawMaterialData = async (body: IRawMaterial, userId: string, employerId: string, typeRole: string): Promise<any> => {
+export const postRawMaterialData = async (body: IRawMaterial, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingRawMaterial = await RawMaterial.findOne({
@@ -49,7 +49,7 @@ export const postRawMaterialData = async (body: IRawMaterial, userId: string, em
 
 
 //DATA PARA CREAR MUCHAS MATERIAS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyRawMaterialData = async (body: IRawMaterial, userId: string, employerId: string, typeRole: string): Promise<any> => {
+export const postManyRawMaterialData = async (body: IRawMaterial, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingRawMaterial = await RawMaterial.findOne({
