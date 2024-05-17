@@ -5,7 +5,7 @@ import { IService } from "../../types/User/services.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UN SERVICIO POR SEDE PARA USER
-export const postServicesData = async (body: IService, userId: string, employerId: string, typeRole: string): Promise<any> => {
+export const postServicesData = async (body: IService, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingServices = await Service.findOne({
@@ -45,7 +45,7 @@ export const postServicesData = async (body: IService, userId: string, employerI
 
 
 //DATA PARA CREAR MUCHOS SERVICIOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyServicesData = async (body: IService, userId: string, employerId: string, typeRole: string): Promise<any> => {
+export const postManyServicesData = async (body: IService, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingServices = await Service.findOne({

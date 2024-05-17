@@ -1,5 +1,6 @@
+import bcrypt from 'bcrypt';
 import {
-    //AMBOS
+    postUserPlatformData,
     getUserPlatformData,
     getUserPlatformBranchByIdData,
     putProfileUserPlatformData,
@@ -11,6 +12,25 @@ import {
 } from '../../types/Responses/responses.types';
 import { IUserPlatform } from '../../types/User/userPlatform.types';
 import { checkPermissionForUserPlatformBranch, checkPermissionForUserPlatform } from '../../helpers/UserPlatform.helper';
+
+
+//CREAR UN USUARIO DE PLATAFORMA
+export const postUserPlatformService = async (body: IUserPlatform, userId: string): Promise<IServiceLayerResponseUserPlatform> => {
+    try {
+        const hashedPassword = await bcrypt.hash(body.password, 10);
+        body.password = hashedPassword;
+        const serResult = await postUserPlatformData(body, userId);
+        if (serResult) {          
+            return { code: 201, result: serResult };
+        } else return { code: 400, message: 'El email ya se encuentra registrado' };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
 
 //SERVICE PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
 export const getUserPlatformService = async (userId: string): Promise<IServiceLayerResponseUserPlatform> => {

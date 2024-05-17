@@ -5,7 +5,7 @@ import { IProduct } from "../../types/User/products.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UN PRODUCTO POR SEDE PARA USER
-export const postProductsData = async (body: IProduct, userId: string, employerId: string, typeRole: string): Promise<any> => {
+export const postProductsData = async (body: IProduct, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingProduct = await Product.findOne({
@@ -49,7 +49,7 @@ export const postProductsData = async (body: IProduct, userId: string, employerI
 
 
 //DATA PARA CREAR MUCHOS PRODUCTOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyProductsData = async (body: IProduct, userId: string, employerId: string, typeRole: string): Promise<any> => {
+export const postManyProductsData = async (body: IProduct, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
 
     try {

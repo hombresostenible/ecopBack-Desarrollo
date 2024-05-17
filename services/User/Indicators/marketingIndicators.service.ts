@@ -31,9 +31,9 @@ import { ServiceError, IServiceLayerResponseSalesFunnelCustomerAcq, IServiceLaye
 
 //^ SALESFUNNELCUSTOMERACQUISITION
 //SERVICE PARA CREAR UN CUSTOMERACQUISITION EN LA SEDE DE USER
-export const postSalesFunnelCustomerAcqService = async (body: ISalesFunnelCustomerAcq, userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
+export const postSalesFunnelCustomerAcqService = async (body: ISalesFunnelCustomerAcq, userId: string, typeRole: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
     try {
-        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
         if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERACQUISITION de esta sede");
         const dataLayerResponse = await postSalesFunnelCustomerAcqData(body, userId);
         if (!dataLayerResponse) throw new ServiceError(400, "CUSTOMERACQUISITION ya existe");
@@ -191,9 +191,9 @@ export const deleteSalesFunnelCustomerAcqService = async (idCustomerAcquisition:
 
 //^ SALESFUNNELCUSTOMERRETENTION
 //SERVICE PARA CREAR UN CUSTOMERRETENTION EN LA SEDE DE USER
-export const postSalesFunnelCustomerRetService = async (body: ISalesFunnelCustomerRet, userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseSalesFunnelCustomerRet> => {
+export const postSalesFunnelCustomerRetService = async (body: ISalesFunnelCustomerRet, userId: string, typeRole: string): Promise<IServiceLayerResponseSalesFunnelCustomerRet> => {
     try {
-        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
         if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERRETENTION de esta sede");
         const dataLayerResponse = await postSalesFunnelCustomerRetData(body, userId);
         if (!dataLayerResponse) throw new ServiceError(400, "CUSTOMERRETENTION ya existe");
@@ -355,9 +355,9 @@ export const deleteSalesFunnelCustomerRetService = async (idCustomerRetention: s
 
 //^ SALESFUNNELCUSTOMERDIGITAL
 //SERVICE PARA CREAR UN CUSTOMERDIGITAL EN LA SEDE DE USER
-export const postSalesFunnelCustomerDigitalService = async (body: ISalesFunnelSalesDigital, userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
+export const postSalesFunnelCustomerDigitalService = async (body: ISalesFunnelSalesDigital, userId: string, typeRole: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
     try {
-        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
         if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en CUSTOMERDIGITAL de esta sede");
         const dataLayerResponse = await postSalesFunnelSalesDigitalData(body, userId);
         if (!dataLayerResponse) throw new ServiceError(400, "CUSTOMERDIGITAL ya existe");

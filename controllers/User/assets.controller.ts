@@ -21,8 +21,8 @@ const router = express.Router();
 router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await postAssetService(body, id, employerId, typeRole, userBranchId);
+        const { id } = req.user;
+        const serviceLayerResponse = await postAssetService(body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -36,9 +36,9 @@ router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async
 router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
+        const { id, typeRole } = req.user;
         // Llamar a la capa de servicio para manejar la creación de múltiples activos
-        const serviceLayerResponse = await postManyAssetService(bodyArray, id, employerId, typeRole, userBranchId);
+        const serviceLayerResponse = await postManyAssetService(bodyArray, id, typeRole);
         // Enviar una respuesta al cliente
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
@@ -117,9 +117,9 @@ router.put("/:idAssets", authRequired, checkRole, validateSchema(assetsSchemaZod
 router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
+        const { id, typeRole } = req.user;
         // Llamar a la capa de servicio para manejar la creación de múltiples activos
-        const serviceLayerResponse = await putUpdateManyAssetService(bodyArray, id, employerId, typeRole, userBranchId);
+        const serviceLayerResponse = await putUpdateManyAssetService(bodyArray, id, typeRole);
         // Enviar una respuesta al cliente
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
