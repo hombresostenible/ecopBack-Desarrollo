@@ -22,8 +22,8 @@ const router = express.Router();
 router.post("/", authRequired, checkRole, validateSchema(productSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await postProductService(body, id, employerId, typeRole, userBranchId);
+        const { id, typeRole } = req.user;
+        const serviceLayerResponse = await postProductService(body, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -37,8 +37,8 @@ router.post("/", authRequired, checkRole, validateSchema(productSchemaZod), asyn
 router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyProductSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await postManyProductService(bodyArray, id, employerId, typeRole, userBranchId);
+        const { id, typeRole } = req.user;
+        const serviceLayerResponse = await postManyProductService(bodyArray, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -120,8 +120,8 @@ router.put("/:idProduct", authRequired, checkRole, validateSchema(productSchemaZ
 router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyProductSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await putUpdateManyProductService(bodyArray, id, employerId, typeRole, userBranchId);
+        const { id, typeRole } = req.user;
+        const serviceLayerResponse = await putUpdateManyProductService(bodyArray, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;

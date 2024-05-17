@@ -1,14 +1,76 @@
 import sequelize from '../../db';
+import {
+    transporterZoho,
+    mailUserPlatformWelcome,
+} from '../../libs/nodemailer';
+import { generateCodes } from '../../helpers/GenerateCodes.helper';
 import UserPlatform from '../../schema/User/userPlatform.schema';
 import { IUserPlatform } from '../../types/User/userPlatform.types';
 import { ServiceError } from '../../types/Responses/responses.types';
+
+export const postUserPlatformData = async (body: IUserPlatform, userId: string): Promise<IUserPlatform | null> => {
+    const t = await sequelize.transaction();
+    try {
+        const existingUser = await UserPlatform.findOne({
+            where: {
+                branchId: body.branchId, documentId: body.documentId, userId: userId
+            },
+            transaction: t,
+        });
+        if (existingUser) {
+            await t.rollback();
+            throw new ServiceError(400, 'El usuario ya está creado');
+        } else {
+            const newUser = new UserPlatform({
+                name: body.name,
+                lastName: body.lastName,
+                typeDocumentId: body.typeDocumentId,
+                documentId: body.documentId,
+                profilePicture: body.profilePicture,
+                logo: body.logo,
+                typeRole: body.typeRole,
+                email: body.email,
+                password: body.password,
+                phone: body.phone,
+                department: body.department,
+                city: body.city,
+                codeDane: body.codeDane,
+                subregionCodeDane: body.subregionCodeDane,
+                address: body.address,
+                isBlocked: true,
+                unlockCode: generateCodes(),
+                isAceptedConditions: body.isAceptedConditions,
+                branchId: body.branchId,
+                userId: body.userId,
+            });
+            try {
+                await newUser.save();
+                await t.commit();
+                const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${newUser.id}`;
+                const mailOptions = mailUserPlatformWelcome(body.email, body.name, newUser.unlockCode, link);
+                await transporterZoho.sendMail(mailOptions);
+                console.log('Correo electrónico de bienvenida enviado con éxito.');
+                return newUser;
+            } catch (emailError) {
+                console.error('Error al enviar el correo electrónico de bienvenida:', emailError);
+                await t.rollback();
+                throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
+            }
+        }
+    } catch (error) {
+        console.log('Error: ', error)
+        await t.rollback();
+        throw error;
+    }
+};
+
 
 //DATA PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
 export const getUserPlatformData = async (userId: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const usersPlatform = await UserPlatform.findAll({
-            where: { employerId: userId },
+            where: { userId: userId },
             transaction: t,
         });
         return usersPlatform;
@@ -62,7 +124,7 @@ export const putProfileUserPlatformData = async (body: IUserPlatform, userId: st
 //DATA PARA OBTENER POR ID UN USUARIO DE PLATAFORMA PERTENECIENTE A UN USER
 export const getUserPlatformByIdData = async (idUserPlatform: string, userId: string): Promise<any> => {
     try {
-        const userPlatformFound = await UserPlatform.findOne({ where: { id: idUserPlatform, employerId: userId } });
+        const userPlatformFound = await UserPlatform.findOne({ where: { id: idUserPlatform, userId: userId } });
         return userPlatformFound;
     } catch (error) {
         throw error;

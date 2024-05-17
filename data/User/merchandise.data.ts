@@ -5,7 +5,7 @@ import { IMerchandise } from "../../types/User/merchandise.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UNA MERCANCIA POR SEDE PARA USER
-export const postMerchandiseData = async (body: IMerchandise, userId: string, employerId: string, typeRole: string): Promise<any> => {
+export const postMerchandiseData = async (body: IMerchandise, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingMerchandise = await Merchandise.findOne({
@@ -49,7 +49,7 @@ export const postMerchandiseData = async (body: IMerchandise, userId: string, em
 
 
 //DATA PARA CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyMerchandiseData = async (body: IMerchandise, userId: string, employerId: string, typeRole: string): Promise<any> => {
+export const postManyMerchandiseData = async (body: IMerchandise, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
 
     try {

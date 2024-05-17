@@ -15,11 +15,11 @@ import { IAssets } from "../../types/User/assets.types";
 import { ServiceError, IServiceLayerResponseAssets } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
-export const postAssetService = async (body: IAssets, userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseAssets> => {
+export const postAssetService = async (body: IAssets, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
-        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
-        if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear una maquina, equipo o herramienta en esta sede");
-        const dataLayerResponse = await postAssetData(body, userId, employerId, typeRole);
+        // const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
+        // if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear una maquina, equipo o herramienta en esta sede");
+        const dataLayerResponse = await postAssetData(body, userId);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe una maquina, equipo o herramienta con el mismo nombre en esta sede, cámbialo");//Esto es lo que se renderiza en la pantalla del usuario de la plataforma
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -33,16 +33,16 @@ export const postAssetService = async (body: IAssets, userId: string, employerId
 
 
 //SERVICE PARA CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER O DESDE EL EXCEL
-export const postManyAssetService = async (assets: IAssets[], userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseAssets> => {
+export const postManyAssetService = async (assets: IAssets[], userId: string, typeRole: string): Promise<IServiceLayerResponseAssets> => {
     const uniqueAssets: IAssets[] = [];
     const duplicatedAssets: IAssets[] = [];
     try {
         for (const asset of assets) {
             // Verificar los permisos del usuario para crear activos en la sede específica
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(asset.branchId, userId, employerId, typeRole, userBranchId);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(asset.branchId, userId, typeRole);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear una máquina, equipo o herramienta en esta sede");
             // Crear el activo
-            const createdAsset = await postManyAssetData(asset, userId, employerId, typeRole);
+            const createdAsset = await postManyAssetData(asset, userId, typeRole);
             if (createdAsset) {
                 uniqueAssets.push(createdAsset);
             } else duplicatedAssets.push(asset);
@@ -130,13 +130,13 @@ export const putAssetService = async (idAssets: string, body: IAssets, userId: s
 
 
 //SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER
-export const putUpdateManyAssetService = async (assets: IAssets[], userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseAssets> => {
+export const putUpdateManyAssetService = async (assets: IAssets[], userId: string, typeRole: string): Promise<IServiceLayerResponseAssets> => {
     const uniqueAssets: IAssets[] = [];
     const duplicatedAssets: IAssets[] = [];
     try {
         for (const asset of assets) {
             // Verificar los permisos del usuario para actualizar activos en la sede específica
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(asset.branchId, userId, employerId, typeRole, userBranchId);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(asset.branchId, userId, typeRole);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar los equipos, herramientas o máquinas en esta sede");
             // Actualizar el activo
             const updatedAsset = await putUpdateManyAssetData(asset, userId,);

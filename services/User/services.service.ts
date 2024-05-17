@@ -14,11 +14,11 @@ import { IService } from "../../types/User/services.types";
 import { ServiceError, IServiceLayerResponseService } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UN SERVICIO POR SEDE PARA USER
-export const postServicesService = async (body: IService, userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseService> => {
+export const postServicesService = async (body: IService, userId: string, typeRole: string): Promise<IServiceLayerResponseService> => {
     try {
-        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
         if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear el servicio en esta sede");
-        const dataLayerResponse = await postServicesData(body, userId, employerId, typeRole);
+        const dataLayerResponse = await postServicesData(body, userId, typeRole);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe un servicio con el mismo nombre en esta sede, cámbialo");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -32,16 +32,16 @@ export const postServicesService = async (body: IService, userId: string, employ
 
 
 //SERVICE PARA CREAR MUCHOS SERVICIOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyServicesService = async (services: IService[], userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseService> => {
+export const postManyServicesService = async (services: IService[], userId: string, typeRole: string): Promise<IServiceLayerResponseService> => {
     const uniqueServices: IService[] = [];
     const duplicatedServices: IService[] = [];
     try {
         for (const service of services) {
             // Verificar los permisos del usuario para crear servicios en la sede específica
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(service.branchId, userId, employerId, typeRole, userBranchId);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(service.branchId, userId, typeRole);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear servicio en esta sede");
             // Crear la servicio
-            const createdService = await postManyServicesData(service, userId, employerId, typeRole);
+            const createdService = await postManyServicesData(service, userId, typeRole);
             if (createdService) {
                 uniqueServices.push(createdService);
             } else duplicatedServices.push(service);
@@ -129,12 +129,12 @@ export const putServicesService = async (idServices: string, body: IService, use
 
 
 //SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIO SERVICIOS
-export const putUpdateManyServiceService = async (services: IService[], userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseService> => {
+export const putUpdateManyServiceService = async (services: IService[], userId: string, typeRole: string): Promise<IServiceLayerResponseService> => {
     const uniqueServices: IService[] = [];
     const duplicatedServices: IService[] = [];
     try {
         for (const service of services) {
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(service.branchId, userId, employerId, typeRole, userBranchId);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(service.branchId, userId, typeRole);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar los servicios en esta sede");
             const updatedService = await putUpdateManyServiceData(service, userId,);
             if (updatedService) {

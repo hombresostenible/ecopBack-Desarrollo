@@ -15,9 +15,9 @@ import { ISustainability } from '../../../types/User/sustainability.types';
 import { ServiceError, IServiceLayerResponseSustainabilityIndicators, IServiceLayerResponseSustainability, IServiceLayerResponseVerifySustainabilityIndicators } from '../../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR REGISTROS DE SOSTENIBILIDAD
-export const postSustainabilityService = async (body: ISustainability, userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseSustainability> => {
+export const postSustainabilityService = async (body: ISustainability, userId: string, typeRole: string): Promise<IServiceLayerResponseSustainability> => {
     try {
-        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
         if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para registrar en esta sede");
         const dataLayerResponse = await postSustainabilityData(body, userId);
         if (!dataLayerResponse) throw new ServiceError(400, "No se puede registrar");
