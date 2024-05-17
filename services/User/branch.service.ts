@@ -11,9 +11,9 @@ import { IBranch } from "../../types/User/branch.types";
 import { ServiceError, IServiceLayerResponseBranch } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UNA SEDE PARA USER
-export const postBranchService = async (body: IBranch, userId: string, userType: string): Promise<IServiceLayerResponseBranch> => {
+export const postBranchService = async (body: IBranch, userId: string): Promise<IServiceLayerResponseBranch> => {
     try {
-        const dataLayerResponse = await postBranchData(body, userId, userType);
+        const dataLayerResponse = await postBranchData(body, userId);
         if (!dataLayerResponse) throw new ServiceError(400, "La sede ya existe");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -27,12 +27,12 @@ export const postBranchService = async (body: IBranch, userId: string, userType:
 
 
 //SERVICE PARA CREAR MASIVAMENTE SEDES PARA USER DESDE EL EXCEL
-export const postManyBranchService = async (branches: IBranch[], userId: string, userType: string): Promise<IServiceLayerResponseBranch> => {
+export const postManyBranchService = async (branches: IBranch[], userId: string): Promise<IServiceLayerResponseBranch> => {
     const uniqueBranches: IBranch[] = [];
     const duplicatedBranches: IBranch[] = [];
     try {
         for (const branch of branches) {
-            const createdBranch = await postManyBranchData(branch, userId, userType);
+            const createdBranch = await postManyBranchData(branch, userId);
             if (createdBranch) {
                 uniqueBranches.push(createdBranch);
             } else duplicatedBranches.push(branch);
@@ -50,12 +50,9 @@ export const postManyBranchService = async (branches: IBranch[], userId: string,
 
 
 //SERVICE PARA OBTENER TODAS LAS SEDES DE UN USER
-export const getBranchsUserService = async (userId: string, userType: string): Promise<IServiceLayerResponseBranch> => {
+export const getBranchsUserService = async (userId: string): Promise<IServiceLayerResponseBranch> => {
     try {
-        let dataLayerResponse;
-        if (userType === 'User') {
-            dataLayerResponse = await getBranchsByUserIdData(userId);
-        }
+        const dataLayerResponse = await getBranchsByUserIdData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -68,9 +65,9 @@ export const getBranchsUserService = async (userId: string, userType: string): P
 
 
 //SERVICE PARA OBTENER UNA SEDE POR ID PERTENECIENTE AL USER
-export const getBranchService = async (idBranch: string, userId: string, userType: string): Promise<IServiceLayerResponseBranch> => {
+export const getBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseBranch> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId, userType);
+        const hasPermission = await checkPermissionForBranch(idBranch, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a esta sede");
         const transactionFound = await getBranchByIdData(idBranch);
         if (!transactionFound) return { code: 404, message: 'Sede no encontrada' };
@@ -86,11 +83,11 @@ export const getBranchService = async (idBranch: string, userId: string, userTyp
 
 
 //SERVICE PARA ACTUALIZAR UNA SEDE PERTENECIENTE AL USER
-export const putBranchService = async (idBranch: string, body: IBranch, userId: string, userType: string): Promise<IServiceLayerResponseBranch> => {
+export const putBranchService = async (idBranch: string, body: IBranch, userId: string): Promise<IServiceLayerResponseBranch> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId, userType);
+        const hasPermission = await checkPermissionForBranch(idBranch, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar esta sede");
-        const updateBranch = await putBranchData(idBranch, body, userId, userType);
+        const updateBranch = await putBranchData(idBranch, body, userId);
         if (!updateBranch) throw new ServiceError(404, 'Sede no encontrada');
         return { code: 200, message: 'Sede actualizada exitosamente', result: updateBranch };
     } catch (error) {
@@ -104,9 +101,9 @@ export const putBranchService = async (idBranch: string, body: IBranch, userId: 
 
 
 //SERVICE PARA ELIMINAR UNA SEDE PERTENECIENTE AL USER
-export const deleteBranchService = async (idBranch: string, userId: string, userType: string): Promise<IServiceLayerResponseBranch> => {
+export const deleteBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseBranch> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId, userType);
+        const hasPermission = await checkPermissionForBranch(idBranch, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar esta sede");
         await deleteBranchData(idBranch);
         return { code: 200, message: "Sede eliminada exitosamente" };

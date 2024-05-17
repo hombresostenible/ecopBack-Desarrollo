@@ -42,7 +42,6 @@ export const postRegisterUserData = async (body: IUser): Promise<User | null> =>
             verificationDigit: body.verificationDigit,
             commercialName: body.commercialName,
             logo: body.logo,
-            userType: body.userType,
             typeRole: body.typeRole,
             economicSector: body.economicSector,
             codeCiiu: body.codeCiiu,

@@ -5,7 +5,7 @@ import {
 import { ServiceError } from '../types/Responses/responses.types';
 
 //VALIDA QUE LOS USARIOS DE PLATAFORMA PERTENEZCAN A UNA SEDE DE UN USER
-export const checkPermissionForUserPlatformBranch = async (idBranch: string, userId: string, userType: string): Promise<boolean> => {
+export const checkPermissionForUserPlatformBranch = async (idBranch: string, userId: string): Promise<boolean> => {
     try {
         const usersPlatform = await getUserPlatformBranchByIdData(idBranch);
         if (!usersPlatform) return false;
@@ -22,7 +22,7 @@ export const checkPermissionForUserPlatformBranch = async (idBranch: string, use
 
 
 //VALIDA QUE SI EL USARIO DE PLATAFORMA LE PERTENECE A UN UN USER
-export const checkPermissionForUserPlatform = async (idUserPlatform: string, userId: string, userType: string): Promise<boolean> => {
+export const checkPermissionForUserPlatform = async (idUserPlatform: string, userId: string): Promise<boolean> => {
     try {
         const userPlatform = await getUserPlatformByIdData(idUserPlatform, userId);
         if (!userPlatform) return false;

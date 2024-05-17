@@ -13,8 +13,8 @@ const router = express.Router();
 //CONTROLLER PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await getUserPlatformService(id, userType);      
+        const { id } = req.user;
+        const serviceLayerResponse = await getUserPlatformService(id);      
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener los usuario del usuario" });
@@ -30,8 +30,8 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await getUserPlatformBranchService(idBranch, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await getUserPlatformBranchService(idBranch, id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "No se pudieron obtener los usuarios por sede" });
@@ -58,7 +58,7 @@ router.put("/", authRequired, async (req: Request, res: Response): Promise<void>
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/userPlatform/profileUserPlatform
+}); // PUT - http://localhost:3000/api/userPlatform
 
 
 
@@ -66,8 +66,8 @@ router.put("/", authRequired, async (req: Request, res: Response): Promise<void>
 router.delete('/:idUserPlatform', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idUserPlatform } = req.params;
-        const { id, userType } = req.user
-        const serviceLayerResponse = await deleteUserPlatformService(idUserPlatform, id, userType); 
+        const { id } = req.user
+        const serviceLayerResponse = await deleteUserPlatformService(idUserPlatform, id); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

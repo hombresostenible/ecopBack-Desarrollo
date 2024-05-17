@@ -13,9 +13,9 @@ import {
 import { ICrmSuppliers } from '../../types/User/crmSupplier.types';
 
 //SERVICE PARA CREAR UN PROVEEDOR DEL USER
-export const postRegisterCRMSuppliersService = async (body: ICrmSuppliers, userId: string, userType: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const postRegisterCRMSuppliersService = async (body: ICrmSuppliers, userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
-        const dataLayerResponse = await postRegisterCRMSupplierData(body, userId, userType);
+        const dataLayerResponse = await postRegisterCRMSupplierData(body, userId);
         if (!dataLayerResponse) throw new ServiceError(400, "El proveedor ya existe");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -29,9 +29,9 @@ export const postRegisterCRMSuppliersService = async (body: ICrmSuppliers, userI
 
 
 //SERVICE PARA OBTENER TODOS LOS PROVEEDORES DE UN USER
-export const getCRMSuppliersUserService = async (userId: string, userType: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const getCRMSuppliersUserService = async (userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
-        const dataLayerResponse = await getCRMSuppliersData(userId, userType);
+        const dataLayerResponse = await getCRMSuppliersData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -44,9 +44,9 @@ export const getCRMSuppliersUserService = async (userId: string, userType: strin
 
 
 //SERVICE PARA OBTENER TODOS LOS PROVEEDORES POR SEDE DE USER
-export const getCRMSuppliersBranchService = async (idBranch: string, userId: string, userType: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const getCRMSuppliersBranchService = async (idBranch: string, userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
-        const cRMSuppliersFound = await getCRMSuppliersBranchData(idBranch, userId, userType);
+        const cRMSuppliersFound = await getCRMSuppliersBranchData(idBranch, userId);
         if (!cRMSuppliersFound) return { code: 404, message: "Proveedores no encontrados en esta sede" };
         return { code: 200, result: cRMSuppliersFound };
     } catch (error) {
@@ -60,9 +60,9 @@ export const getCRMSuppliersBranchService = async (idBranch: string, userId: str
 
 
 //SERVICE PARA OBTENER UN PROVEEDOR POR ID PERTENECIENTE AL USER
-export const getCRMSupplierByIdService = async (idCRMSupplier: string, userId: string, userType: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const getCRMSupplierByIdService = async (idCRMSupplier: string, userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
-        const cRMSupplierFound = await getCRMSupplierByIdData(idCRMSupplier, userId, userType);
+        const cRMSupplierFound = await getCRMSupplierByIdData(idCRMSupplier, userId);
         if (!cRMSupplierFound) return { code: 404, message: "Proveedor no encontrado" };
         return { code: 200, result: cRMSupplierFound };
     } catch (error) {
@@ -76,9 +76,9 @@ export const getCRMSupplierByIdService = async (idCRMSupplier: string, userId: s
 
 
 //SERVICE PARA ACTUALIZAR UN PROVEEDOR PERTENECIENTE AL USER
-export const putCRMSupplierService = async (idCRMSupplier: string, body: ICrmSuppliers, userId: string, userType: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const putCRMSupplierService = async (idCRMSupplier: string, body: ICrmSuppliers, userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
-        const updateCRMSupplier = await putCRMSupplierData(idCRMSupplier, body, userId, userType);
+        const updateCRMSupplier = await putCRMSupplierData(idCRMSupplier, body, userId);
         if (!updateCRMSupplier) throw new ServiceError(404, "Proveedor no encontrado");
         return { code: 200, message: "Proveedor actualizado exitosamente", result: updateCRMSupplier };
     } catch (error) {
@@ -92,9 +92,9 @@ export const putCRMSupplierService = async (idCRMSupplier: string, body: ICrmSup
 
 
 //SERVICE PARA ELIMINAR UN PROVEEDOR PERTENECIENTE AL USER
-export const deleteCRMSupplierService = async (idCRMSupplier: string, userId: string, userType: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const deleteCRMSupplierService = async (idCRMSupplier: string, userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
-        await deleteCRMSupplierData(idCRMSupplier, userId, userType);
+        await deleteCRMSupplierData(idCRMSupplier, userId);
         return { code: 200, message: "Proveedor eliminado exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

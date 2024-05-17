@@ -12,8 +12,8 @@ const router = express.Router();
 router.post("/", authRequired, async (req: Request, res: Response) => {
     try {
         const body = req.body;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await postElectronicInvoicingService(body, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await postElectronicInvoicingService(body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -40,8 +40,8 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 router.get("/:idElectronicInvoicing", authRequired, async (req: Request, res: Response) => {
     try {
         const { idElectronicInvoicing } = req.params;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await getElectronicInvoicingByIdService(idElectronicInvoicing, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await getElectronicInvoicingByIdService(idElectronicInvoicing, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;

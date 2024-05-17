@@ -5,7 +5,7 @@ import { IService } from "../../types/User/services.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UN SERVICIO POR SEDE PARA USER
-export const postServicesData = async (body: IService, userId: string, userType: string, employerId: string, typeRole: string): Promise<any> => {
+export const postServicesData = async (body: IService, userId: string, employerId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingServices = await Service.findOne({
@@ -13,7 +13,7 @@ export const postServicesData = async (body: IService, userId: string, userType:
             transaction: t,
         });
         if (existingServices) {
-            if (existingServices.getDataValue('userId') === userId && userType === 'User') {
+            if (existingServices.getDataValue('userId') === userId) {
                 await t.rollback();
                 return null;
             }
@@ -23,7 +23,7 @@ export const postServicesData = async (body: IService, userId: string, userType:
         if (typeRole === 'Superadmin') {
             const newService = await Service.create({
                 ...body,
-                userId: userType === 'User' ? userId : null,
+                userId: userId,
             }, { transaction: t });
             await t.commit();
             return newService;            
@@ -31,7 +31,7 @@ export const postServicesData = async (body: IService, userId: string, userType:
         if (typeRole === 'Administrador') {
             const newService = await Service.create({
                 ...body,
-                userId: userType === 'User' ? employerId : null,
+                userId: userId,
             }, { transaction: t });
             await t.commit();
             return newService;
@@ -45,7 +45,7 @@ export const postServicesData = async (body: IService, userId: string, userType:
 
 
 //DATA PARA CREAR MUCHOS SERVICIOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyServicesData = async (body: IService, userId: string, userType: string, employerId: string, typeRole: string): Promise<any> => {
+export const postManyServicesData = async (body: IService, userId: string, employerId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingServices = await Service.findOne({
@@ -60,7 +60,7 @@ export const postManyServicesData = async (body: IService, userId: string, userT
         if (typeRole === 'Superadmin') {
             const newService = await Service.create({
                 ...body,
-                userId: userType === 'User' ? userId : null,
+                userId: userId,
             }, { transaction: t });
             await t.commit();
             return newService;
@@ -68,7 +68,7 @@ export const postManyServicesData = async (body: IService, userId: string, userT
         if (typeRole === 'Administrador') {
             const newService = await Service.create({
                 ...body,
-                userId: userType === 'User' ? employerId : null,
+                userId: userId,
             }, { transaction: t });
             await t.commit();
             return newService;
@@ -124,7 +124,7 @@ export const getServicesByIdData = async (idServices: string): Promise<any> => {
 
 
 //DATA PARA ACTUALIZAR UN SERVICIO DEL USER
-export const putServicesData = async (idServices: string, body: IService, userId: string, userType: string): Promise<IService | null> => {
+export const putServicesData = async (idServices: string, body: IService, userId: string): Promise<IService | null> => {
     let transaction;
     try {
         transaction = await sequelize.transaction();
@@ -133,13 +133,11 @@ export const putServicesData = async (idServices: string, body: IService, userId
             transaction,
         });
         if (!serviceExists) throw new ServiceError(404, "No se encontró ningún servicio para actualizar");
-        if (userType === 'User') {
-            const existingServiceWithSameName = await Service.findOne({
-                where: { userId, nameItem: body.nameItem, id: { [Op.not]: idServices } },
-                transaction,
-            });
-            if (existingServiceWithSameName) throw new ServiceError(403, "No es posible actualizar el servicio porque ya existe uno con ese mismo nombre");
-        }
+        const existingServiceWithSameName = await Service.findOne({
+            where: { userId, nameItem: body.nameItem, id: { [Op.not]: idServices } },
+            transaction,
+        });
+        if (existingServiceWithSameName) throw new ServiceError(403, "No es posible actualizar el servicio porque ya existe uno con ese mismo nombre");
         const [rowsUpdated] = await Service.update(body, { where: { id: idServices }, transaction });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún servicio para actualizar");
 
@@ -161,16 +159,14 @@ export const putServicesData = async (idServices: string, body: IService, userId
 
 
 //DATA PARA ACTUALIZAR DE FORMA MASIVA VARIO SERVICIOS
-export const putUpdateManyServiceData = async (body: IService, userId: string, userType: string): Promise<any> => {
+export const putUpdateManyServiceData = async (body: IService, userId: string): Promise<any> => {
     const t = await sequelize.transaction();
 
     try {
-        if (userType === 'User') {
-            const existingBranchWithSameName = await Service.findOne({
-                where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
-            });
-            if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el servicio porque ya existe una con ese mismo nombre");
-        }
+        const existingBranchWithSameName = await Service.findOne({
+            where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
+        });
+        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el servicio porque ya existe una con ese mismo nombre");
         const [rowsUpdated] = await Service.update(body, { where: { id: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún servicio para actualizar");
         const updatedService = await Service.findByPk(body.id);

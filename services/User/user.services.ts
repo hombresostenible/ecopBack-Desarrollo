@@ -16,7 +16,7 @@ export const postRegisterUserService = async (body: IUser): Promise<IUserService
         body.password = hashedPassword;
         const serResult = await postRegisterUserData(body);
         if (serResult) {
-            const token = await createAccessToken({ id: serResult.id, userType: serResult.userType, typeRole: serResult.typeRole });
+            const token = await createAccessToken({ id: serResult.id, typeRole: serResult.typeRole });
             return { code: 201, result: { serResult, token } };
         } else return { code: 400, message: 'El email ya se encuentra registrado' };
     } catch (error) {
