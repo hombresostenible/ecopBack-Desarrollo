@@ -28,8 +28,8 @@ function routerApi(app: any) {
     app.use("/api/accountsBook", accountsBookControllers);
     app.use("/api/assets", assetsControllers);
     app.use("/api/branch", branchControllers);
-    app.use("/api/CrmClients", cRMClientsControllers);
-    app.use("/api/CRMSuppliers", cRMSupplierControllers);
+    app.use("/api/crmClients", cRMClientsControllers);
+    app.use("/api/cRMSuppliers", cRMSupplierControllers);
     app.use("/api/electronicInvoicing", electronicInvoicingControllers);
     app.use("/api/electronicInvoicing", invoicingPOSControllers);
     app.use("/api/merchandise", merchandiseControllers);

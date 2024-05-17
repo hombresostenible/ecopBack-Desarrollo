@@ -5,7 +5,6 @@ type RegisterUserSchemaType = ZodObject<{
     typeDocumentId: ZodString;
     documentId: ZodString;
     verificationDigit: ZodString;
-    userType: ZodString;
     typeRole: ZodString;
     economicSector: ZodString;
     codeCiiu: ZodString;
@@ -30,9 +29,6 @@ export const registerUserSchema: RegisterUserSchemaType = z.object({
     }),
     verificationDigit: z.string({
         required_error: 'El dígito de verificación es requerido',
-    }),
-    userType: z.string({
-        required_error: 'El tipo de usuario es requerido',
     }),
     typeRole: z.string({
         required_error: 'El tipo de rol es requerido',

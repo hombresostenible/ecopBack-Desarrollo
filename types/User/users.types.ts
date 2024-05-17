@@ -8,7 +8,6 @@ export interface IUser {
     verificationDigit: string;
     commercialName?: string;
     logo?: string;
-    userType: 'User';
     typeRole: 'CEO' | 'Moderador de atención al cliente' | 'CTO' | 'Desarrollador de software' | 'Financiador de programas' | 'Superadmin' | 'Administrador' | 'Vendedor' | 'Cajero' | 'Operativo' | 'Contador';
     economicSector:  'Agricultura' | 'Manufactura' | 'Comercio' | 'Servicios' | 'Construcción' | 'Turismo' | 'Otro';
     codeCiiu: string;

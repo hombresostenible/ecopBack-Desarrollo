@@ -7,9 +7,9 @@ import { IElectronicInvoicing } from "../../types/User/electronicInvoicing.types
 import { ServiceError, IServiceLayerResponseElectronicInvoicing } from '../../types/Responses/responses.types';
 
 //CONTROLLER PARA CREAR LA FACTURA ELECTRÓNICA
-export const postElectronicInvoicingService = async (body: IElectronicInvoicing, userId: string, userType: string): Promise<IServiceLayerResponseElectronicInvoicing> => {
+export const postElectronicInvoicingService = async (body: IElectronicInvoicing, userId: string): Promise<IServiceLayerResponseElectronicInvoicing> => {
     try {
-        const dataLayerResponse = await postElectronicInvoicingData(body, userId, userType);
+        const dataLayerResponse = await postElectronicInvoicingData(body, userId);
         if (!dataLayerResponse) throw new ServiceError(400, "No se puede registrar en el libro diario");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -38,9 +38,9 @@ export const getElectronicInvoicingService = async (): Promise<IServiceLayerResp
 
 
 //CONTROLLER PARA OBTENER UNA FACTURA ELECTRONICA POR ID
-export const getElectronicInvoicingByIdService = async (idElectronicInvoicing: string, userId: string, userType: string): Promise<IServiceLayerResponseElectronicInvoicing> => {
+export const getElectronicInvoicingByIdService = async (idElectronicInvoicing: string, userId: string): Promise<IServiceLayerResponseElectronicInvoicing> => {
     try {
-        const electronicInvoicingFound = await getElectronicInvoicingByIdData(idElectronicInvoicing, userId, userType);
+        const electronicInvoicingFound = await getElectronicInvoicingByIdData(idElectronicInvoicing, userId);
         if (!electronicInvoicingFound) return { code: 404, message: "Factura electrónica no encontrada" };
         return { code: 200, result: electronicInvoicingFound };
     } catch (error) {

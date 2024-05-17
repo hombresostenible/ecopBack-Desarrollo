@@ -5,7 +5,7 @@ import { IRawMaterial } from "../../types/User/rawMaterial.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR MATERIA PRIMA POR SEDE PARA USER
-export const postRawMaterialData = async (body: IRawMaterial, userId: string, userType: string, employerId: string, typeRole: string): Promise<any> => {
+export const postRawMaterialData = async (body: IRawMaterial, userId: string, employerId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingRawMaterial = await RawMaterial.findOne({
@@ -13,7 +13,7 @@ export const postRawMaterialData = async (body: IRawMaterial, userId: string, us
             transaction: t,
         });
         if (existingRawMaterial) {
-            if (existingRawMaterial.getDataValue('userId') === userId && userType === 'User') {
+            if (existingRawMaterial.getDataValue('userId') === userId) {
                 await t.rollback();
                 return null;
             }
@@ -26,7 +26,7 @@ export const postRawMaterialData = async (body: IRawMaterial, userId: string, us
         if (typeRole === 'Superadmin') {
             const newRawMaterial = await RawMaterial.create({
                 ...body,
-                userId: userType === 'User' ? userId : null,
+                userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
@@ -35,7 +35,7 @@ export const postRawMaterialData = async (body: IRawMaterial, userId: string, us
         if (typeRole === 'Administrador') {
             const newRawMaterial = await RawMaterial.create({
                 ...body,
-                userId: userType === 'User' ? employerId : null,
+                userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
@@ -49,24 +49,21 @@ export const postRawMaterialData = async (body: IRawMaterial, userId: string, us
 
 
 //DATA PARA CREAR MUCHAS MATERIAS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyRawMaterialData = async (body: IRawMaterial, userId: string, userType: string, employerId: string, typeRole: string): Promise<any> => {
+export const postManyRawMaterialData = async (body: IRawMaterial, userId: string, employerId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
-    
     try {
         const existingRawMaterial = await RawMaterial.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-
         if (existingRawMaterial) {
             await t.rollback();
             return null;
         }
-
         if (typeRole === 'Superadmin') {
             const newRawMaterial = await RawMaterial.create({
                 ...body,
-                userId: userType === 'User' ? userId : null,
+                userId: userId,
             }, { transaction: t });        
             await t.commit();
             return newRawMaterial;
@@ -74,23 +71,11 @@ export const postManyRawMaterialData = async (body: IRawMaterial, userId: string
         if (typeRole === 'Administrador') {
             const newRawMaterial = await RawMaterial.create({
                 ...body,
-                userId: userType === 'User' ? employerId : null,
+                userId: userId,
             }, { transaction: t });        
             await t.commit();
             return newRawMaterial;
         }
-    } catch (error) {
-        throw error;
-    }
-};
-
-
-
-//DATA PARA OBTENER TODOS LAS MATERIAS PRIMASDE DE TODOS LOS USER - CEO PLATATORMA
-export const getRawMaterialsData = async (): Promise<any> => {
-    try {
-        const mySQLResponse = await RawMaterial.findAll();
-        return mySQLResponse;
     } catch (error) {
         throw error;
     }
@@ -99,7 +84,7 @@ export const getRawMaterialsData = async (): Promise<any> => {
 
 
 //DATA PARA OBTENER TODAS LAS MATERIAS PRIMAS DE UN USER
-export const getRawMaterialsByUserIdData = async (userId: string): Promise<any> => {
+export const getRawMaterialsData = async (userId: string): Promise<any> => {
     try {
         const userProducts = await RawMaterial.findAll({
             where: { userId: userId },
@@ -111,9 +96,8 @@ export const getRawMaterialsByUserIdData = async (userId: string): Promise<any> 
 };
 
 
-
 //DATA PARA OBTENER TODAS LAS MATERIAS PRIMAS DE UNA SEDE DE UN USER
-export const getRawMaterialBranchByIdData = async (idBranch: string): Promise<any> => {
+export const getRawMaterialByBranchData = async (idBranch: string): Promise<any> => {
     try {
         const customerAcquisitionFound = await RawMaterial.findAll({
             where: { branchId: idBranch }
@@ -139,14 +123,12 @@ export const getRawMaterialByIdData = async (idRawMaterial: string): Promise<any
 
 
 //DATA PARA ACTUALIZAR UNA MATERIA PRIMA PERTENECIENTE AL USER
-export const putRawMaterialData = async (idRawMaterial: string, body: IRawMaterial, userId: string, userType: string): Promise<IRawMaterial | null> => {
+export const putRawMaterialData = async (idRawMaterial: string, body: IRawMaterial, userId: string): Promise<IRawMaterial | null> => {
     try {
-        if (userType === 'User') {
-            const existingBranchWithSameName = await RawMaterial.findOne({
-                where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idRawMaterial } },
-            });
-            if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la materia prima porque ya existe una con ese mismo nombre");
-        }
+        const existingBranchWithSameName = await RawMaterial.findOne({
+            where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idRawMaterial } },
+        });
+        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la materia prima porque ya existe una con ese mismo nombre");
         const [rowsUpdated] = await RawMaterial.update(body, { where: { id: idRawMaterial } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna materia prima para actualizar");
         const updatedRawMaterial = await RawMaterial.findByPk(idRawMaterial);
@@ -160,16 +142,13 @@ export const putRawMaterialData = async (idRawMaterial: string, body: IRawMateri
 
 
 //DATA PARA ACTUALIZAR DE FORMA MASIVA VARIAS MATERIAS PRIMAS
-export const putUpdateManyRawMaterialData = async (body: IRawMaterial, userId: string, userType: string): Promise<any> => {
+export const putUpdateManyRawMaterialData = async (body: IRawMaterial, userId: string): Promise<any> => {
     const t = await sequelize.transaction();
-
     try {
-        if (userType === 'User') {
-            const existingBranchWithSameName = await RawMaterial.findOne({
-                where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
-            });
-            if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la materia prima porque ya existe una con ese mismo nombre");
-        }
+        const existingBranchWithSameName = await RawMaterial.findOne({
+            where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
+        });
+        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la materia prima porque ya existe una con ese mismo nombre");
         const [rowsUpdated] = await RawMaterial.update(body, { where: { id: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna materia prima para actualizar");
         const updatedRawMaterial = await RawMaterial.findByPk(body.id);
@@ -184,12 +163,10 @@ export const putUpdateManyRawMaterialData = async (body: IRawMaterial, userId: s
 
 
 //DATA PARA DAR DE BAJA UN PRODUCTO DEL USER
-export const patchRawMaterialData = async (idRawMaterial: string, body: Partial<IRawMaterial>, userId: string, userType: string): Promise<IRawMaterial | null> => {
+export const patchRawMaterialData = async (idRawMaterial: string, body: Partial<IRawMaterial>, userId: string): Promise<IRawMaterial | null> => {
     try {
         let whereClause: Record<string, any> = { id: idRawMaterial };
-        if (userType === 'User') {
-            whereClause.userId = userId;
-        }
+        whereClause.userId = userId;
         const existingRawMaterial = await RawMaterial.findOne({
             where: whereClause,
         });

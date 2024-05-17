@@ -5,13 +5,11 @@ import {
     mailDetailAppointmentUser,
     mailUpdateAppointmentUser,
     mailCancelAppointmentUser,
-    mailUpdateAppointmentCompany,
-    mailCancelAppointmentCompany,
 } from '../../libs/nodemailer';
 import { IAppointment } from "../../types/Ecopcion/appointment.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
-//DATA PARA CREAR UNA CITA PARA USER O COMPANY
+//DATA PARA CREAR UNA CITA PARA USER
 export const postAppointmentData = async (body: IAppointment): Promise<any> => {
     const t = await sequelize.transaction();
     try {
@@ -63,7 +61,7 @@ export const postAppointmentData = async (body: IAppointment): Promise<any> => {
 
 
 
-//DATA PARA OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER Y COMPANY - CEO PLATATORMA
+//DATA PARA OBTENER TODAS LAS CITAS DE TODOS LOS USER - CEO PLATATORMA
 export const getAppointmentData = async (): Promise<any> => {
     try {
         const appointments = await Appointment.findAll();
@@ -88,7 +86,7 @@ export const getConsultAdAppointmentData = async (appointmentId: string): Promis
 
 
 
-//DATA PARA OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER Y COMPANY - CEO PLATATORMA
+//DATA PARA OBTENER UNA CITA POR ID DEL USER - CEO PLATATORMA
 export const getIdAppointmentData = async (appointmentId: string): Promise<any> => {
     try {
         const appointments = await Appointment.findOne({
@@ -102,7 +100,7 @@ export const getIdAppointmentData = async (appointmentId: string): Promise<any> 
 
 
 
-//DATA PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER O COMPANY
+//DATA PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
 export const putAppointmentData = async (appointmentId: string, body: IAppointment): Promise<IAppointment | null> => {
     const t = await sequelize.transaction();
     try {
@@ -129,34 +127,12 @@ export const putAppointmentData = async (appointmentId: string, body: IAppointme
                     throw new ServiceError(500, 'Error al enviar el correo electrónico');
                 }
             }
-            if (body.corporateName) {
-                const mailOptions = mailUpdateAppointmentCompany(body.email, body.corporateName, body.date, body.hour);
-                try {
-                    await transporterZoho.sendMail(mailOptions);
-                    console.log(`Correo electrónico enviado con éxito.`);
-                } catch (emailError) {
-                    console.error('Error al enviar el correo electrónico:', emailError);
-                    await t.rollback();
-                    throw new ServiceError(500, 'Error al enviar el correo electrónico');
-                }
-            }
         }
 
 
         if (body.stateAppointment === 'Cancelada') {
             if (body.nameClient) {
                 const mailOptions = mailCancelAppointmentUser(body.email, body.nameClient, body.date, body.hour);
-                try {
-                    await transporterZoho.sendMail(mailOptions);
-                    console.log(`Correo electrónico enviado con éxito.`);
-                } catch (emailError) {
-                    console.error('Error al enviar el correo electrónico:', emailError);
-                    await t.rollback();
-                    throw new ServiceError(500, 'Error al enviar el correo electrónico');
-                }
-            }
-            if (body.corporateName) {
-                const mailOptions = mailCancelAppointmentCompany(body.email, body.corporateName, body.date, body.hour);
                 try {
                     await transporterZoho.sendMail(mailOptions);
                     console.log(`Correo electrónico enviado con éxito.`);
@@ -177,7 +153,7 @@ export const putAppointmentData = async (appointmentId: string, body: IAppointme
 
 
 
-//DATA PARA ELIMINAR UN PRODUCTO PERTENECIENTE AL USER O COMPANY
+//DATA PARA ELIMINAR UN PRODUCTO PERTENECIENTE AL USER
 export const deleteAppointmentData = async (appointmentId: string): Promise<void> => {
     try {
         const appointmentFound = await Appointment.findOne({ where: { id: appointmentId } });

@@ -13,9 +13,9 @@ import {
 import { ICrmClients } from '../../types/User/crmClients.types';
 
 //SERVICE PARA CREAR UN CLIENTE DEL USER
-export const postRegisterCRMClientsService = async (body: ICrmClients, userId: string, userType: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const postRegisterCRMClientsService = async (body: ICrmClients, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        const dataLayerResponse = await postRegisterCRMClientsData(body, userId, userType);
+        const dataLayerResponse = await postRegisterCRMClientsData(body, userId);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe un cliente con el mismo documento de identidad");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -29,9 +29,9 @@ export const postRegisterCRMClientsService = async (body: ICrmClients, userId: s
 
 
 //SERVICE PARA OBTENER TODOS LOS CLIENTES DE UN USER
-export const getCRMClientsUserService = async (userId: string, userType: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const getCRMClientsUserService = async (userId: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        const dataLayerResponse = await getCRMClientsData(userId, userType);
+        const dataLayerResponse = await getCRMClientsData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -44,9 +44,9 @@ export const getCRMClientsUserService = async (userId: string, userType: string)
 
 
 //SERVICE PARA OBTENER TODOS LOS CLIENTES POR SEDE DE USER
-export const getCRMClientsBranchService = async (idBranch: string, userId: string, userType: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const getCRMClientsBranchService = async (idBranch: string, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        const cRMClientsFound = await getCRMClientsBranchData(idBranch, userId, userType);
+        const cRMClientsFound = await getCRMClientsBranchData(idBranch, userId);
         if (!cRMClientsFound) return { code: 404, message: "Clientes no encontrados en esta sede" };
         return { code: 200, result: cRMClientsFound };
     } catch (error) {
@@ -60,9 +60,9 @@ export const getCRMClientsBranchService = async (idBranch: string, userId: strin
 
 
 //SERVICE PARA OBTENER UN CLIENTE POR ID PERTENECIENTE AL USER
-export const getCRMClientByIdService = async (idCRMClient: string, userId: string, userType: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const getCRMClientByIdService = async (idCRMClient: string, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        const cRMClientFound = await getCRMClientByIdData(idCRMClient, userId, userType);
+        const cRMClientFound = await getCRMClientByIdData(idCRMClient, userId);
         if (!cRMClientFound) return { code: 404, message: "Cliente no encontrado" };
         return { code: 200, result: cRMClientFound };
     } catch (error) {
@@ -76,9 +76,9 @@ export const getCRMClientByIdService = async (idCRMClient: string, userId: strin
 
 
 //SERVICE PARA ACTUALIZAR UN CLIENTE PERTENECIENTE AL USER
-export const putCRMClientService = async (idCRMClient: string, body: ICrmClients, userId: string, userType: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const putCRMClientService = async (idCRMClient: string, body: ICrmClients, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        const updateCRMClient = await putCRMClientData(idCRMClient, body, userId, userType);
+        const updateCRMClient = await putCRMClientData(idCRMClient, body, userId);
         if (!updateCRMClient) throw new ServiceError(404, "Cliente no encontrado");
         return { code: 200, message: "Cliente actualizado exitosamente", result: updateCRMClient };
     } catch (error) {
@@ -92,9 +92,9 @@ export const putCRMClientService = async (idCRMClient: string, body: ICrmClients
 
 
 //SERVICE PARA ELIMINAR UN CLIENTE PERTENECIENTE AL USER
-export const deleteCRMClientService = async (idCRMClient: string, userId: string, userType: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const deleteCRMClientService = async (idCRMClient: string, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        await deleteCRMClientData(idCRMClient, userId, userType);
+        await deleteCRMClientData(idCRMClient, userId);
         return { code: 200, message: "Cliente eliminado exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

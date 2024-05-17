@@ -5,11 +5,11 @@ import {
 import { ServiceError } from '../types/Responses/responses.types';
 
 //VALIDA QUE LOS USARIOS DE PLATAFORMA PERTENEZCAN A UNA SEDE DE UN USER
-export const checkPermissionForUserPlatformBranch = async (idBranch: string, userId: string, userType: string): Promise<boolean> => {
+export const checkPermissionForUserPlatformBranch = async (idBranch: string, userId: string): Promise<boolean> => {
     try {
         const usersPlatform = await getUserPlatformBranchByIdData(idBranch);
         if (!usersPlatform) return false;
-        for (const userPlatform of usersPlatform) if ((userType === 'User' && userPlatform.entityUserId !== userId) || (userType === 'Company' && userPlatform.entityCompanyId !== userId)) return false;
+        for (const userPlatform of usersPlatform) if (userPlatform.entityUserId !== userId) return false;
         return true;
     } catch (error) {
         if (error instanceof Error) {
@@ -22,12 +22,11 @@ export const checkPermissionForUserPlatformBranch = async (idBranch: string, use
 
 
 //VALIDA QUE SI EL USARIO DE PLATAFORMA LE PERTENECE A UN UN USER
-export const checkPermissionForUserPlatform = async (idUserPlatform: string, userId: string, userType: string): Promise<boolean> => {
+export const checkPermissionForUserPlatform = async (idUserPlatform: string, userId: string): Promise<boolean> => {
     try {
         const userPlatform = await getUserPlatformByIdData(idUserPlatform, userId);
         if (!userPlatform) return false;
-        if (userType === 'User' && userPlatform.id !== idUserPlatform) return false; 
-        if (userType === 'Company' && userPlatform.id !== idUserPlatform) return false;
+        if (userPlatform.id !== idUserPlatform) return false;
         return true;
     } catch (error) {
         if (error instanceof Error) {

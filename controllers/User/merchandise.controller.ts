@@ -21,14 +21,14 @@ const router = express.Router();
 router.post("/", authRequired, checkRole, validateSchema(merchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await postMerchandiseService(body, id, userType, employerId, typeRole, userBranchId);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await postMerchandiseService(body, id, employerId, typeRole, userBranchId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/merchandise/userMerchandise con { "branchId": "28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0", "nameItem": "Arroz Roa VENDEDOR", "barCode": null, "inventory": 5000, "unitMeasure": "Kilogramo", "inventoryIncrease": "Si", "periodicityAutomaticIncrease": "Diario", "automaticInventoryIncrease": 150, "purchasePriceBeforeTax": 1750, "IVA": 0, "sellingPrice": 2100, "packaged": "Si", "primaryPackageType": "Papel", "expirationDate": "2024-06-01T14:50:46.288Z" }
+}); // POST - http://localhost:3000/api/merchandise con { "branchId": "28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0", "nameItem": "Arroz Roa VENDEDOR", "barCode": null, "inventory": 5000, "unitMeasure": "Kilogramo", "inventoryIncrease": "Si", "periodicityAutomaticIncrease": "Diario", "automaticInventoryIncrease": 150, "purchasePriceBeforeTax": 1750, "IVA": 0, "sellingPrice": 2100, "packaged": "Si", "primaryPackageType": "Papel", "expirationDate": "2024-06-01T14:50:46.288Z" }
 
 
 
@@ -36,22 +36,22 @@ router.post("/", authRequired, checkRole, validateSchema(merchandiseSchemaZod), 
 router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await postManyMerchandiseService(bodyArray, id, userType, employerId, typeRole, userBranchId);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await postManyMerchandiseService(bodyArray, id, employerId, typeRole, userBranchId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/merchandise/userMerchandise/createMany con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Supremo","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Roa","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"}]
+}); // POST - http://localhost:3000/api/merchandise/createMany con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Supremo","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Roa","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"}]
 
 
 
 //CONTROLLER PARA OBTENER TODA LA MERCANCIA DEL USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-      const { id, userType } = req.user;
-      const serviceLayerResponse = await getMerchandiseUserService(id, userType);      
+      const { id } = req.user;
+      const serviceLayerResponse = await getMerchandiseUserService(id);      
       if (Array.isArray(serviceLayerResponse.result)) {
         res.status(200).json(serviceLayerResponse.result);
       } else {
@@ -61,7 +61,7 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
       const errorController = error as ServiceError;
       res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/merchandise/userMerchandise
+}); // GET - http://localhost:3000/api/merchandise
 
 
 
@@ -69,8 +69,8 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 router.get("/userMerchandiseBranch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await getMerchandiseBranchService(idBranch, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await getMerchandiseBranchService(idBranch, id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -88,14 +88,14 @@ router.get("/userMerchandiseBranch/:idBranch", authRequired, async (req: Request
 router.get("/:idMerchandise", authRequired, async (req: Request, res: Response) => {
     try {
         const { idMerchandise } = req.params;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await getMerchandiseService(idMerchandise, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await getMerchandiseService(idMerchandise, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/merchandise/userMerchandise/:idMerchandise
+}); // GET - http://localhost:3000/api/merchandise/:idMerchandise
 
 
 
@@ -104,29 +104,29 @@ router.put("/:idMerchandise", authRequired, checkRole, validateSchema(merchandis
     try {
         const { idMerchandise } = req.params;
         const body = req.body;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await putMerchandiseService(idMerchandise, body, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await putMerchandiseService(idMerchandise, body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/merchandise/userMerchandise/:idMerchandise con { "branchId": "c1826ff6-b9aa-46c5-bce8-365157d64be1", "nameItem": "Arroz Roa", "packaged": "Si", // "salesCount": 10, "primaryPackageType": "Papel" }
+}); // PUT - http://localhost:3000/api/merchandise/:idMerchandise con { "branchId": "c1826ff6-b9aa-46c5-bce8-365157d64be1", "nameItem": "Arroz Roa", "packaged": "Si", // "salesCount": 10, "primaryPackageType": "Papel" }
 
 
 
 //CONTROLLER PARA ACTUALIZAR DE FORMA MASIVA VARIAS MERCANCIAS
-router.put("/userMerchandisesMany/update", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
+router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await putUpdateManyMerchandiseService(bodyArray, id, userType, employerId, typeRole, userBranchId);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await putUpdateManyMerchandiseService(bodyArray, id, employerId, typeRole, userBranchId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/merchandise/userMerchandisesMany/update con [{"id":"58eb13ad-bc94-47bd-9f94-b368f0b4ce66","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Roa ACTUALIZADO","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"},{"id":"5d5e7171-b5ce-4246-b13d-916c04bf74e5","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Supremo ACTUALIZADO","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"}]
+}); // PUT - http://localhost:3000/api/merchandise/updateMany con [{"id":"58eb13ad-bc94-47bd-9f94-b368f0b4ce66","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Roa ACTUALIZADO","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"},{"id":"5d5e7171-b5ce-4246-b13d-916c04bf74e5","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Supremo ACTUALIZADO","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"}]
 
 
 
@@ -135,14 +135,14 @@ router.patch("/:idMerchandise", authRequired, checkRole, async (req: Request, re
     try {
         const { idMerchandise } = req.params;
         const body = req.body;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await patchMerchandiseService(idMerchandise, body, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await patchMerchandiseService(idMerchandise, body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;
         res.status(assetError.code).json(assetError.message);
     }
-}); // PATCH - http://localhost:3000/api/merchandise/userMerchandise/:idMerchandise con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "assetStatus": "" }
+}); // PATCH - http://localhost:3000/api/merchandise/:idMerchandise con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "assetStatus": "" }
 
 
 
@@ -150,14 +150,14 @@ router.patch("/:idMerchandise", authRequired, checkRole, async (req: Request, re
 router.delete('/:idMerchandise', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idMerchandise } = req.params;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await deleteMerchandiseService(idMerchandise, id, userType); 
+        const { id } = req.user;
+        const serviceLayerResponse = await deleteMerchandiseService(idMerchandise, id); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // DELETE - http://localhost:3000/api/merchandise/userMerchandise/:idMerchandise
+}); // DELETE - http://localhost:3000/api/merchandise/:idMerchandise
 
 
 

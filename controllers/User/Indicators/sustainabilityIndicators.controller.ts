@@ -21,8 +21,8 @@ const router = express.Router();
 router.post("/userSustainability", authRequired, async (req: Request, res: Response) => {
     try {
         const body = req.body;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await postSustainabilityService(body, id, userType, employerId, typeRole, userBranchId);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await postSustainabilityService(body, id, employerId, typeRole, userBranchId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -32,11 +32,11 @@ router.post("/userSustainability", authRequired, async (req: Request, res: Respo
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD DE UN USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD DE UN USER
 router.get("/userSustainability", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await getSustainabilityUserService(id, userType);      
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await getSustainabilityUserService(id);      
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -50,12 +50,12 @@ router.get("/userSustainability", authRequired, async (req: Request, res: Respon
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD POR SEDE DE UN USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE SOSTENIBILIDAD POR SEDE DE UN USER
 router.get("/userSustainabilityBranch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await getSustainabilityBranchService(idBranch, id, userType);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await getSustainabilityBranchService(idBranch, id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -69,11 +69,11 @@ router.get("/userSustainabilityBranch/:idBranch", authRequired, async (req: Requ
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA DEL USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA DEL USER
 router.get("/energyConsumption", authRequired,async (req: Request, res: Response) => {
     try {
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await getEnergyConsumptionService(id, userType);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await getEnergyConsumptionService(id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -91,8 +91,8 @@ router.get("/energyConsumption", authRequired,async (req: Request, res: Response
 router.get("/verifyEnergyConsumption/:idSustainability", authRequired, async (req: Request, res: Response) => {
     try {
         const { idSustainability } = req.params;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await getSustainabilityByIdService(idSustainability, id, userType);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await getSustainabilityByIdService(idSustainability, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -102,12 +102,12 @@ router.get("/verifyEnergyConsumption/:idSustainability", authRequired, async (re
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER
 router.get("/energyConsumptionBranch/:idBranch", authRequired,async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await getEnergyConsumptionBranchService(idBranch, id, userType);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await getEnergyConsumptionBranchService(idBranch, id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -121,11 +121,11 @@ router.get("/energyConsumptionBranch/:idBranch", authRequired,async (req: Reques
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE AGUA USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE AGUA USER
 router.get("/waterConsumption", authRequired,async (req: Request, res: Response) => {
     try {
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await getWaterConsumptionService(id, userType);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await getWaterConsumptionService(id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -139,12 +139,12 @@ router.get("/waterConsumption", authRequired,async (req: Request, res: Response)
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE AGUA POR SEDE DEL USER O COMPANY
+//CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DE AGUA POR SEDE DEL USER
 router.get("/waterConsumptionBranch/:idBranch", authRequired,async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await getWaterConsumptionBranchService(idBranch, id, userType);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await getWaterConsumptionBranchService(idBranch, id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -158,13 +158,13 @@ router.get("/waterConsumptionBranch/:idBranch", authRequired,async (req: Request
 
 
 
-//CONTROLLER PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER O COMPANY
+//CONTROLLER PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER
 router.put("/userSustainability/:idSustainability", authRequired, async (req: Request, res: Response) => {
     try {
         const { idSustainability } = req.params;
         const body = req.body;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await putSustainabilityService(idSustainability, body, id, userType);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await putSustainabilityService(idSustainability, body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -174,12 +174,12 @@ router.put("/userSustainability/:idSustainability", authRequired, async (req: Re
 
 
 
-//CONTROLLER PARA ELIMINAR UN REGISTRO DE SOSTENIBILIDAD PERTENECIENTE AL USER O COMPANY
+//CONTROLLER PARA ELIMINAR UN REGISTRO DE SOSTENIBILIDAD PERTENECIENTE AL USER
 router.delete('/userSustainability/:idSustainability', authRequired, async (req: Request, res: Response) => {
     try {
         const { idSustainability } = req.params;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await deleteSustainabilityService(idSustainability, id, userType); 
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await deleteSustainabilityService(idSustainability, id); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

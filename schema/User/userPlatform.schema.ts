@@ -11,7 +11,6 @@ class UserPlatform extends Model {
     public documentId!: string;
     public profilePicture!: string;
     public logo!: string;
-    public userType!: 'User';
     public typeRole!: 'Superadmin' | 'Administrador' | 'Vendedor' | 'Cajero' | 'Operativo' | 'Contador';
     public email!: string;
     public password!: string;
@@ -75,10 +74,6 @@ UserPlatform.init(
         logo: {
             type: DataTypes.STRING,
             allowNull: true,
-        },
-        userType: {
-            type: DataTypes.ENUM('User'),
-            defaultValue: 'User',
         },
         typeRole: {
             type: DataTypes.UUID,
