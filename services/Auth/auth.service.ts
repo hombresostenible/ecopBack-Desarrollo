@@ -30,7 +30,7 @@ export const loginService = async (email: string, password: string): Promise<ILo
         if (isMatch === true) {
             userFound.loginAttempts = 0;
             await userFound.save();
-            const token = await createAccessToken({ id: userFound.id, userType: userFound.userType, typeRole: userFound.typeRole });
+            const token = await createAccessToken({ id: userFound.id, typeRole: userFound.typeRole });
             return { code: 200, result: { serResult: userFound, token } };
         } else {
             userFound.loginAttempts += 1;
@@ -88,7 +88,6 @@ export const verifyUserTokenService = async (token: string) => {
                             verificationDigit: userFound.verificationDigit,
                             commercialName: userFound.commercialName,
                             logo: userFound.logo,
-                            userType: userFound.userType,
                             typeRole: userFound.typeRole,
                             economicSector: userFound.economicSector,
                             codeCiiu: userFound.codeCiiu,

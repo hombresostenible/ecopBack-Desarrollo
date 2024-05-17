@@ -5,7 +5,7 @@ import { IMerchandise } from "../../types/User/merchandise.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UNA MERCANCIA POR SEDE PARA USER
-export const postMerchandiseData = async (body: IMerchandise, userId: string, userType: string, employerId: string, typeRole: string): Promise<any> => {
+export const postMerchandiseData = async (body: IMerchandise, userId: string, employerId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingMerchandise = await Merchandise.findOne({
@@ -13,7 +13,7 @@ export const postMerchandiseData = async (body: IMerchandise, userId: string, us
             transaction: t,
         });
         if (existingMerchandise) {
-            if (existingMerchandise.getDataValue('userId') === userId && userType === 'User') {
+            if (existingMerchandise.getDataValue('userId') === userId) {
                 await t.rollback();
                 return null;
             }
@@ -26,7 +26,7 @@ export const postMerchandiseData = async (body: IMerchandise, userId: string, us
         if (typeRole === 'Superadmin') {
             const newMerchandise = await Merchandise.create({
                 ...body,
-                userId: userType === 'User' ? userId : null,
+                userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
@@ -35,7 +35,7 @@ export const postMerchandiseData = async (body: IMerchandise, userId: string, us
         if (typeRole === 'Administrador') {            
             const newMerchandise = await Merchandise.create({
                 ...body,
-                userId: userType === 'User' ? employerId : null,
+                userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
@@ -49,7 +49,7 @@ export const postMerchandiseData = async (body: IMerchandise, userId: string, us
 
 
 //DATA PARA CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyMerchandiseData = async (body: IMerchandise, userId: string, userType: string, employerId: string, typeRole: string): Promise<any> => {
+export const postManyMerchandiseData = async (body: IMerchandise, userId: string, employerId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
 
     try {
@@ -67,7 +67,7 @@ export const postManyMerchandiseData = async (body: IMerchandise, userId: string
         if (typeRole === 'Superadmin') {
             const newMerchandise = await Merchandise.create({
                 ...body,
-                userId: userType === 'User' ? userId : null,
+                userId: userId,
             }, { transaction: t });        
             await t.commit();
             return newMerchandise;            
@@ -75,7 +75,7 @@ export const postManyMerchandiseData = async (body: IMerchandise, userId: string
         if (typeRole === 'Administrador') {
             const newMerchandise = await Merchandise.create({
                 ...body,
-                userId: userType === 'User' ? employerId : null,
+                userId: userId,
             }, { transaction: t });        
             await t.commit();
             return newMerchandise;            
@@ -128,14 +128,12 @@ export const getMerchandiseByIdData = async (idMerchandise: string): Promise<any
 
 
 //DATA PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
-export const putMerchandiseData = async (idMerchandise: string, body: IMerchandise, userId: string, userType: string): Promise<IMerchandise | null> => {
+export const putMerchandiseData = async (idMerchandise: string, body: IMerchandise, userId: string): Promise<IMerchandise | null> => {
     try {
-        if (userType === 'User') {
-            const existingBranchWithSameName = await Merchandise.findOne({
-                where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idMerchandise } },
-            });
-            if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la mercancía porque ya existe uno con ese mismo nombre");
-        }
+        const existingBranchWithSameName = await Merchandise.findOne({
+            where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idMerchandise } },
+        });
+        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la mercancía porque ya existe uno con ese mismo nombre");
         const [rowsUpdated] = await Merchandise.update(body, { where: { id: idMerchandise } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna mercancía para actualizar");
         const updatedMerchandise = await Merchandise.findByPk(idMerchandise);
@@ -149,16 +147,13 @@ export const putMerchandiseData = async (idMerchandise: string, body: IMerchandi
 
 
 //DATA PARA ACTUALIZAR DE FORMA MASIVA VARIAS MERCANCIAS
-export const putUpdateManyMerchandiseData = async (body: IMerchandise, userId: string, userType: string): Promise<any> => {
+export const putUpdateManyMerchandiseData = async (body: IMerchandise, userId: string): Promise<any> => {
     const t = await sequelize.transaction();
-
     try {
-        if (userType === 'User') {
-            const existingBranchWithSameName = await Merchandise.findOne({
-                where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
-            });
-            if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la mercancía porque ya existe una con ese mismo nombre");
-        }
+        const existingBranchWithSameName = await Merchandise.findOne({
+            where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
+        });
+        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la mercancía porque ya existe una con ese mismo nombre");
         const [rowsUpdated] = await Merchandise.update(body, { where: { id: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna mercancía para actualizar");
         const updatedMachinery = await Merchandise.findByPk(body.id);
@@ -173,12 +168,10 @@ export const putUpdateManyMerchandiseData = async (body: IMerchandise, userId: s
 
 
 //DATA PARA DAR DE BAJA UNA MERCANCIA DEL USER
-export const patchMerchandiseData = async (idAssets: string, body: Partial<IMerchandise>, userId: string, userType: string): Promise<IMerchandise | null> => {
+export const patchMerchandiseData = async (idAssets: string, body: Partial<IMerchandise>, userId: string): Promise<IMerchandise | null> => {
     try {
         let whereClause: Record<string, any> = { id: idAssets };
-        if (userType === 'User') {
-            whereClause.userId = userId;
-        }
+        whereClause.userId = userId;
         const existingMerchandise = await Merchandise.findOne({
             where: whereClause,
         });

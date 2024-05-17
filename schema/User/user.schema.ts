@@ -12,7 +12,6 @@ class User extends Model {
     public verificationDigit!: string;
     public commercialName!: string;
     public logo!: string;
-    public userType!: 'User';
     public typeRole!: 'CEO' | 'Moderador de atención al cliente' | 'CTO' | 'Desarrollador de software' | 'Financiador de programas' | 'Superadmin' | 'Administrador' | 'Vendedor' | 'Cajero' | 'Operativo' | 'Contador';
     public economicSector!: 'Agricultura' | 'Manufactura' | 'Comercio' | 'Servicios' | 'Construcción' | 'Turismo' | 'Otro';
     public codeCiiu!: string;
@@ -90,11 +89,6 @@ User.init(
         logo: {
             type: DataTypes.STRING,
             allowNull: true,
-        },
-        userType: {
-            type: DataTypes.ENUM('User'),
-            defaultValue: 'User',
-            allowNull: false,
         },
         typeRole: {
             type: DataTypes.UUID,

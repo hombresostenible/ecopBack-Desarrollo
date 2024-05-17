@@ -2,11 +2,11 @@ import ElectronicInvoicing from '../../schema/User/electronicInvoicing.schema';
 import { IElectronicInvoicing } from "../../types/User/electronicInvoicing.types";
 
 //CONTROLLER PARA CREAR LA FACTURA ELECTRÓNICA
-export const postElectronicInvoicingData = async (body: IElectronicInvoicing, userId: string, userType: string): Promise<IElectronicInvoicing> => {
+export const postElectronicInvoicingData = async (body: IElectronicInvoicing, userId: string): Promise<IElectronicInvoicing> => {
     try {
         const newElectronicInvoicing = new ElectronicInvoicing({
             ...body,
-            userId: userType === 'User' ? userId : null,
+            userId: userId,
         });
         await newElectronicInvoicing.save();
         return newElectronicInvoicing;
@@ -30,12 +30,10 @@ export const getElectronicInvoicingData = async (): Promise<any> => {
 
 
 //CONTROLLER PARA OBTENER UNA FACTURA ELECTRONICA POR ID
-export const getElectronicInvoicingByIdData = async (idElectronicInvoicing: string, userId: string, userType: string): Promise<any> => {
+export const getElectronicInvoicingByIdData = async (idElectronicInvoicing: string, userId: string): Promise<any> => {
     try {
-        if (userType === 'User') {
-            const electronicInvoicingFound = await ElectronicInvoicing.findOne({ where: { id: idElectronicInvoicing, userId: userId } });
-            return electronicInvoicingFound;
-        }
+        const electronicInvoicingFound = await ElectronicInvoicing.findOne({ where: { id: idElectronicInvoicing, userId: userId } });
+        return electronicInvoicingFound;
     } catch (error) {
         throw error;
     }

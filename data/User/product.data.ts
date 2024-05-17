@@ -5,7 +5,7 @@ import { IProduct } from "../../types/User/products.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UN PRODUCTO POR SEDE PARA USER
-export const postProductsData = async (body: IProduct, userId: string, userType: string, employerId: string, typeRole: string): Promise<any> => {
+export const postProductsData = async (body: IProduct, userId: string, employerId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingProduct = await Product.findOne({
@@ -13,7 +13,7 @@ export const postProductsData = async (body: IProduct, userId: string, userType:
             transaction: t,
         });
         if (existingProduct) {
-            if (existingProduct.getDataValue('userId') === userId && userType === 'User' ) {
+            if (existingProduct.getDataValue('userId') === userId) {
                 await t.rollback();
                 return null;
             }
@@ -25,7 +25,7 @@ export const postProductsData = async (body: IProduct, userId: string, userType:
         if (typeRole === 'Superadmin') {
             const newProduct = await Product.create({
                 ...body,
-                userId: userType === 'User' ? userId : null,
+                userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
@@ -34,7 +34,7 @@ export const postProductsData = async (body: IProduct, userId: string, userType:
         if (typeRole === 'Administrador') {
             const newProduct = await Product.create({
                 ...body,
-                userId: userType === 'User' ? employerId : null,
+                userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
@@ -49,7 +49,7 @@ export const postProductsData = async (body: IProduct, userId: string, userType:
 
 
 //DATA PARA CREAR MUCHOS PRODUCTOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyProductsData = async (body: IProduct, userId: string, userType: string, employerId: string, typeRole: string): Promise<any> => {
+export const postManyProductsData = async (body: IProduct, userId: string, employerId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
 
     try {
@@ -67,7 +67,7 @@ export const postManyProductsData = async (body: IProduct, userId: string, userT
         if (typeRole === 'Superadmin') {
             const newProduct = await Product.create({
                 ...body,
-                userId: userType === 'User' ? userId : null,
+                userId: userId,
             }, { transaction: t });      
             await t.commit();
             return newProduct;            
@@ -75,7 +75,7 @@ export const postManyProductsData = async (body: IProduct, userId: string, userT
         if (typeRole === 'Administrador') {
             const newProduct = await Product.create({
                 ...body,
-                userId: userType === 'User' ? employerId : null,
+                userId: userId,
             }, { transaction: t });      
             await t.commit();
             return newProduct;   
@@ -141,14 +141,12 @@ export const getProductByIdData = async (idProduct: string): Promise<any> => {
 
 
 //DATA PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
-export const putProductData = async (idProduct: string, body: IProduct, userId: string, userType: string): Promise<IProduct | null> => {
+export const putProductData = async (idProduct: string, body: IProduct, userId: string): Promise<IProduct | null> => {
     try {
-        if (userType === 'User') {
-            const existingBranchWithSameName = await Product.findOne({
-                where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idProduct } },
-            });
-            if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el producto porque ya existe uno con ese mismo nombre");
-        }
+        const existingBranchWithSameName = await Product.findOne({
+            where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idProduct } },
+        });
+        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el producto porque ya existe uno con ese mismo nombre");
         const [rowsUpdated] = await Product.update(body, { where: { id: idProduct } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún producto para actualizar");
         const updatedProduct = await Product.findByPk(idProduct);
@@ -162,16 +160,14 @@ export const putProductData = async (idProduct: string, body: IProduct, userId: 
 
 
 //DATA PARA ACTUALIZAR DE FORMA MASIVA VARIOS PRODUCTOS
-export const putUpdateManyProductData = async (body: IProduct, userId: string, userType: string): Promise<any> => {
+export const putUpdateManyProductData = async (body: IProduct, userId: string): Promise<any> => {
     const t = await sequelize.transaction();
 
     try {
-        if (userType === 'User') {
-            const existingBranchWithSameName = await Product.findOne({
-                where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
-            });
-            if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el producto porque ya existe un con ese mismo nombre");
-        }
+        const existingBranchWithSameName = await Product.findOne({
+            where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
+        });
+        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el producto porque ya existe un con ese mismo nombre");
         const [rowsUpdated] = await Product.update(body, { where: { id: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún producto para actualizar");
         const updatedProduct = await Product.findByPk(body.id);
@@ -187,12 +183,10 @@ export const putUpdateManyProductData = async (body: IProduct, userId: string, u
 
 
 //DATA PARA DAR DE BAJA UN PRODUCTO DEL USER
-export const patchProductData = async (idProduct: string, body: Partial<IProduct>, userId: string, userType: string): Promise<IProduct | null> => {
+export const patchProductData = async (idProduct: string, body: Partial<IProduct>, userId: string): Promise<IProduct | null> => {
     try {
         let whereClause: Record<string, any> = { id: idProduct };
-        if (userType === 'User') {
-            whereClause.userId = userId;
-        }
+        whereClause.userId = userId;
         const existingProduct = await Product.findOne({
             where: whereClause,
         });
@@ -209,8 +203,6 @@ export const patchProductData = async (idProduct: string, body: Partial<IProduct
         throw error;
     }
 };
-
-
 
 
 

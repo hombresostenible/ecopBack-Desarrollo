@@ -8,7 +8,6 @@ class ProjectFunder extends Model {
     public documentId!: string;
     public verificationDigit!: string;
     public logo!: string;
-    public userType!: 'User';
     public typeRole!: 'CEO' | 'Moderador de atención al cliente' | 'CTO' | 'Desarrollador de software' | 'Financiador de programas' | 'Superadmin' | 'Administrador' | 'Vendedor' | 'Cajero' | 'Operativo' | 'Contador';
     public codeCiiu!: string;
     public department!: 'Bogota D.C.' | 'Amazonas' | 'Antioquia' | 'Arauca' | 'Atlantico' | 'Bolivar' | 'Boyaca' | 'Caldas' | 'Caqueta' | 'Casanare' | 'Cauca' | 'Cesar' | 'Choco' | 'Cordoba' | 'Cundinamarca' | 'Guainia' | 'Guaviare' | 'Huila' | 'La Guajira' | 'Magdalena' | 'Meta' | 'Nariño' | 'Norte de Santander' | 'Putumayo' | 'Quindio' | 'Risaralda' | 'San Andres y Providencia' | 'Santander' | 'Sucre' | 'Tolima' | 'Valle del Cauca' | 'Vaupes' | 'Vichada';
@@ -69,11 +68,6 @@ ProjectFunder.init(
         logo: {
             type: DataTypes.STRING,
             allowNull: true,
-        },
-        userType: {
-            type: DataTypes.ENUM('User'),
-            defaultValue: 'User',
-            allowNull: false,
         },
         typeRole: {
             type: DataTypes.UUID,

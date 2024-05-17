@@ -4,7 +4,7 @@ import { ISustainability } from "../../../types/User/sustainability.types";
 import { ServiceError } from '../../../types/Responses/responses.types';
 
 //DATA PARA CREAR REGISTROS DE SOSTENIBILIDAD
-export const postSustainabilityData = async (body: ISustainability, userId: string, userType: string): Promise<any> => {
+export const postSustainabilityData = async (body: ISustainability, userId: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const newSustainability = await Sustainability.create({
@@ -50,7 +50,7 @@ export const getSustainabilityBranchByIdData = async (idBranch: string): Promise
 
 
 //DATA PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA DEL USER DE LA TABLA ACCOUNTSBOOK SCHEMA
-export const getEnergyConsumptionData = async (userId: string, userType: string): Promise<any> => {
+export const getEnergyConsumptionData = async (userId: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
             where: { userId: userId, typeExpenses: 'Electricity' }
@@ -64,7 +64,7 @@ export const getEnergyConsumptionData = async (userId: string, userType: string)
 
 
 //
-export const getSustainabilityByIdData = async (idSustainability: string, userId: string, userType: string): Promise<any> => {
+export const getSustainabilityByIdData = async (idSustainability: string, userId: string): Promise<any> => {
     try {
         const existingRecord = await Sustainability.findOne({
             where: { id: idSustainability, userId: userId }
@@ -78,7 +78,7 @@ export const getSustainabilityByIdData = async (idSustainability: string, userId
 
 
 //DATA PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER
-export const getEnergyConsumptionBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getEnergyConsumptionBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
             where: { branchId: idBranch, userId: userId, typeExpenses: 'Electricity' },
@@ -92,7 +92,7 @@ export const getEnergyConsumptionBranchData = async (idBranch: string, userId: s
 
 
 //DATA PARA OBTENER TODOS LOS SERVICIOS DE AGUA DEL USER DE LA TABLA ACCOUNTSBOOK SCHEMA
-export const getWaterConsumptionData = async (userId: string, userType: string): Promise<any> => {
+export const getWaterConsumptionData = async (userId: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
             where: { userId: userId, typeExpenses: 'Water' }
@@ -106,7 +106,7 @@ export const getWaterConsumptionData = async (userId: string, userType: string):
 
 
 //DATA PARA OBTENER TODOS LOS SERVICIOS DE ENERGIA POR SEDE DEL USER DE LA TABLA ACCOUNTSBOOK SCHEMA
-export const getWaterConsumptionBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getWaterConsumptionBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
             where: { branchId: idBranch, userId: userId, typeExpenses: 'Water', },
@@ -120,7 +120,7 @@ export const getWaterConsumptionBranchData = async (idBranch: string, userId: st
 
 
 //DATA PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER
-export const putSustainabilityData = async (idSustainability: string, body: ISustainability, userId: string, userType: string): Promise<ISustainability | null> => {
+export const putSustainabilityData = async (idSustainability: string, body: ISustainability, userId: string): Promise<ISustainability | null> => {
     try {
         const existingSustainability = await Sustainability.findOne({
             where: { userId: userId, id: idSustainability },
@@ -139,10 +139,10 @@ export const putSustainabilityData = async (idSustainability: string, body: ISus
 
 
 //DATA PARA ELIMINAR UN REGISTRO DE SOSTENIBILIDAD PERTENECIENTE AL USER
-export const deleteSustainabilityData = async (idSustainability: string, userId: string, userType: string): Promise<void> => {
+export const deleteSustainabilityData = async (idSustainability: string, userId: string): Promise<void> => {
     try {
         const sustainabilityFound = await Sustainability.findOne({
-            where: { id: idSustainability, userId: userId, userType: userType }
+            where: { id: idSustainability, userId: userId }
         });
         if (!sustainabilityFound) throw new Error("Registro no encontrado");
         await Sustainability.destroy({ where: { id: idSustainability } });

@@ -2,9 +2,9 @@ import express, { Request, Response } from "express";
 import {
     postAssetService,
     postManyAssetService,
-    getAssetsUserService,
+    getAssetsService,
+    getAssetByIdService,
     getAssetBranchService,
-    getAssetService,
     putAssetService,
     putUpdateManyAssetService,
     patchAssetService,
@@ -18,11 +18,11 @@ import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 
 //CONTROLLER PARA CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
-router.post("", authRequired, checkRole, validateSchema(assetsSchemaZod), async (req: Request, res: Response) => {
+router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
-        const serviceLayerResponse = await postAssetService(body, id, userType, employerId, typeRole, userBranchId);
+        const { id, employerId, typeRole, userBranchId } = req.user;
+        const serviceLayerResponse = await postAssetService(body, id, employerId, typeRole, userBranchId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -36,9 +36,9 @@ router.post("", authRequired, checkRole, validateSchema(assetsSchemaZod), async 
 router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
+        const { id, employerId, typeRole, userBranchId } = req.user;
         // Llamar a la capa de servicio para manejar la creación de múltiples activos
-        const serviceLayerResponse = await postManyAssetService(bodyArray, id, userType, employerId, typeRole, userBranchId);
+        const serviceLayerResponse = await postManyAssetService(bodyArray, id, employerId, typeRole, userBranchId);
         // Enviar una respuesta al cliente
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
@@ -52,8 +52,8 @@ router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyAsse
 //CONTROLLER PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await getAssetsUserService(id, userType);      
+        const { id } = req.user;
+        const serviceLayerResponse = await getAssetsService(id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas del usuario" });
@@ -65,29 +65,12 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
-router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { idBranch } = req.params;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await getAssetBranchService(idBranch, id, userType);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas del usuario por sede" });
-    } catch (error) {
-        const rawMaterialError = error as ServiceError;
-        res.status(rawMaterialError.code).json(rawMaterialError.message);
-    }
-}); //GET - http://localhost:3000/api/assets/:idBranch
-
-
-
 //CONTROLLER PARA OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 router.get("/:idAssets", authRequired, async (req: Request, res: Response) => {
     try {
         const { idAssets } = req.params;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await getAssetService(idAssets, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await getAssetByIdService(idAssets, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -97,13 +80,30 @@ router.get("/:idAssets", authRequired, async (req: Request, res: Response) => {
 
 
 
+//CONTROLLER PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
+router.get("/assets-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idBranch } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getAssetBranchService(idBranch, id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas del usuario por sede" });
+    } catch (error) {
+        const rawMaterialError = error as ServiceError;
+        res.status(rawMaterialError.code).json(rawMaterialError.message);
+    }
+}); //GET - http://localhost:3000/api/assets/assets-branch/:idBranch
+
+
+
 //CONTROLLER PARA ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 router.put("/:idAssets", authRequired, checkRole, validateSchema(assetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const { idAssets } = req.params;
         const body = req.body;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await putAssetService(idAssets, body, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await putAssetService(idAssets, body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -117,9 +117,9 @@ router.put("/:idAssets", authRequired, checkRole, validateSchema(assetsSchemaZod
 router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, userType, employerId, typeRole, userBranchId } = req.user;
+        const { id, employerId, typeRole, userBranchId } = req.user;
         // Llamar a la capa de servicio para manejar la creación de múltiples activos
-        const serviceLayerResponse = await putUpdateManyAssetService(bodyArray, id, userType, employerId, typeRole, userBranchId);
+        const serviceLayerResponse = await putUpdateManyAssetService(bodyArray, id, employerId, typeRole, userBranchId);
         // Enviar una respuesta al cliente
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
@@ -135,8 +135,8 @@ router.patch("/:idAssets", authRequired, checkRole, async (req: Request, res: Re
     try {
         const { idAssets } = req.params;
         const body = req.body;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await patchAssetService(idAssets, body, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await patchAssetService(idAssets, body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -150,15 +150,13 @@ router.patch("/:idAssets", authRequired, checkRole, async (req: Request, res: Re
 router.delete('/:idAssets', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idAssets } = req.params;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await deleteAssetService(idAssets, id, userType); 
+        const { id } = req.user;
+        const serviceLayerResponse = await deleteAssetService(idAssets, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
 }); // DELETE - http://localhost:3000/api/assets/:idAssets
-
-
 
 export default router;

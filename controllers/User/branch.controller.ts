@@ -18,8 +18,8 @@ const router = express.Router();
 router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await postBranchService(body, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await postBranchService(body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -33,8 +33,8 @@ router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), 
 router.post("/createMany", authRequired, checkRoleAdmin, validateSchema(manyBranchsSchemaType), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await postManyBranchService(bodyArray, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await postManyBranchService(bodyArray, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -47,8 +47,8 @@ router.post("/createMany", authRequired, checkRoleAdmin, validateSchema(manyBran
 //CONTROLLER PARA OBTENER TODAS LAS SEDES DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await getBranchsUserService(id, userType);      
+        const { id } = req.user;
+        const serviceLayerResponse = await getBranchsUserService(id);      
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -66,8 +66,8 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await getBranchService(idBranch, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await getBranchService(idBranch, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -82,8 +82,8 @@ router.put("/:idBranch", authRequired, checkRoleAdmin, validateSchema(branchSche
     try {
         const { idBranch } = req.params;
         const body = req.body;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await putBranchService(idBranch, body, id, userType);
+        const { id } = req.user;
+        const serviceLayerResponse = await putBranchService(idBranch, body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -97,8 +97,8 @@ router.put("/:idBranch", authRequired, checkRoleAdmin, validateSchema(branchSche
 router.delete('/:idBranch', authRequired, checkRoleAdmin, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
-        const { id, userType } = req.user;
-        const serviceLayerResponse = await deleteBranchService(idBranch, id, userType);  
+        const { id } = req.user;
+        const serviceLayerResponse = await deleteBranchService(idBranch, id);  
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

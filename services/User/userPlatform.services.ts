@@ -13,9 +13,9 @@ import { IUserPlatform } from '../../types/User/userPlatform.types';
 import { checkPermissionForUserPlatformBranch, checkPermissionForUserPlatform } from '../../helpers/UserPlatform.helper';
 
 //SERVICE PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
-export const getUserPlatformService = async (userId: string, userType: string): Promise<IServiceLayerResponseUserPlatform> => {
+export const getUserPlatformService = async (userId: string): Promise<IServiceLayerResponseUserPlatform> => {
     try {
-        const dataLayerResponse = await getUserPlatformData(userId, userType);
+        const dataLayerResponse = await getUserPlatformData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -28,9 +28,9 @@ export const getUserPlatformService = async (userId: string, userType: string): 
 
 
 //SERVICE PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA PERTENECIENTES A UNA SEDE DE UN USER
-export const getUserPlatformBranchService = async (idBranch: string, userId: string, userType: string): Promise<IServiceLayerResponseUserPlatform> => {
+export const getUserPlatformBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseUserPlatform> => {
     try {
-        const hasPermission = await checkPermissionForUserPlatformBranch(idBranch, userId, userType);
+        const hasPermission = await checkPermissionForUserPlatformBranch(idBranch, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a los usuarios de esta sede");
         const usersPlatformFound = await getUserPlatformBranchByIdData(idBranch);
         if (!usersPlatformFound) return { code: 404, message: "Usuarios no encontrados en esta sede" };
@@ -64,9 +64,9 @@ export const putProfileUserPlatformService = async (body: IUserPlatform, userId:
 
 
 //SERVICE PARA ELIMINAR UN USUARIO DE PLATAFORMA PERTENECIENTE A UN USER
-export const deleteUserPlatformService = async (idUserPlatform: string, userId: string, userType: string): Promise<IServiceLayerResponseUserPlatform> => {
+export const deleteUserPlatformService = async (idUserPlatform: string, userId: string): Promise<IServiceLayerResponseUserPlatform> => {
     try {
-        const hasPermission = await checkPermissionForUserPlatform(idUserPlatform, userId, userType);
+        const hasPermission = await checkPermissionForUserPlatform(idUserPlatform, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este usuario");
         await deleteUserPlatformData(idUserPlatform);
         return { code: 200, message: "Usuario eliminado exitosamente" };

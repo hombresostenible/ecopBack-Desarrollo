@@ -8,7 +8,7 @@ import AccountsReceivable from '../../../schema/User/accountsReceivable.schema';
 import AccountsPayable from '../../../schema/User/accountsPayable.schema';
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE IngresoS DEL USUARIO
-export const getSalesPerPeriodData = async (userId: string, userType: string): Promise<any> => {
+export const getSalesPerPeriodData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { transactionType: 'Ingreso', userId: userId },
@@ -21,7 +21,7 @@ export const getSalesPerPeriodData = async (userId: string, userType: string): P
 };
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE IngresoS DE UNA SEDE DEL USUARIO
-export const getSalesPerPeriodBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getSalesPerPeriodBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { transactionType: 'Ingreso', branchId: idBranch, userId: userId },
@@ -50,7 +50,7 @@ export const getPermissionSalesBranchData = async (idBranch: string): Promise<an
 
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE GASTOS DE UNA SEDE DEL USUARIO
-export const getExpensesPerPeriodData = async (userId: string, userType: string): Promise<any> => {
+export const getExpensesPerPeriodData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { transactionType: 'Gasto', userId: userId },
@@ -65,7 +65,7 @@ export const getExpensesPerPeriodData = async (userId: string, userType: string)
 
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE GASTOS DE UNA SEDE DEL USUARIO
-export const getExpensesBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getExpensesBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { transactionType: 'Gasto', branchId: idBranch, userId: userId },
@@ -80,7 +80,7 @@ export const getExpensesBranchData = async (idBranch: string, userId: string, us
 
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE GASTOS E INGRESOS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO
-export const getAllTransactionsData = async (userId: string, userType: string): Promise<any> => {
+export const getAllTransactionsData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { userId: userId },
@@ -95,7 +95,7 @@ export const getAllTransactionsData = async (userId: string, userType: string): 
 
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE GASTOS E INGRESOS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO
-export const getAllTransactionsBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getAllTransactionsBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { branchId: idBranch, userId: userId },
@@ -110,7 +110,7 @@ export const getAllTransactionsBranchData = async (idBranch: string, userId: str
 
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DEL USUARIO
-export const getAccountsReceivableData = async (userId: string, userType: string): Promise<any> => {
+export const getAccountsReceivableData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsReceivable.findAll({ 
             where: { userId: userId, stateAccount: 'Activo'},
@@ -125,7 +125,7 @@ export const getAccountsReceivableData = async (userId: string, userType: string
 
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DE UNA SEDE DEL USUARIO
-export const getAccountsReceivableBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getAccountsReceivableBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await AccountsReceivable.findAll({ 
             where: { branchId: idBranch, userId: userId, stateAccount: 'Activo' },
@@ -140,7 +140,7 @@ export const getAccountsReceivableBranchData = async (idBranch: string, userId: 
 
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DEL USUARIO
-export const getAccountsPayableData = async (userId: string, userType: string): Promise<any> => {
+export const getAccountsPayableData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsPayable.findAll({ 
             where: { userId: userId, stateAccount: 'Activo' },
@@ -155,7 +155,7 @@ export const getAccountsPayableData = async (userId: string, userType: string): 
 
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DE UNA SEDE DEL USUARIO
-export const getAccountsPayableBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getAccountsPayableBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await AccountsPayable.findAll({ 
             where: { branchId: idBranch, userId: userId, stateAccount: 'Activo' },
@@ -170,7 +170,7 @@ export const getAccountsPayableBranchData = async (idBranch: string, userId: str
 
 
 //DATA PARA OBTENER LISTA DE MEJORES CLIENTES POR VALOR DEL USUARIO
-export const getBestClientValueData = async (userId: string, userType: string): Promise<any> => {
+export const getBestClientValueData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { userId: userId },
@@ -184,7 +184,7 @@ export const getBestClientValueData = async (userId: string, userType: string): 
 
 
 //DATA PARA OBTENER LISTA DE MEJORES CLIENTES POR VALOR DE UNA SEDE DEL USUARIO
-export const getBestClientValueBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getBestClientValueBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { branchId: idBranch, userId: userId },
@@ -198,7 +198,7 @@ export const getBestClientValueBranchData = async (idBranch: string, userId: str
 
 
 //DATA PARA OBTENER LISTA DE CLIENTE FRECUENTE DEL USUARIO
-export const getBestClientQuantityData = async (userId: string, userType: string): Promise<any> => {
+export const getBestClientQuantityData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { userId: userId },
@@ -212,7 +212,7 @@ export const getBestClientQuantityData = async (userId: string, userType: string
 
 
 //DATA PARA OBTENER LISTA DE CLIENTE FRECUENTE POR SEDE DEL USUARIO
-export const getBestClientQuantityBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getBestClientQuantityBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { branchId: idBranch, userId: userId },
@@ -226,7 +226,7 @@ export const getBestClientQuantityBranchData = async (idBranch: string, userId: 
 
 
 //DATA PARA OBTENER EL INVENTARIO DE PRODUCTOS DEL USUARIO
-export const getProductsInventoryData = async (userId: string, userType: string): Promise<any> => {
+export const getProductsInventoryData = async (userId: string): Promise<any> => {
     try {
         const transactions = await Product.findAll({ 
             where: { userId: userId },
@@ -238,7 +238,7 @@ export const getProductsInventoryData = async (userId: string, userType: string)
 };
 
 //DATA PARA OBTENER EL INVENTARIO DE PRODUCTOS POR SEDE DEL USUARIO
-export const getProductsInventoryByBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getProductsInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await Product.findAll({ 
             where: { branchId: idBranch, userId: userId },
@@ -252,7 +252,7 @@ export const getProductsInventoryByBranchData = async (idBranch: string, userId:
 
 
 //DATA PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS DEL USUARIO
-export const getRawMaterialsInventoryData = async (userId: string, userType: string): Promise<any> => {
+export const getRawMaterialsInventoryData = async (userId: string): Promise<any> => {
     try {
         const transactions = await RawMaterial.findAll({ 
             where: { userId: userId },
@@ -264,7 +264,7 @@ export const getRawMaterialsInventoryData = async (userId: string, userType: str
 };
 
 //DATA PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS POR SEDE DEL USUARIO
-export const getRawMaterialsInventoryByBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getRawMaterialsInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await RawMaterial.findAll({ 
             where: { branchId: idBranch, userId: userId },
@@ -278,7 +278,7 @@ export const getRawMaterialsInventoryByBranchData = async (idBranch: string, use
 
 
 //DATA PARA OBTENER EL INVENTARIO DE MAQUINAS DEL USUARIO
-export const getAssetsInventoryData = async (userId: string, userType: string): Promise<any> => {
+export const getAssetsInventoryData = async (userId: string): Promise<any> => {
     try {
         const transactions = await Assets.findAll({ 
             where: { userId: userId },
@@ -290,7 +290,7 @@ export const getAssetsInventoryData = async (userId: string, userType: string): 
 };
 
 //DATA PARA OBTENER EL INVENTARIO DE MAQUINAS POR SEDE DEL USUARIO
-export const getAssetsInventoryByBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getAssetsInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await Assets.findAll({ 
             where: { branchId: idBranch, userId: userId },
@@ -304,7 +304,7 @@ export const getAssetsInventoryByBranchData = async (idBranch: string, userId: s
 
 
 //DATA PARA OBTENER EL INVENTARIO DE MERCANCIA DEL USUARIO
-export const getMerchandisesInventoryData = async (userId: string, userType: string): Promise<any> => {
+export const getMerchandisesInventoryData = async (userId: string): Promise<any> => {
     try {
         const transactions = await Merchandise.findAll({ 
             where: { userId: userId },
@@ -316,7 +316,7 @@ export const getMerchandisesInventoryData = async (userId: string, userType: str
 };
 
 //DATA PARA OBTENER EL INVENTARIO DE MERCANCIA POR SEDE DEL USUARIO
-export const getMerchandisesInventoryByBranchData = async (idBranch: string, userId: string, userType: string): Promise<any> => {
+export const getMerchandisesInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await Merchandise.findAll({ 
             where: { branchId: idBranch, userId: userId },

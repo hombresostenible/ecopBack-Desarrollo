@@ -5,7 +5,7 @@ import { ISalesFunnelCustomerAcq, ISalesFunnelCustomerRet, ISalesFunnelSalesDigi
 
 //^ SALESFUNNELCUSTOMERACQUISITION
 //DATA PARA CREAR UN CUSTOMERACQUISITION EN LA SEDE DE USER
-export const postSalesFunnelCustomerAcqData = async (body: ISalesFunnelCustomerAcq, userId: string, userType: string): Promise<any> => {
+export const postSalesFunnelCustomerAcqData = async (body: ISalesFunnelCustomerAcq, userId: string): Promise<any> => {
     try {
         const newSalesFunnelCustomerAcq = new SalesFunnelCustomerAcq({
             ...body,
@@ -98,7 +98,7 @@ export const deleteSalesFunnelCustomerAcqData = async (idCustomerAcquisition: st
 
 //^ SALESFUNNELCUSTOMERRETENTION
 //DATA PARA CREAR UN CUSTOMERRETENTION EN LA SEDE DE USER
-export const postSalesFunnelCustomerRetData = async (body: ISalesFunnelCustomerRet, userId: string, userType: string): Promise<any> => {
+export const postSalesFunnelCustomerRetData = async (body: ISalesFunnelCustomerRet, userId: string): Promise<any> => {
     try {
         const newSalesFunnelCustomerRet = new SalesFunnelCustomerRet({
             ...body,
@@ -190,7 +190,7 @@ export const deleteSalesFunnelCustomerRetData = async (idCustomerRetention: stri
 
 //^ SALESFUNNELCUSTOMERDIGITAL
 //DATA PARA CREAR UN CUSTOMERDIGITAL EN LA SEDE DE USER
-export const postSalesFunnelSalesDigitalData = async (body: ISalesFunnelSalesDigital, userId: string, userType: string): Promise<any> => {
+export const postSalesFunnelSalesDigitalData = async (body: ISalesFunnelSalesDigital, userId: string): Promise<any> => {
     try {
         const newSalesFunnelSalesDigital = new SalesFunnelSalesDigital({
             ...body,

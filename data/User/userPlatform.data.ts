@@ -4,16 +4,14 @@ import { IUserPlatform } from '../../types/User/userPlatform.types';
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
-export const getUserPlatformData = async (userId: string, userType:string): Promise<any> => {
+export const getUserPlatformData = async (userId: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        if (userType === 'User') {
-            const usersPlatform = await UserPlatform.findAll({
-                where: { employerId: userId },
-                transaction: t,
-            });
-            return usersPlatform;
-        };
+        const usersPlatform = await UserPlatform.findAll({
+            where: { employerId: userId },
+            transaction: t,
+        });
+        return usersPlatform;
     } catch (error) {
         throw error;
     };

@@ -17,13 +17,11 @@ import { IProduct } from "../../types/User/products.types";
 import { ServiceError, IServiceLayerResponseProduct } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UN PRODUCTO POR SEDE PARA USER
-export const postProductService = async (body: IProduct, userId: string, userType: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseProduct> => {
+export const postProductService = async (body: IProduct, userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        if (userType === 'User') {
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
-            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear un producto en esta sede");
-        }
-        const dataLayerResponse = await postProductsData(body, userId, userType, employerId, typeRole);
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, employerId, typeRole, userBranchId);
+        if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear un producto en esta sede");
+        const dataLayerResponse = await postProductsData(body, userId, employerId, typeRole);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe un producto con el mismo nombre en esta sede, cámbialo");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -72,19 +70,17 @@ export const postProductService = async (body: IProduct, userId: string, userTyp
 
 
 //DATA PARA CREAR MUCHOS PRODUCTOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyProductService = async (products: IProduct[], userId: string, userType: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseProduct> => {
+export const postManyProductService = async (products: IProduct[], userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseProduct> => {
     const uniqueProducts: IProduct[] = [];
     const duplicatedProducts: IProduct[] = [];
 
     try {
         for (const product of products) {
             // Verificar los permisos del usuario para crear productos en la sede específica
-            if (userType === 'User') {
-                const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(product.branchId, userId, employerId, typeRole, userBranchId);
-                if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear productos en esta sede");
-            }
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(product.branchId, userId, employerId, typeRole, userBranchId);
+            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear productos en esta sede");
             // Crear el producto
-            const createdProduct = await postManyProductsData(product, userId, userType, employerId, typeRole);
+            const createdProduct = await postManyProductsData(product, userId, employerId, typeRole);
             if (createdProduct) {
                 uniqueProducts.push(createdProduct);
             } else duplicatedProducts.push(product);
@@ -117,12 +113,9 @@ export const getProductsService = async (): Promise<IServiceLayerResponseProduct
 
 
 //SERVICE PARA OBTENER TODOS LOS PRODUCTOS DE UN USER
-export const getProductsUserService = async (userId: string, userType: string): Promise<IServiceLayerResponseProduct> => {
+export const getProductsUserService = async (userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        let dataLayerResponse;
-        if (userType === 'User') {
-            dataLayerResponse = await getProductsByUserIdData(userId);
-        }
+        const dataLayerResponse = await getProductsByUserIdData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -135,9 +128,9 @@ export const getProductsUserService = async (userId: string, userType: string): 
 
 
 //SERVICE PARA OBTENER TODOS LOS PRODUCTOS DE UNA SEDE DE USER
-export const getProductBranchService = async (idBranch: string, userId: string, userType: string): Promise<IServiceLayerResponseProduct> => {
+export const getProductBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        const hasPermission = await checkPermissionForBranchProduct(idBranch, userId, userType);
+        const hasPermission = await checkPermissionForBranchProduct(idBranch, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los productos de esta sede");
         const productsFound = await getProductsBranchByIdData(idBranch);
         if (!productsFound) return { code: 404, message: "Productos no encontrados en esta sede" };
@@ -153,9 +146,9 @@ export const getProductBranchService = async (idBranch: string, userId: string, 
 
 
 //SERVICE PARA OBTENER UN PRODUCTO POR ID PERTENECIENTE AL USER
-export const getProductByIdService = async (idProduct: string, userId: string, userType: string): Promise<IServiceLayerResponseProduct> => {
+export const getProductByIdService = async (idProduct: string, userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        const hasPermission = await checkPermissionForProduct(idProduct, userId, userType);
+        const hasPermission = await checkPermissionForProduct(idProduct, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a este producto");
         const productFound = await getProductByIdData(idProduct);
         if (!productFound) return { code: 404, message: "Producto no encontrado" };
@@ -171,11 +164,11 @@ export const getProductByIdService = async (idProduct: string, userId: string, u
 
 
 //SERVICE PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
-export const putProductService = async (idProduct: string, body: IProduct, userId: string, userType: string): Promise<IServiceLayerResponseProduct> => {
+export const putProductService = async (idProduct: string, body: IProduct, userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        const hasPermission = await checkPermissionForProduct(idProduct, userId, userType);
+        const hasPermission = await checkPermissionForProduct(idProduct, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este producto");
-        const updateProduct = await putProductData(idProduct, body, userId, userType);
+        const updateProduct = await putProductData(idProduct, body, userId);
         if (!updateProduct) throw new ServiceError(404, "Producto no encontrado");
         return { code: 200, message: "Producto actualizado exitosamente", result: updateProduct };
     } catch (error) {
@@ -189,17 +182,15 @@ export const putProductService = async (idProduct: string, body: IProduct, userI
 
 
 //SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIOS PRODUCTOS
-export const putUpdateManyProductService = async (products: IProduct[], userId: string, userType: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseProduct> => {
+export const putUpdateManyProductService = async (products: IProduct[], userId: string, employerId: string, typeRole: string, userBranchId: string): Promise<IServiceLayerResponseProduct> => {
     const uniqueProducts: IProduct[] = [];
     const duplicatedProducts: IProduct[] = [];
 
     try {
         for (const product of products) {
-            if (userType === 'User') {
-                const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(product.branchId, userId, employerId, typeRole, userBranchId);
-                if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar los productos en esta sede");
-            }
-            const updatedProduct = await putUpdateManyProductData(product, userId, userType,);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(product.branchId, userId, employerId, typeRole, userBranchId);
+            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar los productos en esta sede");
+            const updatedProduct = await putUpdateManyProductData(product, userId,);
             if (updatedProduct) {
                 uniqueProducts.push(updatedProduct);
             } else duplicatedProducts.push(product);
@@ -218,11 +209,11 @@ export const putUpdateManyProductService = async (products: IProduct[], userId: 
 
 
 //SERVICE PARA DAR DE BAJA UN PRODUCTO DEL USER
-export const patchProductService = async (idProduct: string, body: any, userId: string, userType: string): Promise<IServiceLayerResponseProduct> => {
+export const patchProductService = async (idProduct: string, body: any, userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        const hasPermission = await checkPermissionForProduct(idProduct, userId, userType);
+        const hasPermission = await checkPermissionForProduct(idProduct, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para retirar del inventario este producto");
-        const updateProduct = await patchProductData(idProduct, body, userId, userType);
+        const updateProduct = await patchProductData(idProduct, body, userId);
         if (!updateProduct) throw new ServiceError(404, "Producto no encontrado");
         return { code: 200, message: "Unidades del producto retiradas del inventario exitosamente", result: updateProduct };
     } catch (error) {
@@ -235,9 +226,9 @@ export const patchProductService = async (idProduct: string, body: any, userId: 
 
 
 //SERVICE PARA ELIMINAR UN PRODUCTO PERTENECIENTE AL USER
-export const deleteProductService = async (idProduct: string, userId: string, userType: string): Promise<IServiceLayerResponseProduct> => {
+export const deleteProductService = async (idProduct: string, userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        const hasPermission = await checkPermissionForProduct(idProduct, userId, userType);
+        const hasPermission = await checkPermissionForProduct(idProduct, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este producto");
         await deleteProductData(idProduct);
         return { code: 200, message: "Producto eliminado exitosamente" };

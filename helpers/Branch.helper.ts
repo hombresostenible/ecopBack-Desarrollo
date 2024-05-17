@@ -3,7 +3,7 @@ import Branch from '../schema/User/branch.schema';
 import { ServiceError } from '../types/Responses/responses.types';
 
 //CHEQUEA SI LA BRANCH PERTENECE A UN USER
-export const checkPermissionForBranch = async (idBranch: string, userId: string, userType: string): Promise<boolean> => {
+export const checkPermissionForBranch = async (idBranch: string, userId: string): Promise<boolean> => {
     try {
         const branch = await getBranchByIdData(idBranch);
         if (!branch) return false;

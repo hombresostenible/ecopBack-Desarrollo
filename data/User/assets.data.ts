@@ -5,19 +5,18 @@ import { IAssets } from "../../types/User/assets.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
-export const postAssetData = async (body: IAssets, userId: string, userType: string, employerId: string, typeRole: string): Promise<any> => {
+export const postAssetData = async (body: IAssets, userId: string, employerId: string, typeRole: string): Promise<any> => {
     try {
         const existingMachinery = await Assets.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
         });
         if (existingMachinery) {
-            if (existingMachinery.userId === userId && userType === 'User') return null;
+            if (existingMachinery.userId === userId) return null;
             throw new ServiceError(400, "Ya existe una máquina, equipo o herramienta con el mismo nombre en esta sede, cámbialo");
         }
         // Si el activo no existe, crearlo en la base de datos
         const newAsset = await Assets.create({
             ...body,
-            userId: userType === 'User' ? (typeRole === 'Superadmin' ? userId : employerId) : null,
         });
         return newAsset;
     } catch (error) {
@@ -28,7 +27,7 @@ export const postAssetData = async (body: IAssets, userId: string, userType: str
 
 
 //DATA PARA CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER DESDE EL EXCEL
-export const postManyAssetData = async (body: IAssets, userId: string, userType: string, employerId: string, typeRole: string): Promise<any> => {
+export const postManyAssetData = async (body: IAssets, userId: string, employerId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         // Verificar si el activo ya existe en la sede proporcionada
@@ -44,7 +43,6 @@ export const postManyAssetData = async (body: IAssets, userId: string, userType:
         // Si el activo no existe, crearlo en la base de datos
         const newAsset = await Assets.create({
             ...body,
-            userId: userType === 'User' ? (typeRole === 'Superadmin' ? userId : employerId) : null,
         }, { transaction: t });
         await t.commit();
         return newAsset;
@@ -57,26 +55,12 @@ export const postManyAssetData = async (body: IAssets, userId: string, userType:
 
 
 //DATA PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
-export const getAssetsByUserIdData = async (userId: string): Promise<any> => {
+export const getAssetsData = async (userId: string): Promise<any> => {
     try {
         const userMachinery = await Assets.findAll({
             where: { userId: userId },
         });        
         return userMachinery;
-    } catch (error) {
-        throw error;
-    }
-};
-
-
-
-//DATA PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
-export const getAssetBranchByIdData = async (idBranch: string): Promise<any> => {
-    try {
-        const customerMachineryFound = await Assets.findAll({
-            where: { branchId: idBranch }
-        });
-        return customerMachineryFound;
     } catch (error) {
         throw error;
     }
@@ -96,15 +80,27 @@ export const getAssetByIdData = async (idAssets: string): Promise<any> => {
 
 
 
-//DATA PARA ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
-export const putAssetData = async (idAssets: string, body: IAssets, userId: string, userType: string): Promise<IAssets | null> => {
+//DATA PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
+export const getAssetBranchData = async (idBranch: string): Promise<any> => {
     try {
-        if (userType === 'User') {
-            const existingBranchWithSameName = await Assets.findOne({
-                where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idAssets } },
-            });
-            if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la máquina, equipo o herramienta porque ya existe una con ese mismo nombre");
-        }
+        const customerMachineryFound = await Assets.findAll({
+            where: { branchId: idBranch }
+        });
+        return customerMachineryFound;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//DATA PARA ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+export const putAssetData = async (idAssets: string, body: IAssets, userId: string): Promise<IAssets | null> => {
+    try {
+        const existingBranchWithSameName = await Assets.findOne({
+            where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idAssets } },
+        });
+        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la máquina, equipo o herramienta porque ya existe una con ese mismo nombre");
         const [rowsUpdated] = await Assets.update(body, { where: { id: idAssets } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna máquina, equipo o herramienta para actualizar");
         const updatedAsset = await Assets.findByPk(idAssets);
@@ -118,17 +114,14 @@ export const putAssetData = async (idAssets: string, body: IAssets, userId: stri
 
 
 //DATA PARA ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER
-export const putUpdateManyAssetData = async (body: IAssets, userId: string, userType: string): Promise<any> => {
+export const putUpdateManyAssetData = async (body: IAssets, userId: string): Promise<any> => {
     const t = await sequelize.transaction();
-
     try {
         // Verificar si el activo ya existe en la sede proporcionado
-        if (userType === 'User') {
-            const existingBranchWithSameName = await Assets.findOne({
-                where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
-            });
-            if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el equipo, máquina o herramienta porque ya existe una con ese mismo nombre");
-        }
+        const existingBranchWithSameName = await Assets.findOne({
+            where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
+        });
+        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el equipo, máquina o herramienta porque ya existe una con ese mismo nombre");
         // Actualizar el activo
         const [rowsUpdated] = await Assets.update(body, { where: { id: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún equipo, máquina o herramienta para actualizar");
@@ -144,11 +137,11 @@ export const putUpdateManyAssetData = async (body: IAssets, userId: string, user
 
 
 //DATA PARA DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
-export const patchAssetData = async (idAssets: string, body: Partial<IAssets>, userId: string, userType: string): Promise<IAssets | null> => {
+export const patchAssetData = async (idAssets: string, body: Partial<IAssets>, userId: string): Promise<IAssets | null> => {
     const t = await sequelize.transaction();    
     try {
         let whereClause: Record<string, any> = { id: idAssets };        
-        if (userType === 'User') whereClause.userId = userId;        
+     
         const existingAsset = await Assets.findOne({
             where: whereClause,
             transaction: t,
@@ -158,7 +151,6 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>, u
         if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
             const inventoryOffItem = body.inventoryOff[0]; // Accede al primer elemento de inventoryOff
             const currentDate = new Date(); // Obtener la fecha actual
-            
             // Actualizar el inventario y agregar un nuevo elemento a inventoryOff
             existingAsset.inventory -= inventoryOffItem.quantity || 0; // Restar la cantidad de activos dañados del inventario actual
             existingAsset.inventoryOff = existingAsset.inventoryOff.concat({ 
