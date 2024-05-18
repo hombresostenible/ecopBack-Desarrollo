@@ -47,8 +47,23 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
+//CONTROLLER PARA OBTENER UN PROVEEDOR POR ID PERTENECIENTE AL USER
+router.get("/:idCrmSupplier", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idCRMSupplier } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getCRMSupplierByIdService(idCRMSupplier, id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/crmSupplier/:idCrmSupplier
+
+
+
 //CONTROLLER PARA OBTENER TODOS LOS PROVEEDORES POR SEDE DE USER
-router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/crmSupplier-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -62,22 +77,7 @@ router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/crmSupplier/:idBranch
-
-
-
-//CONTROLLER PARA OBTENER UN PROVEEDOR POR ID PERTENECIENTE AL USER
-router.get("/:idCrmSupplier", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { idCRMSupplier } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getCRMSupplierByIdService(idCRMSupplier, id);
-        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/crmSupplier/:idCrmSupplier
+}); // GET - http://localhost:3000/api/crmSupplier/crmSupplier-branch/:idBranch
 
 
 

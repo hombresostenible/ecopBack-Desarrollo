@@ -47,8 +47,23 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
+//CONTROLLER PARA OBTENER UN CLIENTE POR ID PERTENECIENTE AL USER
+router.get("/:idCrmClient", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idCRMClient } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getCRMClientByIdService(idCRMClient, id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/crmClients/:idCrmClient
+
+
+
 //CONTROLLER PARA OBTENER TODOS LOS CLIENTES POR SEDE DE USER
-router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/crmClients-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -62,22 +77,7 @@ router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/crmClients/:idBranch
-
-
-
-//CONTROLLER PARA OBTENER UN CLIENTE POR ID PERTENECIENTE AL USER
-router.get("/:idCrmClient", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { idCRMClient } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getCRMClientByIdService(idCRMClient, id);
-        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/crmClients/:idCrmClient
+}); // GET - http://localhost:3000/api/crmClients/crmClients-branch/:idBranch
 
 
 

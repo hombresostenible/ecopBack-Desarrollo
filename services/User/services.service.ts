@@ -111,11 +111,11 @@ export const getServicesService = async (idMachinery: string, userId: string): P
 
 
 //SERVICE PARA ACTUALIZAR UN SERVICIO DEL USER
-export const putServicesService = async (idServices: string, body: IService, userId: string): Promise<IServiceLayerResponseService> => {
+export const putServicesService = async (idService: string, body: IService, userId: string): Promise<IServiceLayerResponseService> => {
     try {
-        const hasPermission = await checkPermissionForServices(idServices, userId);
+        const hasPermission = await checkPermissionForServices(idService, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este servicio");
-        const updateServices = await putServicesData(idServices, body, userId);
+        const updateServices = await putServicesData(idService, body, userId);
         if (!updateServices) throw new ServiceError(404, "Servicio no encontrado");
         return { code: 200, message: "Servicio actualizado exitosamente", result: updateServices };
     } catch (error) {
@@ -154,11 +154,11 @@ export const putUpdateManyServiceService = async (services: IService[], userId: 
 
 
 //SERVICE PARA ELIMINAR UN SERVICIO DEL USER
-export const deleteServicesService = async (idServices: string, userId: string): Promise<IServiceLayerResponseService> => {
+export const deleteServicesService = async (idService: string, userId: string): Promise<IServiceLayerResponseService> => {
     try {
-        const hasPermission = await checkPermissionForServices(idServices, userId);
+        const hasPermission = await checkPermissionForServices(idService, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este service");
-        await deleteServicesData(idServices);
+        await deleteServicesData(idService);
         return { code: 200, message: "Servicio eliminado exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

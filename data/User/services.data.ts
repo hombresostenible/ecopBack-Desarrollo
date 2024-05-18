@@ -112,9 +112,9 @@ export const getServiceBranchByIdData = async (idBranch: string): Promise<any> =
 
 
 //DATA PARA OBTENER UN SERVICIO POR ID PERTENECIENTE AL USER
-export const getServicesByIdData = async (idServices: string): Promise<any> => {
+export const getServicesByIdData = async (idService: string): Promise<any> => {
     try {
-        const servicesFound = await Service.findOne({ where: { id: idServices } });
+        const servicesFound = await Service.findOne({ where: { id: idService } });
         return servicesFound;
     } catch (error) {
         throw error;
@@ -124,30 +124,30 @@ export const getServicesByIdData = async (idServices: string): Promise<any> => {
 
 
 //DATA PARA ACTUALIZAR UN SERVICIO DEL USER
-export const putServicesData = async (idServices: string, body: IService, userId: string): Promise<IService | null> => {
+export const putServicesData = async (idService: string, body: IService, userId: string): Promise<IService | null> => {
     let transaction;
     try {
         transaction = await sequelize.transaction();
         const serviceExists = await Service.findOne({
-            where: { id: idServices },
+            where: { id: idService },
             transaction,
         });
         if (!serviceExists) throw new ServiceError(404, "No se encontró ningún servicio para actualizar");
         const existingServiceWithSameName = await Service.findOne({
-            where: { userId, nameItem: body.nameItem, id: { [Op.not]: idServices } },
+            where: { userId, nameItem: body.nameItem, id: { [Op.not]: idService } },
             transaction,
         });
         if (existingServiceWithSameName) throw new ServiceError(403, "No es posible actualizar el servicio porque ya existe uno con ese mismo nombre");
-        const [rowsUpdated] = await Service.update(body, { where: { id: idServices }, transaction });
+        const [rowsUpdated] = await Service.update(body, { where: { id: idService }, transaction });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún servicio para actualizar");
 
         // Lógica para actualizar ServiceRawMaterial
         // if (body.serviceRawMaterials && body.serviceRawMaterials.length > 0) {
-        //     await updateServiceRawMaterials(idServices, body.serviceRawMaterials, transaction);
+        //     await updateServiceRawMaterials(idService, body.serviceRawMaterials, transaction);
         // }
 
         await transaction.commit();
-        const updatedService = await Service.findByPk(idServices);
+        const updatedService = await Service.findByPk(idService);
         if (!updatedService) throw new ServiceError(404, "No se encontró ningún servicio para actualizar");
         return updatedService as unknown as IService;
     } catch (error) {
@@ -181,32 +181,32 @@ export const putUpdateManyServiceData = async (body: IService, userId: string): 
 
 
 //DATA PARA ELIMINAR UN SERVICIO DEL USER
-export const deleteServicesData = async (idServices: string): Promise<void> => {
+export const deleteServicesData = async (idService: string): Promise<void> => {
     let transaction;
     try {
         transaction = await sequelize.transaction();
 
         // // Eliminar registros en ServiceRawMaterial
         // await ServiceRawMaterial.destroy({
-        //     where: { serviceId: idServices },
+        //     where: { serviceId: idService },
         //     transaction,
         // });
 
         // // Eliminar registros en ServiceAssets
         // await ServiceAssets.destroy({
-        //     where: { serviceId: idServices },
+        //     where: { serviceId: idService },
         //     transaction,
         // });
 
         // // Eliminar registros en ServiceProduct
         // await ServiceProduct.destroy({
-        //     where: { serviceId: idServices },
+        //     where: { serviceId: idService },
         //     transaction,
         // });
 
         // Eliminar el servicio principal
         await Service.destroy({
-            where: { id: idServices },
+            where: { id: idService },
             transaction,
         });
         await transaction.commit();

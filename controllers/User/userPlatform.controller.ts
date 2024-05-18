@@ -43,7 +43,7 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 //CONTROLLER PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA PERTENECIENTES A UNA SEDE DE UN USER
-router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/usersPlatform-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -55,7 +55,7 @@ router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/userPlatform/:idBranch
+}); // GET - http://localhost:3000/api/userPlatform/usersPlatform-branch/:idBranch
 
 
 

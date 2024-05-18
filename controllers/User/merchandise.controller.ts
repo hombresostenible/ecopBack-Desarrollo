@@ -65,8 +65,23 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
+//CONTROLLER PARA OBTENER UNA MERCANCIA POR ID PERTENECIENTE AL USER
+router.get("/:idMerchandise", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idMerchandise } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getMerchandiseService(idMerchandise, id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/merchandise/:idMerchandise
+
+
+
 //CONTROLLER PARA OBTENER TODA LA MERCANCIA DE UNA SEDE PARA USER
-router.get("/userMerchandiseBranch/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/merchandises-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -80,22 +95,7 @@ router.get("/userMerchandiseBranch/:idBranch", authRequired, async (req: Request
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/merchandise/userMerchandiseBranch/:idBranch
-
-
-
-//CONTROLLER PARA OBTENER UNA MERCANCIA POR ID PERTENECIENTE AL USER
-router.get("/:idMerchandise", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { idMerchandise } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getMerchandiseService(idMerchandise, id);
-        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/merchandise/:idMerchandise
+}); // GET - http://localhost:3000/api/merchandise/merchandises-branch/:idBranch
 
 
 

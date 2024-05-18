@@ -33,8 +33,7 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-  }
-); //POST - http://localhost:3000/api/auth/login con { "email": "mario@gmail.com", "password": "password" }
+}); //POST - http://localhost:3000/api/auth/login con { "email": "mario@gmail.com", "password": "password" }
 
 
 

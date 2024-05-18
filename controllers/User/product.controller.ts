@@ -66,8 +66,23 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
+//CONTROLLER PARA OBTENER UN PRODUCTO POR ID PERTENECIENTE AL USER
+router.get("/:idProduct", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idProduct } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getProductByIdService(idProduct, id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/product/:idProduct
+
+
+
 //CONTROLLER PARA OBTENER TODOS LOS PRODUCTOS POR SEDE DE USER
-router.get("/userProductBranch/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/products-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -81,22 +96,7 @@ router.get("/userProductBranch/:idBranch", authRequired, async (req: Request, re
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/product/userProductBranch/:idBranch
-
-
-
-//CONTROLLER PARA OBTENER UN PRODUCTO POR ID PERTENECIENTE AL USER
-router.get("/:idProduct", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { idProduct } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getProductByIdService(idProduct, id);
-        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/product/:idProduct
+}); // GET - http://localhost:3000/api/product/products-branch/:idBranch
 
 
 
