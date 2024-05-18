@@ -46,7 +46,7 @@ export const loginService = async (email: string, password: string): Promise<ILo
                 } else {
                     userName = ''; // Valor por defecto en caso de que 'name' no esté definido
                 }
-                const link = `http://localhost:5173/unblocking-account-user/complete/${userFound.id}`;
+                const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${userFound.id}`;
                 const mailOptions = mailAccountUserBlocked(email, userName, userFound.unlockCode, link);
                 transporterZoho.sendMail(mailOptions, (error, info) => {
                     if (error) {

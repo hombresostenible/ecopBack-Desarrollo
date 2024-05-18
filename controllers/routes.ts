@@ -5,8 +5,8 @@ import newsletterControllers from "./Ecopcion/newsletter.controller";
 import accountsBookControllers from './User/accountsBook.controller';
 import assetsControllers from "./User/assets.controller";
 import branchControllers from "./User/branch.controller";
-import cRMClientsControllers from "./User/crmClients.controller";
-import cRMSupplierControllers from "./User/crmSupplier.controller";
+import crmClientControllers from "./User/crmClients.controller";
+import crmSupplierControllers from "./User/crmSupplier.controller";
 import electronicInvoicingControllers from "./User/electronicInvoicing.controller";
 import invoicingPOSControllers from "./User/invoicingPOS.controller";
 import merchandiseControllers from "./User/merchandise.controller";
@@ -26,22 +26,22 @@ function routerApi(app: any) {
     app.use("/api/contactUs", contactUsControllers);
 
     app.use("/api/accountsBook", accountsBookControllers);
-    app.use("/api/assets", assetsControllers);
+    app.use("/api/asset", assetsControllers);
     app.use("/api/branch", branchControllers);
-    app.use("/api/crmClients", cRMClientsControllers);
-    app.use("/api/cRMSuppliers", cRMSupplierControllers);
+    app.use("/api/crmClient", crmClientControllers);
+    app.use("/api/crmSupplier", crmSupplierControllers);
     app.use("/api/electronicInvoicing", electronicInvoicingControllers);
     app.use("/api/electronicInvoicing", invoicingPOSControllers);
     app.use("/api/merchandise", merchandiseControllers);
     app.use("/api/product", productControllers);
     app.use("/api/rawMaterial", rawMaterialControllers);
-    app.use("/api/services", serviceControllers);
+    app.use("/api/service", serviceControllers);
     app.use("/api/user", userControllers);
     app.use("/api/userPlatform", userPlatformControllers);
 
-    app.use("/api/financialIndicators", financialIndicatorsControllers);
-    app.use("/api/sustainabilityIndicators", sustainabilityIndicatorsControllers);
-    app.use("/api/marketingIndicators", marketingIndicatorsControllers);
+    app.use("/api/financialIndicator", financialIndicatorsControllers);
+    app.use("/api/sustainabilityIndicator", sustainabilityIndicatorsControllers);
+    app.use("/api/marketingIndicator", marketingIndicatorsControllers);
 };
 
 export { routerApi };

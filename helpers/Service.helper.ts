@@ -22,9 +22,9 @@ export const checkPermissionForBranchService = async (idBranch: string, userId: 
 
 
 //CHEQUEA SI EL SERVICE PERTENECE A LA SEDE DE USER
-export const checkPermissionForServices = async (idServices: string, userId: string): Promise<boolean> => {
+export const checkPermissionForServices = async (idService: string, userId: string): Promise<boolean> => {
     try {
-        const services = await getServicesByIdData(idServices);
+        const services = await getServicesByIdData(idService);
         if (!services) return false;
         if (services.userId !== userId) return false;
         return true;

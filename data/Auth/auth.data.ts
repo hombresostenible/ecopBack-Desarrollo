@@ -6,7 +6,6 @@ import { ServiceError } from '../../types/Responses/responses.types';
 export const searchUserByEmail = async (email: string) => {
     try {
         let userFound;
-        // Busca en User
         userFound = await User.findOne({ where: { email } });
         if (userFound) {
             return userFound;
