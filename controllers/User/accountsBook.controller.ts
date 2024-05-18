@@ -62,27 +62,6 @@ router.get("/:idAccountsBook", authRequired, async (req: Request, res: Response)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //OBTENER TODOS LOS REGISTROS CONTABLES POR SEDE DEL USER
 router.get("/accountsBook-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
@@ -126,24 +105,6 @@ router.delete('/:idAccountsBook', authRequired, checkRole, async (req: Request, 
         res.status(errorController.code).json(errorController.message);
     }
 }); // DELETE - http://localhost:3000/api/accountsBook/:idAccountsBook
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

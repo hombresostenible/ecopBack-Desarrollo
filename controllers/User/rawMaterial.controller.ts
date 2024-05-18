@@ -65,8 +65,23 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
+//CONTROLLER PARA OBTENER UNA MATERIA PRIMA POR ID PERTENECIENTE AL USER
+router.get("/:idRawMaterial", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idRawMaterial } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getRawMaterialService(idRawMaterial, id);
+        res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/rawMaterial/:idRawMaterial
+
+
+
 //CONTROLLER PARA OBTENER TODAS LAS MATERIAS PRIMAS DE UNA SEDE DE USER
-router.get("/userRawMaterialBranch/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/rawMaterials-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -80,22 +95,7 @@ router.get("/userRawMaterialBranch/:idBranch", authRequired, async (req: Request
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/rawMaterial/userRawMaterialBranch/:idBranch
-
-
-
-//CONTROLLER PARA OBTENER UNA MATERIA PRIMA POR ID PERTENECIENTE AL USER
-router.get("/:idRawMaterial", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { idRawMaterial } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getRawMaterialService(idRawMaterial, id);
-        res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/rawMaterial/:idRawMaterial
+}); // GET - http://localhost:3000/api/rawMaterial/rawMaterials-branch/:idBranch
 
 
 
