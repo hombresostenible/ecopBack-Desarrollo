@@ -4,6 +4,6 @@ export interface IContactUs {
     nameUser: string | undefined;
     phone: string;
     helpDescription: string;
-    selectedTopic: 'Indicadores' | 'Inventario' | 'Facturación electrónica' | 'Otro';
+    selectedTopic: 'Indicadores' | 'Inventario' | 'Facturacion electronica' | 'Otro';
     acceptPersonalDataPolicy: boolean;
 }

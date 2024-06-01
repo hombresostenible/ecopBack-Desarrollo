@@ -28,7 +28,7 @@ router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/assets con { "branchId": "28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0", "nameItem": "Bicicleta", "barCode": null, "inventory": 1, "brandAssets": "Specialized", "referenceAssets": "Modelo 2010", "conditionAssets": "Nuevo", "stateAssets": "Funciona correctamente", "assetStatus": "Activo en uso" }
+}); // POST - http://localhost:3000/api/asset con { "branchId": "28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0", "nameItem": "Bicicleta", "barCode": null, "inventory": 1, "brandAssets": "Specialized", "referenceAssets": "Modelo 2010", "conditionAssets": "Nuevo", "stateAssets": "Funciona correctamente", "assetStatus": "Activo en uso" }
 
 
 
@@ -45,7 +45,7 @@ router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyAsse
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/assets/createMany con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
+}); // POST - http://localhost:3000/api/asset/createMany con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
 
 
 
@@ -61,7 +61,7 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/assets
+}); // GET - http://localhost:3000/api/asset
 
 
 
@@ -76,7 +76,7 @@ router.get("/:idAssets", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/assets/:idAssets
+}); // GET - http://localhost:3000/api/asset/:idAssets
 
 
 
@@ -93,7 +93,7 @@ router.get("/assets-branch/:idBranch", authRequired, async (req: Request, res: R
         const rawMaterialError = error as ServiceError;
         res.status(rawMaterialError.code).json(rawMaterialError.message);
     }
-}); //GET - http://localhost:3000/api/assets/assets-branch/:idBranch
+}); //GET - http://localhost:3000/api/asset/assets-branch/:idBranch
 
 
 
@@ -109,7 +109,7 @@ router.put("/:idAssets", authRequired, checkRole, validateSchema(assetsSchemaZod
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/assets/:idAssets con { "branchId": "13c403d6-23c0-42bf-a815-0949e43c3540", "nameAssets": "Tractor", "brandAssets": "John Dere", "referenceAssets": "Modelo 2010", "conditionAssets": "Usada/De segunda", "stateAssets": "Funciona correctamente" }
+}); // PUT - http://localhost:3000/api/asset/:idAssets con { "branchId": "13c403d6-23c0-42bf-a815-0949e43c3540", "nameAssets": "Tractor", "brandAssets": "John Dere", "referenceAssets": "Modelo 2010", "conditionAssets": "Usada/De segunda", "stateAssets": "Funciona correctamente" }
 
 
 
@@ -126,7 +126,7 @@ router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAsset
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/assets/update con [{"id":"6fd572e5-683f-4c6d-a421-dbb86f64d48a","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"id":"88667153-4fec-40d5-9ff9-e04cb0f1fee7","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9 ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
+}); // PUT - http://localhost:3000/api/asset/update con [{"id":"6fd572e5-683f-4c6d-a421-dbb86f64d48a","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"id":"88667153-4fec-40d5-9ff9-e04cb0f1fee7","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9 ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
 
 
 
@@ -142,7 +142,7 @@ router.patch("/:idAssets", authRequired, checkRole, async (req: Request, res: Re
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PATCH - http://localhost:3000/api/assets/:idAssets con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "assetStatus": "" }
+}); // PATCH - http://localhost:3000/api/asset/:idAssets con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "assetStatus": "" }
 
 
 
@@ -157,6 +157,6 @@ router.delete('/:idAssets', authRequired, checkRole, async (req: Request, res: R
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // DELETE - http://localhost:3000/api/assets/:idAssets
+}); // DELETE - http://localhost:3000/api/asset/:idAssets
 
 export default router;

@@ -7,7 +7,7 @@ class UserPlatform extends Model {
     public id!: string;
     public name!: string;
     public lastName!: string;
-    public typeDocumentId!: 'Cédula de Ciudadanía' | 'Cédula de Extranjería' | 'Pasaporte';
+    public typeDocumentId!: 'Cedula de Ciudadania' | 'Cedula de Extranjeria' | 'Pasaporte';
     public documentId!: string;
     public profilePicture!: string;
     public logo!: string;
@@ -56,7 +56,7 @@ UserPlatform.init(
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isIn: [[ 'Cédula de Ciudadanía', 'Cédula de Extranjería', 'Pasaporte' ]],
+                isIn: [[ 'Cedula de Ciudadania', 'Cedula de Extranjeria', 'Pasaporte' ]],
             },
         },
         documentId: {

@@ -117,8 +117,8 @@ export const putMerchandiseService = async (idMerchandise: string, body: IMercha
         const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar esta mercancía");
         const updateMerchandise = await putMerchandiseData(idMerchandise, body, userId);
-        if (!updateMerchandise) throw new ServiceError(404, "Mercancía no encontrada");
-        return { code: 200, message: "Mercancía actualizado exitosamente", result: updateMerchandise };
+        if (!updateMerchandise) throw new ServiceError(404, "Mercancia no encontrada");
+        return { code: 200, message: "Mercancia actualizado exitosamente", result: updateMerchandise };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -159,7 +159,7 @@ export const patchMerchandiseService = async (idMerchandise: string, body: any, 
         const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para retirar del inventario esta mercancía");
         const updateMerchandise = await patchMerchandiseData(idMerchandise, body, userId);
-        if (!updateMerchandise) throw new ServiceError(404, "Mercancía no encontrada");
+        if (!updateMerchandise) throw new ServiceError(404, "Mercancia no encontrada");
         return { code: 200, message: "Unidades de la mercancía retiradas del inventario exitosamente", result: updateMerchandise };
     } catch (error) {
         if (error instanceof Error) {
@@ -177,7 +177,7 @@ export const deleteMerchandiseService = async (idMerchandise: string, userId: st
         const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar esta mercancía");
         await deleteMerchandiseData(idMerchandise);
-        return { code: 200, message: "Mercancía eliminada exitosamente" };
+        return { code: 200, message: "Mercancia eliminada exitosamente" };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
