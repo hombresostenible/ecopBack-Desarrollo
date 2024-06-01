@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import {
     postProductService,
     postManyProductService,
-    getProductsService,
     getProductsUserService,
     getProductBranchService,
     getProductByIdService,

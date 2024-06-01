@@ -13,7 +13,7 @@ export interface IAssets {
     brandAssets: string;
     referenceAssets?: string;
     conditionAssets?: 'Nuevo' | 'Usado';
-    stateAssets?: 'Funciona correctamente' | 'Funciona requiere mantenimiento' | 'Dañada requiere cambio' | 'Dañada requiere reparación';
+    stateAssets?: 'Funciona correctamente' | 'Funciona requiere mantenimiento' | 'Dañada requiere cambio' | 'Dañada requiere reparacion';
     purchasePriceBeforeTax?: number;
     IVA?: number;
     sellingPrice?: number;    

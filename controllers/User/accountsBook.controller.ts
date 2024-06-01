@@ -25,7 +25,7 @@ router.post("/", authRequired, validateSchema(accountsBookSchemaZod), async (req
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //POST - http://localhost:3000/api/accountsBook con { "registrationDate": "2023-09-19T12:00:00.000Z", "transactionType": "Venta", "item": "Arroz", "productId": "f0f4f10b-449e-46cf-b462-a08d5f37a9ce", "unitValue": 15000, "quantity": 10, "totalValue": 150000, "creditCash": "Crédito", "numberOfPayments": 0, "paymentValue": 0, "paymentNumber": 0, "accountsReceivable": 0, "accountsPayable": 0, "seller": "Mario", "branchId": "9da61ca8-eb13-4062-987a-83b7d3b89ca1", "transactionDate": "2023-09-19T12:00:00.000Z" }
+}); //POST - http://localhost:3000/api/accountsBook con { "registrationDate": "2023-09-19T12:00:00.000Z", "transactionType": "Venta", "item": "Arroz", "productId": "f0f4f10b-449e-46cf-b462-a08d5f37a9ce", "unitValue": 15000, "quantity": 10, "totalValue": 150000, "creditCash": "Credito", "numberOfPayments": 0, "paymentValue": 0, "paymentNumber": 0, "accountsReceivable": 0, "accountsPayable": 0, "seller": "Mario", "branchId": "9da61ca8-eb13-4062-987a-83b7d3b89ca1", "transactionDate": "2023-09-19T12:00:00.000Z" }
 
 
 

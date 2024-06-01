@@ -32,7 +32,7 @@ export const expensesAccountsPayable = async (body: IAccountsBook, newTransactio
 
             //Relaciones con los modelos de Assets, Merchandise, Product, RawMaterial y Service
             if (body.typeExpenses === 'Activo') accountsPayable.assetId = body.itemId;
-            if (body.typeExpenses === 'Mercancía') accountsPayable.merchandiseId = body.itemId;
+            if (body.typeExpenses === 'Mercancia') accountsPayable.merchandiseId = body.itemId;
             if (body.typeExpenses === 'Materia Prima') accountsPayable.rawMaterialId = body.itemId;
 
             const newAccountPayableTransaction = new AccountsPayable();

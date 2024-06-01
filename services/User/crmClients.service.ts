@@ -60,9 +60,9 @@ export const getCRMClientsBranchService = async (idBranch: string, userId: strin
 
 
 //SERVICE PARA OBTENER UN CLIENTE POR ID PERTENECIENTE AL USER
-export const getCRMClientByIdService = async (idCRMClient: string, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const getCRMClientByIdService = async (idCrmClient: string, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        const cRMClientFound = await getCRMClientByIdData(idCRMClient, userId);
+        const cRMClientFound = await getCRMClientByIdData(idCrmClient, userId);
         if (!cRMClientFound) return { code: 404, message: "Cliente no encontrado" };
         return { code: 200, result: cRMClientFound };
     } catch (error) {
@@ -76,9 +76,9 @@ export const getCRMClientByIdService = async (idCRMClient: string, userId: strin
 
 
 //SERVICE PARA ACTUALIZAR UN CLIENTE PERTENECIENTE AL USER
-export const putCRMClientService = async (idCRMClient: string, body: ICrmClients, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const putCRMClientService = async (idCrmClient: string, body: ICrmClients, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        const updateCRMClient = await putCRMClientData(idCRMClient, body, userId);
+        const updateCRMClient = await putCRMClientData(idCrmClient, body, userId);
         if (!updateCRMClient) throw new ServiceError(404, "Cliente no encontrado");
         return { code: 200, message: "Cliente actualizado exitosamente", result: updateCRMClient };
     } catch (error) {
@@ -92,9 +92,9 @@ export const putCRMClientService = async (idCRMClient: string, body: ICrmClients
 
 
 //SERVICE PARA ELIMINAR UN CLIENTE PERTENECIENTE AL USER
-export const deleteCRMClientService = async (idCRMClient: string, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const deleteCRMClientService = async (idCrmClient: string, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        await deleteCRMClientData(idCRMClient, userId);
+        await deleteCRMClientData(idCrmClient, userId);
         return { code: 200, message: "Cliente eliminado exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

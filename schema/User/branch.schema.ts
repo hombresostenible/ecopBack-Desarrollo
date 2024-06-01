@@ -14,7 +14,7 @@ class Branch extends Model {
     public contactPhoneBranch!: string;
     public nameManagerBranch!: string;
     public lastNameManagerBranch!: string;
-    public typeDocumentIdManager!: 'Cédula de Ciudadanía' | 'Cédula de Extranjería' | 'Pasaporte';    
+    public typeDocumentIdManager!: 'Cedula de Ciudadania' | 'Cedula de Extranjeria' | 'Pasaporte';    
     public documentIdManager!: string;
 
     //RELACION CON OTRAS TABLAS
@@ -72,7 +72,7 @@ Branch.init(
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isIn: [[ 'Cédula de Ciudadanía', 'Cédula de Extranjería', 'Pasaporte' ]],
+                isIn: [[ 'Cedula de Ciudadania', 'Cedula de Extranjeria', 'Pasaporte' ]],
             },
         },
         documentIdManager: {

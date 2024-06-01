@@ -7,7 +7,7 @@ class ContactUs extends Model {
     public nameUser!: string;
     public phone!: string;
     public helpDescription!: string;
-    public selectedTopic!: 'Indicadores' | 'Inventario' | 'Facturación electrónica' | 'Otro';
+    public selectedTopic!: 'Indicadores' | 'Inventario' | 'Facturacion electronica' | 'Otro';
     public acceptPersonalDataPolicy!: boolean;
 };
 
@@ -42,7 +42,7 @@ ContactUs.init(
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isIn: [[ 'Indicadores', 'Inventario', 'Facturación electrónica', 'Otro' ]],
+                isIn: [[ 'Indicadores', 'Inventario', 'Facturacion electronica', 'Otro' ]],
             },
         },
         acceptPersonalDataPolicy: {

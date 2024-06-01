@@ -47,7 +47,7 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
         if (body.incomeCategory === 'Activo') incomeFromCashSaleAssets(body);
 
         //ACTUALIZAMOS EL INVENTARIO EN LA TABLA DE MERCHANDISES 
-        if (body.incomeCategory === 'Mercancía') incomeFromCashSaleMerchandises(body);
+        if (body.incomeCategory === 'Mercancia') incomeFromCashSaleMerchandises(body);
         
         //ACTUALIZAMOS EL INVENTARIO EN LA TABLA DE PRODUCT 
         if (body.incomeCategory === 'Producto') incomeFromCashSaleProduct(body)     
@@ -60,7 +60,7 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
 
         //^INGRESOS POR VENTAS A CREDITO - CUENTAS POR COBRAR
         // SE CREA LA CXC EN LA TABLA ACCOUNTSRECEIVABLE PARA USER
-        if (body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Crédito") incomeAccountsReceivable(body, newTransaction.id, userId)
+        if (body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Credito") incomeAccountsReceivable(body, newTransaction.id, userId)
 
         //^PAGOS A CUENTAS POR COBRAR
         // SE HACE EL PAGO A LA CXC EN LA TABLA ACCOUNTSRECEIVABLE PARA USER
@@ -68,7 +68,7 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
 
         //^GASTOS A CREDITO - CUENTAS POR PAGAR
         // SE CREA LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA USER
-        if (body.pay === 'No' && body.transactionType === 'Gasto' && body.creditCash === "Crédito") expensesAccountsPayable(body, newTransaction.id, userId);
+        if (body.pay === 'No' && body.transactionType === 'Gasto' && body.creditCash === "Credito") expensesAccountsPayable(body, newTransaction.id, userId);
 
         //^PAGOS A CUENTAS POR PAGAR
         // SE HACE EL PAGO A LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA USER
@@ -76,7 +76,7 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
         
         //^CREAR DATOS EN LA TABLA DE SUSTAINABILITY PARA INDICADORES DE SOSTENIBILIDAD
         // PASAR LOS DATOS DEL LIBRO DIARIO A LA TABLA DE SOSTENIBILIDAD
-        const isSustainabilityExpense = body.typeExpenses !== undefined && [ 'Acueducto', 'Energía', 'Gas', 'Internet', 'Celular/Plan de datos' ].includes(body.typeExpenses);
+        const isSustainabilityExpense = body.typeExpenses !== undefined && [ 'Acueducto', 'Energia', 'Gas', 'Internet', 'Celular/Plan de datos' ].includes(body.typeExpenses);
         if (isSustainabilityExpense) {
             const sustainabilityData = {
                 branchId: body.branchId,
@@ -187,7 +187,7 @@ export const deleteAccountsBookData = async (idAccountsBook: string): Promise<vo
     try {
         const transactionFound = await AccountsBook.findOne({ where: { id: idAccountsBook } });
         if (!transactionFound) throw new Error('Registro del libro diario no encontrado');        
-        if (transactionFound.incomeCategory === 'Mercancía') {
+        if (transactionFound.incomeCategory === 'Mercancia') {
             const merchandiseFound = await Merchandise.findOne({
                 where: { id: transactionFound?.itemId, nameItem: transactionFound?.nameItem, branchId: transactionFound?.branchId },
             });

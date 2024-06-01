@@ -25,7 +25,7 @@ router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), 
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/branch con { "nameBranch": "Sede oriente", "departmentBranch": "Av Caracas", "cityBranch": "Av Caracas", "addressBranch": "Av Caracas", "identificationNumberBranch": "1000", "contactEmailBranch": "sedeoriente@gmail.com", "contactPhoneBranch": "3001002030", "nameManagerBranch": "Carlos", "lastNameManagerBranch": "Reyes", "managertypeDocumentId": "Cédula de Ciudadanía", "managerIdDocument": "100020003000" }
+}); // POST - http://localhost:3000/api/branch con { "nameBranch": "Sede oriente", "departmentBranch": "Av Caracas", "cityBranch": "Av Caracas", "addressBranch": "Av Caracas", "identificationNumberBranch": "1000", "contactEmailBranch": "sedeoriente@gmail.com", "contactPhoneBranch": "3001002030", "nameManagerBranch": "Carlos", "lastNameManagerBranch": "Reyes", "managertypeDocumentId": "Cedula de Ciudadania", "managerIdDocument": "100020003000" }
 
 
 
@@ -40,7 +40,7 @@ router.post("/createMany", authRequired, checkRoleAdmin, validateSchema(manyBran
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/branch/createMany con [{"nameBranch":"Sede Uno","departmentBranch":"Av Caracas","cityBranch":"Av Caracas","addressBranch":"Av Caracas","identificationNumberBranch":"1000","contactEmailBranch":"sedeuno@gmail.com","contactPhoneBranch":"3001002030","nameManagerBranch":"Carlos","lastNameManagerBranch":"Reyes","managertypeDocumentId":"Cédula de Ciudadanía","managerIdDocument":"100020003000"},{"nameBranch":"Sede Dos","departmentBranch":"Av Caracas","cityBranch":"Av Caracas","addressBranch":"Av Caracas","identificationNumberBranch":"1000","contactEmailBranch":"sededos@gmail.com","contactPhoneBranch":"3001002030","nameManagerBranch":"Carlos","lastNameManagerBranch":"Reyes","managertypeDocumentId":"Cédula de Ciudadanía","managerIdDocument":"100020003000"}]
+}); // POST - http://localhost:3000/api/branch/createMany con [{"nameBranch":"Sede Uno","departmentBranch":"Av Caracas","cityBranch":"Av Caracas","addressBranch":"Av Caracas","identificationNumberBranch":"1000","contactEmailBranch":"sedeuno@gmail.com","contactPhoneBranch":"3001002030","nameManagerBranch":"Carlos","lastNameManagerBranch":"Reyes","managertypeDocumentId":"Cedula de Ciudadania","managerIdDocument":"100020003000"},{"nameBranch":"Sede Dos","departmentBranch":"Av Caracas","cityBranch":"Av Caracas","addressBranch":"Av Caracas","identificationNumberBranch":"1000","contactEmailBranch":"sededos@gmail.com","contactPhoneBranch":"3001002030","nameManagerBranch":"Carlos","lastNameManagerBranch":"Reyes","managertypeDocumentId":"Cedula de Ciudadania","managerIdDocument":"100020003000"}]
 
 
 
@@ -89,7 +89,7 @@ router.put("/:idBranch", authRequired, checkRoleAdmin, validateSchema(branchSche
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/branch/:idBranch con { "nameBranch": "Sede Norte", "addressBranch": "Av Caracas", "identificationNumberBranch": "1000", "contactEmailBranch": "sedenorte@gmail.com", "contactPhoneBranch": "3001002030", "nameManagerBranch": "Carlos", "lastNameManagerBranch": "Reyes", "managertypeDocumentId": "Cédula de Ciudadanía", "managerIdDocument": "100020003000" }
+}); // PUT - http://localhost:3000/api/branch/:idBranch con { "nameBranch": "Sede Norte", "addressBranch": "Av Caracas", "identificationNumberBranch": "1000", "contactEmailBranch": "sedenorte@gmail.com", "contactPhoneBranch": "3001002030", "nameManagerBranch": "Carlos", "lastNameManagerBranch": "Reyes", "managertypeDocumentId": "Cedula de Ciudadania", "managerIdDocument": "100020003000" }
 
 
 

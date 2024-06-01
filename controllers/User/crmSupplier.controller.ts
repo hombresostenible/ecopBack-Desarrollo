@@ -25,7 +25,7 @@ router.post("/", authRequired, validateSchema(crmSupplierSchema), async (req: Re
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/crmSupplier con { "entityUserId": "1ecd49f4-f6b7-4d49-a000-0d9b58147a32", "fullName": "Carlos Mario Reyes", "typeDocumentId": "Cédula de Ciudadanía", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
+}); // POST - http://localhost:3000/api/crmSupplier con { "entityUserId": "6dde1b74-2e3c-4915-bc93-6e39ac77afc8", "name": "Carlos", "lastName": "Reyes", "typeDocumentId": "Cedula de Ciudadania", "documentId": "1110521285", "verificationDigit": "5", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
 
 
 
@@ -50,9 +50,9 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 //CONTROLLER PARA OBTENER UN PROVEEDOR POR ID PERTENECIENTE AL USER
 router.get("/:idCrmSupplier", authRequired, async (req: Request, res: Response) => {
     try {
-        const { idCRMSupplier } = req.params;
+        const { idCrmSupplier } = req.params;
         const { id } = req.user;
-        const serviceLayerResponse = await getCRMSupplierByIdService(idCRMSupplier, id);
+        const serviceLayerResponse = await getCRMSupplierByIdService(idCrmSupplier, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -84,25 +84,25 @@ router.get("/crmSupplier-branch/:idBranch", authRequired, async (req: Request, r
 //CONTROLLER PARA ACTUALIZAR UN PROVEEDOR PERTENECIENTE AL USER
 router.put("/:idCrmSupplier", authRequired, validateSchema(crmSupplierSchema), async (req: Request, res: Response) => {
     try {
-        const { idCRMSupplier } = req.params;
+        const { idCrmSupplier } = req.params;
         const body = req.body;
         const { id } = req.user;
-        const serviceLayerResponse = await putCRMSupplierService(idCRMSupplier, body, id);
+        const serviceLayerResponse = await putCRMSupplierService(idCrmSupplier, body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/crmSupplier/:idCrmSupplier con { "entityUserId": "1ecd49f4-f6b7-4d49-a000-0d9b58147a32", "fullName": "Carlos Mario Reyes", "typeDocumentId": "Cédula de Ciudadanía", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
+}); // PUT - http://localhost:3000/api/crmSupplier/:idCrmSupplier con { "entityUserId": "6dde1b74-2e3c-4915-bc93-6e39ac77afc8", "name": "Carlos", "lastName": "Reyes", "typeDocumentId": "Cedula de Ciudadania", "documentId": "1110521285", "verificationDigit": "5", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
 
 
 
 //CONTROLLER PARA ELIMINAR UN PROVEEDOR PERTENECIENTE AL USER
 router.delete('/:idCrmSupplier', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
-        const { idCRMSupplier } = req.params;
+        const { idCrmSupplier } = req.params;
         const { id } = req.user;
-        const serviceLayerResponse = await deleteCRMSupplierService(idCRMSupplier, id); 
+        const serviceLayerResponse = await deleteCRMSupplierService(idCrmSupplier, id); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

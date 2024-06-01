@@ -65,13 +65,11 @@ export const postRegisterUserData = async (body: IUser): Promise<User | null> =>
             await t.commit();
             return newUser;
         } catch (emailError) {
-            console.log('emailError: ', emailError)
             await t.rollback();
             throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
         }
     } catch (error) {
-        console.log('Error: ', error)
         await t.rollback();
-        throw new ServiceError(500, `Error al crear el usuario: ${error}`);
+        throw new ServiceError(500, `${error}`);
     }
 };

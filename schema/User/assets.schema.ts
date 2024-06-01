@@ -13,7 +13,7 @@ class Assets extends Model {
     public brandAssets!: string;
     public referenceAssets!: string;
     public conditionAssets!: 'Nuevo' | 'Usado';
-    public stateAssets!: 'Funciona correctamente' | 'Funciona requiere mantenimiento' | 'Dañada requiere cambio' | 'Dañada requiere reparación';
+    public stateAssets!: 'Funciona correctamente' | 'Funciona requiere mantenimiento' | 'Dañada requiere cambio' | 'Dañada requiere reparacion';
     public purchasePriceBeforeTax!: number;
     public IVA!: number;
     public sellingPrice!: number;
@@ -68,7 +68,7 @@ Assets.init(
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [[ 'Funciona correctamente', 'Funciona requiere mantenimiento', 'Dañada requiere cambio', 'Dañada requiere reparación' ]],
+                isIn: [[ 'Funciona correctamente', 'Funciona requiere mantenimiento', 'Dañada requiere cambio', 'Dañada requiere reparacion' ]],
             },
         },
         purchasePriceBeforeTax: {

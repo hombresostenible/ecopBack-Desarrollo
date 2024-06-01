@@ -1,21 +1,17 @@
 import { IUser } from '../User/users.types';
 import { IUserPlatform } from '../User/userPlatform.types';
 import { IBranch } from "../User/branch.types";
-
 import { IAssets } from "../User/assets.types";
 import { IMerchandise } from "../User/merchandise.types";
 import { IProduct } from "../User/products.types";
 import { IRawMaterial } from "../User/rawMaterial.types";
 import { IService } from '../User/services.types';
-
 import { IAccountsBook } from "../User/accountsBook.types";
 import { ISustainability } from "../User/sustainability.types";
 import { IElectronicInvoicing } from "../User/electronicInvoicing.types";
 import { IInvoicingPOS } from "../User/invoicingPOS.types";
-
 import { ICrmClients } from '../User/crmClients.types';
 import { ICrmSuppliers } from '../User/crmSupplier.types';
-
 import { ISalesFunnelCustomerAcq, ISalesFunnelCustomerRet, ISalesFunnelSalesDigital } from "../User/salesFunnel.types";
 
 //INTERFACE DE ERRORES

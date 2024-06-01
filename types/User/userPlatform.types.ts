@@ -2,7 +2,7 @@ export interface IUserPlatform {
     id: string;
     name: string;
     lastName: string;
-    typeDocumentId: 'Cédula de Ciudadanía' | 'Cédula de Extranjería' | 'Pasaporte';
+    typeDocumentId: 'Cedula de Ciudadania' | 'Cedula de Extranjeria' | 'Pasaporte';
     documentId: string;
     profilePicture?: string;
     logo?: string;
