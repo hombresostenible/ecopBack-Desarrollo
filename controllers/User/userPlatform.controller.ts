@@ -22,7 +22,7 @@ router.post("/", authRequired, checkRoleCreateUserPlatform, async (req: Request,
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/userPlatform con {"branchId":"450df933-b11b-4279-b992-701cc16a15b5","name":"Mario","lastName":"Reyes","typeDocumentId":"Cédula de Ciudadanía","documentId":"1110111222","logo":null,"userType":"User","typeRole":"Administrador","economicSector":null,"email":"mario_cr07@hotmail.es","password":"password","phone":"3001002020","department":"Tolima","city":"Ibagué","address":"Cra 10 # 3 - 20","isBlocked":true,"isAceptedConditions":true}
+}); // POST - http://localhost:3000/api/userPlatform con {"branchId":"450df933-b11b-4279-b992-701cc16a15b5","name":"Mario","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"1110111222","logo":null,"userType":"User","typeRole":"Administrador","economicSector":null,"email":"mario_cr07@hotmail.es","password":"password","phone":"3001002020","department":"Tolima","city":"Ibagué","address":"Cra 10 # 3 - 20","isBlocked":true,"isAceptedConditions":true}
 
 
 

@@ -1,0 +1,555 @@
+{
+    "Parametros": {
+        "VersionDocElectronico": "4.0",
+        "NombreSistemaEmisor": "Ecopcion",
+        "VersionSistemaEmisor": "v1.0.0.1",
+        "ModoRespuesta": "1",
+        "TipoAmbiente": "2",
+        "TokenEmpresa": "89E33A03-23F7-4B45-A3A1-FE7B6D773B1A",
+        "PasswordEmpresa": "",
+        "TipoReporte": "1",
+        "Personalizacion": "20",
+        "ContactoReceptor": [
+            {
+                "CorreoElectronico": "carlosmario.reyesp@gmai.com",
+                "IdEtiquetaUbicacionCorreo": "1",
+                "SoloEnvioCasoDeFalloSpecified": false
+            }
+        ],
+        "IndicadoresAdicionales": [
+            {
+                "NombreIndicador": "SKIPVALIDDIANLOGI",
+                "Activado": true
+            },
+            {
+                "NombreIndicador": "SKIPVALIDDIANREQU",
+                "Activado": true
+            }
+        ]
+    },
+    "Extensiones": [
+        {
+            "ContenidoExtension": {
+                "FabricanteSoftware": {
+                    "InformacionDelFabricanteDelSoftware": [
+                        {
+                            "Name": "NombreApellido",
+                            "Value": "Felipe Hernandez"
+                        },
+                        {
+                            "Name": "RazonSocial",
+                            "Value": "Ecopcion SAS Bic"
+                        },
+                        {
+                            "Name": "NombreSoftware",
+                            "Value": "Ecopcion"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "ContenidoExtension": {
+                "BeneficiosComprador": {
+                    "InformacionBeneficiosComprador": [
+                        {
+                            "Name": "Codigo",
+                            "Value": ""
+                        },
+                        {
+                            "Name": "NombresApellidos",
+                            "Value": ""
+                        },
+                        {
+                            "Name": "Puntos",
+                            "Value": ""
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "ContenidoExtension": {
+                "PuntoVenta": {
+                    "InformacionCajaVenta": [
+                        {
+                            "Name": "PlacaCaja",
+                            "Value": "1"
+                        },
+                        {
+                            "Name": "UbicaciónCaja",
+                            "Value": "Sede 1"
+                        },
+                        {
+                            "Name": "Cajero",
+                            "Value": "Carlos Reyes"
+                        },
+                        {
+                            "Name": "TipoCaja",
+                            "Value": "Caja de venta"
+                        },
+                        {
+                            "Name": "CódigoVenta",
+                            "Value": "1212152445451221"
+                        },
+                        {
+                            "Name": "SubTotal",
+                            "Value": "1000"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "ContenidoExtension": {
+                "CustomTagGeneral": {
+                    "TotalesCop": {
+                        "FctConvCop": "",
+                        "MonedaCop": "",
+                        "SubTotalCop": "",
+                        "DescuentoDetalleCop": "0.00",
+                        "RecargoDetalleCop": "0.00",
+                        "TotalBrutoFacturaCop": "0.00",
+                        "TotIvaCop": "0.00",
+                        "TotIncCop": "0.00",
+                        "TotBolCop": "0.00",
+                        "ImpOtroCop": "0.00",
+                        "MntImpCop": "0.00",
+                        "TotalNetoFacturaCop": "20.00",
+                        "MntDctoCop": "0.00",
+                        "MntRcgoCop": "0.00",
+                        "VlrPagarCop": "0.00",
+                        "ReteFueCop": "0.00",
+                        "ReteIvaCop": "0.00",
+                        "ReteIcaCop": "0.00",
+                        "TotAnticiposCop": "0.00"
+                    }
+                }
+            }
+        }
+    ],
+    "Encabezado": {
+        "TipoDocElectronico": "1",
+        "IdPersonalizacion": {
+            "Value": "10"
+        },
+        "PrefijoDocumento": "SETT",
+        "NumeroDocumento": "1",
+        "IndicaCopiaSpecified": false,
+        "FechaYHoraDocumento": "2024-01-23T08:31:27.8335553-05:00",
+        "FechaDeVencimientoSpecified": false,
+        "TipoDeFactura": {
+            "Value": "01"
+        },
+        "FechaTributariaSpecified": false,
+        "CodigoMoneda": {
+            "Value": "COP"
+        },
+        "CantidadLineas": 1.0,
+        "CantidadLineasSpecified": true
+    },
+    "Terceros": {
+        "TerceroProveedorContable": {
+            "IdAdicional": [
+                {
+                    "Value": "1"
+                }
+            ],
+            "Tercero": {
+                "IndicaATravesDeSpecified": false,
+                "IndicaAtencionASpecified": false,
+                "CodigoClasificacionIndustria": {
+                    "Value": "6496"
+                },
+                "IdTercero": [
+                    {
+                        "SmaIdCodigo": "0",
+                        "SmaIdNombre": "31",
+                        "Value": "890890890"
+                    }
+                ],
+                "NombreTercero": [
+                    {
+                        "Value": "Todo Software SA"}
+                ],
+                "UbicacionFisica": {
+                    "Direccion": {
+                        "Id": {
+                            "Value": "11001"
+                        },
+                        "Departamento": {
+                            "Value": "Bogotá"
+                        },
+                        "Ciudad": {
+                            "Value": "Bogotá, D.C."
+                        },
+                        "ZonaPostal": {
+                            "Value": "110121"
+                        },
+                        "SubdivisionPais": {
+                            "Value": "Bogotá"
+                        },
+                        "SubdivisionPaisCodigo": {
+                            "Value": "11"
+                        },
+                        "LineaDireccion": [
+                            {
+                                "TextoLinea": {
+                                "Value": "Avenida Boyaca"
+                                }
+                            }
+                        ],
+                        "Pais": {
+                            "Codigo": {
+                                "Value": "CO"
+                            },
+                            "Nombre": {
+                                "IdLenguaje": "es",
+                                "Value": "Colombia"
+                            }
+                        }
+                    }
+                },
+                "EsquemaTributarioTercero": [
+                    {
+                        "NombreRegistrado": {
+                            "Value": "Todo Software SA"
+                        },
+                        "NumeroIdTributario": {
+                            "SmaIdCodigo": "0",
+                            "SmaIdNombre": "31",
+                            "Value": "890890890"
+                        },
+                        "NivelTributario": {
+                            "ListaNombre": "48",
+                            "Value": "R-99-PN"
+                        },
+                        "DireccionParaImpuestos": {
+                            "Id": {
+                                "Value": "11001"
+                            },
+                            "Departamento": {
+                                "Value": "Bogotá"
+                            },
+                            "Ciudad": {
+                                "Value": "Bogotá, D.C."
+                            },
+                            "ZonaPostal": {
+                                "Value": "110121"
+                            },
+                            "SubdivisionPais": {
+                                "Value": "Bogotá"
+                            },
+                            "SubdivisionPaisCodigo": {
+                                "Value": "11"
+                            },
+                            "LineaDireccion": [
+                                {
+                                    "TextoLinea": {
+                                        "Value": "Avenida Quito"
+                                    }
+                                }
+                            ],
+                        "Pais": {
+                            "Codigo": {
+                                "Value": "CO"
+                            },
+                            "Nombre": {
+                                "IdLenguaje": "es",
+                                "Value": "Colombia"
+                            }
+                        }
+                        },
+                        "EsquemaTributario": {
+                            "Id": {
+                                "Value": "01"
+                            },
+                            "Nombre": {
+                                "Value": "IVA"
+                            }
+                        }
+                    }
+                ],
+                "EntidadLegalTercero": [
+                    {
+                        "NombreRegistrado": {
+                            "Value": "Todo Software SA"
+                        },
+                        "NumeroIdLegal": {
+                            "SmaIdCodigo": "0",
+                            "SmaIdNombre": "31",
+                            "Value": "890890890"
+                        },
+                        "FechaRegistroSpecified": false,
+                        "FechaExpiracionRegistroSpecified": false,
+                        "IndicaPropietarioPersonaSpecified": false,
+                        "IndicaAccionesPagadasSpecified": false,
+                        "EsquemaRegistroCorporativo": {
+                            "Id": {
+                                "Value": "SETT"
+                            },
+                            "Nombre": {
+                                "Value": "6496"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "TerceroClienteContable": {
+            "IdAdicional": [
+                {
+                    "Value": "1"
+                }
+            ],
+            "Tercero": {
+                "IndicaATravesDeSpecified": false,
+                "IndicaAtencionASpecified": false,
+                "CodigoClasificacionIndustria": {
+                    "Value": "6496"
+                },
+                "IdTercero": [
+                    {
+                        "SmaIdCodigo": "0",
+                        "SmaIdNombre": "30",
+                        "Value": "222222222222"
+                    }
+                ],
+                "NombreTercero": [
+                    {
+                        "Value": "Consumidor final"
+                    }
+                ],
+                "UbicacionFisica": {
+                    "Direccion": {
+                        "Id": {
+                            "Value": "11001"
+                        },
+                        "Departamento": {
+                            "Value": "Bogotá"
+                        },
+                        "Ciudad": {
+                            "Value": "Bogotá, D.C."
+                        },
+                        "ZonaPostal": {
+                            "Value": "110121"
+                        },
+                        "SubdivisionPais": {
+                            "Value": "Bogotá"
+                        },
+                        "SubdivisionPaisCodigo": {
+                            "Value": "11"
+                        },
+                        "LineaDireccion": [
+                        {
+                            "TextoLinea": {
+                                "Value": "Avenida Quito"
+                            }
+                        }
+                        ],
+                        "Pais": {
+                            "Codigo": {
+                                "Value": "CO"
+                            },
+                            "Nombre": {
+                                "IdLenguaje": "es",
+                                "Value": "Colombia"
+                            }
+                        }
+                    }
+                },
+                "EsquemaTributarioTercero": [
+                    {
+                        "NombreRegistrado": {
+                            "Value": "Nombre Empresa"
+                        },
+                        "NumeroIdTributario": {
+                            "SmaIdCodigo": "0",
+                            "SmaIdNombre": "31",
+                            "Value": "Nit 0000000"
+                        },
+                        "NivelTributario": {
+                            "ListaNombre": "48",
+                            "Value": "R-99-PN"
+                        },
+                        "DireccionParaImpuestos": {
+                            "Id": {
+                                "Value": "11001"
+                            },
+                            "Departamento": {
+                                "Value": "Bogotá"
+                            },
+                            "Ciudad": {
+                                "Value": "Bogotá, D.C."
+                            },
+                            "ZonaPostal": {
+                                "Value": "110121"
+                            },
+                            "SubdivisionPais": {
+                                "Value": "Bogotá"
+                            },
+                            "SubdivisionPaisCodigo": {
+                                "Value": "11"
+                            },
+                            "LineaDireccion": [
+                                {
+                                    "TextoLinea": {
+                                        "Value": "Avenida Quito"
+                                    }
+                                }
+                            ],
+                            "Pais": {
+                                "Codigo": {
+                                    "Value": "CO"
+                                },
+                                "Nombre": {
+                                    "IdLenguaje": "es",
+                                    "Value": "Colombia"
+                                }
+                            }
+                        },
+                        "EsquemaTributario": {
+                            "Id": {
+                                "Value": "01"
+                            },
+                            "Nombre": {
+                                "Value": "IVA"
+                            }
+                        }
+                    }
+                ],
+                "EntidadLegalTercero": [
+                    {
+                        "NombreRegistrado": {
+                            "Value": "Nombre Empresa"
+                        },
+                        "NumeroIdLegal": {
+                            "SmaIdCodigo": "0",
+                            "SmaIdNombre": "31",
+                            "Value": "Nit 0000000"
+                        },
+                        "FechaRegistroSpecified": false,
+                        "FechaExpiracionRegistroSpecified": false,
+                        "IndicaPropietarioPersonaSpecified": false,
+                        "IndicaAccionesPagadasSpecified": false,
+                        "EsquemaRegistroCorporativo": {
+                            "Id": {
+                                "Value": "SETT"
+                            },
+                            "Nombre": {
+                                "Value": "6496"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "Lineas": [
+        {
+            "Id": {
+                "Value": "1"
+            },
+            "Nota": [
+                {
+                    "Value": "Producto Prueba"
+                }
+            ],
+            "Cantidad": {
+                "CodUnidad": "KGM",
+                "Value": 1.0
+            },
+            "ValorNeto": {
+                "IdMoneda": "COP",
+                "Value": 10000.0
+            },
+            "FechaVigenciaImpuestoSpecified": false,
+            "IndicaEsGratisSpecified": false,
+            "Item": {
+                "Descripcion": [
+                    {
+                        "Value": "Producto Prueba"
+                    }
+                ],
+                "ItemsPorEmpaqueSpecified": false,
+                "IndicaDesdeCatalogoSpecified": false,
+                "Nombre": {
+                    "Value": "Producto Prueba"
+                },
+                "IndicadorDePeligroSpecified": false,
+                "IdItemEstandar": {
+                    "Id": {
+                        "SmaIdCodigo": "999",
+                        "SmaIdNombre": "Estándar de adopción del contribuyente",
+                        "Value": "001"
+                    }
+                },
+                "PropiedadesAdicionalesItem": [
+                    {
+                        "Nombre": {
+                            "Value": "UnidadMedidaNombre"
+                        },
+                        "Valor": {
+                            "Value": "one|Uno"
+                        }
+                    }
+                ]
+            },
+            "Precio": {
+                "ValorPrecio": {
+                    "IdMoneda": "COP",
+                    "Value": 10000.0
+                },
+                "CantidadBase": {
+                    "CodUnidad": "KGM",
+                    "Value": 1.0
+                },
+                "FactorConvAUnidadPedidoSpecified": false
+            }
+        }
+    ],
+    "AgregadoComercial": {
+        "MediosDePago": [
+            {
+                "Id": {
+                    "Value": "1"
+                },
+                "CodigoMedioDePago": {
+                    "Value": "1"
+                },
+                "FechaLimitePago": "2024-01-23T08:31:27.8385506-05:00",
+                "FechaLimitePagoSpecified": true,
+                "NotaInstruccion": [
+                    {
+                        "Value": "30 Dias"
+                    }
+                ],
+                "IdPago": [
+                    {
+                        "Value": "2"
+                    }
+                ]
+            }
+        ]
+    },
+    "Totales": {
+        "TotalMonetario": {
+            "ValorBruto": {
+                "IdMoneda": "COP",
+                "Value": 10000.0
+            },
+            "ValorBaseImpuestos": {
+                "IdMoneda": "COP",
+                "Value": 0.0
+            },
+            "TotalMasImpuestos": {
+                "IdMoneda": "COP",
+                "Value": 10000.0
+            },
+            "ValorAPagar": {
+                "IdMoneda": "COP",
+                "Value": 10000.0
+            }
+        }
+    }
+}

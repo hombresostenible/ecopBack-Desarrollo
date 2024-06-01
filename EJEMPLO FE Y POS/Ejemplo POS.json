@@ -1,0 +1,696 @@
+{
+    "Parametros": {
+        "TokenEmpresa": "No Disponible",
+        "VersionDocElectronico": "4.0",
+        "NombreSistemaEmisor": "SoapUI",
+        "VersionSistemaEmisor": "1",
+        "ModoRespuesta": "1",
+        "TipoAmbiente": "2",
+        "TipoReporte": "1",
+        "Personalizacion": "20",
+        "ContactoReceptor": [
+            {
+                "CorreoElectronico": "Factura@billapp.com.co",
+                "IdEtiquetaUbicacionCorreo": "1",
+                "SoloEnvioCasoDeFalloSpecified": false
+            }
+        ],
+        "IndicadoresAdicionales": [
+            {
+                "NombreIndicador": "SKIPVALIDDIANLOGI",
+                "Activado": true
+            },
+            {
+                "NombreIndicador": "SKIPVALIDDIANREQU",
+                "Activado": true
+            }
+        ]
+    },
+    "Extensiones": [
+        {
+            "ContenidoExtension": {
+                "FabricanteSoftware": {
+                    "InformacionDelFabricanteDelSoftware": [
+                        {
+                            "Name": "NombreApellido",
+                            "Value": "DEAB42-Stone Pos"
+                        },
+                        {
+                            "Name": "RazonSocial",
+                            "Value": "DEAB44-Stone Pos"
+                        },
+                        {
+                            "Name": "NombreSoftware",
+                            "Value": "DEAB45-Stone Pos"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "ContenidoExtension": {
+                "BeneficiosComprador": {
+                    "InformacionBeneficiosComprador": [
+                        {
+                            "Name": "Codigo",
+                            "Value": "DEPD16-Codigo del Comprador"
+                        },
+                        {
+                            "Name": "NombresApellidos",
+                            "Value": "DEPD18-Nombres y apellidos comprador"
+                        },
+                        {
+                            "Name": "Puntos",
+                            "Value": "DEPD20-Puntos Comprador"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+        "ContenidoExtension": {
+            "PuntoVenta": {
+                "InformacionCajaVenta": [
+                    {
+                        "Name": "PlacaCaja",
+                        "Value": "Corresponde a la Placa de inventario de la Caja"
+                    },
+                    {
+                        "Name": "UbicaciónCaja",
+                        "Value": "Corresponde a la Ubicación de la caja"
+                    },
+                    {
+                        "Name": "Cajero",
+                        "Value": "Corresponde a los Nombres y apellidos del cajero o vendedor"
+                    },
+                    {
+                        "Name": "TipoCaja",
+                        "Value": "Corresponse al Tipo de Caja"
+                    },
+                    {
+                        "Name": "CódigoVenta",
+                        "Value": "Corresponde al Código de la Venta"
+                    },
+                    {
+                        "Name": "SubTotal",
+                        "Value": "1000"
+                    }
+                ]
+            }
+        }
+        }
+    ],
+    "Encabezado": {
+        "TipoDocElectronico": "1",
+        "IdPersonalizacion": {
+            "Value": "10"
+        },
+        "PrefijoDocumento": "EPOS",
+        "NumeroDocumento": "4",
+        "IndicaCopiaSpecified": false,
+        "FechaYHoraDocumento": "2024-02-17T09:13:36-05:00",
+        "FechaDeVencimientoSpecified": false,
+        "TipoDeFactura": {
+            "Value": "20"
+        },
+        "FechaTributariaSpecified": false,
+        "CodigoMoneda": {
+            "Value": "COP"
+        },
+        "CentroDeCostoCodigo": {
+            "Value": "100001"
+        },
+        "CentroDeCostoNombre": {
+            "Value": "OBRA DE LA 116"
+        },
+        "CantidadLineas": 1.0,
+        "CantidadLineasSpecified": true
+    },
+    "Terceros": {
+        "TerceroProveedorContable": {
+            "IdAdicional": [
+                {
+                    "Value": "1"
+                }
+            ],
+            "Tercero": {
+                "IndicaATravesDeSpecified": false,
+                "IndicaAtencionASpecified": false,
+                "CodigoClasificacionIndustria": {
+                    "Value": "6496"
+                },
+                "IdTercero": [
+                    {
+                        "SmaIdCodigo": "7",
+                        "SmaIdNombre": "31",
+                        "Value": "830041118"
+                    }
+                ],
+                "NombreTercero": [
+                    {
+                        "Value": "QUALITY SOFTWARE SAS"
+                    }
+                ],
+                "UbicacionFisica": {
+                    "Direccion": {
+                        "Id": {
+                            "Value": "11001"
+                        },
+                        "Departamento": {
+                            "Value": "Bogotá"
+                        },
+                        "Ciudad": {
+                            "Value": "Bogotá, D.C."
+                        },
+                        "ZonaPostal": {
+                            "Value": "110121"
+                        },
+                        "SubdivisionPais": {
+                            "Value": "Bogotá"
+                        },
+                        "SubdivisionPaisCodigo": {
+                            "Value": "11"
+                        },
+                        "LineaDireccion": [
+                            {
+                                "TextoLinea": {
+                                    "Value": "CRA 15 No. 98 - 42 OF 401"
+                                }
+                            }
+                        ],
+                        "Pais": {
+                            "Codigo": {
+                                "Value": "CO"
+                            },
+                            "Nombre": {
+                                "IdLenguaje": "es",
+                                "Value": "Colombia"
+                            }
+                        }
+                    }
+                },
+                "EsquemaTributarioTercero": [
+                    {
+                        "NombreRegistrado": {
+                            "Value": "QUALITY SOFTWARE SAS"
+                        },
+                        "NumeroIdTributario": {
+                            "SmaIdCodigo": "7",
+                            "SmaIdNombre": "31",
+                            "Value": "830041118"
+                        },
+                        "NivelTributario": {
+                            "ListaNombre": "48",
+                            "Value": "R-99-PN"
+                        },
+                        "DireccionParaImpuestos": {
+                            "Id": {
+                                "Value": "11001"
+                            },
+                            "Departamento": {
+                                "Value": "Bogotá"
+                            },
+                            "Ciudad": {
+                                "Value": "Bogotá, D.C."
+                            },
+                            "ZonaPostal": {
+                                "Value": "110121"
+                            },
+                            "SubdivisionPais": {
+                                "Value": "Bogotá"
+                            },
+                            "SubdivisionPaisCodigo": {
+                                "Value": "11"
+                            },
+                            "LineaDireccion": [
+                            {
+                                "TextoLinea": {
+                                    "Value": "CRA 15 No. 98 - 42 OF 401"
+                                }
+                            }
+                            ],
+                            "Pais": {
+                                "Codigo": {
+                                    "Value": "CO"
+                                },
+                                "Nombre": {
+                                    "IdLenguaje": "es",
+                                    "Value": "Colombia"
+                                }
+                            }
+                        },
+                        "EsquemaTributario": {
+                            "Id": {
+                                "Value": "01"
+                            },
+                            "Nombre": {
+                                "Value": "IVA"
+                            }
+                        }
+                    }
+                ],
+                "EntidadLegalTercero": [
+                    {
+                        "NombreRegistrado": {
+                            "Value": "QUALITY SOFTWARE SAS"
+                        },
+                        "NumeroIdLegal": {
+                            "SmaIdCodigo": "7",
+                            "SmaIdNombre": "31",
+                            "Value": "830041118"
+                        },
+                        "FechaRegistroSpecified": false,
+                        "FechaExpiracionRegistroSpecified": false,
+                        "IndicaPropietarioPersonaSpecified": false,
+                        "IndicaAccionesPagadasSpecified": false,
+                        "EsquemaRegistroCorporativo": {
+                            "Id": {
+                                "Value": "SETT"
+                            },
+                            "Nombre": {
+                                "Value": "6496"
+                            }
+                        }
+                    }
+                ],
+                "Contacto": {
+                    "Nombre": {
+                        "Value": "Nombre del Contacto"
+                    },
+                    "Email": {
+                        "Value": "correocontacto@empresa.co"
+                    },
+                    "Nota": []
+                }
+            }
+        },
+        "TerceroClienteContable": {
+            "IdAdicional": [
+                {
+                    "Value": "1"
+                }
+            ],
+            "Tercero": {
+                "IndicaATravesDeSpecified": false,
+                "IndicaAtencionASpecified": false,
+                "IdTercero": [
+                    {
+                        "SmaIdNombre": "13",
+                        "Value": "222222222222"
+                    }
+                ],
+                "NombreTercero": [
+                    {
+                        "Value": "Cliente Consumidor Final"
+                    }
+                ],
+                "EsquemaTributarioTercero": [
+                    {
+                        "NombreRegistrado": {
+                            "Value": "Cliente Consumidor Final"
+                        },
+                        "NumeroIdTributario": {
+                            "SmaIdNombre": "13",
+                            "Value": "222222222222"
+                        },
+                        "EsquemaTributario": {
+                            "Id": {
+                            "Value": "01"
+                            },
+                            "Nombre": {
+                            "Value": "IVA"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "Lineas": [
+        {
+            "Id": {
+                "Value": "1"
+            },
+            "Nota": [
+                {
+                    "Value": "Servicio Facturacion Electronica"
+                }
+            ],
+            "Cantidad": {
+                "CodUnidad": "C62",
+                "Value": 1.0000
+            },
+            "ValorNeto": {
+                "IdMoneda": "COP",
+                "Value": 1514.0000
+            },
+            "FechaVigenciaImpuestoSpecified": false,
+            "IndicaEsGratisSpecified": false,
+            "ReferenciaLineaDocPedido": [],
+            "TotalImpuesto": [
+                {
+                    "ValorImpuesto": {
+                        "IdMoneda": "COP",
+                        "Value": 287.6600
+                    },
+                    "ValorAjusteRedondeo": {
+                        "IdMoneda": "COP",
+                        "Value": 0.0
+                    },
+                    "IndicaEsSoloEvidencia": false,
+                    "IndicaEsSoloEvidenciaSpecified": true,
+                    "IndicaImpuestoIncluidoSpecified": false,
+                    "SubTotalImpuesto": [
+                        {
+                            "BaseImponible": {
+                                "IdMoneda": "COP",
+                                "Value": 1514.0000
+                            },
+                            "ValorImpuesto": {
+                                "IdMoneda": "COP",
+                                "Value": 287.6600
+                            },
+                            "SecuenciaNumericaSpecified": false,
+                            "PorcentajeSpecified": false,
+                            "PorcentajeRangoSpecified": false,
+                            "CategoriaImpuesto": {
+                                "Porcentaje": 19.00,
+                                "PorcentajeSpecified": true,
+                                "PorcentajeRangoSpecified": false,
+                                "EsquemaTributario": {
+                                    "Id": {
+                                        "Value": "01"
+                                    },
+                                    "Nombre": {
+                                        "Value": "IVA"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ValorImpuesto": {
+                        "IdMoneda": "COP",
+                        "Value": 378.5000
+                    },
+                    "ValorAjusteRedondeo": {
+                        "IdMoneda": "COP",
+                        "Value": 0.0
+                    },
+                    "IndicaEsSoloEvidencia": false,
+                    "IndicaEsSoloEvidenciaSpecified": true,
+                    "IndicaImpuestoIncluidoSpecified": false,
+                    "SubTotalImpuesto": [
+                        {
+                            "BaseImponible": {
+                                "IdMoneda": "COP",
+                                "Value": 1514.0000
+                            },
+                            "ValorImpuesto": {
+                                "IdMoneda": "COP",
+                                "Value": 378.5000
+                            },
+                            "SecuenciaNumericaSpecified": false,
+                            "PorcentajeSpecified": false,
+                            "PorcentajeRangoSpecified": false,
+                            "CategoriaImpuesto": {
+                                "Porcentaje": 25.0000,
+                                "PorcentajeSpecified": true,
+                                "PorcentajeRangoSpecified": false,
+                                "EsquemaTributario": {
+                                    "Id": {
+                                        "Value": "08"
+                                    },
+                                    "Nombre": {
+                                        "Value": "IC Porcentual"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "Item": {
+                "Descripcion": [
+                    {
+                        "Value": "Servicio Facturacion Electronica"
+                    }
+                ],
+                "CantidadEmpaque": {
+                    "CodUnidad": "C62",
+                    "Value": 1.0000
+                },
+                "ItemsPorEmpaqueSpecified": false,
+                "IndicaDesdeCatalogoSpecified": false,
+                "Nombre": {
+                    "Value": "Lapiz H2a"
+                },
+                "IndicadorDePeligroSpecified": false,
+                "Marca": [
+                    {
+                        "Value": "Faber Castel"
+                    }
+                ],
+                "Modelo": [
+                    {
+                        "Value": "Hb2"
+                    }
+                ],
+                "IdItemComprador": {
+                    "Id": {
+                        "SmaIdCodigo": "999",
+                        "SmaIdNombre": "Estándar de adopción del contribuyente",
+                        "Value": "9999999999999"
+                    },
+                    "IdExtendida": {
+                        "Value": "IdExtendido"
+                    },
+                    "IdCodigoDeBarras": {
+                        "Value": "Codigo de barras"
+                    }
+                },
+                "IdItemVendedor": {
+                    "Id": {
+                        "SmaIdCodigo": "999",
+                        "SmaIdNombre": "Estándar de adopción del contribuyente",
+                        "Value": "9999999999999"
+                    },
+                    "IdExtendida": {
+                        "Value": "IdExtendido"
+                    },
+                    "IdCodigoDeBarras": {
+                        "Value": "Codigo de barras"
+                    }
+                },
+                "IdItemEstandar": {
+                    "Id": {
+                        "SmaIdCodigo": "001",
+                        "SmaIdNombre": "UNSPSC",
+                        "SmaIdOrgEmisorID": "10",
+                        "Value": "30192130-1"
+                    }
+                },
+                "PropiedadesAdicionalesItem": [
+                    {
+                        "Nombre": {
+                            "Value": "UnidadMedidaNombre"
+                        },
+                        "Valor": {
+                            "Value": "one|Uno"
+                        }
+                    }
+                ]
+            },
+            "Precio": {
+                "ValorPrecio": {
+                    "IdMoneda": "COP",
+                    "Value": 1514.0000
+                },
+                "CantidadBase": {
+                    "CodUnidad": "C62",
+                    "Value": 1.0000
+                },
+                "FactorConvAUnidadPedidoSpecified": false
+            }
+        }
+    ],
+    "AgregadoComercial": {
+        "MediosDePago": [
+            {
+                "Id": {
+                    "Value": "1"
+                },
+                "CodigoMedioDePago": {
+                    "Value": "31"
+                },
+                "FechaLimitePago": "2023-12-05T09:13:36.883",
+                "FechaLimitePagoSpecified": true,
+                "IdInstruccion": {
+                    "Value": "02"
+                },
+                "NotaInstruccion": [
+                    {
+                        "Value": "Por favor realizar consignación a la cuenta corriente N° 123545678912 de Banco de Colombia"
+                    }
+                ],
+                "IdPago": [
+                    {
+                        "Value": "1"
+                    }
+                ],
+                "CuentaFinancieraPagador": {
+                    "Id": {
+                        "Value": "12345678912"
+                    },
+                    "Nombre": {
+                        "Value": "Cuenta sede prueba bucaramanga"
+                    },
+                    "TipoDeCuenta": {
+                        "Value": "Corriente"
+                    },
+                    "CodigoMoneda": {
+                        "Value": "COP"
+                    },
+                    "Nota": [],
+                    "Pais": {
+                        "Codigo": {
+                            "Value": "CO"
+                        },
+                        "Nombre": {
+                            "IdLenguaje": "es",
+                            "Value": "Colombia"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "Notas": [
+        {
+            "Value": "[VLetras Origen]DOS MIL CIENTO OCHENTA Y UN COP "
+        },
+        {
+            "Value": "[Usuario]MARTIN SANTOS MOLANO"
+        },
+        {
+            "Value": "[SaldoAFavor]0"
+        },
+        {
+            "Value": "[VLetras Alternativo]DOS MIL CIENTO OCHENTA Y UN COP "
+        },
+        {
+            "Value": "[Pie Pagina] Prie de PAgina 1"
+        }
+    ],
+    "Totales": {
+        "TotalImpuestos": [
+            {
+                "ValorImpuesto": {
+                    "IdMoneda": "COP",
+                    "Value": 288.0000
+                },
+                "ValorAjusteRedondeo": {
+                    "IdMoneda": "COP",
+                    "Value": 0.0
+                },
+                "IndicaEsSoloEvidenciaSpecified": false,
+                "IndicaImpuestoIncluidoSpecified": false,
+                "SubTotalImpuesto": [
+                    {
+                        "BaseImponible": {
+                            "IdMoneda": "COP",
+                            "Value": 1514.0000
+                        },
+                        "ValorImpuesto": {
+                            "IdMoneda": "COP",
+                            "Value": 288.0000
+                        },
+                        "SecuenciaNumericaSpecified": false,
+                        "PorcentajeSpecified": false,
+                        "PorcentajeRangoSpecified": false,
+                        "CategoriaImpuesto": {
+                            "Porcentaje": 19.00,
+                            "PorcentajeSpecified": true,
+                            "PorcentajeRangoSpecified": false,
+                            "EsquemaTributario": {
+                                "Id": {
+                                    "Value": "01"
+                                },
+                                "Nombre": {
+                                    "Value": "IVA"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "ValorImpuesto": {
+                    "IdMoneda": "COP",
+                    "Value": 379.0000
+                },
+                "ValorAjusteRedondeo": {
+                    "IdMoneda": "COP",
+                    "Value": 0.0
+                },
+                "IndicaEsSoloEvidenciaSpecified": false,
+                "IndicaImpuestoIncluidoSpecified": false,
+                "SubTotalImpuesto": [
+                    {
+                        "BaseImponible": {
+                            "IdMoneda": "COP",
+                            "Value": 1514.0000
+                        },
+                        "ValorImpuesto": {
+                            "IdMoneda": "COP",
+                            "Value": 379.0000
+                        },
+                        "SecuenciaNumericaSpecified": false,
+                        "PorcentajeSpecified": false,
+                        "PorcentajeRangoSpecified": false,
+                        "CategoriaImpuesto": {
+                            "Porcentaje": 25.0000,
+                            "PorcentajeSpecified": true,
+                            "PorcentajeRangoSpecified": false,
+                            "EsquemaTributario": {
+                                "Id": {
+                                    "Value": "08"
+                                },
+                                "Nombre": {
+                                    "Value": "IC Porcentual"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        ],
+        "TotalMonetario": {
+            "ValorBruto": {
+                "IdMoneda": "COP",
+                "Value": 1514.0000
+            },
+            "ValorBaseImpuestos": {
+                "IdMoneda": "COP",
+                "Value": 1514.0000
+            },
+            "TotalMasImpuestos": {
+                "IdMoneda": "COP",
+                "Value": 2181.0000
+            },
+            "ValorAjusteRedondeo": {
+                "IdMoneda": "COP",
+                "Value": 0.0000
+            },
+            "ValorAPagar": {
+                "IdMoneda": "COP",
+                "Value": 2181.0000
+            },
+            "ValorAPagarAlternativo": {
+                "IdMoneda": "COP",
+                "Value": 2181.0000
+            }
+        }
+    }
+}

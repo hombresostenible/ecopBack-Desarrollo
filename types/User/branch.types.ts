@@ -10,7 +10,7 @@ export interface IBranch {
     contactPhoneBranch: string;
     nameManagerBranch: string;
     lastNameManagerBranch: string;
-    typeDocumentIdManager: 'Cédula de Ciudadanía' | 'Cédula de Extranjería' | 'Pasaporte';    
+    typeDocumentIdManager: 'Cedula de Ciudadania' | 'Cedula de Extranjeria' | 'Pasaporte';    
     documentIdManager: string;
 
     //RELACION CON OTRAS TABLAS
