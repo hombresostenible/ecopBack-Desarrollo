@@ -8,7 +8,7 @@ class Sustainability extends Model {
     public id!: string;
     public registrationDate!: Date;
     public transactionDate!: Date;
-    public typeExpenses!: 'Acueducto' | 'Energia' | 'Gas' | 'Internet' | 'Celular/Plan de datos';
+    public expenseCategory!: 'Acueducto' | 'Energia' | 'Gas' | 'Internet' | 'Celular/Plan de datos';
     public periodicityPayService!: 'Mensual' | 'Bimestral';
     public periodPayService!: 'Enero de 2024' | 'Febrero de 2024' | 'Marzo de 2024' | 'Abril de 2024' | 'Mayo de 2024' | 'Junio de 2024' | 'Julio de 2024' | 'Agosto de 2024' | 'Septiembre de 2024' | 'Octubre de 2024' | 'Noviembre de 2024' | 'Diciembre de 2024' | 'Julio - Agosto de 2024' | 'Marzo - Abril de 2024' | 'Mayo - Junio de 2024' | 'Julio - Agosto de 2024' | 'Septiembre - Octubre de 2024' | 'Noviembre - Diciembre de 2024';
     public energyConsumption!: number;
@@ -50,7 +50,7 @@ Sustainability.init(
             type: DataTypes.DATE,
             allowNull: true,
         },
-        typeExpenses: {
+        expenseCategory: {
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
