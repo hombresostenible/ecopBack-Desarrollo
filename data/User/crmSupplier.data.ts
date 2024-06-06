@@ -24,6 +24,7 @@ export const postRegisterCRMSupplierData = async (body: ICrmSuppliers, userId: s
         await t.commit();
         return newCRMSupplier;
     } catch (error) {
+        console.log('Error: ', error)
         await t.rollback();
         throw new ServiceError(500, `Error al crear el proveedor: ${error}`);
     }
@@ -60,10 +61,10 @@ export const getCRMSuppliersBranchData = async (idBranch: string, userId: string
 
 
 //DATA PARA OBTENER UN PROVEEDOR POR ID PERTENECIENTE AL USER
-export const getCRMSupplierByIdData = async (idCRMSupplier: string, userId: string): Promise<any> => {
+export const getCRMSupplierByIdData = async (idCrmSupplier: string, userId: string): Promise<any> => {
     try {
         const cRMSupplierFound = await CrmSupplier.findOne({
-            where: { id: idCRMSupplier, entityUserId: userId }
+            where: { id: idCrmSupplier, entityUserId: userId }
         });
         return cRMSupplierFound;
     } catch (error) {
@@ -74,19 +75,21 @@ export const getCRMSupplierByIdData = async (idCRMSupplier: string, userId: stri
 
 
 //DATA PARA ACTUALIZAR UN PROVEEDORES PERTENECIENTE AL USER
-export const putCRMSupplierData = async (idCRMSupplier: string, body: ICrmSuppliers, userId: string): Promise<ICrmSuppliers | null> => {
+export const putCRMSupplierData = async (idCrmSupplier: string, body: ICrmSuppliers, userId: string): Promise<ICrmSuppliers | null> => {
     try {
         const existingWithSameId = await CrmSupplier.findOne({
-            where: { entityUserId: userId, id: { [Op.not]: idCRMSupplier } },
+            where: { entityUserId: userId, id: { [Op.not]: idCrmSupplier } },
         });
+        console.log('existingWithSameId: ', existingWithSameId)
         if (existingWithSameId) throw new ServiceError(403, "No es posible actualizar el proveedor porque ya existe uno con ese mismo número de identidad");
         if (body.entityUserId !== userId) throw new ServiceError(403, "No tienes permiso para actualizar el proveedor");
-        const [rowsUpdated] = await CrmSupplier.update(body, { where: { id: idCRMSupplier } });
+        const [rowsUpdated] = await CrmSupplier.update(body, { where: { id: idCrmSupplier } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún proveedor para actualizar");
-        const updatedCRMClient = await CrmSupplier.findByPk(idCRMSupplier);
+        const updatedCRMClient = await CrmSupplier.findByPk(idCrmSupplier);
         if (!updatedCRMClient) throw new ServiceError(404, "No se encontró ningún proveedor para actualizar");
         return updatedCRMClient as unknown as ICrmSuppliers;
     } catch (error) {
+        console.log('error: ', error)
         throw error;
     }
 };
@@ -94,13 +97,13 @@ export const putCRMSupplierData = async (idCRMSupplier: string, body: ICrmSuppli
 
 
 //DATA PARA ELIMINAR UN PROVEEDORES PERTENECIENTE AL USER
-export const deleteCRMSupplierData = async (idCRMSupplier: string, userId: string): Promise<void> => {
+export const deleteCRMSupplierData = async (idCrmSupplier: string, userId: string): Promise<void> => {
     try {
         const cRMSupplierFound = await CrmSupplier.findOne({
-            where: { id: idCRMSupplier, entityUserId: userId }
+            where: { id: idCrmSupplier, entityUserId: userId }
         });
         if (!cRMSupplierFound) throw new Error("Proveedor no encontrado");
-        await CrmSupplier.destroy({ where: { id: idCRMSupplier } });
+        await CrmSupplier.destroy({ where: { id: idCrmSupplier } });
     } catch (error) {
         throw error;
     }

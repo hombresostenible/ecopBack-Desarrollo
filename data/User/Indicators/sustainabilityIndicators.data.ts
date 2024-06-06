@@ -53,7 +53,7 @@ export const getSustainabilityBranchByIdData = async (idBranch: string): Promise
 export const getEnergyConsumptionData = async (userId: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
-            where: { userId: userId, typeExpenses: 'Electricity' }
+            where: { userId: userId, expenseCategory: 'Electricity' }
         });
         return energyConsumption;
     } catch (error) {
@@ -81,7 +81,7 @@ export const getSustainabilityByIdData = async (idSustainability: string, userId
 export const getEnergyConsumptionBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
-            where: { branchId: idBranch, userId: userId, typeExpenses: 'Electricity' },
+            where: { branchId: idBranch, userId: userId, expenseCategory: 'Electricity' },
         });
         return energyConsumption;
     } catch (error) {
@@ -95,7 +95,7 @@ export const getEnergyConsumptionBranchData = async (idBranch: string, userId: s
 export const getWaterConsumptionData = async (userId: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
-            where: { userId: userId, typeExpenses: 'Water' }
+            where: { userId: userId, expenseCategory: 'Water' }
         });
         return energyConsumption;
     } catch (error) {
@@ -109,7 +109,7 @@ export const getWaterConsumptionData = async (userId: string): Promise<any> => {
 export const getWaterConsumptionBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const energyConsumption = await Sustainability.findAll({ 
-            where: { branchId: idBranch, userId: userId, typeExpenses: 'Water', },
+            where: { branchId: idBranch, userId: userId, expenseCategory: 'Water', },
         });
         return energyConsumption;
     } catch (error) {

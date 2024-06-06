@@ -10,10 +10,10 @@ class AccountsBook extends Model {
     public transactionType!: 'Ingreso' | 'Gasto';
     public creditCash!: 'Contado' | 'Credito';
     public meanPayment!: 'Efectivo' | 'Tarjeta de Credito/Debito' | 'Transferencia bancaria (PSE)' | 'Daviplata' | 'Nequi' | 'Movii' | 'Tuya Pay' | 'Dale' | 'Nubank' | 'Uala' | 'Lulo Bank' | 'Tpaga' | 'Powwi' | 'BBVA Wallet' | 'Ahorro a la mano' | 'Apple Pay' | 'Rappipay' | 'Claro Pay'     | 'Baloto' | 'Giro' | 'Cheque';
-    public incomeCategory!: 'Producto' | 'Materia Prima' | 'Mercancia' | 'Servicio' | 'Activo' | 'Credito del banco' | 'Credito en Cooperativa' | 'Gota gota' | 'Credito de almacen' | 'Credito de servicios publicos';
+    public incomeCategory!: 'Producto' | 'Materia Prima' | 'Mercancia' | 'Servicio' | 'Activo' | 'Credito del Banco' | 'Credito en Cooperativa' | 'Gota gota' | 'Credito de almacen' | 'Credito de servicios publicos';
     public nameItem!: string;
     public itemId!: string;
-    public typeExpenses!: 'Materia Prima' | 'Mercancia' | 'Activo' | 'Arriendo' | 'Mantenimiento de equipos, maquinaria, herramientas' | 'Reparaciones locativas' | 'Transporte' | 'Combustible' | 'Nomina' | 'Seguridad Social y/o parafiscales' | 'Acueducto' | 'Energia' | 'Gas' | 'Internet' | 'Celular/Plan de datos' | 'Credito del banco' | 'Credito en Cooperativa' | 'Gota gota' | 'Credito de almacen' | 'Credito de servicios publicos' | 'IVA' | 'ICA' | 'Declaracion de Renta' | 'Retencion en la Fuente' | 'Predial' | 'Vehiculos y motos' | 'Asesoria Contable' | 'Renovacion Camara de Comercio' | 'Licencias y permisos' | 'Asesoria Juridica' | 'Honorarios de contratista' | 'Honorarios de contratista';
+    public expenseCategory!: 'Materia Prima' | 'Mercancia' | 'Activo' | 'Arriendo' | 'Mantenimiento de equipos, maquinaria, herramientas' | 'Reparaciones locativas' | 'Transporte' | 'Combustible' | 'Nomina' | 'Seguridad Social y/o parafiscales' | 'Acueducto' | 'Energia' | 'Gas' | 'Internet' | 'Celular/Plan de datos' | 'Credito del Banco' | 'Credito en Cooperativa' | 'Gota gota' | 'Credito de almacen' | 'Credito de servicios publicos' | 'IVA' | 'ICA' | 'Declaracion de Renta' | 'Retencion en la Fuente' | 'Predial' | 'Vehiculos y motos' | 'Asesoria Contable' | 'Renovacion Camara de Comercio' | 'Licencias y permisos' | 'Asesoria Juridica' | 'Honorarios de contratista' | 'Honorarios de contratista';
     public periodicityPayService!: 'Mensual' | 'Bimestral';
     public periodPayService!: 'Enero de 2024' | 'Febrero de 2024' | 'Marzo de 2024' | 'Abril de 2024' | 'Mayo de 2024' | 'Junio de 2024' | 'Julio de 2024' | 'Agosto de 2024' | 'Septiembre de 2024' | 'Octubre de 2024' | 'Noviembre de 2024' | 'Diciembre de 2024' | 'Julio - Agosto de 2024' | 'Marzo - Abril de 2024' | 'Mayo - Junio de 2024' | 'Julio - Agosto de 2024' | 'Septiembre - Octubre de 2024' | 'Noviembre - Diciembre de 2024';
     public unitValue!: number;
@@ -80,7 +80,7 @@ AccountsBook.init(
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [[ 'Producto', 'Materia Prima', 'Mercancia', 'Servicio', 'Activo', 'Credito del banco', 'Credito en Cooperativa', 'Gota gota', 'Credito de almacen', 'Credito de servicios publicos' ]],
+                isIn: [[ 'Producto', 'Materia Prima', 'Mercancia', 'Servicio', 'Activo', 'Credito del Banco', 'Credito en Cooperativa', 'Gota gota', 'Credito de almacen', 'Credito de servicios publicos' ]],
             },
         },
         nameItem: {
@@ -91,11 +91,11 @@ AccountsBook.init(
             type: DataTypes.UUID,
             allowNull: true,
         },
-        typeExpenses: {
+        expenseCategory: {
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [[ 'Materia Prima', 'Mercancia', 'Activo', 'Arriendo', 'Mantenimiento de equipos, maquinaria, herramientas', 'Reparaciones locativas', 'Transporte', 'Combustible', 'Nomina', 'Seguridad Social y/o parafiscales', 'Acueducto', 'Energia', 'Gas', 'Internet', 'Celular/Plan de datos', 'Credito del banco', 'Credito en Cooperativa', 'Gota gota', 'Credito de almacen', 'Credito de servicios publicos', 'IVA', 'ICA', 'Declaracion de Renta', 'Retencion en la Fuente', 'Predial', 'Vehiculos y motos', 'Asesoria Contable', 'Renovacion Camara de Comercio', 'Licencias y permisos', 'Asesoria Juridica', 'Honorarios de contratista', 'Honorarios de contratista' ]],
+                isIn: [[ 'Materia Prima', 'Mercancia', 'Activo', 'Arriendo', 'Mantenimiento de equipos, maquinaria, herramientas', 'Reparaciones locativas', 'Transporte', 'Combustible', 'Nomina', 'Seguridad Social y/o parafiscales', 'Acueducto', 'Energia', 'Gas', 'Internet', 'Celular/Plan de datos', 'Credito del Banco', 'Credito en Cooperativa', 'Gota gota', 'Credito de almacen', 'Credito de servicios publicos', 'IVA', 'ICA', 'Declaracion de Renta', 'Retencion en la Fuente', 'Predial', 'Vehiculos y motos', 'Asesoria Contable', 'Renovacion Camara de Comercio', 'Licencias y permisos', 'Asesoria Juridica', 'Honorarios de contratista', 'Honorarios de contratista' ]],
             },
         },
         periodicityPayService: {

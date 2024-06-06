@@ -17,6 +17,7 @@ const router = express.Router();
 //CONTROLLER PARA CREAR UN PROVEEDOR DEL USER
 router.post("/", authRequired, validateSchema(crmSupplierSchema), async (req: Request, res: Response) => {
     try {
+        console.log('Hola')
         const body = req.body;
         const { id } = req.user;
         const serviceLayerResponse = await postRegisterCRMSuppliersService(body, id);
