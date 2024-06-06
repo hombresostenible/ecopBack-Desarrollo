@@ -76,13 +76,13 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
         
         //^CREAR DATOS EN LA TABLA DE SUSTAINABILITY PARA INDICADORES DE SOSTENIBILIDAD
         // PASAR LOS DATOS DEL LIBRO DIARIO A LA TABLA DE SOSTENIBILIDAD
-        const isSustainabilityExpense = body.typeExpenses !== undefined && [ 'Acueducto', 'Energia', 'Gas', 'Internet', 'Celular/Plan de datos' ].includes(body.typeExpenses);
+        const isSustainabilityExpense = body.expenseCategory !== undefined && [ 'Acueducto', 'Energia', 'Gas', 'Internet', 'Celular/Plan de datos' ].includes(body.expenseCategory);
         if (isSustainabilityExpense) {
             const sustainabilityData = {
                 branchId: body.branchId,
                 registrationDate: body.registrationDate,
                 transactionDate: body.transactionDate,
-                typeExpenses: body.typeExpenses,
+                expenseCategory: body.expenseCategory,
                 periodPayService: body.periodPayService,
                 totalValue: body.totalValue,
                 accountsBookId: newTransaction.id,
@@ -94,6 +94,7 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
         };
         return newTransaction;
     } catch (error) {
+        console.log('Error: ', error)
         throw error;
     };
 };
