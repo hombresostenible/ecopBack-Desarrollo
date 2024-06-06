@@ -161,7 +161,7 @@ export const patchAssetService = async (idAssets: string, body: any, userId: str
     try {
         const hasPermission = await checkPermissionForMachinery(idAssets, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para dar de baja el activo");
-        const updateAsset = await patchAssetData(idAssets, body, userId);
+        const updateAsset = await patchAssetData(idAssets, body);
         if (!updateAsset) throw new ServiceError(404, "Maquina, equipo o herramienta no encontrado");
         return { code: 200, message: "Maquina, equipo o herramienta dado de baja exitosamente", result: updateAsset };
     } catch (error) {

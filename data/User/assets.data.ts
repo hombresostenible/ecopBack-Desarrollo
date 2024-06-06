@@ -138,7 +138,7 @@ export const putUpdateManyAssetData = async (body: IAssets, userId: string): Pro
 
 
 //DATA PARA DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
-export const patchAssetData = async (idAssets: string, body: Partial<IAssets>, userId: string): Promise<IAssets | null> => {
+export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): Promise<IAssets | null> => {
     const t = await sequelize.transaction();    
     try {
         let whereClause: Record<string, any> = { id: idAssets };        
@@ -157,7 +157,8 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>, u
             existingAsset.inventoryOff = existingAsset.inventoryOff.concat({ 
                 date: currentDate, 
                 quantity: - (inventoryOffItem.quantity || 0),
-                reason: inventoryOffItem.reason || 'Baja de activo'
+                reason: inventoryOffItem.reason || 'Baja de activo',
+                description: inventoryOffItem.description,
             });
         }
         const [rowsUpdated] = await Assets.update({
