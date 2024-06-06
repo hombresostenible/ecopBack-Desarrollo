@@ -34,7 +34,7 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
         if (body.meanPayment === 'Efectivo') {
             body.transactionApproved = true;
         } else body.transactionApproved = false;
-
+        
         //PRIMERO SE GUARDA LA TRANSACCION EN ACCOUNTSBOOK
         const newTransaction = new AccountsBook({
             ...body,
@@ -94,7 +94,6 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
         };
         return newTransaction;
     } catch (error) {
-        console.log('Error: ', error)
         throw error;
     };
 };

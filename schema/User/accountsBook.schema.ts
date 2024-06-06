@@ -56,32 +56,31 @@ AccountsBook.init(
         },
         transactionType: {
             type: DataTypes.STRING,
-            allowNull: false,
             validate: {
                 isIn: [[ 'Ingreso', 'Gasto' ]],
             },
+            allowNull: false,
         },
         creditCash: {
             type: DataTypes.STRING,
-            allowNull: false,
             validate: {
                 isIn: [[ 'Contado', 'Credito' ]],
             },
+            allowNull: false,
         },
         meanPayment: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'Efectivo', 'Tarjeta de Credito/Debito', 'Transferencia bancaria (PSE)', 'Daviplata', 'Nequi', 'Movii', 'Tuya Pay', 'Dale', 'Nubank', 'Uala', 'Lulo Bank', 'Tpaga', 'Powwi', 'BBVA Wallet', 'Ahorro a la mano', 'Apple Pay', 'Rappipay', 'Claro Pay'    , 'Baloto', 'Giro', 'Cheque' ]],
             },
-            defaultValue: false,
+            allowNull: true,
         },
         incomeCategory: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'Producto', 'Materia Prima', 'Mercancia', 'Servicio', 'Activo', 'Credito del Banco', 'Credito en Cooperativa', 'Gota gota', 'Credito de almacen', 'Credito de servicios publicos' ]],
             },
+            allowNull: true,
         },
         nameItem: {
             type: DataTypes.STRING,
@@ -93,24 +92,24 @@ AccountsBook.init(
         },
         expenseCategory: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'Materia Prima', 'Mercancia', 'Activo', 'Arriendo', 'Mantenimiento de equipos, maquinaria, herramientas', 'Reparaciones locativas', 'Transporte', 'Combustible', 'Nomina', 'Seguridad Social y/o parafiscales', 'Acueducto', 'Energia', 'Gas', 'Internet', 'Celular/Plan de datos', 'Credito del Banco', 'Credito en Cooperativa', 'Gota gota', 'Credito de almacen', 'Credito de servicios publicos', 'IVA', 'ICA', 'Declaracion de Renta', 'Retencion en la Fuente', 'Predial', 'Vehiculos y motos', 'Asesoria Contable', 'Renovacion Camara de Comercio', 'Licencias y permisos', 'Asesoria Juridica', 'Honorarios de contratista', 'Honorarios de contratista' ]],
             },
+            allowNull: true,
         },
         periodicityPayService: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'Mensual', 'Bimestral' ]],
             },
+            allowNull: true,
         },
         periodPayService: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'Enero de 2024', 'Febrero de 2024', 'Marzo de 2024', 'Abril de 2024', 'Mayo de 2024', 'Junio de 2024', 'Julio de 2024', 'Agosto de 2024', 'Septiembre de 2024', 'Octubre de 2024', 'Noviembre de 2024', 'Diciembre de 2024', 'Julio - Agosto de 2024', 'Marzo - Abril de 2024', 'Mayo - Junio de 2024', 'Julio - Agosto de 2024', 'Septiembre - Octubre de 2024', 'Noviembre - Diciembre de 2024']],
             },
+            allowNull: true,
         },
         unitValue: {
             type: DataTypes.INTEGER,
@@ -130,10 +129,10 @@ AccountsBook.init(
         },
         creditWithInterest: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'Si', 'No' ]],
             },
+            allowNull: true,
         },
         creditInterestRate: {
             type: DataTypes.STRING,
@@ -178,10 +177,10 @@ AccountsBook.init(
         },
         pay: {
             type: DataTypes.STRING,
-            allowNull: true,
             validate: {
                 isIn: [[ 'Si', 'No' ]],
             },
+            allowNull: true,
         },
 
         //RELACION CON OTRAS TABLAS
