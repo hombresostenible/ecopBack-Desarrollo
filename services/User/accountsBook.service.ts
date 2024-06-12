@@ -2,6 +2,7 @@ import {
     postAccountsBookData,
     getAccountsBooksData,
     getAccountsBooksIncomesData,
+    getAccountsBooksIncomesTransactionNotApprovedData,
     getAccountsBooksExpesesData,
     getAccountsBookByIdData,
     getAccountsBookByBranchData,
@@ -59,6 +60,21 @@ export const getAccountsBooksIncomesService = async (userId: string): Promise<IS
 
 
 //OBTENER TODOS LOS REGISTROS DE GASTOS DEL USER
+export const getAccountsBooksIncomesTransactionNotApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+    try {
+        const dataLayerResponse = await getAccountsBooksIncomesTransactionNotApprovedData(userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE GASTOS DEL USER
 export const getAccountsBooksExpesesService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
         const dataLayerResponse = await getAccountsBooksExpesesData(userId);
@@ -86,31 +102,6 @@ export const getAccountsBookByIdService = async (idBranch: string, userId: strin
         } else throw error;
     };
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
