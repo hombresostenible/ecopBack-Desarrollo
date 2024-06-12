@@ -125,7 +125,7 @@ export const getAccountsBooksIncomesData = async (userId: string): Promise<any> 
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS DEL USER
+//OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
 export const getAccountsBooksIncomesTransactionNotApprovedData = async (userId: string): Promise<any> => {
     try {
         const allAccountsBook = await AccountsBook.findAll({
