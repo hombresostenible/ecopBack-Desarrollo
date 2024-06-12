@@ -28,14 +28,6 @@ import {
     getBestClientQuantityData,
     getBestClientQuantityBranchData,
 
-    //INVENTARIO DE PRODUCTO
-    getProductsInventoryData,
-    getProductsInventoryByBranchData,
-
-    //INVENTARIO DE MATERIAS PRIMAS
-    getRawMaterialsInventoryData,
-    getRawMaterialsInventoryByBranchData,
-
     //INVENTARIO DE ACIVOS
     getAssetsInventoryData,
     getAssetsInventoryByBranchData,
@@ -43,6 +35,14 @@ import {
     //INVENTARIO DE MERCANCIA
     getMerchandisesInventoryData,
     getMerchandisesInventoryByBranchData,
+
+    //INVENTARIO DE PRODUCTO
+    getProductsInventoryData,
+    getProductsInventoryByBranchData,
+
+    //INVENTARIO DE MATERIAS PRIMAS
+    getRawMaterialsInventoryData,
+    getRawMaterialsInventoryByBranchData,
 } from '../../../data/User/Indicators/financialIndicators.data';
 import { ServiceError, IServiceLayerResponseFinancialIndicators } from '../../../types/Responses/responses.types';
 import { IProduct } from '../../../types/User/products.types';
@@ -451,6 +451,110 @@ export const getAverageTicketTicketBranchService = async (idBranch: string, user
 
 
 
+//SERVICE PARA OBTENER EL INVENTARIO DE MAQUINAS DEL USUARIO
+export const getAssetsInventoryService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+    try {
+        const rawMaterialsFound = await getAssetsInventoryData(userId);
+        if (!rawMaterialsFound) throw new ServiceError(403, "No hay máquinas para calcular el inventario del usuario");
+        const inventoryResult = rawMaterialsFound.map((asset: IAssets) => ({
+            id: asset.id,
+            branchId: asset.branchId,
+            nameItem: asset.nameItem,
+            conditionAssets: asset.conditionAssets,
+            stateAssets: asset.stateAssets,
+        }));
+        return { code: 200, result: inventoryResult };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else {
+            throw error;
+        }
+    }
+};
+
+//SERVICE PARA OBTENER EL INVENTARIO DE MAQUINAS POR SEDE DEL USUARIO
+export const getaAssetsInventoryBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+    try {
+        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener las máquinas por sede del usuario");
+        const rawMaterialsFound = await getAssetsInventoryByBranchData(idBranch, userId);
+        if (!rawMaterialsFound) throw new ServiceError(403, "No hay maquinas en esta sede para calcular el inventario del usuario");
+        const inventoryResult = rawMaterialsFound.map((asset: IAssets) => ({
+            id: asset.id,
+            branchId: asset.branchId,
+            nameItem: asset.nameItem,
+            conditionAssets: asset.conditionAssets,
+            stateAssets: asset.stateAssets,
+        }));
+        return { code: 200, result: inventoryResult };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else {
+            throw error;
+        }
+    }
+};
+
+
+
+//SERVICE PARA OBTENER EL INVENTARIO DE MERCANCIA DEL USUARIO
+export const getMerchandisesInventoryService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+    try {
+        const merchandisesFound = await getMerchandisesInventoryData(userId);
+        if (!merchandisesFound) throw new ServiceError(403, "No hay mercancía para calcular el inventario del usuario");
+        const inventoryResult = merchandisesFound.map((merchandise: IMerchandise) => ({
+            id: merchandise.id,
+            branchId: merchandise.branchId,
+            nameItem: merchandise.nameItem,
+            packaged: merchandise.packaged,
+            primaryPackageType: merchandise.primaryPackageType,
+            returnablePackaging: merchandise.returnablePackaging,
+            inventory: merchandise.inventory,
+            inventoryChanges: merchandise.inventoryChanges,            
+            salesCount: merchandise.salesCount,
+        }));
+        return { code: 200, result: inventoryResult };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else {
+            throw error;
+        }
+    }
+};
+
+//SERVICE PARA OBTENER EL INVENTARIO DE MERCANCIA POR SEDE DEL USUARIO
+export const getaMerchandisesInventoryBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+    try {
+        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener las mercancías por sede del usuario");
+        const merchandisesFound = await getMerchandisesInventoryByBranchData(idBranch, userId);
+        if (!merchandisesFound) throw new ServiceError(403, "No hay mercancías en esta sede para calcular el inventario del usuario");
+        const inventoryResult = merchandisesFound.map((merchandise: IMerchandise) => ({
+            id: merchandise.id,
+            branchId: merchandise.branchId,
+            nameItem: merchandise.nameItem,
+            inventory: merchandise.inventory,            
+            salesCount: merchandise.salesCount,
+        }));
+        return { code: 200, result: inventoryResult };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else {
+            throw error;
+        }
+    }
+};
+
+
+
 //SERVICE PARA OBTENER EL INVENTARIO DE PRODUCTOS DEL USUARIO
 export const getProductsInventoryService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
@@ -555,110 +659,6 @@ export const getRawMaterialsInventoryBranchService = async (idBranch: string, us
             inventory: rawMaterial.inventory,
             inventoryChanges: rawMaterial.inventoryChanges,            
             salesCount: rawMaterial.salesCount,
-        }));
-        return { code: 200, result: inventoryResult };
-    } catch (error) {
-        if (error instanceof Error) {
-            const customErrorMessage = error.message;
-            throw new ServiceError(500, customErrorMessage, error);
-        } else {
-            throw error;
-        }
-    }
-};
-
-
-
-//SERVICE PARA OBTENER EL INVENTARIO DE MAQUINAS DEL USUARIO
-export const getAssetsInventoryService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
-    try {
-        const rawMaterialsFound = await getAssetsInventoryData(userId);
-        if (!rawMaterialsFound) throw new ServiceError(403, "No hay máquinas para calcular el inventario del usuario");
-        const inventoryResult = rawMaterialsFound.map((asset: IAssets) => ({
-            id: asset.id,
-            branchId: asset.branchId,
-            nameItem: asset.nameItem,
-            conditionAssets: asset.conditionAssets,
-            stateAssets: asset.stateAssets,
-        }));
-        return { code: 200, result: inventoryResult };
-    } catch (error) {
-        if (error instanceof Error) {
-            const customErrorMessage = error.message;
-            throw new ServiceError(500, customErrorMessage, error);
-        } else {
-            throw error;
-        }
-    }
-};
-
-//SERVICE PARA OBTENER EL INVENTARIO DE MAQUINAS POR SEDE DEL USUARIO
-export const getaAssetsInventoryBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
-    try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener las máquinas por sede del usuario");
-        const rawMaterialsFound = await getAssetsInventoryByBranchData(idBranch, userId);
-        if (!rawMaterialsFound) throw new ServiceError(403, "No hay maquinas en esta sede para calcular el inventario del usuario");
-        const inventoryResult = rawMaterialsFound.map((asset: IAssets) => ({
-            id: asset.id,
-            branchId: asset.branchId,
-            nameItem: asset.nameItem,
-            conditionAssets: asset.conditionAssets,
-            stateAssets: asset.stateAssets,
-        }));
-        return { code: 200, result: inventoryResult };
-    } catch (error) {
-        if (error instanceof Error) {
-            const customErrorMessage = error.message;
-            throw new ServiceError(500, customErrorMessage, error);
-        } else {
-            throw error;
-        }
-    }
-};
-
-
-
-//SERVICE PARA OBTENER EL INVENTARIO DE MERCANCIA DEL USUARIO
-export const getMerchandisesInventoryService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
-    try {
-        const merchandisesFound = await getMerchandisesInventoryData(userId);
-        if (!merchandisesFound) throw new ServiceError(403, "No hay mercancía para calcular el inventario del usuario");
-        const inventoryResult = merchandisesFound.map((merchandise: IMerchandise) => ({
-            id: merchandise.id,
-            branchId: merchandise.branchId,
-            nameItem: merchandise.nameItem,
-            packaged: merchandise.packaged,
-            primaryPackageType: merchandise.primaryPackageType,
-            returnablePackaging: merchandise.returnablePackaging,
-            inventory: merchandise.inventory,
-            inventoryChanges: merchandise.inventoryChanges,            
-            salesCount: merchandise.salesCount,
-        }));
-        return { code: 200, result: inventoryResult };
-    } catch (error) {
-        if (error instanceof Error) {
-            const customErrorMessage = error.message;
-            throw new ServiceError(500, customErrorMessage, error);
-        } else {
-            throw error;
-        }
-    }
-};
-
-//SERVICE PARA OBTENER EL INVENTARIO DE MERCANCIA POR SEDE DEL USUARIO
-export const getaMerchandisesInventoryBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
-    try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener las mercancías por sede del usuario");
-        const merchandisesFound = await getMerchandisesInventoryByBranchData(idBranch, userId);
-        if (!merchandisesFound) throw new ServiceError(403, "No hay mercancías en esta sede para calcular el inventario del usuario");
-        const inventoryResult = merchandisesFound.map((merchandise: IMerchandise) => ({
-            id: merchandise.id,
-            branchId: merchandise.branchId,
-            nameItem: merchandise.nameItem,
-            inventory: merchandise.inventory,            
-            salesCount: merchandise.salesCount,
         }));
         return { code: 200, result: inventoryResult };
     } catch (error) {

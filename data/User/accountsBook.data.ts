@@ -28,16 +28,16 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
     try {
         //PRIMERO SE GUARDA LA TRANSACCION EN ACCOUNTSBOOK
         // Establecer transactionApproved basado en meanPayment
-        if (body.meanPayment === 'Efectivo') {
+        if (body.transactionType === 'Ingreso' && body.meanPayment === 'Efectivo' && body.creditCash === 'Contado') {
             body.transactionApproved = true;
         } else body.transactionApproved = false;
-        
         //PRIMERO SE GUARDA LA TRANSACCION EN ACCOUNTSBOOK
         const newTransaction = new AccountsBook({
             ...body,
             userId: userId,
         });
         await newTransaction.save();
+        
 
 
         //ACTUALIZAMOS EL INVENTARIO EN LA TABLA DE ASSETS 
@@ -115,7 +115,21 @@ export const getAccountsBooksData = async (userId: string): Promise<any> => {
 export const getAccountsBooksIncomesData = async (userId: string): Promise<any> => {
     try {
         const allAccountsBook = await AccountsBook.findAll({
-            where: { userId: userId, transactionType: 'Ingreso' },
+            where: { userId: userId, transactionType: 'Ingreso', transactionApproved: true },
+        });        
+        return allAccountsBook;
+    } catch (error) {
+        throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE INGRESOS DEL USER
+export const getAccountsBooksIncomesTransactionNotApprovedData = async (userId: string): Promise<any> => {
+    try {
+        const allAccountsBook = await AccountsBook.findAll({
+            where: { userId: userId, transactionType: 'Ingreso', transactionApproved: false },
         });        
         return allAccountsBook;
     } catch (error) {
@@ -130,39 +144,12 @@ export const getAccountsBooksExpesesData = async (userId: string): Promise<any> 
     try {
         const allAccountsBook = await AccountsBook.findAll({
             where: { userId: userId, transactionType: 'Gasto' },
-        });        
+        });
         return allAccountsBook;
     } catch (error) {
         throw error;
     };
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
