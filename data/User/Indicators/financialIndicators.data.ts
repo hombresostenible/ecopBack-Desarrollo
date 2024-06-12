@@ -225,58 +225,6 @@ export const getBestClientQuantityBranchData = async (idBranch: string, userId: 
 
 
 
-//DATA PARA OBTENER EL INVENTARIO DE PRODUCTOS DEL USUARIO
-export const getProductsInventoryData = async (userId: string): Promise<any> => {
-    try {
-        const transactions = await Product.findAll({ 
-            where: { userId: userId },
-        });
-        return transactions;
-    } catch (error) {
-        throw error;
-    }
-};
-
-//DATA PARA OBTENER EL INVENTARIO DE PRODUCTOS POR SEDE DEL USUARIO
-export const getProductsInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
-    try {
-        const transactions = await Product.findAll({ 
-            where: { branchId: idBranch, userId: userId },
-        });
-        return transactions;
-    } catch (error) {
-        throw error;
-    }
-};
-
-
-
-//DATA PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS DEL USUARIO
-export const getRawMaterialsInventoryData = async (userId: string): Promise<any> => {
-    try {
-        const transactions = await RawMaterial.findAll({ 
-            where: { userId: userId },
-        });
-        return transactions;
-    } catch (error) {
-        throw error;
-    }
-};
-
-//DATA PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS POR SEDE DEL USUARIO
-export const getRawMaterialsInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
-    try {
-        const transactions = await RawMaterial.findAll({ 
-            where: { branchId: idBranch, userId: userId },
-        });
-        return transactions;
-    } catch (error) {
-        throw error;
-    }
-};
-
-
-
 //DATA PARA OBTENER EL INVENTARIO DE MAQUINAS DEL USUARIO
 export const getAssetsInventoryData = async (userId: string): Promise<any> => {
     try {
@@ -319,6 +267,58 @@ export const getMerchandisesInventoryData = async (userId: string): Promise<any>
 export const getMerchandisesInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
         const transactions = await Merchandise.findAll({ 
+            where: { branchId: idBranch, userId: userId },
+        });
+        return transactions;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//DATA PARA OBTENER EL INVENTARIO DE PRODUCTOS DEL USUARIO
+export const getProductsInventoryData = async (userId: string): Promise<any> => {
+    try {
+        const transactions = await Product.findAll({ 
+            where: { userId: userId },
+        });
+        return transactions;
+    } catch (error) {
+        throw error;
+    }
+};
+
+//DATA PARA OBTENER EL INVENTARIO DE PRODUCTOS POR SEDE DEL USUARIO
+export const getProductsInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+    try {
+        const transactions = await Product.findAll({ 
+            where: { branchId: idBranch, userId: userId },
+        });
+        return transactions;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//DATA PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS DEL USUARIO
+export const getRawMaterialsInventoryData = async (userId: string): Promise<any> => {
+    try {
+        const transactions = await RawMaterial.findAll({ 
+            where: { userId: userId },
+        });
+        return transactions;
+    } catch (error) {
+        throw error;
+    }
+};
+
+//DATA PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS POR SEDE DEL USUARIO
+export const getRawMaterialsInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+    try {
+        const transactions = await RawMaterial.findAll({ 
             where: { branchId: idBranch, userId: userId },
         });
         return transactions;
