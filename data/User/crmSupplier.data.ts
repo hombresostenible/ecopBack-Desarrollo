@@ -24,7 +24,6 @@ export const postRegisterCRMSupplierData = async (body: ICrmSuppliers, userId: s
         await t.commit();
         return newCRMSupplier;
     } catch (error) {
-        console.log('Error: ', error)
         await t.rollback();
         throw new ServiceError(500, `Error al crear el proveedor: ${error}`);
     }
@@ -80,7 +79,6 @@ export const putCRMSupplierData = async (idCrmSupplier: string, body: ICrmSuppli
         const existingWithSameId = await CrmSupplier.findOne({
             where: { entityUserId: userId, id: { [Op.not]: idCrmSupplier } },
         });
-        console.log('existingWithSameId: ', existingWithSameId)
         if (existingWithSameId) throw new ServiceError(403, "No es posible actualizar el proveedor porque ya existe uno con ese mismo número de identidad");
         if (body.entityUserId !== userId) throw new ServiceError(403, "No tienes permiso para actualizar el proveedor");
         const [rowsUpdated] = await CrmSupplier.update(body, { where: { id: idCrmSupplier } });
@@ -89,7 +87,6 @@ export const putCRMSupplierData = async (idCrmSupplier: string, body: ICrmSuppli
         if (!updatedCRMClient) throw new ServiceError(404, "No se encontró ningún proveedor para actualizar");
         return updatedCRMClient as unknown as ICrmSuppliers;
     } catch (error) {
-        console.log('error: ', error)
         throw error;
     }
 };

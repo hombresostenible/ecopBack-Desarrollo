@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import {
     postAccountsBookService,
     getAccountsBooksService,
+    getAccountsBooksIncomesService,
     getAccountsBookByIdService,
     getAccountsBookByBranchService,
     putAccountsBookService,
@@ -44,6 +45,24 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
         res.status(errorController.code).json(errorController.message);
     }
 }); // GET - http://localhost:3000/api/accountsBook
+
+
+
+//OBTENER TODOS LOS REGISTROS DE INGRESOS DEL USER
+router.get("/incomes", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { id } = req.user;
+        const serviceLayerResponse = await getAccountsBooksIncomesService(id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else {            
+            res.status(500).json({ message: "No se pudieron obtener registros de AccountsBook" });
+        }
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/accountsBook/incomes
 
 
 

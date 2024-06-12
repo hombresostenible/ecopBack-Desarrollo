@@ -114,6 +114,20 @@ export const getAccountsBooksData = async (userId: string): Promise<any> => {
 
 
 
+//OBTENER TODOS LOS REGISTROS DE INGRESOS DEL USER
+export const getAccountsBooksIncomesData = async (userId: string): Promise<any> => {
+    try {
+        const allAccountsBook = await AccountsBook.findAll({
+            where: { userId: userId, transactionType: 'Ingreso' },
+        });        
+        return allAccountsBook;
+    } catch (error) {
+        throw error;
+    };
+};
+
+
+
 
 
 
