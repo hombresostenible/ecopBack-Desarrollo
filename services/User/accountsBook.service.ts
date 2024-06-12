@@ -59,7 +59,7 @@ export const getAccountsBooksIncomesService = async (userId: string): Promise<IS
 
 
 
-//OBTENER TODOS LOS REGISTROS DE GASTOS DEL USER
+//OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
 export const getAccountsBooksIncomesTransactionNotApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
         const dataLayerResponse = await getAccountsBooksIncomesTransactionNotApprovedData(userId);

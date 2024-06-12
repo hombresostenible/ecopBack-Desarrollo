@@ -68,7 +68,7 @@ router.get("/incomes", authRequired, async (req: Request, res: Response) => {
 
 
 
-//OBTENER TODOS LOS REGISTROS DE GASTOS DEL USER
+//OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
 router.get("/incomesNotApproved", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;

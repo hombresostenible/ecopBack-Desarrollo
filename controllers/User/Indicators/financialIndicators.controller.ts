@@ -160,6 +160,7 @@ router.get("/allTransactionsPerPeriod/:idBranch", authRequired,async (req: Reque
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DEL USUARIO
 router.get("/accountsReceivable", authRequired, async (req: Request, res: Response) => {
     try {
+        console.log('Hola')
         const { id } = req.user;
         const serviceLayerResponse = await getAccountsReceivableService(id);
         if (Array.isArray(serviceLayerResponse.result)) {
