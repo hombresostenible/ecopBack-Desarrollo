@@ -1,6 +1,7 @@
 import {  
     postAccountsBookData,
     getAccountsBooksData,
+    getAccountsBooksIncomesData,
     getAccountsBookByIdData,
     getAccountsBookByBranchData,
     putAccountsBookData,
@@ -30,6 +31,21 @@ export const postAccountsBookService = async (body: IAccountsBook, userId: strin
 export const getAccountsBooksService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
         const dataLayerResponse = await getAccountsBooksData(userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE INGRESOS DEL USER
+export const getAccountsBooksIncomesService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+    try {
+        const dataLayerResponse = await getAccountsBooksIncomesData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
