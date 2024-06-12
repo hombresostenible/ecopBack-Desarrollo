@@ -1,9 +1,6 @@
-import { QueryTypes } from 'sequelize';
-import sequelize from '../../db';
 import AccountsBook from '../../schema/User/accountsBook.schema';
 import AccountsPayable from '../../schema/User/accountsPayable.schema';
 import AccountsReceivable from '../../schema/User/accountsReceivable.schema';
-import Assets from "../../schema/User/assets.schema";
 import Merchandise from "../../schema/User/merchandise.schema";
 import Product from "../../schema/User/product.schema";
 import RawMaterial from "../../schema/User/rawMaterial.schema";
@@ -119,6 +116,20 @@ export const getAccountsBooksIncomesData = async (userId: string): Promise<any> 
     try {
         const allAccountsBook = await AccountsBook.findAll({
             where: { userId: userId, transactionType: 'Ingreso' },
+        });        
+        return allAccountsBook;
+    } catch (error) {
+        throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE GASTOS DEL USER
+export const getAccountsBooksExpesesData = async (userId: string): Promise<any> => {
+    try {
+        const allAccountsBook = await AccountsBook.findAll({
+            where: { userId: userId, transactionType: 'Gasto' },
         });        
         return allAccountsBook;
     } catch (error) {

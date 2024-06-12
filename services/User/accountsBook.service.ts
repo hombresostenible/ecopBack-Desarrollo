@@ -2,6 +2,7 @@ import {
     postAccountsBookData,
     getAccountsBooksData,
     getAccountsBooksIncomesData,
+    getAccountsBooksExpesesData,
     getAccountsBookByIdData,
     getAccountsBookByBranchData,
     putAccountsBookData,
@@ -46,6 +47,21 @@ export const getAccountsBooksService = async (userId: string): Promise<IServiceL
 export const getAccountsBooksIncomesService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
         const dataLayerResponse = await getAccountsBooksIncomesData(userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE GASTOS DEL USER
+export const getAccountsBooksExpesesService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+    try {
+        const dataLayerResponse = await getAccountsBooksExpesesData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
