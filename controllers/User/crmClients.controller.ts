@@ -25,7 +25,7 @@ router.post("/", authRequired, validateSchema(crmClientsSchema), async (req: Req
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/crmClients con { "entityUserId": "6dde1b74-2e3c-4915-bc93-6e39ac77afc8", "name": "Carlos", "lastName": "Reyes", "typeDocumentId": "Cedula de Ciudadania", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
+}); // POST - http://localhost:3000/api/crmClient con { "entityUserId": "6dde1b74-2e3c-4915-bc93-6e39ac77afc8", "name": "Carlos", "lastName": "Reyes", "typeDocumentId": "Cedula de Ciudadania", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
 
 
 
@@ -43,7 +43,7 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/crmClients
+}); // GET - http://localhost:3000/api/crmClient
 
 
 
@@ -58,7 +58,7 @@ router.get("/:idCrmClient", authRequired, async (req: Request, res: Response) =>
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/crmClients/:idCrmClient
+}); // GET - http://localhost:3000/api/crmClient/:idCrmClient
 
 
 
@@ -77,7 +77,7 @@ router.get("/crmClients-branch/:idBranch", authRequired, async (req: Request, re
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/crmClients/crmClients-branch/:idBranch
+}); // GET - http://localhost:3000/api/crmClient/crmClients-branch/:idBranch
 
 
 
@@ -93,7 +93,7 @@ router.put("/:idCrmClient", authRequired, validateSchema(crmClientsSchema), asyn
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/crmClients/:idCrmClient con { "entityUserId": "6dde1b74-2e3c-4915-bc93-6e39ac77afc8", "name": "Carlos", "lastName": "Reyes", "typeDocumentId": "Cedula de Ciudadania", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
+}); // PUT - http://localhost:3000/api/crmClient/:idCrmClient con { "entityUserId": "6dde1b74-2e3c-4915-bc93-6e39ac77afc8", "name": "Carlos", "lastName": "Reyes", "typeDocumentId": "Cedula de Ciudadania", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
 
 
 
@@ -108,7 +108,7 @@ router.delete('/:idCrmClient', authRequired, checkRole, async (req: Request, res
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // DELETE - http://localhost:3000/api/crmClients/:idCrmClient
+}); // DELETE - http://localhost:3000/api/crmClient/:idCrmClient
 
 
 

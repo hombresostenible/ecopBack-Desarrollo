@@ -8,6 +8,8 @@ import {
     getAccountsBookByBranchData,
     putAccountsBookData,
     deleteAccountsBookData,
+    getItemBarCodeData,
+    getNameItemData,
 } from "../../data/User/accountsBook.data";
 import { IAccountsBook } from "../../types/User/accountsBook.types";
 import { IServiceLayerResponseAccountsBook } from '../../types/Responses/responses.types';
@@ -151,6 +153,37 @@ export const deleteAccountsBookService = async (idAccountsBook: string, userId: 
         // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este registro en el libro diario");
         await deleteAccountsBookData(idAccountsBook);
         return { code: 200, message: 'Registro eliminado exitosamente' };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//BUSCAR UN ITEM DE ASSETS, MERCHANDISE, PRODUCT O RAWMATERIAL POR CODIGO DE BARRAS
+export const getItemBarCodeService = async (userId: string, barCode: string): Promise<IServiceLayerResponseAccountsBook> => {
+    try {
+        const itemFound = await getItemBarCodeData(userId, barCode);
+        if (!itemFound) return { code: 404, message: 'Item no registrado' };
+        return { code: 200, result: itemFound };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+export const getNameItemService = async (nameItem: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+    try {
+        const itemFound = await getNameItemData(nameItem, userId);
+        if (!itemFound) return { code: 404, message: 'Item no registrado' };
+        return { code: 200, result: itemFound };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
