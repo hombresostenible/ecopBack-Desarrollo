@@ -1,6 +1,9 @@
+import { QueryTypes } from 'sequelize';
+import sequelize from '../../db';
 import AccountsBook from '../../schema/User/accountsBook.schema';
 import AccountsPayable from '../../schema/User/accountsPayable.schema';
 import AccountsReceivable from '../../schema/User/accountsReceivable.schema';
+import Assets from '../../schema/User/assets.schema';
 import Merchandise from "../../schema/User/merchandise.schema";
 import Product from "../../schema/User/product.schema";
 import RawMaterial from "../../schema/User/rawMaterial.schema";
@@ -263,6 +266,121 @@ export const deleteAccountsBookData = async (idAccountsBook: string): Promise<vo
 
         //ELIMINAMOS EL REGISTRO DE LA TABLA DE "AccountsBook"
         await AccountsBook.destroy({ where: { id: idAccountsBook } });
+    } catch (error) {
+        throw error;
+    };
+};
+
+
+
+//BUSCAR UN ITEM DE ASSETS, MERCHANDISE, PRODUCT O RAWMATERIAL POR CODIGO DE BARRAS
+export const getItemBarCodeData = async (userId: string, barCode: string): Promise<any> => {
+    try {
+        const itemFound = await sequelize.query(`
+            SELECT 
+                id, branchId, barCode, nameItem, inventory, 
+                'Assets' as type, 
+                userId
+            FROM assets
+            WHERE barCode = :barCode AND userId = :userId
+
+            UNION ALL
+
+            SELECT 
+                id, branchId, barCode, nameItem, inventory, 
+                'Merchandise' as type, 
+                userId
+            FROM merchandises
+            WHERE barCode = :barCode AND userId = :userId
+
+            UNION ALL
+
+            SELECT
+                id, branchId, barCode, nameItem, inventory, 
+                'Product' as type, 
+                userId
+            FROM products
+            WHERE barCode = :barCode AND userId = :userId
+
+            UNION ALL
+
+            SELECT
+                id, branchId, barCode, nameItem, inventory, 
+                'RawMaterial' as type, 
+                userId
+            FROM rawMaterials
+            WHERE barCode = :barCode AND userId = :userId
+
+            UNION ALL
+
+            SELECT
+                id, branchId, barCode, nameItem, NULL as inventory, 
+                'Service' as type, 
+                userId
+            FROM services
+            WHERE barCode = :barCode AND userId = :userId
+        `, {
+            replacements: { barCode, userId },
+            type: QueryTypes.SELECT
+        });
+        return itemFound;
+    } catch (error) {
+        throw error;
+    };
+};
+
+
+
+export const getNameItemData = async (nameItem: string, userId: string): Promise<any> => {
+    try {
+        const itemFound = await sequelize.query(`
+            SELECT 
+                id, branchId, barCode, nameItem, inventory, 
+                'Assets' as type, 
+                userId
+            FROM assets
+            WHERE nameItem LIKE :nameItemPattern AND userId = :userId
+
+            UNION ALL
+
+            SELECT 
+                id, branchId, barCode, nameItem, inventory, 
+                'Merchandise' as type, 
+                userId
+            FROM merchandises
+            WHERE nameItem LIKE :nameItemPattern AND userId = :userId
+
+            UNION ALL
+
+            SELECT
+                id, branchId, barCode, nameItem, inventory, 
+                'Product' as type, 
+                userId
+            FROM products
+            WHERE nameItem LIKE :nameItemPattern AND userId = :userId
+
+            UNION ALL
+
+            SELECT
+                id, branchId, barCode, nameItem, inventory, 
+                'RawMaterial' as type, 
+                userId
+            FROM rawMaterials
+            WHERE nameItem LIKE :nameItemPattern AND userId = :userId
+
+            UNION ALL
+
+            SELECT
+                id, branchId, barCode, nameItem, NULL as inventory, 
+                'Service' as type, 
+                userId
+            FROM services
+            WHERE nameItem LIKE :nameItemPattern AND userId = :userId
+        `, {
+            replacements: { nameItemPattern: `%${nameItem}%`, userId },
+            type: QueryTypes.SELECT
+        });
+        return itemFound;
     } catch (error) {
         throw error;
     };

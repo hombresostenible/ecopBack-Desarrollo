@@ -15,6 +15,7 @@ import rawMaterialControllers from "./User/rawMaterial.controller";
 import serviceControllers from "./User/services.controller";
 import userControllers from "./User/user.controller";
 import userPlatformControllers from "./User/userPlatform.controller";
+import itemByBarCodeOrNameControllers from "./User/itemByBarCodeOrName.controller";
 import financialIndicatorsControllers from "./User/Indicators/financialIndicators.controller";
 import sustainabilityIndicatorsControllers from "./User/Indicators/sustainabilityIndicators.controller";
 import marketingIndicatorsControllers from "./User/Indicators/marketingIndicators.controller";
@@ -38,6 +39,7 @@ function routerApi(app: any) {
     app.use("/api/service", serviceControllers);
     app.use("/api/user", userControllers);
     app.use("/api/userPlatform", userPlatformControllers);
+    app.use("/api/item-by-barCode-or-name", itemByBarCodeOrNameControllers);
 
     app.use("/api/financialIndicator", financialIndicatorsControllers);
     app.use("/api/sustainabilityIndicator", sustainabilityIndicatorsControllers);
