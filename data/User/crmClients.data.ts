@@ -21,7 +21,6 @@ export const postRegisterCRMClientsData = async (body: ICrmClients, userId: stri
         await newCRMClient.save();
         return newCRMClient;
     } catch (error) {
-        console.log('Error: ', error)
         throw error;
     }
 };
