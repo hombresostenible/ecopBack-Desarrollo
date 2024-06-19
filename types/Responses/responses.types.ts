@@ -211,3 +211,13 @@ export interface IServiceLayerResponseSalesFunnelCustomerDigital {
     message?: string;
     errorMessage?: unknown,
 };
+
+
+
+//INTERFACE DE RESPUESTA GENERICA PARA RETORNAR PRODUCTOS POR CODIGO DE BARRAS O POR NOMBRE
+export interface IServiceLayerResponseItemByBarCodeOrName {
+    code: number,
+    result?: IAssets | IMerchandise | IProduct | IRawMaterial | IService,
+    message?: string;
+    errorMessage?: unknown,
+};

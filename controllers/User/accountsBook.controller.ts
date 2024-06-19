@@ -9,8 +9,6 @@ import {
     getAccountsBookByBranchService,
     putAccountsBookService,
     deleteAccountsBookService,
-    getItemBarCodeService,
-    getNameItemService,
 } from '../../services/User/accountsBook.service';
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
@@ -164,39 +162,6 @@ router.delete('/:idAccountsBook', authRequired, checkRole, async (req: Request, 
         res.status(errorController.code).json(errorController.message);
     }
 }); // DELETE - http://localhost:3000/api/accountsBook/:idAccountsBook
-
-
-
-//BUSCAR UN ITEM DE ASSETS, MERCHANDISE, PRODUCT O RAWMATERIAL POR CODIGO DE BARRAS
-router.get("/item-by-barCode/:barCode", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { id } = req.user;
-        const { barCode } = req.params;
-        const serviceLayerResponse = await getItemBarCodeService(id, barCode);
-        res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/accountsBook/item-by-barCode/7702552000097
-
-
-
-//BUSCA UN ARTICULO POR NOMBRE EN TODAS LAS TABLAS
-router.get("/item-by-name/query?", authRequired, async (req: Request, res: Response) => {
-    try {
-        const nameItem = req.query.nameItem as string | undefined;
-        if (!nameItem) {
-            return res.status(400).json({ error: 'El parámetro nameItem es requerido.' });
-        }
-        const { id } = req.user;
-        const serviceLayerResponse = await getNameItemService(nameItem, id);
-        res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/accountsBook/item-by-name/query?nameItem=Cabello de ángel
 
 
 
