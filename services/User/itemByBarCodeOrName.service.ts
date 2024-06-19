@@ -2,11 +2,11 @@ import {
     getItemBarCodeData,
     getNameItemData,
 } from "../../data/User/itemByBarCodeOrName.data";
-import { IServiceLayerResponseAccountsBook } from '../../types/Responses/responses.types';
+import { IServiceLayerResponseItemByBarCodeOrName } from '../../types/Responses/responses.types';
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //BUSCAR UN ITEM DE ASSETS, MERCHANDISE, PRODUCT O RAWMATERIAL POR CODIGO DE BARRAS
-export const getItemBarCodeService = async (userId: string, barCode: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const getItemBarCodeService = async (userId: string, barCode: string): Promise<IServiceLayerResponseItemByBarCodeOrName> => {
     try {
         const itemFound = await getItemBarCodeData(userId, barCode);
         if (!itemFound) return { code: 404, message: 'Item no registrado' };
@@ -22,7 +22,7 @@ export const getItemBarCodeService = async (userId: string, barCode: string): Pr
 
 
 //BUSCAR UN ITEM DE ASSETS, MERCHANDISE, PRODUCT O RAWMATERIAL POR NOMBRE
-export const getNameItemService = async (nameItem: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const getNameItemService = async (nameItem: string, userId: string): Promise<IServiceLayerResponseItemByBarCodeOrName> => {
     try {
         const itemFound = await getNameItemData(nameItem, userId);
         if (!itemFound) return { code: 404, message: 'Item no registrado' };

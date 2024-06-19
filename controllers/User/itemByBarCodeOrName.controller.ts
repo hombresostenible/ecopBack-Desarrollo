@@ -8,7 +8,7 @@ import { ServiceError } from '../../types/Responses/responses.types';
 const router = express.Router();
 
 //BUSCAR UN ITEM DE ASSETS, MERCHANDISE, PRODUCT O RAWMATERIAL POR CODIGO DE BARRAS
-router.get("/barCode/:barCode", authRequired, async (req: Request, res: Response) => {
+router.get("/bar-code/:barCode", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const { barCode } = req.params;
@@ -18,12 +18,12 @@ router.get("/barCode/:barCode", authRequired, async (req: Request, res: Response
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/item-by-barCode-or-name/barCode/7702552000097
+}); // GET - http://localhost:3000/api/item-by-barCode-or-name/bar-code/7702552000097
 
 
 
 //BUSCA UN ARTICULO POR NOMBRE EN TODAS LAS TABLAS
-router.get("/nameItem/query?", authRequired, async (req: Request, res: Response) => {
+router.get("/name-item/query?", authRequired, async (req: Request, res: Response) => {
     try {
         const nameItem = req.query.nameItem as string | undefined;
         if (!nameItem) {
@@ -36,7 +36,7 @@ router.get("/nameItem/query?", authRequired, async (req: Request, res: Response)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/item-by-barCode-or-name/nameItem/query?nameItem=Cabello de ángel
+}); // GET - http://localhost:3000/api/item-by-barCode-or-name/name-item/query?nameItem=Cabello de ángel
 
 
 
