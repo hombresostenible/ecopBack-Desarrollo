@@ -2,6 +2,7 @@ import {
     postRegisterUserData,
     getSearchEmailUserPasswordChangeData,
     findUserData,
+    findUserBlockedData,
 } from "../../data/User/user.data";
 import bcrypt from 'bcrypt';
 import User from '../../schema/User/user.schema';
@@ -21,6 +22,7 @@ import {
 } from '../../libs/nodemailer';
 import { IUser } from '../../types/User/users.types';
 import { IResetPassword } from "../../types/User/resetPassword.types";
+import { IResetPasswordBlocked } from "../../types/User/resetPasswordBlocked.types";
 
 //REGISTRO DE UN USUARIO
 export const postRegisterUserService = async (body: IUser): Promise<IUserServiceLayerResponse> => {
@@ -101,6 +103,41 @@ export const putResetPasswordUserService = async (idUser: string, passwordResetC
         throw new ServiceError(401, "Código de restablecimiento de contraseña no válido");
     } catch (error) {
         if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//DESBLOQUEO DE CUENTA Y CAMBIO DE CONTRASEÑA USER
+export const putResetPasswordUserIsBlockedService = async (idUser: string, body: IResetPasswordBlocked): Promise<IServiceLayerResponseUser> => {
+    try {
+        const user = await findUserBlockedData(idUser);
+        if (!user) throw new ServiceError(404, "Usuario no encontrado");
+
+        if (body?.unlockCode === user.unlockCode) {
+            user.loginAttempts = 0;
+            user.isBlocked = false;
+            const password = await bcrypt.hash(body.resetPassword, 10);
+            const [rowsUpdated] = await User.update(
+                { password, loginAttempts: 0, isBlocked: false },
+                { where: { id: idUser } }
+            );
+            if (rowsUpdated === 0) throw new ServiceError(500, "No se logró desbloquear tu cuenta ni actualizar la contraseña");
+            const mailOptions = mailResetPasswordUserBlocked(user.email, user.name);
+            transporterZoho.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    throw new ServiceError(500, "No se pudo enviar el correo de confirmación");
+                } else console.log(`Correo electrónico enviado: ${info.response}`);
+            });
+            return { code: 200, message: "Usuario desbloqueado y contraseña actualizada exitosamente", result: user };
+        } else throw new ServiceError(401, "Código de desbloqueo incorrecto");
+    } catch (error) {
+        if (error instanceof ServiceError) {
+            throw error;
+        } else if (error instanceof Error) {
             const customErrorMessage = error.message;
             throw new ServiceError(500, customErrorMessage, error);
         } else throw error;
