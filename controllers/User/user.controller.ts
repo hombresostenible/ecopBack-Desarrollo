@@ -3,6 +3,7 @@ import {
     postRegisterUserService,
     getSearchEmailUserPasswordChangeService,
     putResetPasswordUserService,
+    putResetPasswordUserIsBlockedService,
 } from "../../services/User/user.services";
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware.js';
 import { registerUserSchema } from '../../validations/User/user.zod';
@@ -62,5 +63,24 @@ router.put("/reset-password-user/:idUser/:passwordResetCode", async (req: Reques
         res.status(errorController.code).json(errorController.message);
     }    
 }); // PUT - http://localhost:3000/api/user/reset-password-user/:idUser/:passwordResetCode con { "email": "carlosmario.reyesp@gmail.com", "password": "passwordC" }
+
+
+
+//DESBLOQUEO DE CUENTA Y CAMBIO DE CONTRASEÑA USER
+router.put("/reset-password-user-blocked/:idUser", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { idUser } = req.params;
+        const body = req.body;
+        const serviceLayerResponse = await putResetPasswordUserIsBlockedService(idUser, body);
+        if (!serviceLayerResponse) {
+            res.status(401).json({ message: 'Usuario no encontrado' });
+            return;
+        }
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+});
 
 export default router;

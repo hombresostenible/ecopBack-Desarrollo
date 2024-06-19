@@ -104,3 +104,16 @@ export const findUserData = async (id: string): Promise<User | null> => {
         throw error;
     }
 };
+
+
+
+//DESBLOQUEO DE CUENTA Y CAMBIO DE CONTRASEÑA USER
+export const findUserBlockedData = async (idUser: string): Promise<User | null> => {
+    try {
+        const userFound = await User.findOne({ where: { id: idUser } });
+        if (!userFound) throw new Error("usuario no encontrado");
+        return userFound;
+    } catch (error) {
+        throw error;
+    }
+};
