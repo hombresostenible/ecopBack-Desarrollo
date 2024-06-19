@@ -62,8 +62,8 @@ type ManyBranchsSchemaType = ZodArray<
         nameBranch: ZodString;
         department: ZodString;
         city: ZodString;
-        codeDane: ZodString;
-        subregionCodeDane: ZodString;
+        // codeDane: ZodString;
+        // subregionCodeDane: ZodString;
         addressBranch: ZodString;
         contactEmailBranch: ZodString;
         contactPhoneBranch: ZodString;
@@ -85,12 +85,12 @@ export const manyBranchsSchemaType: ManyBranchsSchemaType = z.array(
         city: z.string({
             required_error: 'La ciudad de domicilio de lasede es requerida',
         }),
-        codeDane: z.string({
-            required_error: 'El código Dane de la ciudad es requerido',
-        }),
-        subregionCodeDane: z.string({
-            required_error: 'El código Dane de la subregión es requerido',
-        }),
+        // codeDane: z.string({
+        //     required_error: 'El código Dane de la ciudad es requerido',
+        // }),
+        // subregionCodeDane: z.string({
+        //     required_error: 'El código Dane de la subregión es requerido',
+        // }),
         addressBranch: z.string({
             required_error: 'La dirección de la sede es requerida',
         }),
