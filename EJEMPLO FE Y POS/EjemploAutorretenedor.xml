@@ -1,0 +1,240 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://webservice.simba.co/">
+	<soapenv:Header/>
+	<soapenv:Body>
+		<soap:EnviarDocumentoElectronico>     
+			<objetoDocumento>
+				<Parametros>
+					<NombreSistemaEmisor>PruebaSimbaSistema</NombreSistemaEmisor>
+					<TipoAmbiente>2</TipoAmbiente>
+					<TokenEmpresa>[Token Empresa]</TokenEmpresa>
+					<VersionDocElectronico>4.0</VersionDocElectronico>
+					<VersionSistemaEmisor>1.2.0.12</VersionSistemaEmisor>
+					<ModoRespuesta>1</ModoRespuesta>
+					<PasswordEmpresa>Bogota18*</PasswordEmpresa>
+					<TipoReporte>1</TipoReporte>
+					<ContactoReceptor>
+						<CorreoElectronico>dlancheros@simba.co</CorreoElectronico>
+						<IdEtiquetaUbicacionCorreo>1</IdEtiquetaUbicacionCorreo>
+					</ContactoReceptor>
+					<ContactoReceptor>
+						<CorreoElectronico>jvillegas@stone.com.co</CorreoElectronico>
+						<IdEtiquetaUbicacionCorreo>2</IdEtiquetaUbicacionCorreo>
+					</ContactoReceptor>
+				</Parametros>
+				<Encabezado>
+					<TipoDocElectronico>1</TipoDocElectronico>
+					<IdPersonalizacion>10</IdPersonalizacion>
+					<PrefijoDocumento>SETP</PrefijoDocumento>
+					<NumeroDocumento>992160005</NumeroDocumento>
+					<FechaYHoraDocumento>2019-07-29T00:00:00.000-05:00</FechaYHoraDocumento>
+					<TipoDeFactura>01</TipoDeFactura>
+					<CodigoMoneda>COP</CodigoMoneda>
+					<CantidadLineas>1</CantidadLineas>
+					<PeriodoFacturacion>				
+						<FechaInicial>2019-03-07</FechaInicial>
+						<FechaFinal>2019-03-07</FechaFinal>
+					</PeriodoFacturacion>
+				</Encabezado>
+				<Terceros>
+					<TerceroProveedorContable>
+						<IdAdicional>1</IdAdicional>
+						<Tercero>
+							<NombreTercero>SIMBA SOFTWARE S.A.S.</NombreTercero>
+							<CodigoClasificacionIndustria>1105</CodigoClasificacionIndustria>
+							<UbicacionFisica>
+								<Direccion>
+									<Id>11001</Id>
+									<Departamento>Distrito Capital de Bogota</Departamento>
+									<Ciudad>BOGOTÁ, D.C.</Ciudad>
+									<SubdivisionPais>Distrito Capital de Bogota</SubdivisionPais>
+									<SubdivisionPaisCodigo>11</SubdivisionPaisCodigo>
+									<ZonaPostal>110221</ZonaPostal>
+									<LineaDireccion>
+										<TextoLinea>Cra 15 N° 98-42</TextoLinea>
+									</LineaDireccion>
+									<Pais>
+										<Codigo>CO</Codigo>
+										<Nombre IdLenguaje="es">Colombia</Nombre>
+									</Pais>
+								</Direccion>
+							</UbicacionFisica>
+							<EsquemaTributarioTercero>
+								<NombreRegistrado>SIMBA SOFTWARE S.A.S</NombreRegistrado>
+								<NumeroIdTributario SmaIdCodigo="1" SmaIdNombre="31">901098244</NumeroIdTributario>		
+								<NivelTributario ListaNombre="04">O-11;O-06</NivelTributario>
+								<EsquemaTributario>
+									<Id>01</Id>
+									<Nombre>IVA</Nombre>
+								</EsquemaTributario>
+								<DireccionParaImpuestos>
+									<Id>11001</Id>
+									<Departamento>Distrito Capital de Bogota</Departamento>
+									<Ciudad>BOGOTÁ, D.C.</Ciudad>
+									<SubdivisionPais>Distrito Capital de Bogota</SubdivisionPais>
+									<SubdivisionPaisCodigo>11</SubdivisionPaisCodigo>
+									<ZonaPostal>110221</ZonaPostal>
+									<LineaDireccion>
+										<TextoLinea>Cra 15 N° 98-42</TextoLinea>
+									</LineaDireccion>
+									<Pais>
+										<Codigo>CO</Codigo>
+										<Nombre IdLenguaje="es">Colombia</Nombre>
+									</Pais>
+								</DireccionParaImpuestos>
+							</EsquemaTributarioTercero>
+							<EntidadLegalTercero>
+								<NumeroIdLegal SmaIdCodigo="1" SmaIdNombre="31">901098244</NumeroIdLegal>				
+								<NombreRegistrado>SIMBA SOFTWARE S.A.S</NombreRegistrado>
+								<EsquemaRegistroCorporativo>
+									<Id>SETP</Id>
+									<Nombre>6201</Nombre>
+								</EsquemaRegistroCorporativo>
+							</EntidadLegalTercero>
+							<Contacto>
+								<Nombre>MAURICIO DIAZ ARANDA</Nombre>
+								<Telefono>1234567</Telefono>
+								<Email>idiaz@stone.com.co</Email>
+							</Contacto>
+						</Tercero>
+					</TerceroProveedorContable>
+					<TerceroClienteContable>
+						<IdAdicional>1</IdAdicional>
+						<Tercero>
+							<IdTercero SmaIdCodigo="6" SmaIdNombre="31">804016671</IdTercero>
+							<NombreTercero>CAMPOLLO S.A .</NombreTercero>
+							<UbicacionFisica>
+								<Direccion>
+									<Id>05125</Id>
+									<Departamento>ANTIOQUIA</Departamento>
+									<Ciudad>MEDELLIN</Ciudad>
+									<SubdivisionPais>Antioquia</SubdivisionPais>
+									<SubdivisionPaisCodigo>05</SubdivisionPaisCodigo>
+									<ZonaPostal>050011</ZonaPostal>
+									<LineaDireccion>
+										<TextoLinea>CR 29C N° 10C - 125</TextoLinea>
+									</LineaDireccion>
+									<Pais>
+										<Codigo>CO</Codigo>
+										<Nombre IdLenguaje="es">Colombia</Nombre>
+									</Pais>
+								</Direccion>
+							</UbicacionFisica>
+							<EsquemaTributarioTercero>
+								<NumeroIdTributario SmaIdNombre="31" SmaIdCodigo="9">804016671</NumeroIdTributario>
+								<NombreRegistrado>CAMPOLLO S.A .</NombreRegistrado>
+								<NivelTributario ListaNombre="04">O-99</NivelTributario>
+								<DireccionParaImpuestos>
+									<Id>05125</Id>
+									<Departamento>ANTIOQUIA</Departamento>
+									<Ciudad>MEDELLIN</Ciudad>
+									<SubdivisionPais>Antioquia</SubdivisionPais>
+									<SubdivisionPaisCodigo>05</SubdivisionPaisCodigo>
+									<LineaDireccion>
+										<TextoLinea>CR 29C N° 10C - 125</TextoLinea>
+									</LineaDireccion>
+									<Pais>
+										<Codigo>CO</Codigo>
+										<Nombre IdLenguaje="es">Colombia</Nombre>
+									</Pais>
+								</DireccionParaImpuestos>
+								<EsquemaTributario>	
+									<Id>01</Id>
+									<Nombre>IVA</Nombre>
+								</EsquemaTributario>
+							</EsquemaTributarioTercero>
+							<EntidadLegalTercero>
+								<NombreRegistrado>CAMPOLLO S.A .</NombreRegistrado>
+								<NumeroIdLegal SmaIdNombre="31" SmaIdCodigo="9">804016671</NumeroIdLegal>
+								<EsquemaRegistroCorporativo>
+									<Nombre>6201</Nombre>
+								</EsquemaRegistroCorporativo>
+							</EntidadLegalTercero>
+							<Contacto>
+								<Id>804016671-9</Id>
+								<Nombre>CAMPOLLO S.A</Nombre>
+								<Telefono>6572206</Telefono>
+								<Email>jvillegas@stone.com.co</Email>
+							</Contacto>
+						</Tercero>
+					</TerceroClienteContable>
+					<TerceroRpteFiscal>
+						<IdTercero SmaIdNombre="31">804016671-9</IdTercero>
+					</TerceroRpteFiscal>
+				</Terceros>
+				<Lineas>
+					<Id>1</Id>
+					<Cantidad CodUnidad="KGM">3</Cantidad>
+					<ValorNeto IdMoneda="COP">93600</ValorNeto>
+					<TotalImpuesto>
+						<ValorImpuesto IdMoneda="COP">17184</ValorImpuesto>
+						<IndicaEsSoloEvidencia>false</IndicaEsSoloEvidencia>
+						<SubTotalImpuesto>
+							<BaseImponible IdMoneda="COP">93600</BaseImponible>
+							<ValorImpuesto IdMoneda="COP">17184</ValorImpuesto>
+							<Porcentaje>1</Porcentaje>
+							<CategoriaImpuesto>
+								<Porcentaje>19.00</Porcentaje>
+								<EsquemaTributario>
+									<Id>01</Id>
+									<Nombre>IVA</Nombre>
+								</EsquemaTributario>
+							</CategoriaImpuesto>
+						</SubTotalImpuesto>
+					</TotalImpuesto>
+					<Item>
+						<Descripcion>Linea 1 de validacion previa - Item numero 1....</Descripcion>
+						<IdItemEstandar>
+							<Id SmaIdCodigo="999">Fev1656s</Id>
+						</IdItemEstandar>
+						<IdItemVendedor>
+							<Id>20</Id>
+						</IdItemVendedor>
+					</Item>
+					<Precio>
+						<ValorPrecio IdMoneda="COP">31200</ValorPrecio>
+						<CantidadBase CodUnidad="KGM">3</CantidadBase>
+					</Precio>
+				</Lineas>
+				<AgregadoComercial>
+					<MediosDePago>
+						<Id>1</Id>
+						<CodigoMedioDePago>42</CodigoMedioDePago>
+						<IdInstruccion>BBVA- convenio 12346 -Cuenta corriente No. 0066665520010375</IdInstruccion>
+						<IdPago>134</IdPago>
+					</MediosDePago>
+					<MediosDePago>
+						<Id>1</Id>
+						<CodigoMedioDePago>42</CodigoMedioDePago>
+						<IdInstruccion>Bancolombia -CONVENIO 51392- CUENTA CORRIENTE NO. 12346548912</IdInstruccion>
+						<IdPago>134</IdPago>
+					</MediosDePago>
+				</AgregadoComercial>
+				<Notas>[VLetras Origen] SON: TRES MILLONES CUATROCIENTOS SESENTA Y OCHO MIL OCHOCIENTOS CINCUENTA PESOS M.L.</Notas>
+				<Totales>
+					<TotalRetenciones>
+						<ValorImpuesto IdMoneda="COP">2340</ValorImpuesto>
+						<IndicaEsSoloEvidencia>false</IndicaEsSoloEvidencia>
+						<SubTotalImpuesto>
+							<BaseImponible IdMoneda="COP">93600</BaseImponible>
+							<ValorImpuesto IdMoneda="COP">2340</ValorImpuesto>
+							<Porcentaje>1</Porcentaje>
+							<CategoriaImpuesto>
+								<Porcentaje>2.5</Porcentaje>
+								<EsquemaTributario>
+									<Id>06</Id>
+									<Nombre>ReteFuente</Nombre>
+								</EsquemaTributario>
+							</CategoriaImpuesto>
+						</SubTotalImpuesto>
+					</TotalRetenciones>
+					<TotalMonetario>
+						<ValorBruto IdMoneda="COP">93600</ValorBruto>
+						<TotalMasImpuestos IdMoneda="COP">110784</TotalMasImpuestos>
+						<ValorBaseImpuestos IdMoneda="COP">93600</ValorBaseImpuestos>
+						<ValorAPagar IdMoneda="COP">108444</ValorAPagar>
+					</TotalMonetario>
+				</Totales>
+			</objetoDocumento>
+		</soap:EnviarDocumentoElectronico>
+	</soapenv:Body>
+</soapenv:Envelope>
