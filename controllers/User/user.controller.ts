@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import {
     postRegisterUserService,
     getSearchEmailUserPasswordChangeService,
+    putResetPasswordUserService,
 } from "../../services/User/user.services";
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware.js';
 import { registerUserSchema } from '../../validations/User/user.zod';
@@ -42,5 +43,24 @@ router.get("/email-user", async (req: Request, res: Response): Promise<void> => 
         res.status(errorController.code).json(errorController.message);
     }                
 }); // GET - http://localhost:3000/api/user/email-user?email=carlosmario.reyesp@yahoo.com
+
+
+
+//CAMBIO DE CONTRASEÑA USER O USUARIO DE PLATAFORMA
+router.put("/reset-password-user/:idUser/:passwordResetCode", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { idUser, passwordResetCode } = req.params;
+        const body = req.body;
+        const serviceLayerResponse = await putResetPasswordUserService(idUser, passwordResetCode, body);
+        if (!serviceLayerResponse) {
+            res.status(401).json({ message: 'Usuario no encontrado' });
+            return;
+        }    
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }    
+}); // PUT - http://localhost:3000/api/user/reset-password-user/:idUser/:passwordResetCode con { "email": "carlosmario.reyesp@gmail.com", "password": "passwordC" }
 
 export default router;

@@ -89,3 +89,18 @@ export const getSearchEmailUserPasswordChangeData = async (email: string, token:
         throw error;
     }
 };
+
+
+
+//CAMBIO DE CONTRASEÑA USER O USUARIO DE PLATAFORMA
+export const findUserData = async (id: string): Promise<User | null> => {
+    try {
+        const userFound = await User.findOne({ where: { id: id } });
+        if (!userFound) {
+            throw new Error("usuario no encontrado")
+        } else if (userFound.isBlocked === true) throw new Error("Tu cuenta se encuentra bloqueada, por favor realiza el proceso de desbloqueo");
+        return userFound;
+    } catch (error) {
+        throw error;
+    }
+};
