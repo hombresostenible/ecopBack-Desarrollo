@@ -470,3 +470,190 @@ export const mailSubscribeNewsletter = (email: string) => {
         `,
     };
 };
+
+
+
+//EMAIL DE CONFIRMACION POR DESBLOQUEO DE CUENTA Y CAMBIO DE CONTRASEÑA DE USER
+export const mailResetPasswordUserBlocked = (email: string, name: string) => {
+    return {
+        from: `Ecopción <${EMAIL}>` ,
+        to: email,
+        subject: `Cuanta desbloqueada y cambio de contraseña`,
+        html: `
+            <div style="background: #e9ecef; width: 100%; min-height: 900px;">
+                <div style="background: #ffffff; margin: auto; width: 700px; height: 100%">
+                    <div style="width: 100%; min-height: 670px;">
+                        <div style="background: #718bd8; padding: 20px;">
+                            <img style="width: 300px; margin: 0 auto; display: block;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1698187390/images/uysjyavwsqtbvl0dpunj.png" />
+                        </div>
+                        <p style="margin: 20px 40px; font-size: 16px;">¡Hola ${name},</p>
+                        <p style="margin: 20px 40px; font-size: 16px;">Se ha desbloqueado tu cuenta y tu contraseña se ha recuperado.</p>
+                        <br/>
+                        <p style="margin: 20px 40px; font-size: 16px;">Si no fuiste tú quien solicitó el cambio, tenemos algunos consejos para ayudarte a mantener segura tu cuenta. Para más información, consulta nuestro <a href='http://localhost:5173/resetPassword' ><b>sitio de Ayuda</b></a></p>
+                        <p style="margin: 20px 40px; font-size: 16px;">Saludos.</p>
+                        <p style="margin: 20px 40px; font-size: 16px;">El equipo de Ecopción</p>
+                    </div>
+
+                    <div style="width: 100%; height: 80px; ">
+                        <p style="margin: 30px 0 10px 0; font-size: 16px; color: #ffb703; font-weight: 600; text-align: center;">¡Entérate de todo!</p>
+                        <div style="margin: auto; width: 200px; display: flex; align-items: center; justify-content: center;">
+                            <a href="https://www.linkedin.com/company/ecopcion" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; " src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/hiytaro1ubfiitblrrgt.png" alt="Linkedin" />
+                            </a>
+                            <a href="https://instagram.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/wdfrfzxibpqslzmqmgas.png" alt="Instagram" />
+                            </a>
+                            <a href="https://www.facebook.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/npptyynt0ctschep9tfq.png" alt="Facebook" />
+                            </a>
+                            <a href="https://twitter.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/i8qu6plo4g3vptevasdj.png" alt="Twitter" />
+                            </a>
+                            <a href="https://web.whatsapp.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/lvfqkvqlyzedr0wozxxp.png" alt="Whatsapp" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; height: 150px; ">
+                        <p style="margin: 30px 0 0 0; font-size: 16px; font-weight: 600; text-align: center; color: #ffb703;">¿Necesitas ayuda?</p>
+                        <div style="width: 700px; height: 90px; display: flex; align-items: center; justify-content: center;">                        
+                            <div style="width: 350px; height: 90px; padding: 0 40px;">                            
+                                <h3 style="text-align: center;">Email</h3>
+                                <p style="text-align: center; text-decoration: none">fhernandez@ecopcion.com</p>
+                            </div>
+                            <div style="width: 350px; height: 90px; padding: 0 40px;">                            
+                                <h3 style="text-align: center;">WhatsApp</h3>
+                                <p style="text-align: center;">321 327 0365</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+    };
+};
+
+
+
+//EMAIL DE SOLICITUD PARA CAMBIO DE CONTRASEÑA DE USER
+export const mailResetUserPassword = (email: string, name: string, link: string) => {
+    return {
+        from: `Ecopción <${EMAIL}>`,
+        to: email,
+        subject: `Solicitud para cambio de contraseña`,
+        html: `
+            <div style="background: #e9ecef; width: 100%; min-height: 900px;">
+                <div style="background: #ffffff; margin: auto; width: 700px; height: 100%">
+                    <div style="width: 100%; min-height: 670px;">
+                        <div style="background: #718bd8; padding: 20px;">
+                            <img style="width: 300px; margin: 0 auto; display: block;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1698187390/images/uysjyavwsqtbvl0dpunj.png" />
+                        </div>
+                        <p style="margin: 20px 40px; font-size: 16px;">¡Hola ${name},</p>
+                        <p style="margin: 20px 40px; font-size: 16px;">Has solicitado cambio de contraseña.</p>
+                        <br/>
+                        <a href=${link} ><b>LINK</b></a>
+                    </div>
+
+                    <div style="width: 100%; height: 80px; ">
+                        <p style="margin: 30px 0 10px 0; font-size: 16px; color: #ffb703; font-weight: 600; text-align: center;">¡Entérate de todo!</p>
+                        <div style="margin: auto; width: 200px; display: flex; align-items: center; justify-content: center;">
+                            <a href="https://www.linkedin.com/company/ecopcion" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; " src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/hiytaro1ubfiitblrrgt.png" alt="Linkedin" />
+                            </a>
+                            <a href="https://instagram.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/wdfrfzxibpqslzmqmgas.png" alt="Instagram" />
+                            </a>
+                            <a href="https://www.facebook.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/npptyynt0ctschep9tfq.png" alt="Facebook" />
+                            </a>
+                            <a href="https://twitter.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/i8qu6plo4g3vptevasdj.png" alt="Twitter" />
+                            </a>
+                            <a href="https://web.whatsapp.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/lvfqkvqlyzedr0wozxxp.png" alt="Whatsapp" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; height: 150px; ">
+                        <p style="margin: 30px 0 0 0; font-size: 16px; font-weight: 600; text-align: center; color: #ffb703;">¿Necesitas ayuda?</p>
+                        <div style="width: 700px; height: 90px; display: flex; align-items: center; justify-content: center;">                        
+                            <div style="width: 350px; height: 90px; padding: 0 40px;">                            
+                                <h3 style="text-align: center;">Email</h3>
+                                <p style="text-align: center; text-decoration: none">fhernandez@ecopcion.com</p>
+                            </div>
+                            <div style="width: 350px; height: 90px; padding: 0 40px;">                            
+                                <h3 style="text-align: center;">WhatsApp</h3>
+                                <p style="text-align: center;">321 327 0365</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+    };
+};
+
+
+
+//EMAIL DE CONFIRMACION POR CAMBIO DE CONTRASEÑA DE USER
+export const mailConfirmResetUserPassword = (email: string, name: string) => {
+    return {
+        from: `Ecopción <${EMAIL}>`,
+        to: email,
+        subject: `Cambio de contraseña`,
+        html: `
+            <div style="background: #e9ecef; width: 100%; min-height: 900px;">
+                <div style="background: #ffffff; margin: auto; width: 700px; height: 100%">
+                    <div style="width: 100%; min-height: 670px;">
+                        <div style="background: #718bd8; padding: 20px;">
+                            <img style="width: 300px; margin: 0 auto; display: block;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1698187390/images/uysjyavwsqtbvl0dpunj.png" />
+                        </div>
+                        <p style="margin: 20px 40px; font-size: 16px;">¡Hola ${name},</p>
+                        <h2>Se ha cambiado tu contraseña exitosamente.</h2>
+                        <br/>
+                        <p style="margin: 20px 40px; font-size: 16px;">Si no fuiste tú quien solicitó el cambio, tenemos algunos consejos para ayudarte a mantener segura tu cuenta. Para más información, consulta nuestro <a href='http://localhost:5173/resetPassword' ><b>sitio de Ayuda</b></a></p>
+                        <p style="margin: 20px 40px; font-size: 16px;">Saludos.</p>
+                        <p style="margin: 20px 40px; font-size: 16px;">El equipo de Ecopción</p>
+                    </div>
+
+                    <div style="width: 100%; height: 80px; ">
+                        <p style="margin: 30px 0 10px 0; font-size: 16px; color: #ffb703; font-weight: 600; text-align: center;">¡Entérate de todo!</p>
+                        <div style="margin: auto; width: 200px; display: flex; align-items: center; justify-content: center;">
+                            <a href="https://www.linkedin.com/company/ecopcion" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; " src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/hiytaro1ubfiitblrrgt.png" alt="Linkedin" />
+                            </a>
+                            <a href="https://instagram.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/wdfrfzxibpqslzmqmgas.png" alt="Instagram" />
+                            </a>
+                            <a href="https://www.facebook.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/npptyynt0ctschep9tfq.png" alt="Facebook" />
+                            </a>
+                            <a href="https://twitter.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/i8qu6plo4g3vptevasdj.png" alt="Twitter" />
+                            </a>
+                            <a href="https://web.whatsapp.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/lvfqkvqlyzedr0wozxxp.png" alt="Whatsapp" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; height: 150px; ">
+                        <p style="margin: 30px 0 0 0; font-size: 16px; font-weight: 600; text-align: center; color: #ffb703;">¿Necesitas ayuda?</p>
+                        <div style="width: 700px; height: 90px; display: flex; align-items: center; justify-content: center;">                        
+                            <div style="width: 350px; height: 90px; padding: 0 40px;">                            
+                                <h3 style="text-align: center;">Email</h3>
+                                <p style="text-align: center; text-decoration: none">fhernandez@ecopcion.com</p>
+                            </div>
+                            <div style="width: 350px; height: 90px; padding: 0 40px;">                            
+                                <h3 style="text-align: center;">WhatsApp</h3>
+                                <p style="text-align: center;">321 327 0365</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+    };
+};
