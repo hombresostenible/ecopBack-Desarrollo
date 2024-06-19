@@ -58,7 +58,6 @@ export const postUserPlatformData = async (body: IUserPlatform, userId: string):
             }
         }
     } catch (error) {
-        console.log('Error: ', error)
         await t.rollback();
         throw error;
     }
