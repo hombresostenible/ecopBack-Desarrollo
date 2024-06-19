@@ -50,6 +50,7 @@ export const postManyBranchData = async (body: IBranch, userId: string): Promise
         await t.commit();
         return newBranch;
     } catch (error) {
+        console.log('Error: ', error)
         await t.rollback();
         throw error;
     }
@@ -62,12 +63,12 @@ export const getBranchsByUserIdData = async (userId: string): Promise<any> => {
     try {
         const userBranchs = await Branch.findAll({
             where: { userId: userId },
-            include: [
-                {
-                    model: User,
-                    as: 'user', // Asociación con el alias definido en el modelo Branch
-                },
-            ],
+            // include: [
+            //     {
+            //         model: User,
+            //         as: 'user', // Asociación con el alias definido en el modelo Branch
+            //     },
+            // ],
         });
         return userBranchs;
     } catch (error) {
