@@ -6,7 +6,7 @@ export const getItemBarCodeData = async (userId: string, barCode: string): Promi
     try {
         const itemFound = await sequelize.query(`
             SELECT 
-                id, branchId, barCode, nameItem, inventory, 
+                id, branchId, barCode, nameItem, inventory, IVA, sellingPrice,
                 'Assets' as type, 
                 userId
             FROM assets
@@ -15,7 +15,7 @@ export const getItemBarCodeData = async (userId: string, barCode: string): Promi
             UNION ALL
 
             SELECT 
-                id, branchId, barCode, nameItem, inventory, 
+                id, branchId, barCode, nameItem, inventory, IVA, sellingPrice,
                 'Merchandise' as type, 
                 userId
             FROM merchandises
@@ -24,7 +24,7 @@ export const getItemBarCodeData = async (userId: string, barCode: string): Promi
             UNION ALL
 
             SELECT
-                id, branchId, barCode, nameItem, inventory, 
+                id, branchId, barCode, nameItem, inventory, IVA, sellingPrice,
                 'Product' as type, 
                 userId
             FROM products
@@ -33,7 +33,7 @@ export const getItemBarCodeData = async (userId: string, barCode: string): Promi
             UNION ALL
 
             SELECT
-                id, branchId, barCode, nameItem, inventory, 
+                id, branchId, barCode, nameItem, inventory, IVA, sellingPrice,
                 'RawMaterial' as type, 
                 userId
             FROM rawMaterials
@@ -42,7 +42,7 @@ export const getItemBarCodeData = async (userId: string, barCode: string): Promi
             UNION ALL
 
             SELECT
-                id, branchId, barCode, nameItem, NULL as inventory, 
+                id, branchId, barCode, nameItem, NULL as inventory, IVA, sellingPrice,
                 'Service' as type, 
                 userId
             FROM services
@@ -64,7 +64,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
     try {
         const itemFound = await sequelize.query(`
             SELECT 
-                id, branchId, barCode, nameItem, inventory, 
+                id, branchId, barCode, nameItem, inventory, IVA, sellingPrice,
                 'Assets' as type, 
                 userId
             FROM assets
@@ -73,7 +73,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
             UNION ALL
 
             SELECT 
-                id, branchId, barCode, nameItem, inventory, 
+                id, branchId, barCode, nameItem, inventory, IVA, sellingPrice,
                 'Merchandise' as type, 
                 userId
             FROM merchandises
@@ -82,7 +82,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
             UNION ALL
 
             SELECT
-                id, branchId, barCode, nameItem, inventory, 
+                id, branchId, barCode, nameItem, inventory, IVA, sellingPrice,
                 'Product' as type, 
                 userId
             FROM products
@@ -91,7 +91,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
             UNION ALL
 
             SELECT
-                id, branchId, barCode, nameItem, inventory, 
+                id, branchId, barCode, nameItem, inventory, IVA, sellingPrice,
                 'RawMaterial' as type, 
                 userId
             FROM rawMaterials
@@ -100,7 +100,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
             UNION ALL
 
             SELECT
-                id, branchId, barCode, nameItem, NULL as inventory, 
+                id, branchId, barCode, nameItem, NULL as inventory, IVA, sellingPrice,
                 'Service' as type, 
                 userId
             FROM services
