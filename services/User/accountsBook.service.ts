@@ -1,8 +1,9 @@
 import {  
     postAccountsBookData,
     getAccountsBooksData,
-    getAccountsBooksIncomesData,
-    getAccountsBooksIncomesTransactionNotApprovedData,
+    getAccountsBooksIncomesApprovedData,
+    getAccountsBooksIncomesApprovedByBranchData,
+    getAccountsBooksIncomesNotApprovedData,
     getAccountsBooksExpesesData,
     getAccountsBookByIdData,
     getAccountsBookByBranchData,
@@ -12,6 +13,7 @@ import {
 import { IAccountsBook } from "../../types/User/accountsBook.types";
 import { IServiceLayerResponseAccountsBook } from '../../types/Responses/responses.types';
 import { ServiceError } from '../../types/Responses/responses.types';
+import { checkPermissionForBranchAccountsBook, checkPermissionForAccountsBook } from '../../helpers/AccountsBook.helper';
 
 //CREAR UN REGISTRO CONTABLE DEL USER
 export const postAccountsBookService = async (body: IAccountsBook, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
@@ -44,10 +46,10 @@ export const getAccountsBooksService = async (userId: string): Promise<IServiceL
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS DEL USER
-export const getAccountsBooksIncomesService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS DEL USER
+export const getAccountsBooksIncomesApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        const dataLayerResponse = await getAccountsBooksIncomesData(userId);
+        const dataLayerResponse = await getAccountsBooksIncomesApprovedData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -59,10 +61,29 @@ export const getAccountsBooksIncomesService = async (userId: string): Promise<IS
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
-export const getAccountsBooksIncomesTransactionNotApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
+export const getAccountsBooksIncomesApprovedByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        const dataLayerResponse = await getAccountsBooksIncomesTransactionNotApprovedData(userId);
+        console.log('Hola 2')
+        const hasPermission = await checkPermissionForBranchAccountsBook(idBranch, userId);
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los registros de ingresos aprobados de esta sede");
+        const assetsFound = await getAccountsBooksIncomesApprovedByBranchData(idBranch);
+        if (!assetsFound) return { code: 404, message: "Registros de ingresos aprobados no encontrados en esta sede" };
+        return { code: 200, result: assetsFound };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
+export const getAccountsBooksIncomesNotApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+    try {
+        const dataLayerResponse = await getAccountsBooksIncomesNotApprovedData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
