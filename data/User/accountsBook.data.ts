@@ -114,12 +114,19 @@ export const getAccountsBooksData = async (userId: string): Promise<any> => {
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS DEL USER
-export const getAccountsBooksIncomesData = async (userId: string): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS DEL USER
+export const getAccountsBooksIncomesApprovedData = async (userId: string): Promise<any> => {
     try {
         const allAccountsBook = await AccountsBook.findAll({
-            where: { userId: userId, transactionType: 'Ingreso', transactionApproved: true },
-        });        
+            where: { 
+                userId: userId, 
+                transactionType: 'Ingreso', 
+                transactionApproved: true 
+            },
+            order: [
+                ['transactionDate', 'DESC'] // Aquí se especifica el campo y el orden
+            ]
+        });
         return allAccountsBook;
     } catch (error) {
         throw error;
@@ -128,11 +135,39 @@ export const getAccountsBooksIncomesData = async (userId: string): Promise<any> 
 
 
 
+//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
+export const getAccountsBooksIncomesApprovedByBranchData = async (idBranch: string): Promise<any> => {
+    try {
+        const AccountsBooksIncomesFound = await AccountsBook.findAll({
+            where: {
+                branchId: idBranch,
+                transactionType: 'Ingreso', 
+                transactionApproved: true 
+            },
+            order: [
+                ['transactionDate', 'DESC'] // Aquí se especifica el campo y el orden
+            ]
+        });
+        return AccountsBooksIncomesFound;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
-export const getAccountsBooksIncomesTransactionNotApprovedData = async (userId: string): Promise<any> => {
+export const getAccountsBooksIncomesNotApprovedData = async (userId: string): Promise<any> => {
     try {
         const allAccountsBook = await AccountsBook.findAll({
-            where: { userId: userId, transactionType: 'Ingreso', transactionApproved: false },
+            where: {
+                userId: userId,
+                transactionType: 'Ingreso',
+                transactionApproved: false
+            },
+            order: [
+                ['transactionDate', 'DESC'] // Aquí se especifica el campo y el orden
+            ]
         });        
         return allAccountsBook;
     } catch (error) {
