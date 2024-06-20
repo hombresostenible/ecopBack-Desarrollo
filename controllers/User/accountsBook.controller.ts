@@ -2,8 +2,9 @@ import express, { Request, Response } from "express";
 import {
     postAccountsBookService,
     getAccountsBooksService,
-    getAccountsBooksIncomesService,
-    getAccountsBooksIncomesTransactionNotApprovedService,
+    getAccountsBooksIncomesApprovedService,
+    getAccountsBooksIncomesApprovedByBranchService,
+    getAccountsBooksIncomesNotApprovedService,
     getAccountsBooksExpesesService,
     getAccountsBookByIdService,
     getAccountsBookByBranchService,
@@ -50,15 +51,15 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS DEL USER
+//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS DEL USER
 router.get("/incomes", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
-        const serviceLayerResponse = await getAccountsBooksIncomesService(id);
+        const serviceLayerResponse = await getAccountsBooksIncomesApprovedService(id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
-            res.status(500).json({ message: "No se pudieron obtener registros de AccountsBook" });
+            res.status(500).json({ message: "No se pudieron obtener registros de ingresos aprobados del usuario" });
         }
     } catch (error) {
         const errorController = error as ServiceError;
@@ -68,11 +69,29 @@ router.get("/incomes", authRequired, async (req: Request, res: Response) => {
 
 
 
+//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
+router.get("/incomes-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
+    try {
+        console.log('Hola')
+        const { idBranch } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getAccountsBooksIncomesApprovedByBranchService(idBranch, id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else res.status(500).json({ message: "Error al obtener los registros de ingresos aprobados del usuario por sede" });
+    } catch (error) {
+        const rawMaterialError = error as ServiceError;
+        res.status(rawMaterialError.code).json(rawMaterialError.message);
+    }
+}); //GET - http://localhost:3000/api/accountsBook/aincomes-branch/:idBranch
+
+
+
 //OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
-router.get("/incomesNotApproved", authRequired, async (req: Request, res: Response) => {
+router.get("/incomes-not-approved", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
-        const serviceLayerResponse = await getAccountsBooksIncomesTransactionNotApprovedService(id);
+        const serviceLayerResponse = await getAccountsBooksIncomesNotApprovedService(id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -82,7 +101,7 @@ router.get("/incomesNotApproved", authRequired, async (req: Request, res: Respon
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook/incomesNotApproved
+}); // GET - http://localhost:3000/api/accountsBook/incomes-not-approved
 
 
 

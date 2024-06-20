@@ -4,7 +4,7 @@ import {
     postManyAssetService,
     getAssetsService,
     getAssetByIdService,
-    getAssetBranchService,
+    getAssetByBranchService,
     putAssetService,
     putUpdateManyAssetService,
     patchAssetService,
@@ -17,7 +17,7 @@ import { assetsSchemaZod, manyAssetsSchemaZod } from '../../validations/User/ass
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 
-//CONTROLLER PARA CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
+//CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
 router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
@@ -32,7 +32,7 @@ router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async
 
 
 
-//CONTROLLER PARA CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER DESDE EL EXCEL
+//CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER DESDE EL EXCEL
 router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
@@ -49,7 +49,7 @@ router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyAsse
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
@@ -65,7 +65,7 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
-//CONTROLLER PARA OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
+//OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 router.get("/:idAssets", authRequired, async (req: Request, res: Response) => {
     try {
         const { idAssets } = req.params;
@@ -80,12 +80,12 @@ router.get("/:idAssets", authRequired, async (req: Request, res: Response) => {
 
 
 
-//CONTROLLER PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
 router.get("/assets-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
-        const serviceLayerResponse = await getAssetBranchService(idBranch, id);
+        const serviceLayerResponse = await getAssetByBranchService(idBranch, id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas del usuario por sede" });
@@ -97,7 +97,7 @@ router.get("/assets-branch/:idBranch", authRequired, async (req: Request, res: R
 
 
 
-//CONTROLLER PARA ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+//ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 router.put("/:idAssets", authRequired, checkRole, validateSchema(assetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const { idAssets } = req.params;
@@ -113,7 +113,7 @@ router.put("/:idAssets", authRequired, checkRole, validateSchema(assetsSchemaZod
 
 
 
-//CONTROLLER PARA ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER
+//ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER
 router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
@@ -130,7 +130,7 @@ router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAsset
 
 
 
-//CONTROLLER PARA DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+//DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 router.patch("/:idAssets", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idAssets } = req.params;
@@ -146,7 +146,7 @@ router.patch("/:idAssets", authRequired, checkRole, async (req: Request, res: Re
 
 
 
-//CONTROLLER PARA ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+//ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 router.delete('/:idAssets', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idAssets } = req.params;

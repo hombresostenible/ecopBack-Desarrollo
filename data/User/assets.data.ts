@@ -4,7 +4,7 @@ import Assets from '../../schema/User/assets.schema';
 import { IAssets } from "../../types/User/assets.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
-//DATA PARA CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
+//CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
 export const postAssetData = async (body: IAssets, userId: string): Promise<any> => {
     try {
         const existingMachinery = await Assets.findOne({
@@ -27,7 +27,7 @@ export const postAssetData = async (body: IAssets, userId: string): Promise<any>
 
 
 
-//DATA PARA CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER DESDE EL EXCEL
+//CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER DESDE EL EXCEL
 export const postManyAssetData = async (body: IAssets, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
@@ -55,7 +55,7 @@ export const postManyAssetData = async (body: IAssets, userId: string, typeRole:
 
 
 
-//DATA PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
 export const getAssetsData = async (userId: string): Promise<any> => {
     try {
         const userMachinery = await Assets.findAll({
@@ -69,7 +69,7 @@ export const getAssetsData = async (userId: string): Promise<any> => {
 
 
 
-//DATA PARA OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
+//OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 export const getAssetByIdData = async (idAssets: string): Promise<any> => {
     try {
         const machineryFound = await Assets.findOne({ where: { id: idAssets } });
@@ -81,8 +81,8 @@ export const getAssetByIdData = async (idAssets: string): Promise<any> => {
 
 
 
-//DATA PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
-export const getAssetBranchData = async (idBranch: string): Promise<any> => {
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
+export const getAssetByBranchData = async (idBranch: string): Promise<any> => {
     try {
         const customerMachineryFound = await Assets.findAll({
             where: { branchId: idBranch }
@@ -95,7 +95,7 @@ export const getAssetBranchData = async (idBranch: string): Promise<any> => {
 
 
 
-//DATA PARA ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+//ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const putAssetData = async (idAssets: string, body: IAssets, userId: string): Promise<IAssets | null> => {
     try {
         const existingBranchWithSameName = await Assets.findOne({
@@ -114,7 +114,7 @@ export const putAssetData = async (idAssets: string, body: IAssets, userId: stri
 
 
 
-//DATA PARA ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER
+//ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER
 export const putUpdateManyAssetData = async (body: IAssets, userId: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
@@ -137,7 +137,7 @@ export const putUpdateManyAssetData = async (body: IAssets, userId: string): Pro
 
 
 
-//DATA PARA DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+//DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): Promise<IAssets | null> => {
     const t = await sequelize.transaction();    
     try {
@@ -183,7 +183,7 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): 
 
 
 
-//DATA PARA ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+//ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const deleteAssetData = async (idAssets: string): Promise<void> => {
     try {
         const productFound = await Assets.findOne({ where: { id: idAssets } });
