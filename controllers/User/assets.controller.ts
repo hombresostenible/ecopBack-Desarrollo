@@ -4,10 +4,12 @@ import {
     postManyAssetService,
     getAssetsService,
     getAssetByIdService,
-    getAssetByBranchService,
+    getAssetBranchService,
     putAssetService,
     putUpdateManyAssetService,
     patchAssetService,
+    getAssetsOffService,
+    getAssetsOffByBranchService,
     deleteAssetService,
 } from '../../services/User/assets.service';
 import { authRequired } from '../../middlewares/Token/Token.middleware';
@@ -65,6 +67,22 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+router.get("/assets-off", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { id } = req.user;
+        const serviceLayerResponse = await getAssetsOffService(id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas dadas de baja del usuario" });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/asset/assets-off
+
+
+
 //OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 router.get("/:idAssets", authRequired, async (req: Request, res: Response) => {
     try {
@@ -85,7 +103,7 @@ router.get("/assets-branch/:idBranch", authRequired, async (req: Request, res: R
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
-        const serviceLayerResponse = await getAssetByBranchService(idBranch, id);
+        const serviceLayerResponse = await getAssetBranchService(idBranch, id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas del usuario por sede" });
@@ -94,6 +112,27 @@ router.get("/assets-branch/:idBranch", authRequired, async (req: Request, res: R
         res.status(rawMaterialError.code).json(rawMaterialError.message);
     }
 }); //GET - http://localhost:3000/api/asset/assets-branch/:idBranch
+
+
+
+
+
+
+
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+router.get("/assets-off/:idBranch", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idBranch } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getAssetsOffByBranchService(idBranch, id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas dadas de baja del usuario" });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/asset/assets-off/:idBranch
 
 
 
@@ -126,7 +165,7 @@ router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAsset
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/asset/update con [{"id":"6fd572e5-683f-4c6d-a421-dbb86f64d48a","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"id":"88667153-4fec-40d5-9ff9-e04cb0f1fee7","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9 ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
+}); // PUT - http://localhost:3000/api/asset/updateMany con [{"id":"6fd572e5-683f-4c6d-a421-dbb86f64d48a","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"id":"88667153-4fec-40d5-9ff9-e04cb0f1fee7","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9 ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
 
 
 

@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import sequelize from '../../db';
 import Assets from '../../schema/User/assets.schema';
 import { IAssets } from "../../types/User/assets.types";
@@ -69,6 +69,25 @@ export const getAssetsData = async (userId: string): Promise<any> => {
 
 
 
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getAssetsOffData = async (userId: string): Promise<any> => {
+    try {
+        const userMachinery = await Assets.findAll({
+            where: {
+                userId: userId,
+                [Op.and]: [
+                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
+                ]
+            },
+        });        
+        return userMachinery;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 export const getAssetByIdData = async (idAssets: string): Promise<any> => {
     try {
@@ -82,7 +101,7 @@ export const getAssetByIdData = async (idAssets: string): Promise<any> => {
 
 
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
-export const getAssetByBranchData = async (idBranch: string): Promise<any> => {
+export const getAssetBranchData = async (idBranch: string): Promise<any> => {
     try {
         const customerMachineryFound = await Assets.findAll({
             where: { branchId: idBranch }
@@ -177,6 +196,26 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): 
         return updatedAsset;
     } catch (error) {
         await t.rollback();
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getAssetsOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+    try {
+        const assetsWithInventoryOff = await Assets.findAll({
+            where: {
+                branchId: idBranch,
+                userId: userId,
+                [Op.and]: [
+                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
+                ]
+            }
+        });
+        return assetsWithInventoryOff;
+    } catch (error) {
         throw error;
     }
 };
