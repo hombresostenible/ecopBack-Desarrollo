@@ -7,6 +7,8 @@ import {
     putAssetData,
     putUpdateManyAssetData,
     patchAssetData,
+    getAssetsOffData,
+    getAssetsOffByBranchData,
     deleteAssetData,
 } from "../../data/User/assets.data";
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
@@ -14,7 +16,7 @@ import { checkPermissionForBranchMachinery, checkPermissionForMachinery } from '
 import { IAssets } from "../../types/User/assets.types";
 import { ServiceError, IServiceLayerResponseAssets } from '../../types/Responses/responses.types';
 
-//SERVICE PARA CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
+//CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
 export const postAssetService = async (body: IAssets, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
         // const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
@@ -32,7 +34,7 @@ export const postAssetService = async (body: IAssets, userId: string): Promise<I
 
 
 
-//SERVICE PARA CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER O DESDE EL EXCEL
+//CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER O DESDE EL EXCEL
 export const postManyAssetService = async (assets: IAssets[], userId: string, typeRole: string): Promise<IServiceLayerResponseAssets> => {
     const uniqueAssets: IAssets[] = [];
     const duplicatedAssets: IAssets[] = [];
@@ -60,7 +62,7 @@ export const postManyAssetService = async (assets: IAssets[], userId: string, ty
 
 
 
-//SERVICE PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
 export const getAssetsService = async (userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
         const dataLayerResponse = await getAssetsData(userId);
@@ -75,7 +77,22 @@ export const getAssetsService = async (userId: string): Promise<IServiceLayerRes
 
 
 
-//SERVICE PARA OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getAssetsOffService = async (userId: string): Promise<IServiceLayerResponseAssets> => {
+    try {
+        const dataLayerResponse = await getAssetsOffData(userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 export const getAssetByIdService = async (idAssets: string, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
         const hasPermission = await checkPermissionForMachinery(idAssets, userId);
@@ -93,7 +110,7 @@ export const getAssetByIdService = async (idAssets: string, userId: string): Pro
 
 
 
-//SERVICE PARA OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
 export const getAssetBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
         const hasPermission = await checkPermissionForBranchMachinery(idBranch, userId);
@@ -111,7 +128,7 @@ export const getAssetBranchService = async (idBranch: string, userId: string): P
 
 
 
-//SERCICE PARA ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+//ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const putAssetService = async (idAssets: string, body: IAssets, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
         const hasPermission = await checkPermissionForMachinery(idAssets, userId);
@@ -129,7 +146,7 @@ export const putAssetService = async (idAssets: string, body: IAssets, userId: s
 
 
 
-//SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER
+//ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER
 export const putUpdateManyAssetService = async (assets: IAssets[], userId: string, typeRole: string): Promise<IServiceLayerResponseAssets> => {
     const uniqueAssets: IAssets[] = [];
     const duplicatedAssets: IAssets[] = [];
@@ -156,7 +173,7 @@ export const putUpdateManyAssetService = async (assets: IAssets[], userId: strin
 
 
 
-//SERVICE PARA DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+//DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const patchAssetService = async (idAssets: string, body: any, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
         const hasPermission = await checkPermissionForMachinery(idAssets, userId);
@@ -174,7 +191,22 @@ export const patchAssetService = async (idAssets: string, body: any, userId: str
 
 
 
-//SERVICE PARA ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getAssetsOffByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAssets> => {
+    try {
+        const dataLayerResponse = await getAssetsOffByBranchData(idBranch, userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const deleteAssetService = async (idAssets: string, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
         const hasPermission = await checkPermissionForMachinery(idAssets, userId);

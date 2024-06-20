@@ -1,9 +1,6 @@
-import { QueryTypes } from 'sequelize';
-import sequelize from '../../db';
 import AccountsBook from '../../schema/User/accountsBook.schema';
 import AccountsPayable from '../../schema/User/accountsPayable.schema';
 import AccountsReceivable from '../../schema/User/accountsReceivable.schema';
-import Assets from '../../schema/User/assets.schema';
 import Merchandise from "../../schema/User/merchandise.schema";
 import Product from "../../schema/User/product.schema";
 import RawMaterial from "../../schema/User/rawMaterial.schema";
