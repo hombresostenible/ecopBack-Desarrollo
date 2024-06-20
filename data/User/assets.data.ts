@@ -91,8 +91,8 @@ export const getAssetsOffData = async (userId: string): Promise<any> => {
 //OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 export const getAssetByIdData = async (idAssets: string): Promise<any> => {
     try {
-        const machineryFound = await Assets.findOne({ where: { id: idAssets } });
-        return machineryFound;
+        const assetFound = await Assets.findOne({ where: { id: idAssets } });
+        return assetFound;
     } catch (error) {
         throw error;
     }
@@ -103,10 +103,10 @@ export const getAssetByIdData = async (idAssets: string): Promise<any> => {
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
 export const getAssetBranchData = async (idBranch: string): Promise<any> => {
     try {
-        const customerMachineryFound = await Assets.findAll({
+        const customerAssetFound = await Assets.findAll({
             where: { branchId: idBranch }
         });
-        return customerMachineryFound;
+        return customerAssetFound;
     } catch (error) {
         throw error;
     }
@@ -158,28 +158,32 @@ export const putUpdateManyAssetData = async (body: IAssets, userId: string): Pro
 
 //DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): Promise<IAssets | null> => {
-    const t = await sequelize.transaction();    
+    const t = await sequelize.transaction();
     try {
-        let whereClause: Record<string, any> = { id: idAssets };        
-     
+        let whereClause: Record<string, any> = { id: idAssets };
         const existingAsset = await Assets.findOne({
             where: whereClause,
             transaction: t,
-        });        
-        if (!existingAsset) throw new ServiceError(404, "No se encontró el activo");        
-        if (body.inventory !== undefined && body.inventory > existingAsset.inventory) throw new ServiceError(400, "No hay suficientes activos disponibles para dar de baja");        
+        });
+
+        if (!existingAsset) throw new ServiceError(404, "No se encontró el activo");
+        if (body.inventory !== undefined && body.inventory > existingAsset.inventory) throw new ServiceError(400, "No hay suficientes activos disponibles para dar de baja");
+    
         if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
             const inventoryOffItem = body.inventoryOff[0]; // Accede al primer elemento de inventoryOff
             const currentDate = new Date(); // Obtener la fecha actual
+
             // Actualizar el inventario y agregar un nuevo elemento a inventoryOff
             existingAsset.inventory -= inventoryOffItem.quantity || 0; // Restar la cantidad de activos dañados del inventario actual
+
             existingAsset.inventoryOff = existingAsset.inventoryOff.concat({ 
                 date: currentDate, 
-                quantity: - (inventoryOffItem.quantity || 0),
+                quantity: (inventoryOffItem.quantity || 0),
                 reason: inventoryOffItem.reason || 'Baja de activo',
                 description: inventoryOffItem.description,
             });
         }
+
         const [rowsUpdated] = await Assets.update({
             inventory: existingAsset.inventory,
             inventoryOff: existingAsset.inventoryOff
@@ -187,11 +191,14 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): 
             where: whereClause,
             transaction: t,
         });
+
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna máquina, equipo o herramienta para actualizar");
         const updatedAsset = await Assets.findByPk(idAssets, {
             transaction: t,
         });
+
         if (!updatedAsset) throw new ServiceError(404, "No se encontró ninguna máquina, equipo o herramienta para actualizar");
+
         await t.commit();
         return updatedAsset;
     } catch (error) {

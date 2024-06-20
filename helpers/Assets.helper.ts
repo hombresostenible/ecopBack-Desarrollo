@@ -5,7 +5,7 @@ import {
 import { ServiceError } from "../types/Responses/responses.types";
 
 //CHEQUEA SI LOS EQUIPOS, HERRAMIENTAS O MAQUINAS PERTENECEN A LA SEDE DE USER
-export const checkPermissionForBranchMachinery = async (idBranch: string, userId: string): Promise<boolean> => {
+export const checkPermissionForBranchAssets = async (idBranch: string, userId: string): Promise<boolean> => {
     try {
         const assets = await getAssetBranchData(idBranch);
         if (!assets) return false;
@@ -24,7 +24,7 @@ export const checkPermissionForBranchMachinery = async (idBranch: string, userId
 
 
 //CHEQUEA SI EL EQUIPO, HERRAMIENTA O MAQUINA PERTENECEN A LA SEDE DE USER
-export const checkPermissionForMachinery = async (idAssets: string, userId: string): Promise<boolean> => {
+export const checkPermissionForAssets = async (idAssets: string, userId: string): Promise<boolean> => {
     try {
         const asset = await getAssetByIdData(idAssets);
         if (!asset) return false;
