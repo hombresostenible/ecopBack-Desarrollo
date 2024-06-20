@@ -33,7 +33,7 @@ router.post("/", authRequired, checkRole, validateSchema(merchandiseSchemaZod), 
 
 
 //CONTROLLER PARA CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
-router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
+router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
         const { id, typeRole } = req.user;
@@ -43,7 +43,7 @@ router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyMerc
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/merchandise/createMany con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Supremo","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Roa","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"}]
+}); // POST - http://localhost:3000/api/merchandise/create-many con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Supremo","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Arroz Roa","barCode":null,"inventory":5000,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":150,"purchasePriceBeforeTax":1750,"IVA":0,"sellingPrice":2100,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z"}]
 
 
 
