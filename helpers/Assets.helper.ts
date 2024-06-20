@@ -1,13 +1,13 @@
 import {
-    getAssetByBranchData,
+    getAssetBranchData,
     getAssetByIdData,
 } from "../data/User/assets.data";
 import { ServiceError } from "../types/Responses/responses.types";
 
 //CHEQUEA SI LOS EQUIPOS, HERRAMIENTAS O MAQUINAS PERTENECEN A LA SEDE DE USER
-export const checkPermissionForBranchAsset = async (idBranch: string, userId: string): Promise<boolean> => {
+export const checkPermissionForBranchAssets = async (idBranch: string, userId: string): Promise<boolean> => {
     try {
-        const assets = await getAssetByBranchData(idBranch);
+        const assets = await getAssetBranchData(idBranch);
         if (!assets) return false;
         for (const machinery of assets) {
             if (machinery.userId !== userId) return false;
@@ -23,7 +23,7 @@ export const checkPermissionForBranchAsset = async (idBranch: string, userId: st
 
 
 
-//CHEQUEA SI EL EQUIPO, HERRAMIENTA O MAQUINA PERTENECE AÑ USER
+//CHEQUEA SI EL EQUIPO, HERRAMIENTA O MAQUINA PERTENECEN A LA SEDE DE USER
 export const checkPermissionForAssets = async (idAssets: string, userId: string): Promise<boolean> => {
     try {
         const asset = await getAssetByIdData(idAssets);
