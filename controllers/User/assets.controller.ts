@@ -116,9 +116,6 @@ router.get("/assets-branch/:idBranch", authRequired, async (req: Request, res: R
 
 
 
-
-
-
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
 router.get("/assets-off/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {

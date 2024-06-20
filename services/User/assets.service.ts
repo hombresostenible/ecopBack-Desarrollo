@@ -12,7 +12,7 @@ import {
     deleteAssetData,
 } from "../../data/User/assets.data";
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
-import { checkPermissionForBranchMachinery, checkPermissionForMachinery } from '../../helpers/Assets.helper';
+import { checkPermissionForBranchAssets, checkPermissionForAssets } from '../../helpers/Assets.helper';
 import { IAssets } from "../../types/User/assets.types";
 import { ServiceError, IServiceLayerResponseAssets } from '../../types/Responses/responses.types';
 
@@ -20,7 +20,6 @@ import { ServiceError, IServiceLayerResponseAssets } from '../../types/Responses
 export const postAssetService = async (body: IAssets, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
         // const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
-        // if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear una maquina, equipo o herramienta en esta sede");
         const dataLayerResponse = await postAssetData(body, userId);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe una maquina, equipo o herramienta con el mismo nombre en esta sede, cámbialo");//Esto es lo que se renderiza en la pantalla del usuario de la plataforma
         return { code: 201, result: dataLayerResponse };
@@ -95,7 +94,7 @@ export const getAssetsOffService = async (userId: string): Promise<IServiceLayer
 //OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 export const getAssetByIdService = async (idAssets: string, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
-        const hasPermission = await checkPermissionForMachinery(idAssets, userId);
+        const hasPermission = await checkPermissionForAssets(idAssets, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a estas maquinas, equipos y herramientas");
         const assetFound = await getAssetByIdData(idAssets);
         if (!assetFound) return { code: 404, message: "Maquina, equipo o herramienta no encontrada" };
@@ -113,7 +112,7 @@ export const getAssetByIdService = async (idAssets: string, userId: string): Pro
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
 export const getAssetBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
-        const hasPermission = await checkPermissionForBranchMachinery(idBranch, userId);
+        const hasPermission = await checkPermissionForBranchAssets(idBranch, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener las maquinas, equipos y herramientas de esta sede");
         const assetsFound = await getAssetBranchData(idBranch);
         if (!assetsFound) return { code: 404, message: "Maquinas, equipos y herramientas no encontrados en esta sede" };
@@ -131,7 +130,7 @@ export const getAssetBranchService = async (idBranch: string, userId: string): P
 //ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const putAssetService = async (idAssets: string, body: IAssets, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
-        const hasPermission = await checkPermissionForMachinery(idAssets, userId);
+        const hasPermission = await checkPermissionForAssets(idAssets, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar esta maquina, equipo o herramienta");
         const updateAsset = await putAssetData(idAssets, body, userId);
         if (!updateAsset) throw new ServiceError(404, "Maquina, equipo o herramienta no encontrado");
@@ -176,8 +175,14 @@ export const putUpdateManyAssetService = async (assets: IAssets[], userId: strin
 //DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const patchAssetService = async (idAssets: string, body: any, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
-        const hasPermission = await checkPermissionForMachinery(idAssets, userId);
+        const hasPermission = await checkPermissionForAssets(idAssets, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para dar de baja el activo");
+
+        // Verificar que inventoryOff sea un array
+        if (body.inventoryOff && !Array.isArray(body.inventoryOff)) {
+            body.inventoryOff = [body.inventoryOff];
+        }
+
         const updateAsset = await patchAssetData(idAssets, body);
         if (!updateAsset) throw new ServiceError(404, "Maquina, equipo o herramienta no encontrado");
         return { code: 200, message: "Maquina, equipo o herramienta dado de baja exitosamente", result: updateAsset };
@@ -186,7 +191,7 @@ export const patchAssetService = async (idAssets: string, body: any, userId: str
             const customErrorMessage = error.message;
             throw new ServiceError(500, customErrorMessage, error);
         } else throw error;
-    };
+    }
 };
 
 
@@ -209,7 +214,7 @@ export const getAssetsOffByBranchService = async (idBranch: string, userId: stri
 //ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const deleteAssetService = async (idAssets: string, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
-        const hasPermission = await checkPermissionForMachinery(idAssets, userId);
+        const hasPermission = await checkPermissionForAssets(idAssets, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar esta maquina, equipo o herramienta");
         await deleteAssetData(idAssets);
         return { code: 200, message: "Maquina, equipo o herramienta eliminada exitosamente" };
