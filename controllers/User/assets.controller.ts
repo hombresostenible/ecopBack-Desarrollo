@@ -35,7 +35,7 @@ router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async
 
 
 //CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER DESDE EL EXCEL
-router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
+router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
         const { id, typeRole } = req.user;
@@ -47,7 +47,7 @@ router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyAsse
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/asset/createMany con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
+}); // POST - http://localhost:3000/api/asset/create-many con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
 
 
 
