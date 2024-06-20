@@ -33,7 +33,7 @@ router.post("/", authRequired, checkRole, validateSchema(rawMaterialSchema), asy
 
 
 //CONTROLLER PARA CREAR MUCHAS MATERIAS PRIMAS POR SEDE PARA USER DESDE EL EXCEL
-router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyRawMaterialSchema), async (req: Request, res: Response) => {
+router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyRawMaterialSchema), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
         const { id, typeRole } = req.user;
@@ -43,7 +43,7 @@ router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyRawM
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-});// POST - http://localhost:3000/api/rawMaterial/createMany con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina998uyuyu*9","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina 28yuyu88","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null}]
+});// POST - http://localhost:3000/api/rawMaterial/create-many con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina998uyuyu*9","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina 28yuyu88","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null}]
 
 
 

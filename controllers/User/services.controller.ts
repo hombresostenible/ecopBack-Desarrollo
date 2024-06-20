@@ -32,7 +32,7 @@ router.post("/", authRequired, checkRole, validateSchema(serviceSchemaZod), asyn
 
 
 //CONTROLLER PARA CREAR MUCHOS SERVICIOS POR SEDE PARA USER DESDE EL EXCEL
-router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyServiceSchemaZod), async (req: Request, res: Response) => {
+router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyServiceSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
         const { id, typeRole } = req.user;
@@ -42,7 +42,7 @@ router.post("/createMany", authRequired, checkRoleArray, validateSchema(manyServ
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/service/createMany con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Servicio de Programación QQQQ","sellingPrice":1500000,"IVA":19},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Servicio de Programación 2.0 QQQW","sellingPrice":1500000,"IVA":19}]
+}); // POST - http://localhost:3000/api/service/create-many con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Servicio de Programación QQQQ","sellingPrice":1500000,"IVA":19},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Servicio de Programación 2.0 QQQW","sellingPrice":1500000,"IVA":19}]
 
 
 

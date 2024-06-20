@@ -4,6 +4,8 @@ import { z, ZodObject, ZodArray, ZodString } from 'zod';
 type ServiceSchemaType = ZodObject<{
     nameItem: ZodString;
     branchId: ZodString;
+    sellingPrice: ZodString;
+    IVA: ZodString;
 }>;
 
 
@@ -14,6 +16,12 @@ export const serviceSchemaZod: ServiceSchemaType = z.object({
     branchId: z.string({
         required_error: 'La sede del servicio es requerida',
     }),
+    sellingPrice: z.string({
+        required_error: 'El precio de venta es requerido',
+    }),
+    IVA: z.string({
+        required_error: 'El IVA es requerido',
+    }),
 });
 
 
@@ -23,6 +31,8 @@ type ManyServiceSchemaType = ZodArray<
     ZodObject<{
         nameItem: ZodString;
         branchId: ZodString;
+        sellingPrice: ZodString;
+        IVA: ZodString;
     }>
 >;
 
@@ -33,6 +43,12 @@ export const manyServiceSchemaZod: ManyServiceSchemaType = z.array(
         }),
         branchId: z.string({
             required_error: 'La sede del servicio es requerida',
+        }),
+        sellingPrice: z.string({
+            required_error: 'El precio de venta es requerido',
+        }),
+        IVA: z.string({
+            required_error: 'El IVA es requerido',
         }),
     })
 );
