@@ -68,9 +68,9 @@ export const postManyMerchandiseData = async (body: IMerchandise, userId: string
             const newMerchandise = await Merchandise.create({
                 ...body,
                 userId: userId,
-            }, { transaction: t });        
+            }, { transaction: t });
             await t.commit();
-            return newMerchandise;            
+            return newMerchandise;
         }
         if (typeRole === 'Administrador') {
             const newMerchandise = await Merchandise.create({

@@ -36,6 +36,7 @@ export const postManyServicesService = async (services: IService[], userId: stri
     const uniqueServices: IService[] = [];
     const duplicatedServices: IService[] = [];
     try {
+        console.log('services: ', services)
         for (const service of services) {
             // Verificar los permisos del usuario para crear servicios en la sede específica
             const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(service.branchId, userId, typeRole);

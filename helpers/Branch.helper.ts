@@ -51,7 +51,6 @@ export const isBranchAssociatedWithUserRole = async ( branchId: string, userId: 
             });
             return !!branch;
         };
-        
         // Si el tipo de rol no es ni 'Superadmin' ni 'Administrador', devolvemos false
         return false;
     } catch (error) {
