@@ -68,20 +68,16 @@ export const checkRoleArrayCreateUserPlatform = (req: Request, res: Response, ne
 
 // MIDDLEWARE QUE VERIFICA SI EL USUARIO TIENE EL ROL AUTORIZADO PARA CREAR MASIVAMENTE REGISTROS (ASSETS, MERCHANDISES, ETC)
 export const checkRoleArray = (req: Request, res: Response, next: NextFunction) => {
-    console.log('Hola 1')
     const { user } = req;
     // Verifica si el usuario está autenticado
     if (!user) return res.status(401).json({ error: 'Usuario no autenticado' });
     const { typeRole } = user;
     if (typeRole === 'Superadmin') {
-        console.log('Hola SUPERADMIN')
         // Si el usuario es 'Superadmin', pasa al siguiente middleware directamente
         return next();
     } else if (typeRole === 'Administrador') {
-        console.log('Hola 2')
         // Si el usuario es 'Administrador', verifica cada objeto en el array
         if (Array.isArray(req.body)) {
-            console.log('Hola ADMIN')
             // for (const obj of req.body) if (obj.branchId !== userBranchId) return res.status(403).json({ error: 'Acceso denegado. Tu rol no está autorizado para ejecutar esta acción para uno o más registros' });
             // Si todas las verificaciones pasan, pasa al siguiente middleware
             return next();
