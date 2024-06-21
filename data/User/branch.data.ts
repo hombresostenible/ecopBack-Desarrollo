@@ -23,7 +23,6 @@ export const postBranchData = async (body: IBranch, userId: string): Promise<IBr
         await newBranch.save();
         return newBranch;
     } catch (error) {
-        console.log('ERROR EN BRANCH: ', error)
         throw error;
     };
 };
@@ -51,6 +50,7 @@ export const postManyBranchData = async (body: IBranch, userId: string): Promise
         await t.commit();
         return newBranch;
     } catch (error) {
+        console.log('ERROR DATA: ', error)
         await t.rollback();
         console.log('BRANCH: ', error)
         throw error;
