@@ -22,7 +22,6 @@ router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), 
         const serviceLayerResponse = await postBranchService(body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
-        console.log('ERROR EN BRANCH: ', error)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
@@ -33,11 +32,13 @@ router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), 
 //CONTROLLER PARA CREAR MASIVAMENTE SEDES PARA USER DESDE EL EXCEL
 router.post("/createMany", authRequired, checkRoleAdmin, validateSchema(manyBranchsSchemaType), async (req: Request, res: Response) => {
     try {
+        console.log('HOLA')
         const bodyArray = req.body;
         const { id } = req.user;
         const serviceLayerResponse = await postManyBranchService(bodyArray, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
+        console.log('ERROR EN BRANCH: ', error)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
