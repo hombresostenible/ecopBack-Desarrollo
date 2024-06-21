@@ -12,7 +12,7 @@ export const postAssetData = async (body: IAssets, userId: string): Promise<any>
         });
         if (existingMachinery) {
             if (existingMachinery.userId === userId) return null;
-            throw new ServiceError(400, "Ya existe una máquina, equipo o herramienta con el mismo nombre en esta sede, cámbialo");
+            throw new ServiceError(400, "Ya existe un equipo, máquina o herramienta con el mismo nombre en esta sede, cámbialo");
         }
         // Si el activo no existe, crearlo en la base de datos
         const newAsset = await Assets.create({
@@ -120,11 +120,11 @@ export const putAssetData = async (idAssets: string, body: IAssets, userId: stri
         const existingBranchWithSameName = await Assets.findOne({
             where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idAssets } },
         });
-        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la máquina, equipo o herramienta porque ya existe una con ese mismo nombre");
+        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el equipo, máquina o herramienta porque ya existe una con ese mismo nombre");
         const [rowsUpdated] = await Assets.update(body, { where: { id: idAssets } });
-        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna máquina, equipo o herramienta para actualizar");
+        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún equipo, máquina o herramienta para actualizar");
         const updatedAsset = await Assets.findByPk(idAssets);
-        if (!updatedAsset) throw new ServiceError(404, "No se encontró ninguna máquina, equipo o herramienta para actualizar");
+        if (!updatedAsset) throw new ServiceError(404, "No se encontró ningún equipo, máquina o herramienta para actualizar");
         return updatedAsset;
     } catch (error) {
         throw error;
@@ -192,12 +192,12 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): 
             transaction: t,
         });
 
-        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna máquina, equipo o herramienta para actualizar");
+        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún equipo, máquina o herramienta para actualizar");
         const updatedAsset = await Assets.findByPk(idAssets, {
             transaction: t,
         });
 
-        if (!updatedAsset) throw new ServiceError(404, "No se encontró ninguna máquina, equipo o herramienta para actualizar");
+        if (!updatedAsset) throw new ServiceError(404, "No se encontró ningún equipo, máquina o herramienta para actualizar");
 
         await t.commit();
         return updatedAsset;
@@ -229,11 +229,35 @@ export const getAssetsOffByBranchData = async (idBranch: string, userId: string)
 
 
 
+//AUMENTA UNIDADES DEL INVENTARIO DE UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+export const patchAddInventoryAssetData = async (idAssets: string, body: Partial<IAssets>, userId: string): Promise<IAssets | null> => {
+    try {
+        let whereClause: Record<string, any> = { id: idAssets };
+        whereClause.userId = userId;
+        const existingAsset = await Assets.findOne({
+            where: whereClause,
+        });
+        if (!existingAsset) throw new ServiceError(404, "No se encontró el equipo, máquina o herramienta");
+        const addInventory = existingAsset.inventory + (body?.inventory ?? 0);
+        const [rowsUpdated] = await Assets.update({ inventory: addInventory }, {
+            where: whereClause,
+        });
+        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún equipo, máquina o herramienta para actualizar");
+        const updatedRawMaterial = await Assets.findByPk(idAssets);
+        if (!updatedRawMaterial) throw new ServiceError(404, "No se encontró ningún equipo, máquina o herramienta para actualizar");
+        return updatedRawMaterial;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const deleteAssetData = async (idAssets: string): Promise<void> => {
     try {
         const productFound = await Assets.findOne({ where: { id: idAssets } });
-        if (!productFound) throw new Error("Máquina, equipo o herramienta no encontrada");
+        if (!productFound) throw new Error("equipo, Máquina o herramienta no encontrada");
         await Assets.destroy({ where: { id: idAssets } });
     } catch (error) {
         throw error;
