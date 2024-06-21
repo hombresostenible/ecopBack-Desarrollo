@@ -175,9 +175,33 @@ export const patchMerchandiseData = async (idAssets: string, body: Partial<IMerc
         const existingMerchandise = await Merchandise.findOne({
             where: whereClause,
         });
-        if (!existingMerchandise) throw new ServiceError(404, "No se encontró el producto");
+        if (!existingMerchandise) throw new ServiceError(404, "No se encontró la mercancía");
         const newInventory = existingMerchandise.inventory - (body?.quantityManualDiscountingInventory ?? 0);
         const [rowsUpdated] = await Merchandise.update({ inventory: newInventory }, {
+            where: whereClause,
+        });
+        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna mercancía para actualizar");
+        const updatedMerchandise = await Merchandise.findByPk(idAssets);
+        if (!updatedMerchandise) throw new ServiceError(404, "No se encontró ninguna mercancía para actualizar");
+        return updatedMerchandise;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//AUMENTA UNIDADES DEL INVENTARIO DE UNA MERCANCIA DEL USER
+export const patchAddInventoryMerchandiseData = async (idAssets: string, body: Partial<IMerchandise>, userId: string): Promise<IMerchandise | null> => {
+    try {
+        let whereClause: Record<string, any> = { id: idAssets };
+        whereClause.userId = userId;
+        const existingMerchandise = await Merchandise.findOne({
+            where: whereClause,
+        });
+        if (!existingMerchandise) throw new ServiceError(404, "No se encontró el producto");
+        const addInventory = existingMerchandise.inventory + (body?.inventory ?? 0);
+        const [rowsUpdated] = await Merchandise.update({ inventory: addInventory }, {
             where: whereClause,
         });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna mercancía para actualizar");

@@ -30,7 +30,7 @@ router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), 
 
 
 //CONTROLLER PARA CREAR MASIVAMENTE SEDES PARA USER DESDE EL EXCEL
-router.post("/createMany", authRequired, checkRoleAdmin, validateSchema(manyBranchsSchemaType), async (req: Request, res: Response) => {
+router.post("/create-many", authRequired, checkRoleAdmin, validateSchema(manyBranchsSchemaType), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
         const { id } = req.user;
@@ -40,7 +40,7 @@ router.post("/createMany", authRequired, checkRoleAdmin, validateSchema(manyBran
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/branch/createMany con [{"nameBranch":"Sede Uno","departmentBranch":"Av Caracas","cityBranch":"Av Caracas","addressBranch":"Av Caracas","identificationNumberBranch":"1000","contactEmailBranch":"sedeuno@gmail.com","contactPhoneBranch":"3001002030","nameManagerBranch":"Carlos","lastNameManagerBranch":"Reyes","managertypeDocumentId":"Cedula de Ciudadania","managerIdDocument":"100020003000"},{"nameBranch":"Sede Dos","departmentBranch":"Av Caracas","cityBranch":"Av Caracas","addressBranch":"Av Caracas","identificationNumberBranch":"1000","contactEmailBranch":"sededos@gmail.com","contactPhoneBranch":"3001002030","nameManagerBranch":"Carlos","lastNameManagerBranch":"Reyes","managertypeDocumentId":"Cedula de Ciudadania","managerIdDocument":"100020003000"}]
+}); // POST - http://localhost:3000/api/branch/create-many con [{"nameBranch":"Sede Uno","departmentBranch":"Av Caracas","cityBranch":"Av Caracas","addressBranch":"Av Caracas","identificationNumberBranch":"1000","contactEmailBranch":"sedeuno@gmail.com","contactPhoneBranch":"3001002030","nameManagerBranch":"Carlos","lastNameManagerBranch":"Reyes","managertypeDocumentId":"Cedula de Ciudadania","managerIdDocument":"100020003000"},{"nameBranch":"Sede Dos","departmentBranch":"Av Caracas","cityBranch":"Av Caracas","addressBranch":"Av Caracas","identificationNumberBranch":"1000","contactEmailBranch":"sededos@gmail.com","contactPhoneBranch":"3001002030","nameManagerBranch":"Carlos","lastNameManagerBranch":"Reyes","managertypeDocumentId":"Cedula de Ciudadania","managerIdDocument":"100020003000"}]
 
 
 
