@@ -7,6 +7,7 @@ import {
     putRawMaterialData,
     putUpdateManyRawMaterialData,
     patchRawMaterialData,
+    patchAddInventoryRawMaterialData,
     deleteRawMaterialData
 } from "../../data/User/rawMaterial.data";
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
@@ -160,6 +161,24 @@ export const patchRawMaterialService = async (idRawMaterial: string, body: any, 
         const updateRawMaterial = await patchRawMaterialData(idRawMaterial, body, userId);
         if (!updateRawMaterial) throw new ServiceError(404, "Materia prima no encontrado");
         return { code: 200, message: "Unidades de la materia prima retiradas del inventario exitosamente", result: updateRawMaterial };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//AUMENTA UNIDADES DEL INVENTARIO DE UNA MATERIA PRIMA DEL USER
+export const patchAddInventoryRawMaterialService = async (idRawMaterial: string, body: any, userId: string): Promise<IServiceLayerResponseRawMaterial> => {
+    try {
+        const hasPermission = await checkPermissionForRawMaterial(idRawMaterial, userId);
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para aumentar unidades del inventario de esta materia prima");
+        const updateRawMaterial = await patchAddInventoryRawMaterialData(idRawMaterial, body, userId);
+        if (!updateRawMaterial) throw new ServiceError(404, "Materia prima no encontrado");
+        return { code: 200, message: "Unidades de la materia prima añadidas al inventario exitosamente", result: updateRawMaterial };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
