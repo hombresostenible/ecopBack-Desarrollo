@@ -147,7 +147,6 @@ router.patch("/:idRawMaterial", authRequired, checkRole, async (req: Request, re
 
 
 
-
 //AUMENTA UNIDADES DEL INVENTARIO DE UNA MATERIA PRIMA DEL USER
 router.patch("/add-inventory/:idRawMaterial", authRequired, checkRole, async (req: Request, res: Response) => {
     try {

@@ -10,6 +10,7 @@ import {
     patchAssetService,
     getAssetsOffService,
     getAssetsOffByBranchService,
+    patchAddInventoryAssetService,
     deleteAssetService,
 } from '../../services/User/assets.service';
 import { authRequired } from '../../middlewares/Token/Token.middleware';
@@ -179,6 +180,22 @@ router.patch("/:idAssets", authRequired, checkRole, async (req: Request, res: Re
         res.status(errorController.code).json(errorController.message);
     }
 }); // PATCH - http://localhost:3000/api/asset/:idAssets con { "branchId": "85284ef9-ab01-42a0-be6b-9c66823cdf73", "inventoryOff": { "date": "2024-06-20T13:47:22.000Z", "reason": "Desechado", "quantity": 1, "description": "Se dañó porque la dejé caer" } }
+
+
+
+//AUMENTA UNIDADES DEL INVENTARIO DE UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
+router.patch("/add-inventory/:idAssets", authRequired, checkRole, async (req: Request, res: Response) => {
+    try {
+        const { idAssets } = req.params;
+        const body = req.body;
+        const { id } = req.user;
+        const serviceLayerResponse = await patchAddInventoryAssetService(idAssets, body, id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse);
+    } catch (error) {
+        const assetError = error as ServiceError;
+        res.status(assetError.code).json(assetError.message);
+    }
+}); // PATCH - http://localhost:3000/api/asset/add-inventory/:idAssets con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "inventory": 10 }
 
 
 
