@@ -75,7 +75,6 @@ export const postManyServicesData = async (body: IService, userId: string, typeR
         }
     } catch (error) {
         await t.rollback();
-        console.log('Error Data: ', error)
         throw new ServiceError(500, `Error al crear el servicio: ${error}`);
     }
 };

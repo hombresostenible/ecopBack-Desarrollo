@@ -34,13 +34,11 @@ router.post("/", authRequired, checkRole, validateSchema(serviceSchemaZod), asyn
 //CONTROLLER PARA CREAR MUCHOS SERVICIOS POR SEDE PARA USER DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyServiceSchemaZod), async (req: Request, res: Response) => {
     try {
-        console.log('OLA')
         const bodyArray = req.body;
         const { id, typeRole } = req.user;
         const serviceLayerResponse = await postManyServicesService(bodyArray, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
-        console.log('ERROR EN SERVICES: ', error)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
