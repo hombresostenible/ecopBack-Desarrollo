@@ -52,31 +52,21 @@ export const postManyServicesData = async (body: IService, userId: string, typeR
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-        // Si la mercancía ya existe, devuelve null
+        // Si el servicio ya existe, devuelve null
         if (existingServices) {
             await t.rollback();
             return null;
-        }    
-        if (typeRole === 'Superadmin') {
-            const newService = await Service.create({
-                ...body,
-                userId: userId,
-            }, { transaction: t });
-            await t.commit();
-            return newService;
         }
-        if (typeRole === 'Administrador') {
-            const newService = await Service.create({
-                ...body,
-                userId: userId,
-            }, { transaction: t });
-            await t.commit();
-            return newService;
-        }
+        // Si el servicio no existe, crearlo en la base de datos
+        const newService = await Service.create({
+            ...body,
+        }, { transaction: t });
+        await t.commit();
+        return newService;
     } catch (error) {
         await t.rollback();
-        console.log('Error Data: ', error)
-        throw new ServiceError(500, `Error al crear el servicio: ${error}`);
+        console.log('Error: ', error)
+        throw error;
     }
 };
 
