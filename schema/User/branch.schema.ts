@@ -46,11 +46,11 @@ Branch.init(
         },
         codeDane: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         subregionCodeDane: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         addressBranch: {
             type: DataTypes.STRING,
