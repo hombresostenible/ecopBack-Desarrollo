@@ -17,8 +17,8 @@ class Service extends Model {
     public salesCount!: number;
 
     //RELACION CON OTRAS TABLAS
-    public branchId?: string | null;
-    public userId?: string | null;
+    public branchId!: string;
+    public userId!: string | null;
 }
 
 Service.init(

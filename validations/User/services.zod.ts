@@ -30,7 +30,7 @@ export const serviceSchemaZod: ServiceSchemaType = z.object({
 type ManyServiceSchemaType = ZodArray<
     ZodObject<{
         nameItem: ZodString;
-        // branchId: ZodString;
+        branchId: ZodString;
         sellingPrice: ZodString;
         IVA: ZodString;
     }>
@@ -41,9 +41,9 @@ export const manyServiceSchemaZod: ManyServiceSchemaType = z.array(
         nameItem: z.string({
             required_error: 'El nombre del servicio es requerido',
         }),
-        // branchId: z.string({
-        //     required_error: 'La sede del servicio es requerida',
-        // }),
+        branchId: z.string({
+            required_error: 'La sede del servicio es requerida',
+        }),
         sellingPrice: z.string({
             required_error: 'El precio de venta es requerido',
         }),

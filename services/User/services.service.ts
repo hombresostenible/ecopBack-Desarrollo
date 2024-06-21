@@ -16,10 +16,8 @@ import { ServiceError, IServiceLayerResponseService } from '../../types/Response
 //SERVICE PARA CREAR UN SERVICIO POR SEDE PARA USER
 export const postServicesService = async (body: IService, userId: string, typeRole: string): Promise<IServiceLayerResponseService> => {
     try {
-        if (body.branchId) {
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
-            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear el servicio en esta sede");
-        }
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
+        if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear el servicio en esta sede");
         const dataLayerResponse = await postServicesData(body, userId, typeRole);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe un servicio con el mismo nombre en esta sede, cámbialo");
         return { code: 201, result: dataLayerResponse };
@@ -39,11 +37,9 @@ export const postManyServicesService = async (services: IService[], userId: stri
     const duplicatedServices: IService[] = [];
     try {
         for (const service of services) {
-            if (service.branchId) {
-                // Verificar los permisos del usuario para crear servicios en la sede específica
-                const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(service.branchId, userId, typeRole);
-                if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear servicio en esta sede");
-            }
+            // Verificar los permisos del usuario para crear servicios en la sede específica
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(service.branchId, userId, typeRole);
+            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear servicio en esta sede");
             // Crear la servicio
             const createdService = await postManyServicesData(service, userId, typeRole);
             if (createdService) {
@@ -138,14 +134,12 @@ export const putUpdateManyServiceService = async (services: IService[], userId: 
     const duplicatedServices: IService[] = [];
     try {
         for (const service of services) {
-            if (service.branchId) {
-                const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(service.branchId, userId, typeRole);
-                if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar los servicios en esta sede");
-                const updatedService = await putUpdateManyServiceData(service, userId,);
-                if (updatedService) {
-                    uniqueServices.push(updatedService);
-                } else duplicatedServices.push(service);
-            }
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(service.branchId, userId, typeRole);
+            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar los servicios en esta sede");
+            const updatedService = await putUpdateManyServiceData(service, userId,);
+            if (updatedService) {
+                uniqueServices.push(updatedService);
+            } else duplicatedServices.push(service);
         }
 
         return { code: 201, result: uniqueServices };

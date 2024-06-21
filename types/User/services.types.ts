@@ -23,6 +23,6 @@ export interface IService {
     salesCount?: number;
 
     //RELACION CON OTRAS TABLAS
-    branchId?: string | undefined;
+    branchId: string;
     userId?: string;
 }
