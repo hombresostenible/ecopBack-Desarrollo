@@ -38,7 +38,6 @@ export const postServicesData = async (body: IService, userId: string, typeRole:
         }
     } catch (error) {
         await t.rollback();
-        console.log('ERROR EN SERVICES: ', error)
         throw new ServiceError(500, `Error al crear el servicio: ${error}`);
     }
 };
@@ -76,7 +75,7 @@ export const postManyServicesData = async (body: IService, userId: string, typeR
         }
     } catch (error) {
         await t.rollback();
-        console.log('SERVICE: ', error)
+        console.log('Error Data: ', error)
         throw new ServiceError(500, `Error al crear el servicio: ${error}`);
     }
 };
