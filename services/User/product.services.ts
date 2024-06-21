@@ -9,6 +9,7 @@ import {
     putProductData,
     putUpdateManyProductData,
     patchProductData,
+    patchAddInventoryProductData,
     deleteProductData,
 } from "../../data/User/product.data";
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
@@ -207,7 +208,6 @@ export const putUpdateManyProductService = async (products: IProduct[], userId: 
 
 
 
-
 //SERVICE PARA DAR DE BAJA UN PRODUCTO DEL USER
 export const patchProductService = async (idProduct: string, body: any, userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
@@ -223,6 +223,25 @@ export const patchProductService = async (idProduct: string, body: any, userId: 
         } else throw error;
     }
 };
+
+
+
+//AUMENTA UNIDADES DEL INVENTARIO DE UN PRODUCTO DEL USER
+export const patchAddInventoryProductService = async (idProduct: string, body: any, userId: string): Promise<IServiceLayerResponseProduct> => {
+    try {
+        const hasPermission = await checkPermissionForProduct(idProduct, userId);
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para aumentar unidades del inventario de este productos");
+        const updateProduct = await patchAddInventoryProductData(idProduct, body, userId);
+        if (!updateProduct) throw new ServiceError(404, "Producto no encontrado");
+        return { code: 200, message: "Unidades del producto añadidas al inventario exitosamente", result: updateProduct };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
 
 
 //SERVICE PARA ELIMINAR UN PRODUCTO PERTENECIENTE AL USER

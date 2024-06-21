@@ -8,6 +8,7 @@ import {
     putProductService,
     putUpdateManyProductService,
     patchProductService,
+    patchAddInventoryProductService,
     deleteProductService,
 } from "../../services/User/product.services";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
@@ -142,6 +143,22 @@ router.patch("/:idProduct", authRequired, checkRole, async (req: Request, res: R
         res.status(assetError.code).json(assetError.message);
     }
 }); // PATCH - http://localhost:3000/api/product/:idProduct con { "branchId": "d0b3ff70-ac49-4c2c-bba3-5d67686607d3", "reasonManualDiscountingInventory": "Donado", "quantityManualDiscountingInventory": 20 }
+
+
+
+//AUMENTA UNIDADES DEL INVENTARIO DE UN PRODUCTO DEL USER
+router.patch("/add-inventory/:idProduct", authRequired, checkRole, async (req: Request, res: Response) => {
+    try {
+        const { idProduct } = req.params;
+        const body = req.body;
+        const { id } = req.user;
+        const serviceLayerResponse = await patchAddInventoryProductService(idProduct, body, id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse);
+    } catch (error) {
+        const assetError = error as ServiceError;
+        res.status(assetError.code).json(assetError.message);
+    }
+}); // PATCH - http://localhost:3000/api/product/add-inventory/:idProduct con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "inventory": 10 }
 
 
 

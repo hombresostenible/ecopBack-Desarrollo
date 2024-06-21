@@ -8,6 +8,7 @@ import {
     putRawMaterialService,
     putUpdateManyRawMaterialService,
     patchRawMaterialService,
+    patchAddInventoryRawMaterialService,
     deleteRawMaterialService
 } from "../../services/User/rawMaterial.services";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
@@ -143,6 +144,22 @@ router.patch("/:idRawMaterial", authRequired, checkRole, async (req: Request, re
         res.status(assetError.code).json(assetError.message);
     }
 }); // PATCH - http://localhost:3000/api/rawMaterial/:idRawMaterial con { "branchId": "d0b3ff70-ac49-4c2c-bba3-5d67686607d3", "reasonManualDiscountingInventory": "Donado", "quantityManualDiscountingInventory": 20 }
+
+
+
+//AUMENTA UNIDADES DEL INVENTARIO DE UNA MATERIA PRIMA DEL USER
+router.patch("/add-inventory/:idRawMaterial", authRequired, checkRole, async (req: Request, res: Response) => {
+    try {
+        const { idRawMaterial } = req.params;
+        const body = req.body;
+        const { id } = req.user;
+        const serviceLayerResponse = await patchAddInventoryRawMaterialService(idRawMaterial, body, id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse);
+    } catch (error) {
+        const assetError = error as ServiceError;
+        res.status(assetError.code).json(assetError.message);
+    }
+}); // PATCH - http://localhost:3000/api/rawMaterial/add-inventory/:idRawMaterial con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "inventory": 10 }
 
 
 
