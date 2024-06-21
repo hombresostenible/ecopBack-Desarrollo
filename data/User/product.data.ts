@@ -206,6 +206,30 @@ export const patchProductData = async (idProduct: string, body: Partial<IProduct
 
 
 
+//AUMENTA UNIDADES DEL INVENTARIO DE UN PRODUCTO DEL USER
+export const patchAddInventoryProductData = async (idProduct: string, body: Partial<IProduct>, userId: string): Promise<IProduct | null> => {
+    try {
+        let whereClause: Record<string, any> = { id: idProduct };
+        whereClause.userId = userId;
+        const existingProduct = await Product.findOne({
+            where: whereClause,
+        });
+        if (!existingProduct) throw new ServiceError(404, "No se encontró el producto");
+        const addInventory = existingProduct.inventory + (body?.inventory ?? 0);
+        const [rowsUpdated] = await Product.update({ inventory: addInventory }, {
+            where: whereClause,
+        });
+        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún producto para actualizar");
+        const updatedProduct = await Product.findByPk(idProduct);
+        if (!updatedProduct) throw new ServiceError(404, "No se encontró ningún producto para actualizar");
+        return updatedProduct;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA ELIMINAR UN PRODUCTO PERTENECIENTE AL USER
 export const deleteProductData = async (idProduct: string): Promise<void> => {
     try {
