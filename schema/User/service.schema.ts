@@ -81,7 +81,7 @@ Service.init(
         //RELACION CON OTRAS TABLAS
         branchId: {
             type: DataTypes.UUID,
-            allowNull: true,
+            allowNull: false,
         },
         userId: {
             type: DataTypes.UUID,

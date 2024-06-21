@@ -35,7 +35,10 @@ router.post("/", authRequired, checkRole, validateSchema(serviceSchemaZod), asyn
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyServiceSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
+        // console.log('bodyArray: ', bodyArray)
         const { id, typeRole } = req.user;
+        // console.log('id: ', id)
+        // console.log('typeRole: ', typeRole)
         const serviceLayerResponse = await postManyServicesService(bodyArray, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {

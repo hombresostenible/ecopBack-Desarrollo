@@ -1,11 +1,11 @@
-import { z, ZodObject, ZodArray, ZodString } from 'zod';
+import { z, ZodObject, ZodArray, ZodString, ZodNumber } from 'zod';
 
 //ESQUEMA PARA CREAR UN SERVICIO
 type ServiceSchemaType = ZodObject<{
     nameItem: ZodString;
-    branchId: ZodString;
     sellingPrice: ZodString;
     IVA: ZodString;
+    branchId: ZodString;
 }>;
 
 
@@ -13,14 +13,14 @@ export const serviceSchemaZod: ServiceSchemaType = z.object({
     nameItem: z.string({
         required_error: 'El nombre del servicio es requerido',
     }),
-    branchId: z.string({
-        required_error: 'La sede del servicio es requerida',
-    }),
     sellingPrice: z.string({
         required_error: 'El precio de venta es requerido',
     }),
     IVA: z.string({
         required_error: 'El IVA es requerido',
+    }),
+    branchId: z.string({
+        required_error: 'La sede del servicio es requerida',
     }),
 });
 
@@ -30,9 +30,9 @@ export const serviceSchemaZod: ServiceSchemaType = z.object({
 type ManyServiceSchemaType = ZodArray<
     ZodObject<{
         nameItem: ZodString;
+        sellingPrice: ZodNumber;
+        IVA: ZodNumber;
         branchId: ZodString;
-        sellingPrice: ZodString;
-        IVA: ZodString;
     }>
 >;
 
@@ -41,14 +41,14 @@ export const manyServiceSchemaZod: ManyServiceSchemaType = z.array(
         nameItem: z.string({
             required_error: 'El nombre del servicio es requerido',
         }),
-        branchId: z.string({
-            required_error: 'La sede del servicio es requerida',
-        }),
-        sellingPrice: z.string({
+        sellingPrice: z.number({
             required_error: 'El precio de venta es requerido',
         }),
-        IVA: z.string({
+        IVA: z.number({
             required_error: 'El IVA es requerido',
+        }),
+        branchId: z.string({
+            required_error: 'La sede del servicio es requerida',
         }),
     })
 );
