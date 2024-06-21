@@ -8,6 +8,7 @@ import {
     putMerchandiseService,
     putUpdateManyMerchandiseService,
     patchMerchandiseService,
+    patchAddInventoryMerchandiseService,
     deleteMerchandiseService,
 } from "../../services/User/merchandise.service";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
@@ -17,7 +18,7 @@ import { merchandiseSchemaZod, manyMerchandiseSchemaZod } from '../../validation
 import { ServiceError } from '../../types/Responses/responses.types';
 const router = express.Router();
 
-//CONTROLLER PARA CREAR UNA MERCANCIA POR SEDE PARA USER
+//CREAR UNA MERCANCIA POR SEDE PARA USER
 router.post("/", authRequired, checkRole, validateSchema(merchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
@@ -32,7 +33,7 @@ router.post("/", authRequired, checkRole, validateSchema(merchandiseSchemaZod), 
 
 
 
-//CONTROLLER PARA CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
+//CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
@@ -47,7 +48,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyMer
 
 
 
-//CONTROLLER PARA OBTENER TODA LA MERCANCIA DEL USER
+//OBTENER TODA LA MERCANCIA DEL USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
       const { id } = req.user;
@@ -65,7 +66,7 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
-//CONTROLLER PARA OBTENER UNA MERCANCIA POR ID PERTENECIENTE AL USER
+//OBTENER UNA MERCANCIA POR ID PERTENECIENTE AL USER
 router.get("/:idMerchandise", authRequired, async (req: Request, res: Response) => {
     try {
         const { idMerchandise } = req.params;
@@ -80,7 +81,7 @@ router.get("/:idMerchandise", authRequired, async (req: Request, res: Response) 
 
 
 
-//CONTROLLER PARA OBTENER TODA LA MERCANCIA DE UNA SEDE PARA USER
+//OBTENER TODA LA MERCANCIA DE UNA SEDE PARA USER
 router.get("/merchandises-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
@@ -99,7 +100,7 @@ router.get("/merchandises-branch/:idBranch", authRequired, async (req: Request, 
 
 
 
-//CONTROLLER PARA ACTUALIZAR UNA MERCANCIA PERTENECIENTE AL USER
+//ACTUALIZAR UNA MERCANCIA PERTENECIENTE AL USER
 router.put("/:idMerchandise", authRequired, checkRole, validateSchema(merchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
         const { idMerchandise } = req.params;
@@ -115,7 +116,7 @@ router.put("/:idMerchandise", authRequired, checkRole, validateSchema(merchandis
 
 
 
-//CONTROLLER PARA ACTUALIZAR DE FORMA MASIVA VARIAS MERCANCIAS
+//ACTUALIZAR DE FORMA MASIVA VARIAS MERCANCIAS
 router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
@@ -130,7 +131,7 @@ router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyMerch
 
 
 
-//CONTROLLER PARA DAR DE BAJA UNA MERCANCIA DEL USER
+//DAR DE BAJA UNA MERCANCIA DEL USER
 router.patch("/:idMerchandise", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idMerchandise } = req.params;
@@ -146,7 +147,23 @@ router.patch("/:idMerchandise", authRequired, checkRole, async (req: Request, re
 
 
 
-//CONTROLLER PARA ELIMINAR UNA MERCANCIA PERTENECIENTE AL USER
+//AUMENTA UNIDADES DEL INVENTARIO DE UNA MERCANCIA DEL USER
+router.patch("/add-inventory/:idMerchandise", authRequired, checkRole, async (req: Request, res: Response) => {
+    try {
+        const { idMerchandise } = req.params;
+        const body = req.body;
+        const { id } = req.user;
+        const serviceLayerResponse = await patchAddInventoryMerchandiseService(idMerchandise, body, id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse);
+    } catch (error) {
+        const assetError = error as ServiceError;
+        res.status(assetError.code).json(assetError.message);
+    }
+}); // PATCH - http://localhost:3000/api/merchandise/add-inventory/:idMerchandise con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "inventory": 10 }
+
+
+
+//ELIMINAR UNA MERCANCIA PERTENECIENTE AL USER
 router.delete('/:idMerchandise', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idMerchandise } = req.params;

@@ -7,6 +7,7 @@ import {
     putMerchandiseData,
     putUpdateManyMerchandiseData,
     patchMerchandiseData,
+    patchAddInventoryMerchandiseData,
     deleteMerchandiseData,
 } from "../../data/User/merchandise.data";
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
@@ -157,10 +158,28 @@ export const putUpdateManyMerchandiseService = async (merchandises: IMerchandise
 export const patchMerchandiseService = async (idMerchandise: string, body: any, userId: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
         const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para retirar del inventario esta mercancía");
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para retirar esta mercancía del inventario");
         const updateMerchandise = await patchMerchandiseData(idMerchandise, body, userId);
         if (!updateMerchandise) throw new ServiceError(404, "Mercancia no encontrada");
         return { code: 200, message: "Unidades de la mercancía retiradas del inventario exitosamente", result: updateMerchandise };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//AUMENTA UNIDADES DEL INVENTARIO DE UNA MERCANCIA DEL USER
+export const patchAddInventoryMerchandiseService = async (idMerchandise: string, body: any, userId: string): Promise<IServiceLayerResponseMerchandise> => {
+    try {
+        const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para aumentar unidades del inventario de esta mercancía");
+        const updateMerchandise = await patchAddInventoryMerchandiseData(idMerchandise, body, userId);
+        if (!updateMerchandise) throw new ServiceError(404, "Mercancia no encontrada");
+        return { code: 200, message: "Unidades de la mercancía añadidas al inventario exitosamente", result: updateMerchandise };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;

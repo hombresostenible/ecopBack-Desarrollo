@@ -178,7 +178,7 @@ router.patch("/:idAssets", authRequired, checkRole, async (req: Request, res: Re
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PATCH - http://localhost:3000/api/asset/:idAssets con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "assetStatus": "" }
+}); // PATCH - http://localhost:3000/api/asset/:idAssets con { "branchId": "85284ef9-ab01-42a0-be6b-9c66823cdf73", "inventoryOff": { "date": "2024-06-20T13:47:22.000Z", "reason": "Desechado", "quantity": 1, "description": "Se dañó porque la dejé caer" } }
 
 
 
