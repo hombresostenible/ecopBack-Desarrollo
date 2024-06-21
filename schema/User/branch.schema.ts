@@ -7,8 +7,8 @@ class Branch extends Model {
     public nameBranch!: string;
     public department!: 'Bogota D.C.' | 'Amazonas' | 'Antioquia' | 'Arauca' | 'Atlantico' | 'Bolivar' | 'Boyaca' | 'Caldas' | 'Caqueta' | 'Casanare' | 'Cauca' | 'Cesar' | 'Choco' | 'Cordoba' | 'Cundinamarca' | 'Guainia' | 'Guaviare' | 'Huila' | 'La Guajira' | 'Magdalena' | 'Meta' | 'Nariño' | 'Norte de Santander' | 'Putumayo' | 'Quindio' | 'Risaralda' | 'San Andres y Providencia' | 'Santander' | 'Sucre' | 'Tolima' | 'Valle del Cauca' | 'Vaupes' | 'Vichada';
     public city!: string;
-    // public codeDane?: string;
-    // public subregionCodeDane?: string;
+    public codeDane?: string;
+    public subregionCodeDane?: string;
     public addressBranch!: string;
     public contactEmailBranch!: string;
     public contactPhoneBranch!: string;
@@ -44,14 +44,14 @@ Branch.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        // codeDane: {
-        //     type: DataTypes.STRING,
-        //     allowNull: true,
-        // },
-        // subregionCodeDane: {
-        //     type: DataTypes.STRING,
-        //     allowNull: true,
-        // },
+        codeDane: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        subregionCodeDane: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         addressBranch: {
             type: DataTypes.STRING,
             allowNull: false,
