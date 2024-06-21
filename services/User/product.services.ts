@@ -230,7 +230,7 @@ export const patchProductService = async (idProduct: string, body: any, userId: 
 export const patchAddInventoryProductService = async (idProduct: string, body: any, userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
         const hasPermission = await checkPermissionForProduct(idProduct, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para aumentar unidades del inventario de esta productos");
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para aumentar unidades del inventario de este productos");
         const updateProduct = await patchAddInventoryProductData(idProduct, body, userId);
         if (!updateProduct) throw new ServiceError(404, "Producto no encontrado");
         return { code: 200, message: "Unidades del producto añadidas al inventario exitosamente", result: updateProduct };

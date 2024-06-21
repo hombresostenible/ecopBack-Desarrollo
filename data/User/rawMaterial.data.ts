@@ -186,6 +186,30 @@ export const patchRawMaterialData = async (idRawMaterial: string, body: Partial<
 
 
 
+//AUMENTA UNIDADES DEL INVENTARIO DE UNA MATERIA PRIMA DEL USER
+export const patchAddInventoryRawMaterialData = async (idRawMaterial: string, body: Partial<IRawMaterial>, userId: string): Promise<IRawMaterial | null> => {
+    try {
+        let whereClause: Record<string, any> = { id: idRawMaterial };
+        whereClause.userId = userId;
+        const existingRawMaterial = await RawMaterial.findOne({
+            where: whereClause,
+        });
+        if (!existingRawMaterial) throw new ServiceError(404, "No se encontró la materia prima");
+        const addInventory = existingRawMaterial.inventory + (body?.inventory ?? 0);
+        const [rowsUpdated] = await RawMaterial.update({ inventory: addInventory }, {
+            where: whereClause,
+        });
+        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna materia prima para actualizar");
+        const updatedRawMaterial = await RawMaterial.findByPk(idRawMaterial);
+        if (!updatedRawMaterial) throw new ServiceError(404, "No se encontró ninguna materia prima para actualizar");
+        return updatedRawMaterial;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA ELIMINAR UNA MATERIA PRIMA PERTENECIENTE AL USER
 export const deleteRawMaterialData = async (id: string): Promise<void> => {
     try {
