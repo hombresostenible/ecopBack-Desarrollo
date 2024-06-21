@@ -22,6 +22,7 @@ router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), 
         const serviceLayerResponse = await postBranchService(body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
+        console.log('ERROR EN BRANCH: ', error)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
