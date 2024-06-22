@@ -113,6 +113,7 @@ export const getServicesService = async (idMachinery: string, userId: string): P
 //SERVICE PARA ACTUALIZAR UN SERVICIO DEL USER
 export const putServicesService = async (idService: string, body: IService, userId: string): Promise<IServiceLayerResponseService> => {
     try {
+        console.log('SERVICIOS: ')
         const hasPermission = await checkPermissionForServices(idService, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este servicio");
         const updateServices = await putServicesData(idService, body, userId);
