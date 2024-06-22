@@ -115,7 +115,7 @@ router.put("/:idService", authRequired, checkRole, async (req: Request, res: Res
 
 
 //CONTROLLER PARA ACTUALIZAR DE FORMA MASIVA VARIO SERVICIOS
-router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyServiceSchemaZod), async (req: Request, res: Response) => {
+router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
         const { id, typeRole } = req.user;

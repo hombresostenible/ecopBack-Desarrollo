@@ -78,7 +78,7 @@ router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
 
 
 //CONTROLLER PARA ACTUALIZAR UNA SEDE PERTENECIENTE AL USER
-router.put("/:idBranch", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), async (req: Request, res: Response) => {
+router.put("/:idBranch", authRequired, checkRoleAdmin, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const body = req.body;

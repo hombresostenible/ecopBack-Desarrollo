@@ -136,7 +136,7 @@ router.get("/merchandises-branch/:idBranch", authRequired, async (req: Request, 
 
 
 //ACTUALIZAR UNA MERCANCIA PERTENECIENTE AL USER
-router.put("/:idMerchandise", authRequired, checkRole, validateSchema(merchandiseSchemaZod), async (req: Request, res: Response) => {
+router.put("/:idMerchandise", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idMerchandise } = req.params;
         const body = req.body;
@@ -152,7 +152,7 @@ router.put("/:idMerchandise", authRequired, checkRole, validateSchema(merchandis
 
 
 //ACTUALIZAR DE FORMA MASIVA VARIAS MERCANCIAS
-router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
+router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
         const { id, typeRole } = req.user;
