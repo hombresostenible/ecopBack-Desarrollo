@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import sequelize from '../../db';
 import RawMaterial from '../../schema/User/rawMaterial.schema';
 import { IRawMaterial } from "../../types/User/rawMaterial.types";
@@ -122,6 +122,25 @@ export const getRawMaterialByIdData = async (idRawMaterial: string): Promise<any
 
 
 
+//OBTENER TODAS LAS MATERIAS PRIMAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getRawMaterialsOffData = async (userId: string): Promise<any> => {
+    try {
+        const merchandisesWithInventoryOff = await RawMaterial.findAll({
+            where: {
+                userId: userId,
+                [Op.and]: [
+                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
+                ]
+            },
+        });
+        return merchandisesWithInventoryOff;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA ACTUALIZAR UNA MATERIA PRIMA PERTENECIENTE AL USER
 export const putRawMaterialData = async (idRawMaterial: string, body: IRawMaterial, userId: string): Promise<IRawMaterial | null> => {
     try {
@@ -163,26 +182,56 @@ export const putUpdateManyRawMaterialData = async (body: IRawMaterial, userId: s
 
 
 //DATA PARA DAR DE BAJA UN PRODUCTO DEL USER
-export const patchRawMaterialData = async (idRawMaterial: string, body: Partial<IRawMaterial>, userId: string): Promise<IRawMaterial | null> => {
+export const patchRawMaterialData = async (idRawMaterial: string, body: Partial<IRawMaterial>): Promise<IRawMaterial | null> => {
+    const t = await sequelize.transaction();
     try {
         let whereClause: Record<string, any> = { id: idRawMaterial };
-        whereClause.userId = userId;
         const existingRawMaterial = await RawMaterial.findOne({
             where: whereClause,
+            transaction: t,
         });
-        if (!existingRawMaterial) throw new ServiceError(404, "No se encontró la materia prima");
-        const newInventory = existingRawMaterial.inventory - (body?.quantityManualDiscountingInventory ?? 0);
-        const [rowsUpdated] = await RawMaterial.update({ inventory: newInventory }, {
+        console.log('Gola')
+        if (!existingRawMaterial) throw new ServiceError(404, "No se encontró el activo");
+        if (body.inventory !== undefined && body.inventory > existingRawMaterial.inventory) throw new ServiceError(400, "No hay suficiente cantidad de materia prima disponibles para dar de baja");
+        
+        if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
+            const inventoryOffItem = body.inventoryOff[0];                      // Accede al primer elemento de inventoryOff
+            const currentDate = new Date();                                     // Obtener la fecha actual
+            
+            // Actualizar el inventario y agregar un nuevo elemento a inventoryOff
+            existingRawMaterial.inventory -= inventoryOffItem.quantity || 0;    // Restar la cantidad de materia prima dañadas del inventario actual
+
+            existingRawMaterial.inventoryOff = existingRawMaterial.inventoryOff.concat({ 
+                date: currentDate, 
+                quantity: (inventoryOffItem.quantity || 0),
+                reason: inventoryOffItem.reason || 'Baja de activo',
+                description: inventoryOffItem.description,
+            });
+        }
+
+        const [rowsUpdated] = await RawMaterial.update({
+            inventory: existingRawMaterial.inventory,
+            inventoryOff: existingRawMaterial.inventoryOff
+        }, {
             where: whereClause,
+            transaction: t,
         });
+
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna materia prima para actualizar");
-        const updatedRawMaterial = await RawMaterial.findByPk(idRawMaterial);
-        if (!updatedRawMaterial) throw new ServiceError(404, "No se encontró ninguna materia prima para actualizar");
-        return updatedRawMaterial;
+        const updatedMerchandise = await RawMaterial.findByPk(idRawMaterial, {
+            transaction: t,
+        });
+
+        if (!updatedMerchandise) throw new ServiceError(404, "No se encontró ninguna materia prima para actualizar");
+
+        await t.commit();
+        return updatedMerchandise;
     } catch (error) {
+        await t.rollback();
         throw error;
     }
 };
+
 
 
 

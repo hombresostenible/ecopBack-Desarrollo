@@ -4,6 +4,7 @@ import {
     getRawMaterialsData,
     getRawMaterialByBranchData,
     getRawMaterialByIdData,
+    getRawMaterialsOffData,
     putRawMaterialData,
     putUpdateManyRawMaterialData,
     patchRawMaterialData,
@@ -111,6 +112,21 @@ export const getRawMaterialService = async (idRawMaterial: string, userId: strin
 
 
 
+//OBTENER TODAS LAS MATERIAS PRIMAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getRawMaterialsOffService = async (userId: string): Promise<IServiceLayerResponseRawMaterial> => {
+    try {
+        const dataLayerResponse = await getRawMaterialsOffData(userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
 //SERVICE PARA ACTUALIZAR UNA MATERIA PRIMA PERTENECIENTE AL USER
 export const putRawMaterialService = async (idRawMaterial: string, body: IRawMaterial, userId: string): Promise<IServiceLayerResponseRawMaterial> => {
     try {
@@ -158,9 +174,15 @@ export const patchRawMaterialService = async (idRawMaterial: string, body: any, 
     try {
         const hasPermission = await checkPermissionForRawMaterial(idRawMaterial, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para retirar del inventario esta materia prima");
-        const updateRawMaterial = await patchRawMaterialData(idRawMaterial, body, userId);
-        if (!updateRawMaterial) throw new ServiceError(404, "Materia prima no encontrado");
-        return { code: 200, message: "Unidades de la materia prima retiradas del inventario exitosamente", result: updateRawMaterial };
+
+        // Verificar que inventoryOff sea un array
+        if (body.inventoryOff && !Array.isArray(body.inventoryOff)) {
+            body.inventoryOff = [body.inventoryOff];
+        }
+
+        const updateMerchandise = await patchRawMaterialData(idRawMaterial, body);
+        if (!updateMerchandise) throw new ServiceError(404, "Materia prima no encontrado");
+        return { code: 200, message: "Unidades de la materia prima retiradas del inventario exitosamente", result: updateMerchandise };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
