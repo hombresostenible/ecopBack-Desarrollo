@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import sequelize from '../../db';
 import Product from '../../schema/User/product.schema';
 import { IProduct } from "../../types/User/products.types";
@@ -140,6 +140,45 @@ export const getProductByIdData = async (idProduct: string): Promise<any> => {
 
 
 
+//OBTENER TODOS LOS PRODUCTOS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getProductOffData = async (userId: string): Promise<any> => {
+    try {
+        const productsWithInventoryOff = await Product.findAll({
+            where: {
+                userId: userId,
+                [Op.and]: [
+                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
+                ]
+            },
+        });
+        return productsWithInventoryOff;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS PRODUCTOS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getProductsOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+    try {
+        const productsWithInventoryOff = await Product.findAll({
+            where: {
+                branchId: idBranch,
+                userId: userId,
+                [Op.and]: [
+                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
+                ]
+            }
+        });
+        return productsWithInventoryOff;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
 export const putProductData = async (idProduct: string, body: IProduct, userId: string): Promise<IProduct | null> => {
     try {
@@ -181,25 +220,53 @@ export const putUpdateManyProductData = async (body: IProduct, userId: string): 
 
 
 
-
 //DATA PARA DAR DE BAJA UN PRODUCTO DEL USER
-export const patchProductData = async (idProduct: string, body: Partial<IProduct>, userId: string): Promise<IProduct | null> => {
+export const patchProductData = async (idProduct: string, body: Partial<IProduct>): Promise<IProduct | null> => {
+    const t = await sequelize.transaction();
     try {
         let whereClause: Record<string, any> = { id: idProduct };
-        whereClause.userId = userId;
         const existingProduct = await Product.findOne({
             where: whereClause,
+            transaction: t,
         });
-        if (!existingProduct) throw new ServiceError(404, "No se encontró el producto");
-        const newInventory = existingProduct.inventory - (body?.quantityManualDiscountingInventory ?? 0);
-        const [rowsUpdated] = await Product.update({ inventory: newInventory }, {
+
+        if (!existingProduct) throw new ServiceError(404, "No se encontró el activo");
+        if (body.inventory !== undefined && body.inventory > existingProduct.inventory) throw new ServiceError(400, "No hay suficiente cantidad de mercancía disponibles para dar de baja");
+        
+        if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
+            const inventoryOffItem = body.inventoryOff[0];                      // Accede al primer elemento de inventoryOff
+            const currentDate = new Date();                                     // Obtener la fecha actual
+            
+            // Actualizar el inventario y agregar un nuevo elemento a inventoryOff
+            existingProduct.inventory -= inventoryOffItem.quantity || 0;    // Restar la cantidad de productos dañados del inventario actual
+
+            existingProduct.inventoryOff = existingProduct.inventoryOff.concat({ 
+                date: currentDate, 
+                quantity: (inventoryOffItem.quantity || 0),
+                reason: inventoryOffItem.reason || 'Baja de activo',
+                description: inventoryOffItem.description,
+            });
+        }
+
+        const [rowsUpdated] = await Product.update({
+            inventory: existingProduct.inventory,
+            inventoryOff: existingProduct.inventoryOff
+        }, {
             where: whereClause,
+            transaction: t,
         });
+
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún producto para actualizar");
-        const updatedProduct = await Product.findByPk(idProduct);
+        const updatedProduct = await Product.findByPk(idProduct, {
+            transaction: t,
+        });
+
         if (!updatedProduct) throw new ServiceError(404, "No se encontró ningún producto para actualizar");
+
+        await t.commit();
         return updatedProduct;
     } catch (error) {
+        await t.rollback();
         throw error;
     }
 };
