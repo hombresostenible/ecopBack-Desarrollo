@@ -88,6 +88,7 @@ export const getRawMaterialsData = async (userId: string): Promise<any> => {
     try {
         const userProducts = await RawMaterial.findAll({
             where: { userId: userId },
+            order: [ ['nameItem', 'ASC'] ]
         });        
         return userProducts;
     } catch (error) {
@@ -100,7 +101,8 @@ export const getRawMaterialsData = async (userId: string): Promise<any> => {
 export const getRawMaterialByBranchData = async (idBranch: string): Promise<any> => {
     try {
         const customerAcquisitionFound = await RawMaterial.findAll({
-            where: { branchId: idBranch }
+            where: { branchId: idBranch },
+            order: [ ['nameItem', 'ASC'] ]
         });
         return customerAcquisitionFound;
     } catch (error) {
@@ -128,10 +130,9 @@ export const getRawMaterialsOffData = async (userId: string): Promise<any> => {
         const rawMaterialsWithInventoryOff = await RawMaterial.findAll({
             where: {
                 userId: userId,
-                [Op.and]: [
-                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
-                ]
+                [Op.and]: [ Sequelize.literal(`json_length(inventoryOff) > 0`) ]
             },
+            order: [ ['nameItem', 'ASC'] ]
         });
         return rawMaterialsWithInventoryOff;
     } catch (error) {
@@ -148,10 +149,9 @@ export const getRawMaterialsOffByBranchData = async (idBranch: string, userId: s
             where: {
                 branchId: idBranch,
                 userId: userId,
-                [Op.and]: [
-                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
-                ]
-            }
+                [Op.and]: [ Sequelize.literal(`json_length(inventoryOff) > 0`) ]
+            },
+            order: [ ['nameItem', 'ASC'] ]
         });
         return rawMaterialsWithInventoryOff;
     } catch (error) {
@@ -210,7 +210,6 @@ export const patchRawMaterialData = async (idRawMaterial: string, body: Partial<
             where: whereClause,
             transaction: t,
         });
-        console.log('Gola')
         if (!existingRawMaterial) throw new ServiceError(404, "No se encontró el activo");
         if (body.inventory !== undefined && body.inventory > existingRawMaterial.inventory) throw new ServiceError(400, "No hay suficiente cantidad de materia prima disponibles para dar de baja");
         
