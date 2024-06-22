@@ -72,7 +72,6 @@ router.get("/incomes", authRequired, async (req: Request, res: Response) => {
 //OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
 router.get("/incomes-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
-        console.log('Hola')
         const { idBranch } = req.params;
         const { id } = req.user;
         const serviceLayerResponse = await getAccountsBooksIncomesApprovedByBranchService(idBranch, id);

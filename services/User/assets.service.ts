@@ -4,11 +4,11 @@ import {
     getAssetsData,
     getAssetBranchData,
     getAssetByIdData,
+    getAssetsOffData,
+    getAssetsOffByBranchData,
     putAssetData,
     putUpdateManyAssetData,
     patchAssetData,
-    getAssetsOffData,
-    getAssetsOffByBranchData,
     patchAddInventoryAssetData,
     deleteAssetData,
 } from "../../data/User/assets.data";
@@ -77,21 +77,6 @@ export const getAssetsService = async (userId: string): Promise<IServiceLayerRes
 
 
 
-//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getAssetsOffService = async (userId: string): Promise<IServiceLayerResponseAssets> => {
-    try {
-        const dataLayerResponse = await getAssetsOffData(userId);
-        return { code: 200, result: dataLayerResponse };
-    } catch (error) {
-        if (error instanceof Error) {
-            const customErrorMessage = error.message;
-            throw new ServiceError(500, customErrorMessage, error);
-        } else throw error;
-    };
-};
-
-
-
 //OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 export const getAssetByIdService = async (idAssets: string, userId: string): Promise<IServiceLayerResponseAssets> => {
     try {
@@ -118,6 +103,36 @@ export const getAssetBranchService = async (idBranch: string, userId: string): P
         const assetsFound = await getAssetBranchData(idBranch);
         if (!assetsFound) return { code: 404, message: "Equipo, máquina o herramienta no encontrados en esta sede" };
         return { code: 200, result: assetsFound };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getAssetsOffService = async (userId: string): Promise<IServiceLayerResponseAssets> => {
+    try {
+        const dataLayerResponse = await getAssetsOffData(userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getAssetsOffByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAssets> => {
+    try {
+        const dataLayerResponse = await getAssetsOffByBranchData(idBranch, userId);
+        return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -193,21 +208,6 @@ export const patchAssetService = async (idAssets: string, body: any, userId: str
             throw new ServiceError(500, customErrorMessage, error);
         } else throw error;
     }
-};
-
-
-
-//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getAssetsOffByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAssets> => {
-    try {
-        const dataLayerResponse = await getAssetsOffByBranchData(idBranch, userId);
-        return { code: 200, result: dataLayerResponse };
-    } catch (error) {
-        if (error instanceof Error) {
-            const customErrorMessage = error.message;
-            throw new ServiceError(500, customErrorMessage, error);
-        } else throw error;
-    };
 };
 
 

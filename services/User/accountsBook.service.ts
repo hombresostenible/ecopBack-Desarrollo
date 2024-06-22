@@ -64,7 +64,6 @@ export const getAccountsBooksIncomesApprovedService = async (userId: string): Pr
 //OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
 export const getAccountsBooksIncomesApprovedByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        console.log('Hola 2')
         const hasPermission = await checkPermissionForBranchAccountsBook(idBranch, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los registros de ingresos aprobados de esta sede");
         const assetsFound = await getAccountsBooksIncomesApprovedByBranchData(idBranch);

@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import sequelize from '../../db';
 import Merchandise from '../../schema/User/merchandise.schema';
 import { IMerchandise } from "../../types/User/merchandise.types";
@@ -127,6 +127,45 @@ export const getMerchandiseByIdData = async (idMerchandise: string): Promise<any
 
 
 
+//OBTENER TODAS LAS MERCANCIAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getMerchandiseOffData = async (userId: string): Promise<any> => {
+    try {
+        const merchandisesFound = await Merchandise.findAll({
+            where: {
+                userId: userId,
+                [Op.and]: [
+                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
+                ]
+            },
+        });
+        return merchandisesFound;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODAS LAS MERCANCIAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getMerchandiseSOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+    try {
+        const assetsWithInventoryOff = await Merchandise.findAll({
+            where: {
+                branchId: idBranch,
+                userId: userId,
+                [Op.and]: [
+                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
+                ]
+            }
+        });
+        return assetsWithInventoryOff;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
 export const putMerchandiseData = async (idMerchandise: string, body: IMerchandise, userId: string): Promise<IMerchandise | null> => {
     try {
@@ -168,26 +207,58 @@ export const putUpdateManyMerchandiseData = async (body: IMerchandise, userId: s
 
 
 //DATA PARA DAR DE BAJA UNA MERCANCIA DEL USER
-export const patchMerchandiseData = async (idMerchandise: string, body: Partial<IMerchandise>, userId: string): Promise<IMerchandise | null> => {
+export const patchMerchandiseData = async (idMerchandise: string, body: Partial<IMerchandise>): Promise<IMerchandise | null> => {
+    const t = await sequelize.transaction();
     try {
         let whereClause: Record<string, any> = { id: idMerchandise };
-        whereClause.userId = userId;
         const existingMerchandise = await Merchandise.findOne({
             where: whereClause,
+            transaction: t,
         });
-        if (!existingMerchandise) throw new ServiceError(404, "No se encontró la mercancía");
-        const newInventory = existingMerchandise.inventory - (body?.quantityManualDiscountingInventory ?? 0);
-        const [rowsUpdated] = await Merchandise.update({ inventory: newInventory }, {
+
+        if (!existingMerchandise) throw new ServiceError(404, "No se encontró el activo");
+        if (body.inventory !== undefined && body.inventory > existingMerchandise.inventory) throw new ServiceError(400, "No hay suficiente cantidad de mercancía disponibles para dar de baja");
+        
+        if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
+            const inventoryOffItem = body.inventoryOff[0];                      // Accede al primer elemento de inventoryOff
+            const currentDate = new Date();                                     // Obtener la fecha actual
+            
+            // Actualizar el inventario y agregar un nuevo elemento a inventoryOff
+            existingMerchandise.inventory -= inventoryOffItem.quantity || 0;    // Restar la cantidad de mercacías dañadas del inventario actual
+
+            existingMerchandise.inventoryOff = existingMerchandise.inventoryOff.concat({ 
+                date: currentDate, 
+                quantity: (inventoryOffItem.quantity || 0),
+                reason: inventoryOffItem.reason || 'Baja de activo',
+                description: inventoryOffItem.description,
+            });
+        }
+
+        const [rowsUpdated] = await Merchandise.update({
+            inventory: existingMerchandise.inventory,
+            inventoryOff: existingMerchandise.inventoryOff
+        }, {
             where: whereClause,
+            transaction: t,
         });
+
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna mercancía para actualizar");
-        const updatedMerchandise = await Merchandise.findByPk(idMerchandise);
-        if (!updatedMerchandise) throw new ServiceError(404, "No se encontró ninguna mercancía para actualizar");
-        return updatedMerchandise;
+        const updatedAsset = await Merchandise.findByPk(idMerchandise, {
+            transaction: t,
+        });
+
+        if (!updatedAsset) throw new ServiceError(404, "No se encontró ninguna mercancía para actualizar");
+
+        await t.commit();
+        return updatedAsset;
     } catch (error) {
+        await t.rollback();
         throw error;
     }
 };
+
+
+
 
 
 

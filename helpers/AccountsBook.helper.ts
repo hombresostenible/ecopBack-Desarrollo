@@ -7,7 +7,6 @@ import { ServiceError } from "../types/Responses/responses.types";
 //CHEQUEA SI LOS REGISTROS PERTENECEN A LA SEDE DE USER
 export const checkPermissionForBranchAccountsBook = async (idBranch: string, userId: string): Promise<boolean> => {
     try {
-        console.log('Hola 3')
         const accountsBooks = await getAccountsBookByBranchData(idBranch);
         if (!accountsBooks) return false;
         for (const machinery of accountsBooks) {

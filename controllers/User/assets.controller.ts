@@ -3,13 +3,13 @@ import {
     postAssetService,
     postManyAssetService,
     getAssetsService,
+    getAssetsOffService,
+    getAssetsOffByBranchService,
     getAssetByIdService,
     getAssetBranchService,
     putAssetService,
     putUpdateManyAssetService,
     patchAssetService,
-    getAssetsOffService,
-    getAssetsOffByBranchService,
     patchAddInventoryAssetService,
     deleteAssetService,
 } from '../../services/User/assets.service';
@@ -84,6 +84,23 @@ router.get("/assets-off", authRequired, async (req: Request, res: Response) => {
 
 
 
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+router.get("/assets-off/:idBranch", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idBranch } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getAssetsOffByBranchService(idBranch, id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas dadas de baja del usuario" });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/asset/assets-off/:idBranch
+
+
+
 //OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 router.get("/:idAssets", authRequired, async (req: Request, res: Response) => {
     try {
@@ -113,24 +130,6 @@ router.get("/assets-branch/:idBranch", authRequired, async (req: Request, res: R
         res.status(rawMaterialError.code).json(rawMaterialError.message);
     }
 }); //GET - http://localhost:3000/api/asset/assets-branch/:idBranch
-
-
-
-
-//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-router.get("/assets-off/:idBranch", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getAssetsOffByBranchService(idBranch, id);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas dadas de baja del usuario" });
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/asset/assets-off/:idBranch
 
 
 
