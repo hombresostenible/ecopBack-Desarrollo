@@ -130,7 +130,7 @@ export const getMerchandiseByIdData = async (idMerchandise: string): Promise<any
 //OBTENER TODAS LAS MERCANCIAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
 export const getMerchandiseOffData = async (userId: string): Promise<any> => {
     try {
-        const merchandisesFound = await Merchandise.findAll({
+        const merchandisesWithInventoryOff = await Merchandise.findAll({
             where: {
                 userId: userId,
                 [Op.and]: [
@@ -138,7 +138,7 @@ export const getMerchandiseOffData = async (userId: string): Promise<any> => {
                 ]
             },
         });
-        return merchandisesFound;
+        return merchandisesWithInventoryOff;
     } catch (error) {
         throw error;
     }
@@ -147,9 +147,9 @@ export const getMerchandiseOffData = async (userId: string): Promise<any> => {
 
 
 //OBTENER TODAS LAS MERCANCIAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getMerchandiseSOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getMerchandisesOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
-        const assetsWithInventoryOff = await Merchandise.findAll({
+        const merchandisesWithInventoryOff = await Merchandise.findAll({
             where: {
                 branchId: idBranch,
                 userId: userId,
@@ -158,7 +158,7 @@ export const getMerchandiseSOffByBranchData = async (idBranch: string, userId: s
                 ]
             }
         });
-        return assetsWithInventoryOff;
+        return merchandisesWithInventoryOff;
     } catch (error) {
         throw error;
     }
@@ -243,22 +243,19 @@ export const patchMerchandiseData = async (idMerchandise: string, body: Partial<
         });
 
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna mercancía para actualizar");
-        const updatedAsset = await Merchandise.findByPk(idMerchandise, {
+        const updatedMerchandise = await Merchandise.findByPk(idMerchandise, {
             transaction: t,
         });
 
-        if (!updatedAsset) throw new ServiceError(404, "No se encontró ninguna mercancía para actualizar");
+        if (!updatedMerchandise) throw new ServiceError(404, "No se encontró ninguna mercancía para actualizar");
 
         await t.commit();
-        return updatedAsset;
+        return updatedMerchandise;
     } catch (error) {
         await t.rollback();
         throw error;
     }
 };
-
-
-
 
 
 

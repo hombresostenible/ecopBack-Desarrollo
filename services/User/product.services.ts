@@ -6,6 +6,8 @@ import {
     getProductsByUserIdData,
     getProductsBranchByIdData,
     getProductByIdData,
+    getProductOffData,
+    getProductsOffByBranchData,
     putProductData,
     putUpdateManyProductData,
     patchProductData,
@@ -17,7 +19,7 @@ import { checkPermissionForBranchProduct, checkPermissionForProduct } from '../.
 import { IProduct } from "../../types/User/products.types";
 import { ServiceError, IServiceLayerResponseProduct } from '../../types/Responses/responses.types';
 
-//SERVICE PARA CREAR UN PRODUCTO POR SEDE PARA USER
+//CREAR UN PRODUCTO POR SEDE PARA USER
 export const postProductService = async (body: IProduct, userId: string, typeRole: string): Promise<IServiceLayerResponseProduct> => {
     try {
         const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
@@ -70,7 +72,7 @@ export const postProductService = async (body: IProduct, userId: string, typeRol
 
 
 
-//DATA PARA CREAR MUCHOS PRODUCTOS POR SEDE PARA USER DESDE EL EXCEL
+//CREAR MUCHOS PRODUCTOS POR SEDE PARA USER DESDE EL EXCEL
 export const postManyProductService = async (products: IProduct[], userId: string, typeRole: string): Promise<IServiceLayerResponseProduct> => {
     const uniqueProducts: IProduct[] = [];
     const duplicatedProducts: IProduct[] = [];
@@ -98,7 +100,7 @@ export const postManyProductService = async (products: IProduct[], userId: strin
 
 
 
-//SERVICE PARA OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER - CEO PLATATORMA
+//OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER - CEO PLATATORMA
 export const getProductsService = async (): Promise<IServiceLayerResponseProduct> => {
     try {
         const dataLayerResponse = await getProductsData();
@@ -113,7 +115,7 @@ export const getProductsService = async (): Promise<IServiceLayerResponseProduct
 
 
 
-//SERVICE PARA OBTENER TODOS LOS PRODUCTOS DE UN USER
+//OBTENER TODOS LOS PRODUCTOS DE UN USER
 export const getProductsUserService = async (userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
         const dataLayerResponse = await getProductsByUserIdData(userId);
@@ -128,7 +130,7 @@ export const getProductsUserService = async (userId: string): Promise<IServiceLa
 
 
 
-//SERVICE PARA OBTENER TODOS LOS PRODUCTOS DE UNA SEDE DE USER
+//OBTENER TODOS LOS PRODUCTOS DE UNA SEDE DE USER
 export const getProductBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
         const hasPermission = await checkPermissionForBranchProduct(idBranch, userId);
@@ -146,7 +148,7 @@ export const getProductBranchService = async (idBranch: string, userId: string):
 
 
 
-//SERVICE PARA OBTENER UN PRODUCTO POR ID PERTENECIENTE AL USER
+//OBTENER UN PRODUCTO POR ID PERTENECIENTE AL USER
 export const getProductByIdService = async (idProduct: string, userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
         const hasPermission = await checkPermissionForProduct(idProduct, userId);
@@ -164,7 +166,37 @@ export const getProductByIdService = async (idProduct: string, userId: string): 
 
 
 
-//SERVICE PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
+//OBTENER TODOS LOS PRODUCTOS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getProductOffService = async (userId: string): Promise<IServiceLayerResponseProduct> => {
+    try {
+        const dataLayerResponse = await getProductOffData(userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS PRODUCTOS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getProductsOffByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseProduct> => {
+    try {
+        const dataLayerResponse = await getProductsOffByBranchData(idBranch, userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
 export const putProductService = async (idProduct: string, body: IProduct, userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
         const hasPermission = await checkPermissionForProduct(idProduct, userId);
@@ -182,7 +214,7 @@ export const putProductService = async (idProduct: string, body: IProduct, userI
 
 
 
-//SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIOS PRODUCTOS
+//ACTUALIZAR DE FORMA MASIVA VARIOS PRODUCTOS
 export const putUpdateManyProductService = async (products: IProduct[], userId: string, typeRole: string): Promise<IServiceLayerResponseProduct> => {
     const uniqueProducts: IProduct[] = [];
     const duplicatedProducts: IProduct[] = [];
@@ -208,12 +240,18 @@ export const putUpdateManyProductService = async (products: IProduct[], userId: 
 
 
 
-//SERVICE PARA DAR DE BAJA UN PRODUCTO DEL USER
+//DAR DE BAJA UN PRODUCTO DEL USER
 export const patchProductService = async (idProduct: string, body: any, userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
         const hasPermission = await checkPermissionForProduct(idProduct, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para retirar del inventario este producto");
-        const updateProduct = await patchProductData(idProduct, body, userId);
+
+        // Verificar que inventoryOff sea un array
+        if (body.inventoryOff && !Array.isArray(body.inventoryOff)) {
+            body.inventoryOff = [body.inventoryOff];
+        }
+
+        const updateProduct = await patchProductData(idProduct, body);
         if (!updateProduct) throw new ServiceError(404, "Producto no encontrado");
         return { code: 200, message: "Unidades del producto retiradas del inventario exitosamente", result: updateProduct };
     } catch (error) {

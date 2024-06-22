@@ -5,6 +5,8 @@ import {
     getProductsUserService,
     getProductBranchService,
     getProductByIdService,
+    getProductOffService,
+    getProductsOffByBranchService,
     putProductService,
     putUpdateManyProductService,
     patchProductService,
@@ -63,6 +65,39 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
         res.status(errorController.code).json(errorController.message);
     }
 }); // GET - http://localhost:3000/api/product
+
+
+
+//OBTENER TODOS LOS PRODUCTOS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+router.get("/products-off", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { id } = req.user;
+        const serviceLayerResponse = await getProductOffService(id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else res.status(500).json({ message: "Error al obtener los productos dados de baja del usuario" });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/product/products-off
+
+
+
+//OBTENER TODOS LOS PRODUCTOS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+router.get("/products-off/:idBranch", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idBranch } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getProductsOffByBranchService(idBranch, id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else res.status(500).json({ message: "Error al obtener los productos dados de baja del usuario" });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/product/products-off/:idBranch
 
 
 
@@ -142,7 +177,7 @@ router.patch("/:idProduct", authRequired, checkRole, async (req: Request, res: R
         const assetError = error as ServiceError;
         res.status(assetError.code).json(assetError.message);
     }
-}); // PATCH - http://localhost:3000/api/product/:idProduct con { "branchId": "d0b3ff70-ac49-4c2c-bba3-5d67686607d3", "reasonManualDiscountingInventory": "Donado", "quantityManualDiscountingInventory": 20 }
+}); // PATCH - http://localhost:3000/api/product/:idProduct con { "branchId": "1e55736b-d36b-4b0e-9c17-c00ecdc43317", "inventoryOff": { "date": "2024-06-20T13:47:22.000Z", "reason": "Desechado", "quantity": 10, "description": "Se dañó porque la dejé caer" } }
 
 
 
