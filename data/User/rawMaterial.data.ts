@@ -125,7 +125,7 @@ export const getRawMaterialByIdData = async (idRawMaterial: string): Promise<any
 //OBTENER TODAS LAS MATERIAS PRIMAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
 export const getRawMaterialsOffData = async (userId: string): Promise<any> => {
     try {
-        const merchandisesWithInventoryOff = await RawMaterial.findAll({
+        const rawMaterialsWithInventoryOff = await RawMaterial.findAll({
             where: {
                 userId: userId,
                 [Op.and]: [
@@ -133,7 +133,27 @@ export const getRawMaterialsOffData = async (userId: string): Promise<any> => {
                 ]
             },
         });
-        return merchandisesWithInventoryOff;
+        return rawMaterialsWithInventoryOff;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODAS LAS MATERIAS PRIMAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getRawMaterialsOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+    try {
+        const rawMaterialsWithInventoryOff = await RawMaterial.findAll({
+            where: {
+                branchId: idBranch,
+                userId: userId,
+                [Op.and]: [
+                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
+                ]
+            }
+        });
+        return rawMaterialsWithInventoryOff;
     } catch (error) {
         throw error;
     }
