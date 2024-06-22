@@ -136,7 +136,7 @@ router.get("/rawMaterials-branch/:idBranch", authRequired, async (req: Request, 
 
 
 //CONTROLLER PARA ACTUALIZAR UNA MATERIA PRIMA PERTENECIENTE AL USER
-router.put("/:idRawMaterial", authRequired, checkRole, validateSchema(rawMaterialSchema), async (req: Request, res: Response) => {
+router.put("/:idRawMaterial", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idRawMaterial } = req.params;
         const body = req.body;
@@ -152,7 +152,7 @@ router.put("/:idRawMaterial", authRequired, checkRole, validateSchema(rawMateria
 
 
 //CONTROLLER PARA ACTUALIZAR DE FORMA MASIVA VARIAS MATERIAS PRIMAS
-router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyRawMaterialSchema), async (req: Request, res: Response) => {
+router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
         const { id, typeRole } = req.user;
