@@ -76,6 +76,7 @@ export const getServicesByUserIdData = async (userId: string): Promise<any> => {
     try {
         const userServices = await Service.findAll({
             where: { userId: userId },
+            order: [ ['nameItem', 'ASC'] ]
         });        
         return userServices;
     } catch (error) {
@@ -90,6 +91,7 @@ export const getServiceBranchByIdData = async (idBranch: string): Promise<any> =
     try {
         const servicesFound = await Service.findAll({
             where: { branchId: idBranch },
+            order: [ ['nameItem', 'ASC'] ]
         });
 
         return servicesFound;

@@ -92,6 +92,7 @@ export const getMerchandiseByUserIdData = async (userId: string): Promise<any> =
     try {
         const userProducts = await Merchandise.findAll({
             where: { userId: userId },
+            order: [ ['nameItem', 'ASC'] ]
         });        
         return userProducts;
     } catch (error) {
@@ -105,7 +106,8 @@ export const getMerchandiseByUserIdData = async (userId: string): Promise<any> =
 export const getMerchandiseBranchByIdData = async (idBranch: string): Promise<any> => {
     try {
         const merchandisesFound = await Merchandise.findAll({
-            where: { branchId: idBranch }
+            where: { branchId: idBranch },
+            order: [ ['nameItem', 'ASC'] ]
         });
         return merchandisesFound;
     } catch (error) {
@@ -133,10 +135,9 @@ export const getMerchandiseOffData = async (userId: string): Promise<any> => {
         const merchandisesWithInventoryOff = await Merchandise.findAll({
             where: {
                 userId: userId,
-                [Op.and]: [
-                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
-                ]
+                [Op.and]: [ Sequelize.literal(`json_length(inventoryOff) > 0`) ]
             },
+            order: [ ['nameItem', 'ASC'] ]
         });
         return merchandisesWithInventoryOff;
     } catch (error) {
@@ -153,10 +154,9 @@ export const getMerchandisesOffByBranchData = async (idBranch: string, userId: s
             where: {
                 branchId: idBranch,
                 userId: userId,
-                [Op.and]: [
-                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
-                ]
-            }
+                [Op.and]: [ Sequelize.literal(`json_length(inventoryOff) > 0`) ]
+            },
+            order: [ ['nameItem', 'ASC'] ]
         });
         return merchandisesWithInventoryOff;
     } catch (error) {
