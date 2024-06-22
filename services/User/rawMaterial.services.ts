@@ -5,6 +5,7 @@ import {
     getRawMaterialByBranchData,
     getRawMaterialByIdData,
     getRawMaterialsOffData,
+    getRawMaterialsOffByBranchData,
     putRawMaterialData,
     putUpdateManyRawMaterialData,
     patchRawMaterialData,
@@ -116,6 +117,21 @@ export const getRawMaterialService = async (idRawMaterial: string, userId: strin
 export const getRawMaterialsOffService = async (userId: string): Promise<IServiceLayerResponseRawMaterial> => {
     try {
         const dataLayerResponse = await getRawMaterialsOffData(userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//OBTENER TODAS LAS MATERIAS PRIMAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getRawMaterialsOffByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseRawMaterial> => {
+    try {
+        const dataLayerResponse = await getRawMaterialsOffByBranchData(idBranch, userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {

@@ -6,6 +6,7 @@ import {
     getRawMaterialBranchService,
     getRawMaterialService,
     getRawMaterialsOffService,
+    getRawMaterialsOffByBranchService,
     putRawMaterialService,
     putUpdateManyRawMaterialService,
     patchRawMaterialService,
@@ -80,6 +81,23 @@ router.get("/rawMaterials-off", authRequired, async (req: Request, res: Response
         res.status(errorController.code).json(errorController.message);
     }
 }); // GET - http://localhost:3000/api/rawMaterial/rawMaterials-off
+
+
+
+//OBTENER TODAS LAS MATERIAS PRIMAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+router.get("/rawMaterials-off/:idBranch", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idBranch } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getRawMaterialsOffByBranchService(idBranch, id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else res.status(500).json({ message: "Error al obtener las materias primas dadas de baja del usuario" });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/rawMaterial/rawMaterials-off/:idBranch
 
 
 
