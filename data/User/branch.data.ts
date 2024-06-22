@@ -51,7 +51,6 @@ export const postManyBranchData = async (body: IBranch, userId: string): Promise
         return newBranch;
     } catch (error) {
         await t.rollback();
-        console.log('BRANCH: ', error)
         throw error;
     }
 };

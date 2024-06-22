@@ -65,7 +65,6 @@ export const postManyServicesData = async (body: IService, userId: string, typeR
         return newService;
     } catch (error) {
         await t.rollback();
-        console.log('Error: ', error)
         throw error;
     }
 };

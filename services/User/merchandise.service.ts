@@ -4,6 +4,8 @@ import {
     getMerchandiseByUserIdData,
     getMerchandiseBranchByIdData,
     getMerchandiseByIdData,
+    getMerchandiseOffData,
+    getMerchandiseSOffByBranchData,
     putMerchandiseData,
     putUpdateManyMerchandiseData,
     patchMerchandiseData,
@@ -112,6 +114,36 @@ export const getMerchandiseService = async (idMerchandise: string, userId: strin
 
 
 
+//OBTENER TODAS LAS MERCANCIAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getMerchandiseOffService = async (userId: string): Promise<IServiceLayerResponseMerchandise> => {
+    try {
+        const dataLayerResponse = await getMerchandiseOffData(userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//OBTENER TODAS LAS MERCANCIAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getMerchandiseSOffByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseMerchandise> => {
+    try {
+        const dataLayerResponse = await getMerchandiseSOffByBranchData(idBranch, userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
 //SERVICE PARA ACTUALIZAR UNA MERCANCIA PERTENECIENTE AL USER
 export const putMerchandiseService = async (idMerchandise: string, body: IMerchandise, userId: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
@@ -159,7 +191,13 @@ export const patchMerchandiseService = async (idMerchandise: string, body: any, 
     try {
         const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para retirar esta mercancía del inventario");
-        const updateMerchandise = await patchMerchandiseData(idMerchandise, body, userId);
+
+        // Verificar que inventoryOff sea un array
+        if (body.inventoryOff && !Array.isArray(body.inventoryOff)) {
+            body.inventoryOff = [body.inventoryOff];
+        }
+
+        const updateMerchandise = await patchMerchandiseData(idMerchandise, body);
         if (!updateMerchandise) throw new ServiceError(404, "Mercancia no encontrada");
         return { code: 200, message: "Unidades de la mercancía retiradas del inventario exitosamente", result: updateMerchandise };
     } catch (error) {

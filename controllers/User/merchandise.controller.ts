@@ -5,6 +5,8 @@ import {
     getMerchandiseUserService,
     getMerchandiseBranchService,
     getMerchandiseService,
+    getMerchandiseOffService,
+    getMerchandiseSOffByBranchService,
     putMerchandiseService,
     putUpdateManyMerchandiseService,
     patchMerchandiseService,
@@ -63,6 +65,39 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
       res.status(errorController.code).json(errorController.message);
     }
 }); // GET - http://localhost:3000/api/merchandise
+
+
+
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+router.get("/merchandises-off", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { id } = req.user;
+        const serviceLayerResponse = await getMerchandiseOffService(id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas dadas de baja del usuario" });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/merchandise/merchandises-off
+
+
+
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+router.get("/merchandises-off/:idBranch", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idBranch } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getMerchandiseSOffByBranchService(idBranch, id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas dadas de baja del usuario" });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/merchandise/merchandises-off/:idBranch
 
 
 
@@ -143,7 +178,7 @@ router.patch("/:idMerchandise", authRequired, checkRole, async (req: Request, re
         const assetError = error as ServiceError;
         res.status(assetError.code).json(assetError.message);
     }
-}); // PATCH - http://localhost:3000/api/merchandise/:idMerchandise con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "assetStatus": "" }
+}); // PATCH - http://localhost:3000/api/merchandise/:idMerchandise con { "branchId": "85284ef9-ab01-42a0-be6b-9c66823cdf73", "inventoryOff": { "date": "2024-06-20T13:47:22.000Z", "reason": "Desechado", "quantity": 1, "description": "Se dañó porque la dejé caer" } }
 
 
 

@@ -69,25 +69,6 @@ export const getAssetsData = async (userId: string): Promise<any> => {
 
 
 
-//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getAssetsOffData = async (userId: string): Promise<any> => {
-    try {
-        const userMachinery = await Assets.findAll({
-            where: {
-                userId: userId,
-                [Op.and]: [
-                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
-                ]
-            },
-        });        
-        return userMachinery;
-    } catch (error) {
-        throw error;
-    }
-};
-
-
-
 //OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 export const getAssetByIdData = async (idAssets: string): Promise<any> => {
     try {
@@ -107,6 +88,45 @@ export const getAssetBranchData = async (idBranch: string): Promise<any> => {
             where: { branchId: idBranch }
         });
         return customerAssetFound;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getAssetsOffData = async (userId: string): Promise<any> => {
+    try {
+        const assetSFound = await Assets.findAll({
+            where: {
+                userId: userId,
+                [Op.and]: [
+                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
+                ]
+            },
+        });        
+        return assetSFound;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
+export const getAssetsOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+    try {
+        const assetsWithInventoryOff = await Assets.findAll({
+            where: {
+                branchId: idBranch,
+                userId: userId,
+                [Op.and]: [
+                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
+                ]
+            }
+        });
+        return assetsWithInventoryOff;
     } catch (error) {
         throw error;
     }
@@ -203,26 +223,6 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): 
         return updatedAsset;
     } catch (error) {
         await t.rollback();
-        throw error;
-    }
-};
-
-
-
-//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getAssetsOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
-    try {
-        const assetsWithInventoryOff = await Assets.findAll({
-            where: {
-                branchId: idBranch,
-                userId: userId,
-                [Op.and]: [
-                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
-                ]
-            }
-        });
-        return assetsWithInventoryOff;
-    } catch (error) {
         throw error;
     }
 };
