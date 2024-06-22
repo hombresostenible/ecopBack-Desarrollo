@@ -48,7 +48,6 @@ export const postManyAssetData = async (body: IAssets, userId: string, typeRole:
         await t.commit();
         return newAsset;
     } catch (error) {
-        console.log('Error: ', error)
         await t.rollback();
         throw error;
     }
@@ -61,6 +60,7 @@ export const getAssetsData = async (userId: string): Promise<any> => {
     try {
         const userMachinery = await Assets.findAll({
             where: { userId: userId },
+            order: [ ['nameItem', 'ASC'] ]
         });        
         return userMachinery;
     } catch (error) {
@@ -73,7 +73,10 @@ export const getAssetsData = async (userId: string): Promise<any> => {
 //OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 export const getAssetByIdData = async (idAssets: string): Promise<any> => {
     try {
-        const assetFound = await Assets.findOne({ where: { id: idAssets } });
+        const assetFound = await Assets.findOne({
+            where: { id: idAssets },
+            order: [ ['nameItem', 'ASC'] ]
+        });
         return assetFound;
     } catch (error) {
         throw error;
@@ -86,7 +89,8 @@ export const getAssetByIdData = async (idAssets: string): Promise<any> => {
 export const getAssetBranchData = async (idBranch: string): Promise<any> => {
     try {
         const customerAssetFound = await Assets.findAll({
-            where: { branchId: idBranch }
+            where: {branchId: idBranch },
+            order: [ ['nameItem', 'ASC'] ]
         });
         return customerAssetFound;
     } catch (error) {
@@ -102,11 +106,10 @@ export const getAssetsOffData = async (userId: string): Promise<any> => {
         const assetSFound = await Assets.findAll({
             where: {
                 userId: userId,
-                [Op.and]: [
-                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
-                ]
+                [Op.and]: [ Sequelize.literal(`json_length(inventoryOff) > 0`) ]
             },
-        });        
+            order: [ ['nameItem', 'ASC'] ]
+        });
         return assetSFound;
     } catch (error) {
         throw error;
@@ -125,7 +128,8 @@ export const getAssetsOffByBranchData = async (idBranch: string, userId: string)
                 [Op.and]: [
                     Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
                 ]
-            }
+            },
+            order: [ ['nameItem', 'ASC'] ]
         });
         return assetsWithInventoryOff;
     } catch (error) {

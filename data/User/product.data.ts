@@ -91,7 +91,9 @@ export const postManyProductsData = async (body: IProduct, userId: string, typeR
 //DATA PARA OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER - CEO PLATATORMA
 export const getProductsData = async (): Promise<any> => {
     try {
-        const products = await Product.findAll();
+        const products = await Product.findAll({
+            order: [ ['nameItem', 'ASC'] ]
+        });
         return products;
     } catch (error) {
         throw error;
@@ -105,7 +107,8 @@ export const getProductsByUserIdData = async (userId: string): Promise<any> => {
     try {
         const userProducts = await Product.findAll({
             where: { userId: userId },
-        });        
+            order: [ ['nameItem', 'ASC'] ]
+        });
         return userProducts;
     } catch (error) {
         throw error;
@@ -118,7 +121,8 @@ export const getProductsByUserIdData = async (userId: string): Promise<any> => {
 export const getProductsBranchByIdData = async (idBranch: string): Promise<any> => {
     try {
         const productsFound = await Product.findAll({
-            where: { branchId: idBranch }
+            where: { branchId: idBranch },
+            order: [ ['nameItem', 'ASC'] ]
         });
         return productsFound;
     } catch (error) {
@@ -131,7 +135,7 @@ export const getProductsBranchByIdData = async (idBranch: string): Promise<any> 
 //DATA PARA OBTENER UN PRODUCTO POR ID PERTENECIENTE AL USER
 export const getProductByIdData = async (idProduct: string): Promise<any> => {
     try {
-        const productFound = await Product.findOne({ where: { id: idProduct } });
+        const productFound = await Product.findOne({where: { id: idProduct } });
         return productFound;
     } catch (error) {
         throw error;
@@ -146,10 +150,9 @@ export const getProductOffData = async (userId: string): Promise<any> => {
         const productsWithInventoryOff = await Product.findAll({
             where: {
                 userId: userId,
-                [Op.and]: [
-                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
-                ]
+                [Op.and]: [ Sequelize.literal(`json_length(inventoryOff) > 0`) ]
             },
+            order: [ ['nameItem', 'ASC'] ]
         });
         return productsWithInventoryOff;
     } catch (error) {
@@ -166,10 +169,9 @@ export const getProductsOffByBranchData = async (idBranch: string, userId: strin
             where: {
                 branchId: idBranch,
                 userId: userId,
-                [Op.and]: [
-                    Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
-                ]
-            }
+                [Op.and]: [ Sequelize.literal(`json_length(inventoryOff) > 0`) ]
+            },
+            order: [ ['nameItem', 'ASC'] ]
         });
         return productsWithInventoryOff;
     } catch (error) {
