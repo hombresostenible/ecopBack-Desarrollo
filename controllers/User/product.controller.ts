@@ -136,7 +136,7 @@ router.get("/products-branch/:idBranch", authRequired, async (req: Request, res:
 
 
 //CONTROLLER PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
-router.put("/:idProduct", authRequired, checkRole, validateSchema(productSchemaZod), async (req: Request, res: Response) => {
+router.put("/:idProduct", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idProduct } = req.params;
         const body = req.body;
@@ -152,7 +152,7 @@ router.put("/:idProduct", authRequired, checkRole, validateSchema(productSchemaZ
 
 
 //CONTROLLER PARA ACTUALIZAR DE FORMA MASIVA VARIOS PRODUCTOS
-router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyProductSchemaZod), async (req: Request, res: Response) => {
+router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
         const { id, typeRole } = req.user;
