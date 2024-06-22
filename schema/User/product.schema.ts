@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
+import { InventoryOffItem } from '../../types/User/products.types';
 import Branch from './branch.schema';
 import User from './user.schema';
 
@@ -8,6 +9,7 @@ class Product extends Model {
     public nameItem!: string;
     public barCode!: string;
     public inventory!: number;
+    public inventoryOff!: InventoryOffItem[];
     public unitMeasure!: 'Unidades' | 'Ristra' | 'Decena' | 'Docena' | 'Miligramo' | 'Gramo' | 'Media libra' | 'Libra' | 'Kilogramo' | 'Caja' | 'Paca' | 'Arroba' | 'Bulto' | 'Saco' | 'Tonelada' | 'Mililitro' | 'Onza' | 'Litro' | 'Galon' | 'Pimpina' | 'Metro cubico' | 'Milimetro' | 'Centrimetro' | 'Pulgada' | 'Metro' | 'Centimetro cuadrado' | 'Metro cuadrado';
     public inventoryIncrease!: 'Si' | 'No';
     public periodicityAutomaticIncrease!: 'Diario' | 'Semanal' | 'Quincenal' | 'Mensual' | 'Bimestral' | 'Trimestral' | 'Semestral';
@@ -59,6 +61,11 @@ Product.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
+        },
+        inventoryOff: {
+            type: DataTypes.JSON,
+            allowNull: true,
+            defaultValue: [],
         },
         unitMeasure: {
             type: DataTypes.STRING,

@@ -10,7 +10,7 @@ export interface IAssets {
     nameItem: string;
     barCode?: string;
     inventory: number;
-    inventoryOff?: InventoryOffItem[]; // Cambio realizado aquí
+    inventoryOff?: InventoryOffItem[];
     brandAssets: string;
     referenceAssets?: string;
     conditionAssets?: 'Nuevo' | 'Usado';
