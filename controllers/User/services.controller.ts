@@ -99,7 +99,7 @@ router.get("/services-branch/:idBranch", authRequired, async (req: Request, res:
 
 
 //CONTROLLER PARA ACTUALIZAR UN SERVICIO DEL USER
-router.put("/:idService", authRequired, checkRole, validateSchema(serviceSchemaZod), async (req: Request, res: Response) => {
+router.put("/:idService", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idService } = req.params;
         const body = req.body;
