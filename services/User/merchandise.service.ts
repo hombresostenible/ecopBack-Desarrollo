@@ -5,7 +5,7 @@ import {
     getMerchandiseBranchByIdData,
     getMerchandiseByIdData,
     getMerchandiseOffData,
-    getMerchandiseSOffByBranchData,
+    getMerchandisesOffByBranchData,
     putMerchandiseData,
     putUpdateManyMerchandiseData,
     patchMerchandiseData,
@@ -100,7 +100,7 @@ export const getMerchandiseBranchService = async (idBranch: string, userId: stri
 export const getMerchandiseService = async (idMerchandise: string, userId: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
         const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a este producto");
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a esta mercancía");
         const merchandiseFound = await getMerchandiseByIdData(idMerchandise);
         if (!merchandiseFound) return { code: 404, message: "Producto no encontrado" };
         return { code: 200, result: merchandiseFound };
@@ -132,7 +132,7 @@ export const getMerchandiseOffService = async (userId: string): Promise<IService
 //OBTENER TODAS LAS MERCANCIAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
 export const getMerchandiseSOffByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
-        const dataLayerResponse = await getMerchandiseSOffByBranchData(idBranch, userId);
+        const dataLayerResponse = await getMerchandisesOffByBranchData(idBranch, userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
