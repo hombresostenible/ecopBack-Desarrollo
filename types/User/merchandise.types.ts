@@ -28,8 +28,8 @@ export interface IMerchandise {
     discountPercentage?: number;
     expirationDate?: Date;
     inventoryChanges?: { date: string; quantity: number, type: 'Ingreso' | 'Salida' }[];
-    salesCount: number;
-    inventoryOff: InventoryOffItem[];
+    salesCount?: number;
+    inventoryOff?: InventoryOffItem[];
     reasonManualDiscountingInventory?: 'Donado' | 'Desechado' | 'Caducado' | 'Perdido' | 'Hurtado';
     quantityManualDiscountingInventory?: number;
     

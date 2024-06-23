@@ -58,11 +58,11 @@ export const postManyAssetData = async (body: IAssets, userId: string, typeRole:
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
 export const getAssetsData = async (userId: string): Promise<any> => {
     try {
-        const userMachinery = await Assets.findAll({
+        const userAsset = await Assets.findAll({
             where: { userId: userId },
             order: [ ['nameItem', 'ASC'] ]
-        });        
-        return userMachinery;
+        }); 
+        return userAsset;
     } catch (error) {
         throw error;
     }
