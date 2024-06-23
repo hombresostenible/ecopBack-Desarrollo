@@ -143,7 +143,6 @@ export const putServicesData = async (idService: string, body: IService, userId:
         if (!updatedService) throw new ServiceError(404, "No se encontró ningún servicio para actualizar");
         return updatedService as unknown as IService;
     } catch (error) {
-        console.log('Error: ')
         if (transaction) await transaction.rollback();
         throw error;
     }

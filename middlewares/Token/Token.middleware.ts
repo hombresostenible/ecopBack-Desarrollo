@@ -12,7 +12,6 @@ declare global {
 const TOKEN_SECRET = process.env.TOKEN_SECRET || 'default_token_secret';
 
 export const authRequired = (req: Request, res: Response, next: NextFunction) => {
-    console.log('authRequired')
     const { token } = req.cookies;
     if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
     jwt.verify(token, TOKEN_SECRET, (err: any, user: any) => {
