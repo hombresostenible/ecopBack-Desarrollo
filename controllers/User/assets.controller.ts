@@ -38,7 +38,6 @@ router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async
 //CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
-        console.log('ENTRA')
         const bodyArray = req.body;
         const { id, typeRole } = req.user;
         // Llamar a la capa de servicio para manejar la creación de múltiples activos
@@ -46,7 +45,6 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyAss
         // Enviar una respuesta al cliente
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
-        console.log('Error: ', error)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
