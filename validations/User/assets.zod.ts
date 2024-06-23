@@ -3,7 +3,7 @@ import { z, ZodObject, ZodArray, ZodString } from 'zod';
 //ESQUEMA PARA CREAR UN ACTIVO
 type AssetsSchemaType = ZodObject<{
     nameItem: ZodString;
-    brandAssets: ZodString;
+    brandItem: ZodString;
     referenceAssets: ZodString;
     conditionAssets: ZodString;
     stateAssets: ZodString;
@@ -14,7 +14,7 @@ export const assetsSchemaZod: AssetsSchemaType = z.object({
     nameItem: z.string({
         required_error: 'El nombre del equipo, herramienta o máquina es requerido',
     }),
-    brandAssets: z.string({
+    brandItem: z.string({
         required_error: 'La marca Brand del equipo, herramienta o máquina es requerida',
     }),
     referenceAssets: z.string({
@@ -37,7 +37,7 @@ export const assetsSchemaZod: AssetsSchemaType = z.object({
 type ManyAssetsSchemaType = ZodArray<
     ZodObject<{
         nameItem: ZodString;
-        brandAssets: ZodString;
+        brandItem: ZodString;
         referenceAssets: ZodString;
         conditionAssets: ZodString;
         stateAssets: ZodString;
@@ -50,7 +50,7 @@ export const manyAssetsSchemaZod: ManyAssetsSchemaType = z.array(
         nameItem: z.string({
             required_error: 'El nombre del equipo, herramienta o máquina es requerido',
         }),
-        brandAssets: z.string({
+        brandItem: z.string({
             required_error: 'La sede Brand del equipo, herramienta o máquina es requerida',
         }),
         referenceAssets: z.string({

@@ -6,28 +6,31 @@ import User from './user.schema';
 
 class RawMaterial extends Model {
     public id!: string;
-    public nameItem!: string;
     public barCode!: string;
+    public nameItem!: string;
+    public brandItem!: string;
+    public packaged!: 'Si' | 'No';
+    public primaryPackageType!: 'Ninguno' | 'Papel' | 'Papel de archivo' | 'Carton' | 'Aluminio' | 'Plegadiza' | 'Vidrio' | 'PET / PETE Polietileno Tereftalato' | 'HDPE Polietileno de alta densidad' | 'PVC Policloruro de Vinilo' | 'LDPE Polietileno de baja densidad' | 'PP Polipropileno' | 'PS Poliestireno' | 'Otros plasticos (Policarbonato, estireno, nylon)' | 'Hierro' | 'Icopor' | 'Biodegradable' | 'Plastico de burbujas';
+    public individualPackaging!: 'Si' | 'No';
+    public secondaryPackageType!: 'Ninguno' | 'Papel' | 'Papel de archivo' | 'Carton' | 'Aluminio' | 'Plegadiza' | 'Vidrio' | 'PET / PETE Polietileno Tereftalato' | 'HDPE Polietileno de alta densidad' | 'PVC Policloruro de Vinilo' | 'LDPE Polietileno de baja densidad' | 'PP Polipropileno' | 'PS Poliestireno' | 'Otros plasticos (Policarbonato, estireno, nylon)' | 'Hierro' | 'Icopor' | 'Biodegradable' | 'Plastico de burbujas';
+    public quantityPerPackage!: number;
+    public returnablePackaging!: 'Si' | 'No';
     public inventory!: number;
-    public inventoryOff!: InventoryOffItem[];
     public unitMeasure!: 'Unidades' | 'Ristra' | 'Decena' | 'Docena' | 'Miligramo' | 'Gramo' | 'Media libra' | 'Libra' | 'Kilogramo' | 'Caja' | 'Paca' | 'Arroba' | 'Bulto' | 'Saco' | 'Tonelada' | 'Mililitro' | 'Onza' | 'Litro' | 'Galon' | 'Pimpina' | 'Metro cubico' | 'Milimetro' | 'Centrimetro' | 'Pulgada' | 'Metro' | 'Centimetro cuadrado' | 'Metro cuadrado';
     public inventoryIncrease!: 'Si' | 'No';
     public periodicityAutomaticIncrease!: 'Diario' | 'Semanal' | 'Quincenal' | 'Mensual' | 'Bimestral' | 'Trimestral' | 'Semestral';
     public automaticInventoryIncrease!: number;
     public purchasePriceBeforeTax!: number;
     public IVA!: number;
-    public packaged!: 'Si' | 'No';
-    public primaryPackageType!: 'Ninguno' | 'Papel' | 'Papel de archivo' | 'Carton' | 'Aluminio' | 'Plegadiza' | 'Vidrio' | 'PET / PETE Polietileno Tereftalato' | 'HDPE Polietileno de alta densidad' | 'PVC Policloruro de Vinilo' | 'LDPE Polietileno de baja densidad' | 'PP Polipropileno' | 'PS Poliestireno' | 'Otros plasticos (Policarbonato, estireno, nylon)' | 'Hierro' | 'Icopor' | 'Biodegradable' | 'Plastico de burbujas';
-    public expirationDate!: Date;    
-    public returnablePackaging!: 'Si' | 'No';
-    public quantityPerPackage!: number;
-    public individualPackaging!: 'Si' | 'No';
-    public secondaryPackageType!: 'Ninguno' | 'Papel' | 'Papel de archivo' | 'Carton' | 'Aluminio' | 'Plegadiza' | 'Vidrio' | 'PET / PETE Polietileno Tereftalato' | 'HDPE Polietileno de alta densidad' | 'PVC Policloruro de Vinilo' | 'LDPE Polietileno de baja densidad' | 'PP Polipropileno' | 'PS Poliestireno' | 'Otros plasticos (Policarbonato, estireno, nylon)' | 'Hierro' | 'Icopor' | 'Biodegradable' | 'Plastico de burbujas';
-    public inventoryChanges!: { date: string; quantity: number, type: 'Ingreso' | 'Salida' }[];
     public sellingPrice!: number;
+    public isDiscounted!: 'Si' | 'No';
+    public discountPercentag!: number;
+    public salesCount!: number;
+    public expirationDate!: Date;    
+    public inventoryChanges!: { date: string; quantity: number, type: 'Ingreso' | 'Salida' }[];
+    public inventoryOff!: InventoryOffItem[];
     public reasonManualDiscountingInventory!: 'Donado' | 'Desechado' | 'Caducado' | 'Perdido' | 'Hurtado';
     public quantityManualDiscountingInventory!: number;
-    public salesCount!: number;
     
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
@@ -42,23 +45,66 @@ RawMaterial.init(
             allowNull: false,
             primaryKey: true,
         },
+        barCode: {
+            type: DataTypes.UUID,
+            allowNull: true,
+        },
         nameItem: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        barCode: {
-            type: DataTypes.UUID,
+        brandItem: {
+            type: DataTypes.STRING,
             allowNull: true,
+        },
+        packaged: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                isIn: [[ 'Si', 'No' ]],
+            },
+            defaultValue: 'No',
+        },
+        primaryPackageType: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+                isIn: [[ 'Ninguno', 'Papel', 'Papel de archivo', 'Carton', 'Aluminio', 'Plegadiza', 'Vidrio', 'PET / PETE Polietileno Tereftalato', 'HDPE Polietileno de alta densidad', 'PVC Policloruro de Vinilo', 'LDPE Polietileno de baja densidad', 'PP Polipropileno', 'PS Poliestireno', 'Otros plasticos (Policarbonato, estireno, nylon)', 'Hierro', 'Icopor', 'Biodegradable', 'Plastico de burbujas' ]],
+            },
+            defaultValue: 'Ninguno',
+        },
+        individualPackaging: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+              isIn: [[ 'Si', 'No' ]],
+            },
+            defaultValue: 'No',
+        },
+        secondaryPackageType: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+                isIn: [[ 'Ninguno', 'Papel', 'Papel de archivo', 'Carton', 'Aluminio', 'Plegadiza', 'Vidrio', 'PET / PETE Polietileno Tereftalato', 'HDPE Polietileno de alta densidad', 'PVC Policloruro de Vinilo', 'LDPE Polietileno de baja densidad', 'PP Polipropileno', 'PS Poliestireno', 'Otros plasticos (Policarbonato, estireno, nylon)', 'Hierro', 'Icopor', 'Biodegradable', 'Plastico de burbujas' ]],
+            },
+            defaultValue: 'Ninguno',
+        },
+        quantityPerPackage: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        returnablePackaging: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+              isIn: [[ 'Si', 'No' ]],
+            },
+            defaultValue: 'No',
         },
         inventory: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0,
-        },
-        inventoryOff: {
-            type: DataTypes.JSON,
-            allowNull: true,
-            defaultValue: [],
         },
         unitMeasure: {
             type: DataTypes.STRING,
@@ -69,7 +115,7 @@ RawMaterial.init(
         },
         inventoryIncrease: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
             validate: {
               isIn: [[ 'Si', 'No' ]],
             },
@@ -89,71 +135,44 @@ RawMaterial.init(
         },
         purchasePriceBeforeTax: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             defaultValue: 0,
         },
         IVA: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             defaultValue: 0,
         },
-        packaged: {
-            type: DataTypes.STRING,
+        sellingPrice: {
+            type: DataTypes.INTEGER,
             allowNull: false,
+            defaultValue: 0,
+        },
+        isDiscounted: {
+            type: DataTypes.STRING,
+            allowNull: true,
             validate: {
-                isIn: [[ 'Si', 'No' ]],
+              isIn: [['Si', 'No']],
             },
             defaultValue: 'No',
         },
-        primaryPackageType: {
-            type: DataTypes.STRING,
+        discountPercentage: {
+            type: DataTypes.INTEGER,
             allowNull: true,
-            validate: {
-                isIn: [[ 'Ninguno', 'Papel', 'Papel de archivo', 'Carton', 'Aluminio', 'Plegadiza', 'Vidrio', 'PET / PETE Polietileno Tereftalato', 'HDPE Polietileno de alta densidad', 'PVC Policloruro de Vinilo', 'LDPE Polietileno de baja densidad', 'PP Polipropileno', 'PS Poliestireno', 'Otros plasticos (Policarbonato, estireno, nylon)', 'Hierro', 'Icopor', 'Biodegradable', 'Plastico de burbujas' ]],
-            },
-            defaultValue: 'Ninguno',
+        },
+        salesCount: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: true,
         },
         expirationDate: {
             type: DataTypes.DATE,
             allowNull: true,
         },
-        returnablePackaging: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-              isIn: [[ 'Si', 'No' ]],
-            },
-            defaultValue: 'No',
-        },
-        quantityPerPackage: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        individualPackaging: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-              isIn: [[ 'Si', 'No' ]],
-            },
-            defaultValue: 'No',
-        },
-        secondaryPackageType: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [[ 'Ninguno', 'Papel', 'Papel de archivo', 'Carton', 'Aluminio', 'Plegadiza', 'Vidrio', 'PET / PETE Polietileno Tereftalato', 'HDPE Polietileno de alta densidad', 'PVC Policloruro de Vinilo', 'LDPE Polietileno de baja densidad', 'PP Polipropileno', 'PS Poliestireno', 'Otros plasticos (Policarbonato, estireno, nylon)', 'Hierro', 'Icopor', 'Biodegradable', 'Plastico de burbujas' ]],
-            },
-            defaultValue: 'Ninguno',
-        },
         inventoryChanges: {
             type: DataTypes.JSON,
-            allowNull: false,
-            defaultValue: [],
-        },
-        sellingPrice: {
-            type: DataTypes.INTEGER,
             allowNull: true,
-            defaultValue: 0,
+            defaultValue: [],
         },
         reasonManualDiscountingInventory: {
             type: DataTypes.STRING,
@@ -166,10 +185,10 @@ RawMaterial.init(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        salesCount: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
+        inventoryOff: {
+            type: DataTypes.JSON,
             allowNull: true,
+            defaultValue: [],
         },
 
         //RELACION CON OTRAS TABLAS
