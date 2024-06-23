@@ -6,21 +6,21 @@ import User from './user.schema';
 
 class Assets extends Model {
     public id!: string;
-    public nameItem!: string;
     public barCode!: string;
-    public inventory!: number;
-    public inventoryOff!: InventoryOffItem[];
-    public brandAssets!: string;
+    public nameItem!: string;
+    public brandItem!: string;
     public referenceAssets!: string;
-    public conditionAssets!: 'Nuevo' | 'Usado';
     public stateAssets!: 'Funciona correctamente' | 'Funciona requiere mantenimiento' | 'Dañada requiere cambio' | 'Dañada requiere reparacion';
+    public conditionAssets!: 'Nuevo' | 'Usado';
+    public inventory!: number;
     public purchasePriceBeforeTax!: number;
     public IVA!: number;
     public sellingPrice!: number;
+    public inventoryOff!: InventoryOffItem[];
 
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
-    public userId!: string;
+    public userId?: string;
 };
 
 Assets.init(
@@ -31,38 +31,21 @@ Assets.init(
             allowNull: false,
             primaryKey: true,
         },
-        nameItem: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
         barCode: {
             type: DataTypes.UUID,
             allowNull: true,
         },
-        inventory: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
-        },
-        inventoryOff: {
-            type: DataTypes.JSON,
-            allowNull: true,
-            defaultValue: [],
-        },
-        brandAssets: {
+        nameItem: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        brandItem: {
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         referenceAssets: {
             type: DataTypes.STRING,
             allowNull: true,
-        },
-        conditionAssets: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [[ 'Nuevo', 'Usado' ]],
-            },
         },
         stateAssets: {
             type: DataTypes.STRING,
@@ -71,9 +54,21 @@ Assets.init(
                 isIn: [[ 'Funciona correctamente', 'Funciona requiere mantenimiento', 'Dañada requiere cambio', 'Dañada requiere reparacion' ]],
             },
         },
+        conditionAssets: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+                isIn: [[ 'Nuevo', 'Usado' ]],
+            },
+        },
+        inventory: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
         purchasePriceBeforeTax: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             defaultValue: 0,
         },
         IVA: {
@@ -85,6 +80,11 @@ Assets.init(
             type: DataTypes.INTEGER,
             allowNull: true,
             defaultValue: 0,
+        },
+        inventoryOff: {
+            type: DataTypes.JSON,
+            allowNull: true,
+            defaultValue: [],
         },
 
         //RELACION CON OTRAS TABLAS

@@ -31,7 +31,7 @@ router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/asset con { "branchId": "28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0", "nameItem": "Bicicleta", "barCode": null, "inventory": 1, "brandAssets": "Specialized", "referenceAssets": "Modelo 2010", "conditionAssets": "Nuevo", "stateAssets": "Funciona correctamente", "assetStatus": "Activo en uso" }
+}); // POST - http://localhost:3000/api/asset con { "branchId": "28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0", "nameItem": "Bicicleta", "barCode": null, "inventory": 1, "brandItem": "Specialized", "referenceAssets": "Modelo 2010", "conditionAssets": "Nuevo", "stateAssets": "Funciona correctamente", "assetStatus": "Activo en uso" }
 
 
 
@@ -50,7 +50,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyAss
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/asset/create-many con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
+}); // POST - http://localhost:3000/api/asset/create-many con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio","barCode":null,"inventory":1,"brandItem":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9","barCode":null,"inventory":1,"brandItem":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
 
 
 
@@ -147,7 +147,7 @@ router.put("/:idAssets", authRequired, checkRole, async (req: Request, res: Resp
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/asset/:idAssets con { "branchId": "13c403d6-23c0-42bf-a815-0949e43c3540", "nameAssets": "Tractor", "brandAssets": "John Dere", "referenceAssets": "Modelo 2010", "conditionAssets": "Usada/De segunda", "stateAssets": "Funciona correctamente" }
+}); // PUT - http://localhost:3000/api/asset/:idAssets con { "branchId": "13c403d6-23c0-42bf-a815-0949e43c3540", "nameAssets": "Tractor", "brandItem": "John Dere", "referenceAssets": "Modelo 2010", "conditionAssets": "Usada/De segunda", "stateAssets": "Funciona correctamente" }
 
 
 
@@ -164,7 +164,7 @@ router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAsset
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/asset/updateMany con [{"id":"6fd572e5-683f-4c6d-a421-dbb86f64d48a","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"id":"88667153-4fec-40d5-9ff9-e04cb0f1fee7","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9 ACTUALIZADA","barCode":null,"inventory":1,"brandAssets":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
+}); // PUT - http://localhost:3000/api/asset/updateMany con [{"id":"6fd572e5-683f-4c6d-a421-dbb86f64d48a","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 515518787878ooioio ACTUALIZADA","barCode":null,"inventory":1,"brandItem":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"},{"id":"88667153-4fec-40d5-9ff9-e04cb0f1fee7","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Bici 989898opopopo9 ACTUALIZADA","barCode":null,"inventory":1,"brandItem":"Specialized","referenceAssets":"Modelo 2010","conditionAssets":"Nuevo","stateAssets":"Funciona correctamente","assetStatus":"Activo en uso"}]
 
 
 
