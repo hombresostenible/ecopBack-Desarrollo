@@ -13,7 +13,6 @@ type RegisterUserSchemaType = ZodObject<{
     codeDane: ZodString;
     subregionCodeDane: ZodString;
     address: ZodString,
-    postalCode: ZodString,
     phone: ZodString;
     email: ZodString;
     password: ZodString;
@@ -53,9 +52,6 @@ export const registerUserSchema: RegisterUserSchemaType = z.object({
     }),
     address: z.string({
         required_error: 'La dirección de domicilio es requerida',
-    }),
-    postalCode: z.string({
-        required_error: 'El código posta es requerido',
     }),
     phone: z.string({
         required_error: 'El celular o teléfono de contacto es requerido',
