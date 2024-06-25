@@ -16,7 +16,7 @@ export interface IUser {
     codeDane: string;
     subregionCodeDane: string;
     address: string;
-    postalCode: string;
+    postalCode?: string;
     phone: string;
     email: string;
     password: string;
