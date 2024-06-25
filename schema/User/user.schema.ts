@@ -134,7 +134,7 @@ User.init(
         },
         postalCode: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         phone: {
             type: DataTypes.STRING,
