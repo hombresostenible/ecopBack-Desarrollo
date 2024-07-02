@@ -4,11 +4,13 @@ import {
     getAccountsBooksService,
     getAccountsBooksIncomesApprovedService,
     getAccountsBooksIncomesApprovedByBranchService,
-    getAccountsBooksIncomesNotApprovedService,
+    getIncomesNotApprovedByBranchService,
+    getIncomesNotApprovedService,
     getAccountsBooksExpesesService,
     getAccountsBookByIdService,
     getAccountsBookByBranchService,
     putAccountsBookService,
+    patchIncomesNotApprovedService,
     deleteAccountsBookService,
 } from '../../services/User/accountsBook.service';
 import { authRequired } from '../../middlewares/Token/Token.middleware';
@@ -90,17 +92,36 @@ router.get("/incomes-branch/:idBranch", authRequired, async (req: Request, res: 
 router.get("/incomes-not-approved", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
-        const serviceLayerResponse = await getAccountsBooksIncomesNotApprovedService(id);
+        const serviceLayerResponse = await getIncomesNotApprovedService(id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
-            res.status(500).json({ message: "No se pudieron obtener registros de AccountsBook" });
+            res.status(500).json({ message: "No se pudieron obtener los ingresos pendientes de aprobar" });
         }
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
 }); // GET - http://localhost:3000/api/accountsBook/incomes-not-approved
+
+
+
+//OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
+router.get("/incomes-not-approved/:idBranch", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { idBranch } = req.params;
+        const { id } = req.user;
+        const serviceLayerResponse = await getIncomesNotApprovedByBranchService(idBranch, id);
+        if (Array.isArray(serviceLayerResponse.result)) {
+            res.status(200).json(serviceLayerResponse.result);
+        } else {            
+            res.status(500).json({ message: "No se pudieron obtener los ingresos pendientes de aprobar por sede" });
+        }
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/accountsBook/incomes-not-approved/:idBranch
 
 
 
@@ -165,6 +186,22 @@ router.put("/:idAccountsBook", authRequired, checkRole, validateSchema(accountsB
         res.status(errorController.code).json(errorController.message);
     }
 }); //PUT - http://localhost:3000/api/accountsBook/:idAccountsBook con { "transactionDate": "2023-09-19T12:00:00.000Z", "transactionType": "Ingreso", "item": "Nombre del producto/servicio/materiaPrima", "unitValue": "15000", "quantity": "2", "totalValue": "30000" }
+
+
+
+//APROBAR UN REGISTRO DE INGRESO DEL USER
+router.patch("/incomes-not-approved/:idAccountsBook", authRequired, checkRole, async (req: Request, res: Response) => {
+    try {
+        const { idAccountsBook } = req.params;
+        const body = req.body;
+        const { id } = req.user;
+        const serviceLayerResponse = await patchIncomesNotApprovedService(idAccountsBook, body, id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse);
+    } catch (error) {
+        const assetError = error as ServiceError;
+        res.status(assetError.code).json(assetError.message);
+    }
+}); //PATCH - http://localhost:3000/api/accountsBook/incomes-not-approved/:idAccountsBook
 
 
 
