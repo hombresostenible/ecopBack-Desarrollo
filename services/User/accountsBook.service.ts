@@ -1,8 +1,8 @@
 import {  
     postAccountsBookData,
     getAccountsBooksData,
-    getAccountsBooksIncomesApprovedData,
-    getAccountsBooksIncomesApprovedByBranchData,
+    getIncomesApprovedData,
+    getIncomesApprovedByBranchData,
     getIncomesNotApprovedByBranchData,
     getIncomesNotApprovedData,
     getAccountsBooksExpesesData,
@@ -49,9 +49,9 @@ export const getAccountsBooksService = async (userId: string): Promise<IServiceL
 
 
 //OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS DEL USER
-export const getAccountsBooksIncomesApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const getIncomesApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        const dataLayerResponse = await getAccountsBooksIncomesApprovedData(userId);
+        const dataLayerResponse = await getIncomesApprovedData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -64,13 +64,13 @@ export const getAccountsBooksIncomesApprovedService = async (userId: string): Pr
 
 
 //OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
-export const getAccountsBooksIncomesApprovedByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const getIncomesApprovedByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        const hasPermission = await checkPermissionForBranchAccountsBook(idBranch, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los registros de ingresos aprobados de esta sede");
-        const assetsFound = await getAccountsBooksIncomesApprovedByBranchData(idBranch);
-        if (!assetsFound) return { code: 404, message: "Registros de ingresos aprobados no encontrados en esta sede" };
-        return { code: 200, result: assetsFound };
+        // const hasPermission = await checkPermissionForBranchAccountsBook(idBranch, userId);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los registros de ingresos aprobados de esta sede");
+        const dataLayerResponse = await getIncomesApprovedByBranchData(idBranch);
+        if (!dataLayerResponse) return { code: 404, message: "Registros de ingresos aprobados no encontrados en esta sede" };
+        return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
