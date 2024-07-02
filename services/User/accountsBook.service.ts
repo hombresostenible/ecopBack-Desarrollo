@@ -3,11 +3,13 @@ import {
     getAccountsBooksData,
     getAccountsBooksIncomesApprovedData,
     getAccountsBooksIncomesApprovedByBranchData,
-    getAccountsBooksIncomesNotApprovedData,
+    getIncomesNotApprovedByBranchData,
+    getIncomesNotApprovedData,
     getAccountsBooksExpesesData,
     getAccountsBookByIdData,
     getAccountsBookByBranchData,
     putAccountsBookData,
+    patchIncomesNotApprovedData,
     deleteAccountsBookData,
 } from "../../data/User/accountsBook.data";
 import { IAccountsBook } from "../../types/User/accountsBook.types";
@@ -80,10 +82,27 @@ export const getAccountsBooksIncomesApprovedByBranchService = async (idBranch: s
 
 
 //OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
-export const getAccountsBooksIncomesNotApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const getIncomesNotApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        const dataLayerResponse = await getAccountsBooksIncomesNotApprovedData(userId);
+        const dataLayerResponse = await getIncomesNotApprovedData(userId);
         return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+export const getIncomesNotApprovedByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+    try {
+        // const hasPermission = await checkPermissionForBranchAccountsBook(idBranch, userId);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los ingresos pendientes de aprobar de esta sede");
+        const assetsFound = await getIncomesNotApprovedByBranchData(idBranch);
+        if (!assetsFound) return { code: 404, message: "No se pudieron obtener los ingresos pendientes de aprobar" };
+        return { code: 200, result: assetsFound };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -160,6 +179,24 @@ export const putAccountsBookService = async (idAccountsBook: string, body: IAcco
             throw new ServiceError(500, customErrorMessage, error);
         } else throw error;
     };
+};
+
+
+
+//APROBAR UN REGISTRO DE INGRESO DEL USER
+export const patchIncomesNotApprovedService = async (idAssets: string, body: any, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+    try {
+        // const hasPermission = await checkPermissionForAssets(idAssets, userId);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para aumentar unidades del inventario de este equipo, máquina o herramienta");
+        const updateAsset = await patchIncomesNotApprovedData(idAssets, body, userId);
+        if (!updateAsset) throw new ServiceError(404, "Registro pendiente de aprobar no encontrado");
+        return { code: 200, message: "Registro aprobado exitosamente", result: updateAsset };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
 };
 
 
