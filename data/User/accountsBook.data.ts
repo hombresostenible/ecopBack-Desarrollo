@@ -154,7 +154,7 @@ export const getAccountsBooksIncomesApprovedByBranchData = async (idBranch: stri
 
 
 //OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
-export const getAccountsBooksIncomesNotApprovedData = async (userId: string): Promise<any> => {
+export const getIncomesNotApprovedData = async (userId: string): Promise<any> => {
     try {
         const allAccountsBook = await AccountsBook.findAll({
             where: {
@@ -170,6 +170,24 @@ export const getAccountsBooksIncomesNotApprovedData = async (userId: string): Pr
     } catch (error) {
         throw error;
     };
+};
+
+export const getIncomesNotApprovedByBranchData = async (idBranch: string): Promise<any> => {
+    try {
+        const AccountsBooksIncomesFound = await AccountsBook.findAll({
+            where: {
+                branchId: idBranch,
+                transactionType: 'Ingreso', 
+                transactionApproved: false 
+            },
+            order: [
+                ['transactionDate', 'DESC'] // Aquí se especifica el campo y el orden
+            ]
+        });
+        return AccountsBooksIncomesFound;
+    } catch (error) {
+        throw error;
+    }
 };
 
 
@@ -227,6 +245,28 @@ export const putAccountsBookData = async (idAccountsBook: string, body: IAccount
     };
 };
 
+
+
+export const patchIncomesNotApprovedData = async (idAssets: string, body: Partial<IAccountsBook>, userId: string): Promise<IAccountsBook | null> => {
+    try {
+        let whereClause: Record<string, any> = { id: idAssets };
+        whereClause.userId = userId;
+        const existingIncomesNotApproved = await AccountsBook.findOne({
+            where: whereClause,
+        });
+        if (!existingIncomesNotApproved) throw new ServiceError(404, "No se encontró el registro para aprobar");
+        const transactionApproved = existingIncomesNotApproved.transactionApproved = true;
+        const [rowsUpdated] = await AccountsBook.update({ transactionApproved: transactionApproved }, {
+            where: whereClause,
+        });
+        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún registro para aprobar para actualizar");
+        const updatedRawMaterial = await AccountsBook.findByPk(idAssets);
+        if (!updatedRawMaterial) throw new ServiceError(404, "No se encontró ningún registro para aprobar para actualizar");
+        return updatedRawMaterial;
+    } catch (error) {
+        throw error;
+    }
+};
 
 
 //ELIMINA UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER
