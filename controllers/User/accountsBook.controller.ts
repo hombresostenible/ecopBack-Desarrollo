@@ -2,8 +2,8 @@ import express, { Request, Response } from "express";
 import {
     postAccountsBookService,
     getAccountsBooksService,
-    getAccountsBooksIncomesApprovedService,
-    getAccountsBooksIncomesApprovedByBranchService,
+    getIncomesApprovedService,
+    getIncomesApprovedByBranchService,
     getIncomesNotApprovedByBranchService,
     getIncomesNotApprovedService,
     getAccountsBooksExpesesService,
@@ -57,7 +57,7 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 router.get("/incomes", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
-        const serviceLayerResponse = await getAccountsBooksIncomesApprovedService(id);
+        const serviceLayerResponse = await getIncomesApprovedService(id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -76,7 +76,7 @@ router.get("/incomes-branch/:idBranch", authRequired, async (req: Request, res: 
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
-        const serviceLayerResponse = await getAccountsBooksIncomesApprovedByBranchService(idBranch, id);
+        const serviceLayerResponse = await getIncomesApprovedByBranchService(idBranch, id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener los registros de ingresos aprobados del usuario por sede" });
@@ -84,7 +84,7 @@ router.get("/incomes-branch/:idBranch", authRequired, async (req: Request, res: 
         const rawMaterialError = error as ServiceError;
         res.status(rawMaterialError.code).json(rawMaterialError.message);
     }
-}); //GET - http://localhost:3000/api/accountsBook/aincomes-branch/:idBranch
+}); //GET - http://localhost:3000/api/accountsBook/incomes-branch/:idBranch
 
 
 
@@ -154,7 +154,7 @@ router.get("/:idAccountsBook", authRequired, async (req: Request, res: Response)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook/userAccountsBookBranch/:idBranch
+}); // GET - http://localhost:3000/api/accountsBook/idAccountsBook
 
 
 

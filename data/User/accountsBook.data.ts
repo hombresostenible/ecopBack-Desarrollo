@@ -112,7 +112,7 @@ export const getAccountsBooksData = async (userId: string): Promise<any> => {
 
 
 //OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS DEL USER
-export const getAccountsBooksIncomesApprovedData = async (userId: string): Promise<any> => {
+export const getIncomesApprovedData = async (userId: string): Promise<any> => {
     try {
         const allAccountsBook = await AccountsBook.findAll({
             where: { 
@@ -133,7 +133,7 @@ export const getAccountsBooksIncomesApprovedData = async (userId: string): Promi
 
 
 //OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
-export const getAccountsBooksIncomesApprovedByBranchData = async (idBranch: string): Promise<any> => {
+export const getIncomesApprovedByBranchData = async (idBranch: string): Promise<any> => {
     try {
         const AccountsBooksIncomesFound = await AccountsBook.findAll({
             where: {
