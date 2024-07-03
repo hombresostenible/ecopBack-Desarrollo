@@ -204,8 +204,6 @@ export const patchIncomesNotApprovedService = async (idAssets: string, body: any
 //SERVICE PARA ELIMINAR UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER
 export const deleteAccountsBookService = async (idAccountsBook: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        // const hasPermission = await checkPermissionForAccountsBookBranch(idAccountsBook, userId);
-        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este registro en el libro diario");
         await deleteAccountsBookData(idAccountsBook);
         return { code: 200, message: 'Registro eliminado exitosamente' };
     } catch (error) {

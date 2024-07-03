@@ -1,3 +1,4 @@
+import sequelize from '../../db';
 import AccountsBook from '../../schema/User/accountsBook.schema';
 import AccountsPayable from '../../schema/User/accountsPayable.schema';
 import AccountsReceivable from '../../schema/User/accountsReceivable.schema';
@@ -271,74 +272,78 @@ export const patchIncomesNotApprovedData = async (idAssets: string, body: Partia
 
 //ELIMINA UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER
 export const deleteAccountsBookData = async (idAccountsBook: string): Promise<void> => {
+    const transaction = await sequelize.transaction();
     try {
-        const transactionFound = await AccountsBook.findOne({ where: { id: idAccountsBook } });
-        if (!transactionFound) throw new Error('Registro del libro diario no encontrado');        
+        const transactionFound = await AccountsBook.findOne({ where: { id: idAccountsBook }, transaction });
+        if (!transactionFound) throw new Error('Registro del libro diario no encontrado');
+
         if (transactionFound.incomeCategory === 'Mercancia') {
             const merchandiseFound = await Merchandise.findOne({
-                where: { id: transactionFound?.itemId, nameItem: transactionFound?.nameItem, branchId: transactionFound?.branchId },
+                where: { id: transactionFound.itemId, nameItem: transactionFound.nameItem, branchId: transactionFound.branchId },
+                transaction
             });
             if (!merchandiseFound) throw new ServiceError(400, "No se encontró la mercancía de este registro");
-            if (merchandiseFound) {
-                if (transactionFound?.transactionType === 'Ingreso') {
-                    merchandiseFound.inventory += transactionFound?.quantity;
-                    merchandiseFound.salesCount -= transactionFound?.quantity;
-                } else if (transactionFound?.transactionType === 'Gasto') merchandiseFound.inventory -= transactionFound?.quantity;
-                await merchandiseFound.save();
+            if (transactionFound.transactionType === 'Ingreso') {
+                merchandiseFound.inventory += transactionFound.quantity;
+                merchandiseFound.salesCount -= transactionFound.quantity;
+            } else if (transactionFound.transactionType === 'Gasto') {
+                merchandiseFound.inventory -= transactionFound.quantity;
             }
+            await merchandiseFound.save({ transaction });
         } else if (transactionFound.incomeCategory === 'Producto') {
             const productFound = await Product.findOne({
-                where: { id: transactionFound?.itemId, nameItem: transactionFound?.nameItem, branchId: transactionFound?.branchId },
+                where: { id: transactionFound.itemId, nameItem: transactionFound.nameItem, branchId: transactionFound.branchId },
+                transaction
             });
             if (!productFound) throw new ServiceError(400, "No se encontró el producto de este registro");
-            if (productFound) {
-                if (transactionFound?.transactionType === 'Ingreso') {
-                    productFound.inventory += transactionFound?.quantity;
-                    productFound.salesCount -= transactionFound?.quantity;
-                } else if (transactionFound?.transactionType === 'Gasto') productFound.inventory -= transactionFound?.quantity;
-                await productFound.save();
+            if (transactionFound.transactionType === 'Ingreso') {
+                productFound.inventory += transactionFound.quantity;
+                productFound.salesCount -= transactionFound.quantity;
+            } else if (transactionFound.transactionType === 'Gasto') {
+                productFound.inventory -= transactionFound.quantity;
             }
+            await productFound.save({ transaction });
         } else if (transactionFound.incomeCategory === 'Materia Prima') {
             const rawMaterialFound = await RawMaterial.findOne({
-                where: { id: transactionFound?.itemId, nameItem: transactionFound?.nameItem, branchId: transactionFound?.branchId },
+                where: { id: transactionFound.itemId, nameItem: transactionFound.nameItem, branchId: transactionFound.branchId },
+                transaction
             });
             if (!rawMaterialFound) throw new ServiceError(400, "No se encontró la materia prima de este registro");
-            if (rawMaterialFound) {
-                if (transactionFound?.transactionType === 'Ingreso') {
-                    rawMaterialFound.inventory += transactionFound?.quantity;
-                    rawMaterialFound.salesCount -= transactionFound?.quantity;
-                } else if (transactionFound?.transactionType === 'Gasto') rawMaterialFound.inventory -= transactionFound?.quantity;
-                await rawMaterialFound.save();
+            if (transactionFound.transactionType === 'Ingreso') {
+                rawMaterialFound.inventory += transactionFound.quantity;
+                rawMaterialFound.salesCount -= transactionFound.quantity;
+            } else if (transactionFound.transactionType === 'Gasto') {
+                rawMaterialFound.inventory -= transactionFound.quantity;
             }
+            await rawMaterialFound.save({ transaction });
         } else if (transactionFound.incomeCategory === 'Servicio') {
             const serviceFound = await Service.findOne({
-                where: { id: transactionFound?.itemId, nameItem: transactionFound?.nameItem, branchId: transactionFound?.branchId },
+                where: { id: transactionFound.itemId, nameItem: transactionFound.nameItem, branchId: transactionFound.branchId },
+                transaction
             });
             if (!serviceFound) throw new ServiceError(400, "No se encontró el servicio de este registro");
-            if (serviceFound) {
-                if (transactionFound?.transactionType === 'Ingreso') serviceFound.salesCount -= transactionFound?.quantity;
-                await serviceFound.save();
+            if (transactionFound.transactionType === 'Ingreso') {
+                serviceFound.salesCount -= transactionFound.quantity;
             }
-        } else await AccountsBook.destroy({ where: { id: idAccountsBook } });
+            await serviceFound.save({ transaction });
+        }
 
-        //ELIMINAMOS EL REGISTRO DE LA TABLA DE "AccountsReceivable"
-        const accountReceivableFound = await AccountsReceivable.findOne({ where: { accountsBookId: idAccountsBook } });
-        if (!accountReceivableFound) throw new Error('CXC del no encontrada');
-        if (accountReceivableFound) await AccountsReceivable.destroy({ where: { accountsBookId: idAccountsBook } });
-        
-        //ELIMINAMOS EL REGISTRO DE LA TABLA DE "AccountsReceivable"
-        const accountPayableFound = await AccountsPayable.findOne({ where: { accountsBookId: idAccountsBook } });
-        if (!accountPayableFound) throw new Error('CXP del no encontrada');
-        if (accountPayableFound) await AccountsReceivable.destroy({ where: { accountsBookId: idAccountsBook } });
-        
-        //ELIMINAMOS EL REGISTRO DE LA TABLA DE "Sustainability"
-        const sustainabilityFound = await Sustainability.findOne({ where: { accountsBookId: idAccountsBook } });
-        if (!sustainabilityFound) throw new Error('Registro de sostenibilidad del no encontrada');
-        if (sustainabilityFound) await Sustainability.destroy({ where: { accountsBookId: idAccountsBook } });
+        // Eliminar registros relacionados
+        const accountReceivableFound = await AccountsReceivable.findOne({ where: { accountsBookId: idAccountsBook }, transaction });
+        if (accountReceivableFound) await AccountsReceivable.destroy({ where: { accountsBookId: idAccountsBook }, transaction });
 
-        //ELIMINAMOS EL REGISTRO DE LA TABLA DE "AccountsBook"
-        await AccountsBook.destroy({ where: { id: idAccountsBook } });
+        const accountPayableFound = await AccountsPayable.findOne({ where: { accountsBookId: idAccountsBook }, transaction });
+        if (accountPayableFound) await AccountsPayable.destroy({ where: { accountsBookId: idAccountsBook }, transaction });
+
+        const sustainabilityFound = await Sustainability.findOne({ where: { accountsBookId: idAccountsBook }, transaction });
+        if (sustainabilityFound) await Sustainability.destroy({ where: { accountsBookId: idAccountsBook }, transaction });
+
+        await AccountsBook.destroy({ where: { id: idAccountsBook }, transaction });
+
+        await transaction.commit();
     } catch (error) {
+        await transaction.rollback();
+        console.error('Error: ', error);
         throw error;
-    };
+    }
 };
