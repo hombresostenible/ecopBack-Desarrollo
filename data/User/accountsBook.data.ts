@@ -44,7 +44,7 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
         // Actualizar inventario según los artículos vendidos
         if (body.itemsSold) {
             for (const item of body.itemsSold) {
-                switch (item.incomeCategory) {
+                switch (item.type) {
                     case 'Assets':
                         await incomeFromCashSaleAssets(item, body.branchId, body.transactionType);
                         break;
@@ -61,7 +61,7 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
                         await incomeFromCashSaleServices(item, body.branchId, body.transactionType);
                         break;
                     default:
-                        throw new ServiceError(400, `Categoría de ingreso no reconocida: ${item.incomeCategory}`);
+                        throw new ServiceError(400, `Categoría de ingreso no reconocida: ${item.type}`);
                 }
             }
         }
@@ -294,7 +294,7 @@ export const deleteAccountsBookData = async (idAccountsBook: string): Promise<vo
         // Iteración y procesamiento de itemsSold
         if (transactionFound.itemsSold && transactionFound.itemsSold.length > 0) {
             for (const itemSold of transactionFound.itemsSold) {
-                switch (itemSold.incomeCategory) {
+                switch (itemSold.type) {
                     case 'Merchandise': {
                         await processMerchandise(transactionFound, itemSold, transaction);
                         break;
@@ -312,7 +312,7 @@ export const deleteAccountsBookData = async (idAccountsBook: string): Promise<vo
                         break;
                     }
                     default:
-                        throw new ServiceError(400, `Categoría de ingreso desconocida: ${itemSold.incomeCategory}`);
+                        throw new ServiceError(400, `Categoría de ingreso desconocida: ${itemSold.type}`);
                 }
             }
         }
