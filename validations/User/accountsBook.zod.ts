@@ -5,7 +5,6 @@ type AccountsBookSchemaType = ZodObject<{
     transactionDate: ZodString;
     transactionType: ZodString;
     creditCash: ZodString;
-    nameItem: ZodString;
     totalValue: ZodNumber;
     branchId: ZodString;
 }>;
@@ -22,9 +21,6 @@ export const accountsBookSchemaZod: AccountsBookSchemaType = z.object({
     }),
     creditCash: z.string({
         required_error: 'El tipo de ingreso del registro contable es requerido',
-    }),
-    nameItem: z.string({
-        required_error: 'El nombre del item del registro contable es requerido',
     }),
     totalValue: z.number({
         required_error: 'El valor total del registro contable es requerido',

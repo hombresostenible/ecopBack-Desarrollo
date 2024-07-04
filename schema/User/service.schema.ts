@@ -10,7 +10,7 @@ class Service extends Model {
     public sellingPrice!: number;
     public IVA!: number;    
     public serviceAssets!: { nameItem: string; assetId?: string | null}[];
-    public serviceProducts!: { nameItem: string; productlId?: string | null; quantity: string}[];
+    public serviceProducts!: { nameItem: string; productId?: string | null; quantity: string}[];
     public serviceRawMaterials!: { nameItem: string; rawMaterialId?: string | null; quantity: string}[];
     public isDiscounted!: 'Si' | 'No';
     public discountPercentage!: number;
