@@ -2,9 +2,11 @@ import express, { Request, Response } from "express";
 import {
     postRegisterUserService,
     getSearchEmailUserPasswordChangeService,
+    putProfileUserService,
     putResetPasswordUserService,
     putResetPasswordUserIsBlockedService,
 } from "../../services/User/user.services";
+import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware.js';
 import { registerUserSchema } from '../../validations/User/user.zod';
 import { ServiceError } from '../../types/Responses/responses.types';
@@ -44,6 +46,25 @@ router.get("/email-user", async (req: Request, res: Response): Promise<void> => 
         res.status(errorController.code).json(errorController.message);
     }                
 }); // GET - http://localhost:3000/api/user/email-user?email=carlosmario.reyesp@yahoo.com
+
+
+
+//ACTUALIZAR EL PERFIL DEL USER
+router.put("/profile-user", authRequired, async (req: Request, res: Response): Promise<void> => {
+    try {
+        const body = req.body;
+        const { id } = req.user;
+        const serviceLayerResponse = await putProfileUserService(body, id);
+        if (!serviceLayerResponse) {
+            res.status(401).json({ message: 'Usuario no encontrado' });
+            return;
+        }
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // PUT - http://localhost:3000/api/user/profile-user con { "name": "Mario ACT", "lastName": "Reyes", "corporateName": null, "typeDocumentId": "Cedula de Ciudadania", "documentId": "110521284", "typeRole": "Superadmin", "department": "Tolima", "city": "Ibagué", "address": "Cra 10 # 3 - 20", "phone": "3001002020", "email": "carlosmario.reyesp@gmail.com", "password": "password" }
 
 
 

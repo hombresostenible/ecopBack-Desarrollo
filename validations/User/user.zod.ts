@@ -4,14 +4,10 @@ import { z, ZodObject, ZodString, ZodBoolean } from 'zod';
 type RegisterUserSchemaType = ZodObject<{
     typeDocumentId: ZodString;
     documentId: ZodString;
-    verificationDigit: ZodString;
     typeRole: ZodString;
-    economicSector: ZodString;
-    codeCiiu: ZodString;
     department: ZodString,
     city: ZodString,
     codeDane: ZodString;
-    subregionCodeDane: ZodString;
     address: ZodString,
     phone: ZodString;
     email: ZodString;
@@ -26,17 +22,8 @@ export const registerUserSchema: RegisterUserSchemaType = z.object({
     documentId: z.string({
         required_error: 'El número de identidad es requerido',
     }),
-    verificationDigit: z.string({
-        required_error: 'El dígito de verificación es requerido',
-    }),
     typeRole: z.string({
         required_error: 'El tipo de rol es requerido',
-    }),
-    economicSector: z.string({
-        required_error: 'El sector económico es requerido',
-    }),
-    codeCiiu: z.string({
-        required_error: 'El código CIIU es requerido',
     }),
     department: z.string({
         required_error: 'El departamento de residencia es requerido',
@@ -46,9 +33,6 @@ export const registerUserSchema: RegisterUserSchemaType = z.object({
     }),
     codeDane: z.string({
         required_error: 'El código Dane de la ciudad es requerido',
-    }),
-    subregionCodeDane: z.string({
-        required_error: 'El código Dane de la subregión es requerido',
     }),
     address: z.string({
         required_error: 'La dirección de domicilio es requerida',
