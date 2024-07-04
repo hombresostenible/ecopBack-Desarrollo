@@ -6,7 +6,7 @@ import { ServiceError } from '../../../types/Responses/responses.types';
 
 export const incomeFromCashSaleServices = async (item: IItemsSold, branchId: string, transactionType: string): Promise<any> => {
     const serviceFound = await Service.findOne({
-        where: { id: item.itemId, branchId: branchId },
+        where: { id: item.id, branchId: branchId },
     });
     if (!serviceFound) throw new ServiceError(400, "El servicio no existe en esta sede");
 
