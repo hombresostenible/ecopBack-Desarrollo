@@ -33,11 +33,11 @@ export const incomeAccountsReceivable = async (body: IAccountsBook, newTransacti
             if (body.seller !== undefined) accountReceivable.seller = body.seller;
 
             //Relaciones con los modelos de Assets, Merchandise, Product, RawMaterial y Service
-            // if (body.incomeCategory === 'Activo') accountReceivable.assetId = body.itemId;
-            // if (body.incomeCategory === 'Mercancia') accountReceivable.merchandiseId = body.itemId;
-            // if (body.incomeCategory === 'Producto') accountReceivable.productId = body.itemId;
-            // if (body.incomeCategory === 'Materia Prima') accountReceivable.rawMaterialId = body.itemId;
-            // if (body.incomeCategory === 'Servicio') accountReceivable.serviceId = body.itemId;
+            // if (body.incomeCategory === 'Assets') accountReceivable.assetId = body.itemId;
+            // if (body.incomeCategory === 'Merchandise') accountReceivable.merchandiseId = body.itemId;
+            // if (body.incomeCategory === 'Product') accountReceivable.productId = body.itemId;
+            // if (body.incomeCategory === 'RawMaterial') accountReceivable.rawMaterialId = body.itemId;
+            // if (body.incomeCategory === 'Service') accountReceivable.serviceId = body.itemId;
     
             const newAccountReceivableTransaction = new AccountsReceivable();
             Object.assign(newAccountReceivableTransaction, accountReceivable);

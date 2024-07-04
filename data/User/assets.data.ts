@@ -7,11 +7,11 @@ import { ServiceError } from '../../types/Responses/responses.types';
 //CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
 export const postAssetData = async (body: IAssets, userId: string): Promise<any> => {
     try {
-        const existingMachinery = await Assets.findOne({
+        const existingAsset = await Assets.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
         });
-        if (existingMachinery) {
-            if (existingMachinery.userId === userId) return null;
+        if (existingAsset) {
+            if (existingAsset.userId === userId) return null;
             throw new ServiceError(400, "Ya existe un equipo, máquina o herramienta con el mismo nombre en esta sede, cámbialo");
         }
         // Si el activo no existe, crearlo en la base de datos
