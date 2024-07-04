@@ -184,11 +184,11 @@ export const putAccountsBookService = async (idAccountsBook: string, body: IAcco
 
 
 //APROBAR UN REGISTRO DE INGRESO DEL USER
-export const patchIncomesNotApprovedService = async (idAssets: string, body: any, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const patchIncomesNotApprovedService = async (idAssets: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
         // const hasPermission = await checkPermissionForAssets(idAssets, userId);
         // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para aumentar unidades del inventario de este equipo, máquina o herramienta");
-        const updateAsset = await patchIncomesNotApprovedData(idAssets, body, userId);
+        const updateAsset = await patchIncomesNotApprovedData(idAssets, userId);
         if (!updateAsset) throw new ServiceError(404, "Registro pendiente de aprobar no encontrado");
         return { code: 200, message: "Registro aprobado exitosamente", result: updateAsset };
     } catch (error) {

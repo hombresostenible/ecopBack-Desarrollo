@@ -262,7 +262,7 @@ export const putAccountsBookData = async (idAccountsBook: string, body: IAccount
 
 
 
-export const patchIncomesNotApprovedData = async (idAssets: string, body: Partial<IAccountsBook>, userId: string): Promise<IAccountsBook | null> => {
+export const patchIncomesNotApprovedData = async (idAssets: string, userId: string): Promise<IAccountsBook | null> => {
     try {
         let whereClause: Record<string, any> = { id: idAssets };
         whereClause.userId = userId;
@@ -290,7 +290,6 @@ export const deleteAccountsBookData = async (idAccountsBook: string): Promise<vo
     try {
         const transactionFound = await AccountsBook.findOne({ where: { id: idAccountsBook }, transaction });
         if (!transactionFound) throw new Error('Registro del libro diario no encontrado');
-
         // Iteración y procesamiento de itemsSold
         if (transactionFound.itemsSold && transactionFound.itemsSold.length > 0) {
             for (const itemSold of transactionFound.itemsSold) {
@@ -333,7 +332,7 @@ export const deleteAccountsBookData = async (idAccountsBook: string): Promise<vo
 // Función para procesar mercancías
 const processMerchandise = async (transactionFound: any, itemSold: any, transaction: any) => {
     const merchandiseFound = await Merchandise.findOne({
-        where: { id: itemSold.itemId, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
     if (!merchandiseFound) throw new ServiceError(400, "No se encontró la mercancía de este registro");
@@ -349,7 +348,7 @@ const processMerchandise = async (transactionFound: any, itemSold: any, transact
 // Función para procesar productos
 const processProduct = async (transactionFound: any, itemSold: any, transaction: any) => {
     const productFound = await Product.findOne({
-        where: { id: itemSold.itemId, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
     if (!productFound) throw new ServiceError(400, "No se encontró el producto de este registro");
@@ -365,7 +364,7 @@ const processProduct = async (transactionFound: any, itemSold: any, transaction:
 // Función para procesar materias primas
 const processRawMaterial = async (transactionFound: any, itemSold: any, transaction: any) => {
     const rawMaterialFound = await RawMaterial.findOne({
-        where: { id: itemSold.itemId, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
     if (!rawMaterialFound) throw new ServiceError(400, "No se encontró la materia prima de este registro");
@@ -381,7 +380,7 @@ const processRawMaterial = async (transactionFound: any, itemSold: any, transact
 // Función para procesar servicios
 const processService = async (transactionFound: any, itemSold: any, transaction: any) => {
     const serviceFound = await Service.findOne({
-        where: { id: itemSold.itemId, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
     if (!serviceFound) throw new ServiceError(400, "No se encontró el servicio de este registro");

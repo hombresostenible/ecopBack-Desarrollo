@@ -193,9 +193,8 @@ router.put("/:idAccountsBook", authRequired, checkRole, validateSchema(accountsB
 router.patch("/incomes-not-approved/:idAccountsBook", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idAccountsBook } = req.params;
-        const body = req.body;
         const { id } = req.user;
-        const serviceLayerResponse = await patchIncomesNotApprovedService(idAccountsBook, body, id);
+        const serviceLayerResponse = await patchIncomesNotApprovedService(idAccountsBook, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;
