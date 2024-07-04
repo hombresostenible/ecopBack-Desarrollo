@@ -80,7 +80,7 @@ User.init(
             validate: {
                 len: [1, 1],
             },
-            allowNull: false,
+            allowNull: true,
         },
         commercialName: {
             type: DataTypes.STRING,
@@ -103,11 +103,11 @@ User.init(
             validate: {
                 isIn: [[ 'Agricultura', 'Manufactura', 'Comercio', 'Servicios', 'Construcción', 'Turismo', 'Otro' ]],
             },
-            allowNull: false,
+            allowNull: true,
         },
         codeCiiu: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         department: {
             type: DataTypes.STRING,
@@ -122,11 +122,11 @@ User.init(
         },
         codeDane: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         subregionCodeDane: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         address: {
             type: DataTypes.STRING,

@@ -1,6 +1,7 @@
 import {
     postRegisterUserData,
     getSearchEmailUserPasswordChangeData,
+    putProfileUserData,
     findUserData,
     findUserBlockedData,
 } from "../../data/User/user.data";
@@ -65,6 +66,22 @@ export const getSearchEmailUserPasswordChangeService = async (email: string): Pr
             });
         }
         return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//ACTUALIZAR EL PERFIL DEL USER
+export const putProfileUserService = async (body: IUser, userId: string): Promise<IServiceLayerResponseUser> => {
+    try {
+        const userUpdate = await putProfileUserData(body, userId);
+        if (!userUpdate) throw new ServiceError(404, "Usuario no encontrado");
+        return { code: 200, message: "Usuario actualizado exitosamente", result: userUpdate };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
