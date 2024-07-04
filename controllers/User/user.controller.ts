@@ -3,6 +3,8 @@ import {
     postRegisterUserService,
     getSearchEmailUserPasswordChangeService,
     putProfileUserService,
+    patchLogoUserService,
+    patchDeleteLogoUserService,
     putResetPasswordUserService,
     putResetPasswordUserIsBlockedService,
 } from "../../services/User/user.services";
@@ -65,6 +67,35 @@ router.put("/profile-user", authRequired, async (req: Request, res: Response): P
         res.status(errorController.code).json(errorController.message);
     }
 }); // PUT - http://localhost:3000/api/user/profile-user con { "name": "Mario ACT", "lastName": "Reyes", "corporateName": null, "typeDocumentId": "Cedula de Ciudadania", "documentId": "110521284", "typeRole": "Superadmin", "department": "Tolima", "city": "Ibagué", "address": "Cra 10 # 3 - 20", "phone": "3001002020", "email": "carlosmario.reyesp@gmail.com", "password": "password" }
+
+
+
+//SUBIR LA IMAGEN DE PERFIL DEL USER
+router.patch("/logo-user", authRequired, async (req: Request, res: Response) => {
+    try {
+        const body = req.body;
+        const { id } = req.user;
+        const serviceLayerResponse = await patchLogoUserService(id, body);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+});  // PATCH - http://localhost:3000/api/user/logo-user con { "logo": "" }
+
+
+
+//ELIMINAR LA IMAGEN DE PERFIL DEL USER
+router.patch("/delete-logo-user", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { id } = req.user;
+        const serviceLayerResponse = await patchDeleteLogoUserService(id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+});  // PATCH - http://localhost:3000/api/user/delete-logo-user con { "logo": "" }
 
 
 
