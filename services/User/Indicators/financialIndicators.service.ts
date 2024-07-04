@@ -60,10 +60,7 @@ export const getSalesPerPeriodService = async (userId: string): Promise<IService
             id: sales.id,
             branchId: sales.branchId,
             transactionDate: sales.transactionDate,
-            incomeCategory: sales.incomeCategory,
-            nameItem: sales.nameItem,
-            unitValue: sales.unitValue,
-            quantity: sales.quantity,            
+            itemsSold: sales.itemsSold,           
             totalValue: sales.totalValue,
         }));
         return { code: 200, result: salesResult };
@@ -90,10 +87,7 @@ export const getSalesPerPeriodBranchService = async (idBranch: string, userId: s
             id: sales.id,
             branchId: sales.branchId,
             transactionDate: sales.transactionDate,
-            incomeCategory: sales.incomeCategory,
-            nameItem: sales.nameItem,
-            unitValue: sales.unitValue,
-            quantity: sales.quantity,
+            itemsSold: sales.itemsSold,
             totalValue: sales.totalValue,
         }));
         return { code: 200, result: salesResult };
@@ -138,9 +132,9 @@ export const getExpensesPerPeriodService = async (userId: string): Promise<IServ
             branchId: expenses.branchId,
             transactionDate: expenses.transactionDate,
             expenseCategory: expenses.expenseCategory,
-            nameItem: expenses.nameItem,
-            unitValue: expenses.unitValue,
-            quantity: expenses.quantity,            
+            // nameItem: expenses.nameItem,
+            // unitValue: expenses.unitValue,
+            // quantity: expenses.quantity,            
             totalValue: expenses.totalValue,
         }));
         return { code: 200, result: salesResult };
@@ -168,9 +162,9 @@ export const getExpensesPerPeriodBranchService = async (idBranch: string, userId
             branchId: expenses.branchId,
             transactionDate: expenses.transactionDate,
             expenseCategory: expenses.expenseCategory,
-            nameItem: expenses.nameItem,
-            unitValue: expenses.unitValue,
-            quantity: expenses.quantity,            
+            // nameItem: expenses.nameItem,
+            // unitValue: expenses.unitValue,
+            // quantity: expenses.quantity,            
             totalValue: expenses.totalValue,
         }));
         return { code: 200, result: salesResult };

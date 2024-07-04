@@ -27,54 +27,67 @@ import { ServiceError } from "../../types/Responses/responses.types";
 //CREAR UN REGISTRO CONTABLE DEL USER
 export const postAccountsBookData = async (body: IAccountsBook, userId: string): Promise<IAccountsBook> => {
     try {
-        //PRIMERO SE GUARDA LA TRANSACCION EN ACCOUNTSBOOK
         // Establecer transactionApproved basado en meanPayment
         if (body.transactionType === 'Ingreso' && body.meanPayment === 'Efectivo' && body.creditCash === 'Contado') {
             body.transactionApproved = true;
-        } else body.transactionApproved = false;
-        //PRIMERO SE GUARDA LA TRANSACCION EN ACCOUNTSBOOK
+        } else {
+            body.transactionApproved = false;
+        }
+
+        // Guardar la transacción en AccountsBook
         const newTransaction = new AccountsBook({
             ...body,
             userId: userId,
         });
         await newTransaction.save();
-        
 
+        // Actualizar inventario según los artículos vendidos
+        if (body.itemsSold) {
+            for (const item of body.itemsSold) {
+                switch (item.incomeCategory) {
+                    case 'Activo':
+                        await incomeFromCashSaleAssets(item, body.branchId, body.transactionType);
+                        break;
+                    case 'Mercancia':
+                        await incomeFromCashSaleMerchandises(item, body.branchId, body.transactionType);
+                        break;
+                    case 'Producto':
+                        await incomeFromCashSaleProduct(item, body.branchId, body.transactionType);
+                        break;
+                    case 'Materia Prima':
+                        await incomeFromCashSaleRawMaterials(item, body.branchId, body.transactionType);
+                        break;
+                    case 'Servicio':
+                        await incomeFromCashSaleServices(item, body.branchId, body.transactionType);
+                        break;
+                    default:
+                        throw new ServiceError(400, `Categoría de ingreso no reconocida: ${item.incomeCategory}`);
+                }
+            }
+        }
 
-        //ACTUALIZAMOS EL INVENTARIO EN LA TABLA DE ASSETS 
-        if (body.incomeCategory === 'Activo') incomeFromCashSaleAssets(body);
+        // Ingresos por ventas a crédito - cuentas por cobrar
+        if (body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Credito") {
+            await incomeAccountsReceivable(body, newTransaction.id, userId);
+        }
 
-        //ACTUALIZAMOS EL INVENTARIO EN LA TABLA DE MERCHANDISES 
-        if (body.incomeCategory === 'Mercancia') incomeFromCashSaleMerchandises(body);
-        
-        //ACTUALIZAMOS EL INVENTARIO EN LA TABLA DE PRODUCT 
-        if (body.incomeCategory === 'Producto') incomeFromCashSaleProduct(body)     
-            
-        //ACTUALIZAMOS EL INVENTARIO EN LA TABLA DE RAWMATERIAL 
-        if (body.incomeCategory === 'Materia Prima') incomeFromCashSaleRawMaterials(body);
-            
-        //ACTUALIZAMOS EL INVENTARIO EN LA TABLA DE SERVICE 
-        if (body.incomeCategory === 'Servicio') incomeFromCashSaleServices(body);
+        // Pagos a cuentas por cobrar
+        if (body.pay === 'Si' && body.transactionType === 'Ingreso' && body.creditCash === "Contado") {
+            await paymentsAccountsReceivable(body, userId);
+        }
 
-        //^INGRESOS POR VENTAS A CREDITO - CUENTAS POR COBRAR
-        // SE CREA LA CXC EN LA TABLA ACCOUNTSRECEIVABLE PARA USER
-        if (body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Credito") incomeAccountsReceivable(body, newTransaction.id, userId)
+        // Gastos a crédito - cuentas por pagar
+        if (body.pay === 'No' && body.transactionType === 'Gasto' && body.creditCash === "Credito") {
+            await expensesAccountsPayable(body, newTransaction.id, userId);
+        }
 
-        //^PAGOS A CUENTAS POR COBRAR
-        // SE HACE EL PAGO A LA CXC EN LA TABLA ACCOUNTSRECEIVABLE PARA USER
-        if (body.pay === 'Si' && body.transactionType === 'Ingreso' && body.creditCash === "Contado") paymentsAccountsReceivable(body, userId);
+        // Pagos a cuentas por pagar
+        if (body.pay === 'Si' && body.transactionType === 'Gasto' && body.creditCash === "Contado") {
+            await paymentsAccountsPayable(body, userId);
+        }
 
-        //^GASTOS A CREDITO - CUENTAS POR PAGAR
-        // SE CREA LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA USER
-        if (body.pay === 'No' && body.transactionType === 'Gasto' && body.creditCash === "Credito") expensesAccountsPayable(body, newTransaction.id, userId);
-
-        //^PAGOS A CUENTAS POR PAGAR
-        // SE HACE EL PAGO A LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA USER
-        if (body.pay === 'Si' && body.transactionType === 'Gasto' && body.creditCash === "Contado") paymentsAccountsPayable(body, userId);
-        
-        //^CREAR DATOS EN LA TABLA DE SUSTAINABILITY PARA INDICADORES DE SOSTENIBILIDAD
-        // PASAR LOS DATOS DEL LIBRO DIARIO A LA TABLA DE SOSTENIBILIDAD
-        const isSustainabilityExpense = body.expenseCategory !== undefined && [ 'Acueducto', 'Energia', 'Gas', 'Internet', 'Celular/Plan de datos' ].includes(body.expenseCategory);
+        // Crear datos en la tabla de Sustainability para indicadores de sostenibilidad
+        const isSustainabilityExpense = body.expenseCategory !== undefined && ['Acueducto', 'Energia', 'Gas', 'Internet', 'Celular/Plan de datos'].includes(body.expenseCategory);
         if (isSustainabilityExpense) {
             const sustainabilityData = {
                 branchId: body.branchId,
@@ -85,15 +98,16 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
                 totalValue: body.totalValue,
                 accountsBookId: newTransaction.id,
                 userId: userId
-                // ... (otras propiedades que se necesiten)
+                // ... otras propiedades que se necesiten
             };
             const newSustainabilityTransaction = new Sustainability(sustainabilityData);
             await newSustainabilityTransaction.save();
-        };
+        }
+
         return newTransaction;
     } catch (error) {
         throw error;
-    };
+    }
 };
 
 
@@ -277,73 +291,111 @@ export const deleteAccountsBookData = async (idAccountsBook: string): Promise<vo
         const transactionFound = await AccountsBook.findOne({ where: { id: idAccountsBook }, transaction });
         if (!transactionFound) throw new Error('Registro del libro diario no encontrado');
 
-        if (transactionFound.incomeCategory === 'Mercancia') {
-            const merchandiseFound = await Merchandise.findOne({
-                where: { id: transactionFound.itemId, nameItem: transactionFound.nameItem, branchId: transactionFound.branchId },
-                transaction
-            });
-            if (!merchandiseFound) throw new ServiceError(400, "No se encontró la mercancía de este registro");
-            if (transactionFound.transactionType === 'Ingreso') {
-                merchandiseFound.inventory += transactionFound.quantity;
-                merchandiseFound.salesCount -= transactionFound.quantity;
-            } else if (transactionFound.transactionType === 'Gasto') {
-                merchandiseFound.inventory -= transactionFound.quantity;
+        // Iteración y procesamiento de itemsSold
+        if (transactionFound.itemsSold && transactionFound.itemsSold.length > 0) {
+            for (const itemSold of transactionFound.itemsSold) {
+                switch (itemSold.incomeCategory) {
+                    case 'Mercancia': {
+                        await processMerchandise(transactionFound, itemSold, transaction);
+                        break;
+                    }
+                    case 'Producto': {
+                        await processProduct(transactionFound, itemSold, transaction);
+                        break;
+                    }
+                    case 'Materia Prima': {
+                        await processRawMaterial(transactionFound, itemSold, transaction);
+                        break;
+                    }
+                    case 'Servicio': {
+                        await processService(transactionFound, itemSold, transaction);
+                        break;
+                    }
+                    default:
+                        throw new ServiceError(400, `Categoría de ingreso desconocida: ${itemSold.incomeCategory}`);
+                }
             }
-            await merchandiseFound.save({ transaction });
-        } else if (transactionFound.incomeCategory === 'Producto') {
-            const productFound = await Product.findOne({
-                where: { id: transactionFound.itemId, nameItem: transactionFound.nameItem, branchId: transactionFound.branchId },
-                transaction
-            });
-            if (!productFound) throw new ServiceError(400, "No se encontró el producto de este registro");
-            if (transactionFound.transactionType === 'Ingreso') {
-                productFound.inventory += transactionFound.quantity;
-                productFound.salesCount -= transactionFound.quantity;
-            } else if (transactionFound.transactionType === 'Gasto') {
-                productFound.inventory -= transactionFound.quantity;
-            }
-            await productFound.save({ transaction });
-        } else if (transactionFound.incomeCategory === 'Materia Prima') {
-            const rawMaterialFound = await RawMaterial.findOne({
-                where: { id: transactionFound.itemId, nameItem: transactionFound.nameItem, branchId: transactionFound.branchId },
-                transaction
-            });
-            if (!rawMaterialFound) throw new ServiceError(400, "No se encontró la materia prima de este registro");
-            if (transactionFound.transactionType === 'Ingreso') {
-                rawMaterialFound.inventory += transactionFound.quantity;
-                rawMaterialFound.salesCount -= transactionFound.quantity;
-            } else if (transactionFound.transactionType === 'Gasto') {
-                rawMaterialFound.inventory -= transactionFound.quantity;
-            }
-            await rawMaterialFound.save({ transaction });
-        } else if (transactionFound.incomeCategory === 'Servicio') {
-            const serviceFound = await Service.findOne({
-                where: { id: transactionFound.itemId, nameItem: transactionFound.nameItem, branchId: transactionFound.branchId },
-                transaction
-            });
-            if (!serviceFound) throw new ServiceError(400, "No se encontró el servicio de este registro");
-            if (transactionFound.transactionType === 'Ingreso') {
-                serviceFound.salesCount -= transactionFound.quantity;
-            }
-            await serviceFound.save({ transaction });
         }
 
-        // Eliminar registros relacionados
-        const accountReceivableFound = await AccountsReceivable.findOne({ where: { accountsBookId: idAccountsBook }, transaction });
-        if (accountReceivableFound) await AccountsReceivable.destroy({ where: { accountsBookId: idAccountsBook }, transaction });
+        // Eliminación de registros relacionados
+        await deleteRelatedRecords(idAccountsBook, transaction);
 
-        const accountPayableFound = await AccountsPayable.findOne({ where: { accountsBookId: idAccountsBook }, transaction });
-        if (accountPayableFound) await AccountsPayable.destroy({ where: { accountsBookId: idAccountsBook }, transaction });
-
-        const sustainabilityFound = await Sustainability.findOne({ where: { accountsBookId: idAccountsBook }, transaction });
-        if (sustainabilityFound) await Sustainability.destroy({ where: { accountsBookId: idAccountsBook }, transaction });
-
+        // Eliminación del registro del libro diario
         await AccountsBook.destroy({ where: { id: idAccountsBook }, transaction });
 
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();
-        console.error('Error: ', error);
         throw error;
     }
+};
+
+// Función para procesar mercancías
+const processMerchandise = async (transactionFound: any, itemSold: any, transaction: any) => {
+    const merchandiseFound = await Merchandise.findOne({
+        where: { id: itemSold.itemId, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        transaction
+    });
+    if (!merchandiseFound) throw new ServiceError(400, "No se encontró la mercancía de este registro");
+    if (transactionFound.transactionType === 'Ingreso') {
+        merchandiseFound.inventory += itemSold.quantity;
+        merchandiseFound.salesCount -= itemSold.quantity;
+    } else if (transactionFound.transactionType === 'Gasto') {
+        merchandiseFound.inventory -= itemSold.quantity;
+    }
+    await merchandiseFound.save({ transaction });
+};
+
+// Función para procesar productos
+const processProduct = async (transactionFound: any, itemSold: any, transaction: any) => {
+    const productFound = await Product.findOne({
+        where: { id: itemSold.itemId, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        transaction
+    });
+    if (!productFound) throw new ServiceError(400, "No se encontró el producto de este registro");
+    if (transactionFound.transactionType === 'Ingreso') {
+        productFound.inventory += itemSold.quantity;
+        productFound.salesCount -= itemSold.quantity;
+    } else if (transactionFound.transactionType === 'Gasto') {
+        productFound.inventory -= itemSold.quantity;
+    }
+    await productFound.save({ transaction });
+};
+
+// Función para procesar materias primas
+const processRawMaterial = async (transactionFound: any, itemSold: any, transaction: any) => {
+    const rawMaterialFound = await RawMaterial.findOne({
+        where: { id: itemSold.itemId, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        transaction
+    });
+    if (!rawMaterialFound) throw new ServiceError(400, "No se encontró la materia prima de este registro");
+    if (transactionFound.transactionType === 'Ingreso') {
+        rawMaterialFound.inventory += itemSold.quantity;
+        rawMaterialFound.salesCount -= itemSold.quantity;
+    } else if (transactionFound.transactionType === 'Gasto') {
+        rawMaterialFound.inventory -= itemSold.quantity;
+    }
+    await rawMaterialFound.save({ transaction });
+};
+
+// Función para procesar servicios
+const processService = async (transactionFound: any, itemSold: any, transaction: any) => {
+    const serviceFound = await Service.findOne({
+        where: { id: itemSold.itemId, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        transaction
+    });
+    if (!serviceFound) throw new ServiceError(400, "No se encontró el servicio de este registro");
+    if (transactionFound.transactionType === 'Ingreso') {
+        serviceFound.salesCount -= itemSold.quantity;
+    }
+    await serviceFound.save({ transaction });
+};
+
+// Función para eliminar registros relacionados
+const deleteRelatedRecords = async (idAccountsBook: string, transaction: any) => {
+    await Promise.all([
+        AccountsReceivable.destroy({ where: { accountsBookId: idAccountsBook }, transaction }),
+        AccountsPayable.destroy({ where: { accountsBookId: idAccountsBook }, transaction }),
+        Sustainability.destroy({ where: { accountsBookId: idAccountsBook }, transaction })
+    ]);
 };
