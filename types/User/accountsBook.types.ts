@@ -1,7 +1,7 @@
 export interface IItemsSold {
     nameItem: string;
-    itemId: string;
-    type?: 'Assets' | 'Merchandise' | 'Product' | 'RawMaterial' | 'Service';
+    id: string;
+    type: 'Assets' | 'Merchandise' | 'Product' | 'RawMaterial' | 'Service';
     sellingPrice: number;
     quantity: number;
     subTotalValue: number;
