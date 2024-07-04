@@ -25,7 +25,7 @@ router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), 
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/branch con { "nameBranch": "Sede oriente", "departmentBranch": "Av Caracas", "cityBranch": "Av Caracas", "addressBranch": "Av Caracas", "identificationNumberBranch": "1000", "contactEmailBranch": "sedeoriente@gmail.com", "contactPhoneBranch": "3001002030", "nameManagerBranch": "Carlos", "lastNameManagerBranch": "Reyes", "managertypeDocumentId": "Cedula de Ciudadania", "managerIdDocument": "100020003000" }
+}); // POST - http://localhost:3000/api/branch con { "nameBranch": "Sede Centro", "department": "Bogota D.C.", "city": "Bogota D.C.", "codeDane": "11001", "subregionCodeDane": "11", "addressBranch": "Av Caracas", "contactEmailBranch": "sedecentro@gmail.com", "contactPhoneBranch": "3128082002", "nameManagerBranch": "Carlos", "lastNameManagerBranch": "Reyes", "typeDocumentIdManager": "Cedula de Ciudadania", "documentIdManager": "1110521285" }
 
 
 

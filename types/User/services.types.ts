@@ -10,7 +10,7 @@ export interface IService {
     }[];
     serviceProducts?: {
         nameItem: string;
-        productlId?: string | null;
+        productId?: string | null;
         quantity: string;
     }[];
     serviceRawMaterials?: {

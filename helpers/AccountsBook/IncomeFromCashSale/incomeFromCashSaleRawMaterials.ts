@@ -1,42 +1,45 @@
 import RawMaterial from "../../../schema/User/rawMaterial.schema";
-import { IAccountsBook } from "../../../types/User/accountsBook.types";
+import { IItemsSold } from '../../../types/User/accountsBook.types';
 import { ServiceError } from '../../../types/Responses/responses.types';
 
-export const incomeFromCashSaleRawMaterials = async (body: IAccountsBook): Promise<any> => {
+export const incomeFromCashSaleRawMaterials = async (item: IItemsSold, branchId: string, transactionType: string): Promise<any> => {
     const rawMaterialFound = await RawMaterial.findOne({
-        where: { id: body.itemId, nameItem: body.nameItem, branchId: body.branchId },
+        where: { id: item.itemId, nameItem: item.nameItem, branchId: branchId },
     });
     if (!rawMaterialFound) throw new ServiceError(400, "La materia prima no existe en esta sede");
-    if (rawMaterialFound) {
-        if (body.transactionType === 'Ingreso') {
+
+    if (transactionType === 'Ingreso') {
+        if (item.quantity !== undefined) {
             try {
-                if (body.quantity !== undefined) {
-                    rawMaterialFound.inventory -= body.quantity;
-                    rawMaterialFound.salesCount += body.quantity;
+                rawMaterialFound.inventory -= item.quantity;
+                rawMaterialFound.salesCount += item.quantity;
 
-                    const currentDate = new Date().toISOString();
-                    const quantity = -body.quantity;
+                const currentDate = new Date().toISOString();
+                const quantity = -item.quantity;
 
-                    rawMaterialFound.setDataValue('inventoryChanges', rawMaterialFound.inventoryChanges.concat({ date: currentDate, quantity: quantity, type: 'Salida' }));
-                    await rawMaterialFound.save();
-                } else throw new ServiceError(400, "La cantidad no está definida para el descuento en el inventario de la materia prima");                    
+                rawMaterialFound.setDataValue('inventoryChanges', rawMaterialFound.inventoryChanges.concat({ date: currentDate, quantity: quantity, type: 'Salida' }));
+                await rawMaterialFound.save();
             } catch (error) {
                 throw error;
-            };
-        } else if (body.transactionType === 'Gasto') {
+            }
+        } else {
+            throw new ServiceError(400, "La cantidad no está definida para el descuento en el inventario de la materia prima");
+        }
+    } else if (transactionType === 'Gasto') {
+        if (item.quantity !== undefined) {
             try {
-                if (body.quantity !== undefined) {
-                    rawMaterialFound.inventory  += body.quantity;
-                    
-                    const currentDate = new Date().toISOString();
-                    const quantity = body.quantity
-            
-                    rawMaterialFound.setDataValue('inventoryChanges', rawMaterialFound.inventoryChanges.concat({ date: currentDate, quantity: quantity, type: 'Ingreso' }));
-                    await rawMaterialFound.save();
-                } else throw new ServiceError(400, "La cantidad no está definida para el ingreso en el inventario de la materia prima");                     
+                rawMaterialFound.inventory += item.quantity;
+
+                const currentDate = new Date().toISOString();
+                const quantity = item.quantity;
+
+                rawMaterialFound.setDataValue('inventoryChanges', rawMaterialFound.inventoryChanges.concat({ date: currentDate, quantity: quantity, type: 'Ingreso' }));
+                await rawMaterialFound.save();
             } catch (error) {
                 throw error;
-            };
-        };
-    };
+            }
+        } else {
+            throw new ServiceError(400, "La cantidad no está definida para el ingreso en el inventario de la materia prima");
+        }
+    }
 };
