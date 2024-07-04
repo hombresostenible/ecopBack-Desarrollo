@@ -4,6 +4,7 @@ import User from '../../schema/User/user.schema';
 import {
     transporterZoho,
     mailUserWelcome,
+    mailUpdateUserProfile,
 } from '../../libs/nodemailer';
 import { IUser } from '../../types/User/users.types';
 import { ServiceError } from '../../types/Responses/responses.types';
@@ -86,6 +87,38 @@ export const getSearchEmailUserPasswordChangeData = async (email: string, token:
         await user.save();
         return user;
     } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//ACTUALIZAR EL PERFIL DEL USER
+export const putProfileUserData = async (body: IUser, userId: string): Promise<IUser | null> => {
+    const t = await sequelize.transaction();
+    try {
+        const [rowsUpdated] = await User.update(body, { where: { id: userId }, transaction: t });
+        if (rowsUpdated === 0) {
+            await t.rollback();
+            throw new ServiceError(403, "No se encontró ningún usuario para actualizar");
+        }
+        const updatedUser = await User.findByPk(userId, { transaction: t });
+        if (!updatedUser) {
+            await t.rollback();
+            throw new ServiceError(404, "No se encontró ningún usuario para actualizar");
+        }
+        const mailOptions = mailUpdateUserProfile(updatedUser.email, updatedUser.name);
+        try {
+            await transporterZoho.sendMail(mailOptions);
+            console.log('Correo electrónico de actualización de perfil enviado con éxito.');
+            await t.commit();
+            return updatedUser;
+        } catch (emailError) {
+            await t.rollback();
+            throw new ServiceError(500, 'Error al enviar el correo electrónico de actualización de perfil');
+        }
+    } catch (error) {
+        await t.rollback();
         throw error;
     }
 };
