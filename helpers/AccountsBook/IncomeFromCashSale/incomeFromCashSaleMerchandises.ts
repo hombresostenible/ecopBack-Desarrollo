@@ -4,7 +4,7 @@ import { ServiceError } from '../../../types/Responses/responses.types';
 
 export const incomeFromCashSaleMerchandises = async (item: IItemsSold, branchId: string, transactionType: string): Promise<any> => {
     const merchandiseFound = await Merchandise.findOne({
-        where: { id: item.itemId, nameItem: item.nameItem, branchId: branchId },
+        where: { id: item.id, nameItem: item.nameItem, branchId: branchId },
     });
     if (!merchandiseFound) throw new ServiceError(400, "La mercancía no existe en esta sede");
     

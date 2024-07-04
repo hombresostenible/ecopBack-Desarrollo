@@ -5,7 +5,7 @@ import { ServiceError } from '../../../types/Responses/responses.types';
 
 export const incomeFromCashSaleAssets = async (item: IItemsSold, branchId: string, transactionType: string): Promise<any> => {
     const assetFound = await Assets.findOne({
-        where: { id: item.itemId, nameItem: item.nameItem, branchId: branchId },
+        where: { id: item.id, nameItem: item.nameItem, branchId: branchId },
     });
     if (!assetFound) throw new ServiceError(400, "El activo no existe en esta sede");
     
