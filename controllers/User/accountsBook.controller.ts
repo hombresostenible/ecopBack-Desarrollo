@@ -31,7 +31,7 @@ router.post("/", authRequired, validateSchema(accountsBookSchemaZod), async (req
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //POST - http://localhost:3000/api/accountsBook con { "registrationDate": "2024-09-19T12:00:00.000Z", "transactionDate": "2024-09-19T12:00:00.000Z", "transactionType": "Ingreso", "creditCash": "Contado", "meanPayment": "Efectivo", "expenseCategory": null, "periodicityPayService": null, "periodPayService": null, "itemsSold": [ { "nameItem": "Arroz Roa", "itemId": "9c9d27ad-0ce5-4f33-b1b8-28d0477524b9", "incomeCategory": "Mercancia", "unitValue": 2100, "quantity": 10, "subTotalValue": 21000 }, { "nameItem": "Harina de trigo", "itemId": "f2244600-1302-4ede-8f83-e29b75afd5fb", "incomeCategory": "Materia Prima", "unitValue": 1560, "quantity": 5, "subTotalValue": 7800 } ], "totalValue": 28800, "creditDescription": null, "creditWithInterest": null, "creditInterestRate": null, "numberOfPayments": null, "paymentValue": null, "paymentNumber": null, "accountsReceivable": null, "accountsPayable": null, "transactionCounterpartId": "1110521285", "transactionApproved": true, "seller": "Mario", "branchId": "a3e4c52b-3fc6-4d3f-a981-3fcf40338e0b" }
+}); //POST - http://localhost:3000/api/accountsBook con { "registrationDate": "2024-09-19T12:00:00.000Z", "transactionDate": "2024-09-19T12:00:00.000Z", "transactionType": "Ingreso", "creditCash": "Contado", "meanPayment": "Efectivo", "expenseCategory": null, "periodicityPayService": null, "periodPayService": null, "itemsSold": [ { "nameItem": "Arroz Roa", "itemId": "9c9d27ad-0ce5-4f33-b1b8-28d0477524b9", "type": "Mercancia", "sellingPrice": 2100, "quantity": 10, "subTotalValue": 21000 }, { "nameItem": "Harina de trigo", "itemId": "f2244600-1302-4ede-8f83-e29b75afd5fb", "type": "Materia Prima", "sellingPrice": 1560, "quantity": 5, "subTotalValue": 7800 } ], "totalValue": 28800, "creditDescription": null, "creditWithInterest": null, "creditInterestRate": null, "numberOfPayments": null, "paymentValue": null, "paymentNumber": null, "accountsReceivable": null, "accountsPayable": null, "transactionCounterpartId": "1110521285", "transactionApproved": true, "seller": "Mario", "branchId": "a3e4c52b-3fc6-4d3f-a981-3fcf40338e0b" }
 
 
 
@@ -185,7 +185,7 @@ router.put("/:idAccountsBook", authRequired, checkRole, validateSchema(accountsB
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //PUT - http://localhost:3000/api/accountsBook/:idAccountsBook con { "transactionDate": "2023-09-19T12:00:00.000Z", "transactionType": "Ingreso", "item": "Nombre del producto/servicio/materiaPrima", "unitValue": "15000", "quantity": "2", "totalValue": "30000" }
+}); //PUT - http://localhost:3000/api/accountsBook/:idAccountsBook con { "transactionDate": "2023-09-19T12:00:00.000Z", "transactionType": "Ingreso", "item": "Nombre del producto/servicio/materiaPrima", "sellingPrice": "15000", "quantity": "2", "totalValue": "30000" }
 
 
 

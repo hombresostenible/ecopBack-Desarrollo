@@ -1,8 +1,8 @@
 export interface IItemsSold {
     nameItem: string;
     itemId: string;
-    incomeCategory?: 'Assets' | 'Merchandise' | 'Product' | 'RawMaterial' | 'Service';
-    unitValue: number;
+    type?: 'Assets' | 'Merchandise' | 'Product' | 'RawMaterial' | 'Service';
+    sellingPrice: number;
     quantity: number;
     subTotalValue: number;
 }
