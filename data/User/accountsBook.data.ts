@@ -45,19 +45,19 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
         if (body.itemsSold) {
             for (const item of body.itemsSold) {
                 switch (item.incomeCategory) {
-                    case 'Activo':
+                    case 'Assets':
                         await incomeFromCashSaleAssets(item, body.branchId, body.transactionType);
                         break;
-                    case 'Mercancia':
+                    case 'Merchandise':
                         await incomeFromCashSaleMerchandises(item, body.branchId, body.transactionType);
                         break;
-                    case 'Producto':
+                    case 'Product':
                         await incomeFromCashSaleProduct(item, body.branchId, body.transactionType);
                         break;
-                    case 'Materia Prima':
+                    case 'RawMaterial':
                         await incomeFromCashSaleRawMaterials(item, body.branchId, body.transactionType);
                         break;
-                    case 'Servicio':
+                    case 'Service':
                         await incomeFromCashSaleServices(item, body.branchId, body.transactionType);
                         break;
                     default:
@@ -295,19 +295,19 @@ export const deleteAccountsBookData = async (idAccountsBook: string): Promise<vo
         if (transactionFound.itemsSold && transactionFound.itemsSold.length > 0) {
             for (const itemSold of transactionFound.itemsSold) {
                 switch (itemSold.incomeCategory) {
-                    case 'Mercancia': {
+                    case 'Merchandise': {
                         await processMerchandise(transactionFound, itemSold, transaction);
                         break;
                     }
-                    case 'Producto': {
+                    case 'Product': {
                         await processProduct(transactionFound, itemSold, transaction);
                         break;
                     }
-                    case 'Materia Prima': {
+                    case 'RawMaterial': {
                         await processRawMaterial(transactionFound, itemSold, transaction);
                         break;
                     }
-                    case 'Servicio': {
+                    case 'Service': {
                         await processService(transactionFound, itemSold, transaction);
                         break;
                     }
