@@ -125,6 +125,46 @@ export const putProfileUserData = async (body: IUser, userId: string): Promise<I
 
 
 
+//SUBIR LA IMAGEN DE PERFIL DEL USER
+export const patchLogoUserData = async (idUser: string, body: Partial<IUser>): Promise<IUser | null> => {
+    try {
+        const existingUser = await User.findOne({
+            where: { id: idUser },
+        });
+        if (!existingUser) throw new ServiceError(404, "No se encontró el usuario");
+        const [rowsUpdated] = await User.update(body, {
+            where: { id: idUser },
+        });
+        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró el usaurio para actualizar");
+        const updatedUser = await User.findByPk(idUser);
+        if (!updatedUser) throw new ServiceError(404, "No se encontró el usuario para actualizar");
+        return updatedUser;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//ELIMINAR LA IMAGEN DE PERFIL DEL USER
+export const patchDeleteLogoUserData = async (userId: string) => {
+    try {
+        const existingUser = await User.findOne({
+            where: { id: userId }
+        });
+        if (!existingUser) throw new ServiceError(404, "No se encontró el usuario");
+        if (existingUser) {
+            existingUser.logo = '';
+            await existingUser.save();
+        }
+        return existingUser;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //CAMBIO DE CONTRASEÑA USER O USUARIO DE PLATAFORMA
 export const findUserData = async (id: string): Promise<User | null> => {
     try {

@@ -2,6 +2,8 @@ import {
     postRegisterUserData,
     getSearchEmailUserPasswordChangeData,
     putProfileUserData,
+    patchLogoUserData,
+    patchDeleteLogoUserData,
     findUserData,
     findUserBlockedData,
 } from "../../data/User/user.data";
@@ -82,6 +84,38 @@ export const putProfileUserService = async (body: IUser, userId: string): Promis
         const userUpdate = await putProfileUserData(body, userId);
         if (!userUpdate) throw new ServiceError(404, "Usuario no encontrado");
         return { code: 200, message: "Usuario actualizado exitosamente", result: userUpdate };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//SUBIR LA IMAGEN DE PERFIL DEL USER
+export const patchLogoUserService = async (idUser: string, body: any): Promise<IServiceLayerResponseUser> => {
+    try {
+        const userUpdate = await patchLogoUserData(idUser, body);
+        if (!userUpdate) throw new ServiceError(404, "Usuario no encontrado");
+        return { code: 200, message: "Logo de usuario actualizado exitosamente", result: userUpdate };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//ELIMINAR LA IMAGEN DE PERFIL DEL USER
+export const patchDeleteLogoUserService = async (userId: string): Promise<IServiceLayerResponseUser> => {
+    try {
+        const updateAsset = await patchDeleteLogoUserData(userId);
+        if (!updateAsset) throw new ServiceError(404, "Usuario no encontrado");
+        return { code: 200, message: "Logo de usuario actualizado exitosamente", result: updateAsset };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
