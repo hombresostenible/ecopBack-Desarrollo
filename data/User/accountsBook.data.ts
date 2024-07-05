@@ -106,6 +106,7 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
 
         return newTransaction;
     } catch (error) {
+        console.log('Error: ', error)
         throw error;
     }
 };
