@@ -23,6 +23,7 @@ const router = express.Router();
 //CREAR UN REGISTRO CONTABLE DEL USER
 router.post("/", authRequired, validateSchema(accountsBookSchemaZod), async (req: Request, res: Response) => {
     try {
+        console.log('Hola')
         const body = req.body;
         const { id } = req.user;
         const serviceLayerResponse = await postAccountsBookService(body, id);

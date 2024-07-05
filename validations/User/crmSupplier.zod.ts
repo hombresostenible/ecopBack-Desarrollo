@@ -1,8 +1,8 @@
-import { z, ZodObject, ZodString, ZodNumber, ZodBoolean } from 'zod';
+import { z, ZodObject, ZodString, ZodNumber } from 'zod';
 
 type CRMSupplierSchemaType = ZodObject<{
     typeDocumentId: ZodString;
-    documentId: ZodString;
+    documentId: ZodNumber;
     email: ZodString;
     phone: ZodString;
 }>;
@@ -11,7 +11,7 @@ export const crmSupplierSchema: CRMSupplierSchemaType = z.object({
     typeDocumentId: z.string({
         required_error: 'El tipo de documento de identidad del proveedor es requerido',
     }),
-    documentId: z.string({
+    documentId: z.number({
         required_error: 'El número de identidad del proveedor es requerido',
     }),
     email: z.string({
