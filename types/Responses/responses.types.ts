@@ -217,7 +217,10 @@ export interface IServiceLayerResponseSalesFunnelCustomerDigital {
 //INTERFACE DE RESPUESTA GENERICA PARA RETORNAR PRODUCTOS POR CODIGO DE BARRAS O POR NOMBRE
 export interface IServiceLayerResponseItemByBarCodeOrName {
     code: number,
-    result?: IAssets | IMerchandise | IProduct | IRawMaterial | IService,
+    result?: {
+        serResult: IAssets | IMerchandise | IProduct | IRawMaterial | IService,
+        token: string;
+    };
     message?: string;
     errorMessage?: unknown,
 };
