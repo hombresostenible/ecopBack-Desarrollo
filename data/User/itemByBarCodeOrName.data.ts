@@ -62,6 +62,8 @@ export const getItemBarCodeData = async (userId: string, barCode: string): Promi
 //BUSCAR UN ITEM DE ASSETS, MERCHANDISE, PRODUCT O RAWMATERIAL POR NOMBRE
 export const getNameItemData = async (nameItem: string, userId: string): Promise<any> => {
     try {
+        console.log('nameItem: ', nameItem)
+        console.log('userId: ', userId)
         const itemFound = await sequelize.query(`
             SELECT 
                 id, branchId, barCode, nameItem, inventory, IVA, sellingPrice,
@@ -109,6 +111,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
             replacements: { nameItemPattern: `%${nameItem}%`, userId },
             type: QueryTypes.SELECT
         });
+        console.log('itemFound: ', itemFound)
         return itemFound;
     } catch (error) {
         throw error;

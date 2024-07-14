@@ -1,10 +1,10 @@
 import Product from "../../../schema/User/product.schema";
 import RawMaterial from "../../../schema/User/rawMaterial.schema";
 import Service from "../../../schema/User/service.schema";
-import { IItemsSold } from '../../../types/User/accountsBook.types';
+import { IItemsAccountsBook } from '../../../types/User/accountsBook.types';
 import { ServiceError } from '../../../types/Responses/responses.types';
 
-export const incomeFromCashSaleServices = async (item: IItemsSold, branchId: string, transactionType: string): Promise<any> => {
+export const incomeFromCashSaleServices = async (item: IItemsAccountsBook, branchId: string, transactionType: string): Promise<any> => {
     const serviceFound = await Service.findOne({
         where: { id: item.id, branchId: branchId },
     });
