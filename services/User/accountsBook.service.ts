@@ -1,6 +1,8 @@
 import {  
     postAccountsBookData,
     getAccountsBooksData,
+    getAccountsBooksApprovedData,
+    getAccountsBooksApprovedByBranchData,
     getIncomesApprovedData,
     getIncomesApprovedByBranchData,
     getIncomesNotApprovedByBranchData,
@@ -15,7 +17,6 @@ import {
 import { IAccountsBook } from "../../types/User/accountsBook.types";
 import { IServiceLayerResponseAccountsBook } from '../../types/Responses/responses.types';
 import { ServiceError } from '../../types/Responses/responses.types';
-import { checkPermissionForBranchAccountsBook, checkPermissionForAccountsBook } from '../../helpers/AccountsBook.helper';
 
 //CREAR UN REGISTRO CONTABLE DEL USER
 export const postAccountsBookService = async (body: IAccountsBook, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
@@ -48,6 +49,37 @@ export const getAccountsBooksService = async (userId: string): Promise<IServiceL
 
 
 
+//OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS, TANTO DE INGRESOS COMO DE GASTOS DEL USER
+export const getAccountsBooksApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+    try {
+        const dataLayerResponse = await getAccountsBooksApprovedData(userId);
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS POR SEDE, TANTO DE INGRESOS COMO DE GASTOS DEL USER
+export const getAccountsBooksApprovedByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+    try {
+        const dataLayerResponse = await getAccountsBooksApprovedByBranchData(idBranch);
+        if (!dataLayerResponse) return { code: 404, message: "Registros aprobados no encontrados en esta sede" };
+        return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    };
+};
+
+
+
 //OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS DEL USER
 export const getIncomesApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
@@ -66,8 +98,6 @@ export const getIncomesApprovedService = async (userId: string): Promise<IServic
 //OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
 export const getIncomesApprovedByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        // const hasPermission = await checkPermissionForBranchAccountsBook(idBranch, userId);
-        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los registros de ingresos aprobados de esta sede");
         const dataLayerResponse = await getIncomesApprovedByBranchData(idBranch);
         if (!dataLayerResponse) return { code: 404, message: "Registros de ingresos aprobados no encontrados en esta sede" };
         return { code: 200, result: dataLayerResponse };

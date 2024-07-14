@@ -13,6 +13,10 @@ import { incomeFromCashSaleMerchandises } from '../../helpers/AccountsBook/Incom
 import { incomeFromCashSaleProduct } from '../../helpers/AccountsBook/IncomeFromCashSale/incomeFromCashSaleProduct';
 import { incomeFromCashSaleRawMaterials } from '../../helpers/AccountsBook/IncomeFromCashSale/incomeFromCashSaleRawMaterials';
 import { incomeFromCashSaleServices } from '../../helpers/AccountsBook/IncomeFromCashSale/incomeFromCashSaleServices';
+//GASTOS POR COMPRAS EN EFECTIVO
+import { expenseFromCashBuyAssets } from '../../helpers/AccountsBook/ExpenseFromCashSale/expenseFromCashBuyAssets';
+import { expenseFromCashBuyMerchandises } from '../../helpers/AccountsBook/ExpenseFromCashSale/expenseFromCashBuyMerchandises';
+import { expenseFromCashBuyRawMaterials } from '../../helpers/AccountsBook/ExpenseFromCashSale/expenseFromCashBuyRawMaterials';
 //INGRESOS POR VENTAS A CREDITO - CUENTAS POR COBRAR
 import { incomeAccountsReceivable } from '../../helpers/AccountsBook/AccountsReceivable/incomeAccountsReceivable';
 //PAGOS A CUENTAS POR COBRAR
@@ -28,7 +32,7 @@ import { ServiceError } from "../../types/Responses/responses.types";
 export const postAccountsBookData = async (body: IAccountsBook, userId: string): Promise<IAccountsBook> => {
     try {
         // Establecer transactionApproved basado en meanPayment
-        if (body.transactionType === 'Ingreso' && body.meanPayment === 'Efectivo' && body.creditCash === 'Contado') {
+        if ((body.transactionType === 'Ingreso' || body.transactionType === 'Gasto') && body.meanPayment === 'Efectivo' && body.creditCash === 'Contado') {
             body.transactionApproved = true;
         } else {
             body.transactionApproved = false;
@@ -66,6 +70,25 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
             }
         }
 
+        // Actualizar inventario según los artículos vendidos
+        if (body.itemsBuy) {
+            for (const item of body.itemsBuy) {
+                switch (item.type) {
+                    case 'Assets':
+                        await expenseFromCashBuyAssets(item, body.branchId, body.transactionType);
+                        break;
+                    case 'Merchandise':
+                        await expenseFromCashBuyMerchandises(item, body.branchId, body.transactionType);
+                        break;
+                    case 'RawMaterial':
+                        await expenseFromCashBuyRawMaterials(item, body.branchId, body.transactionType);
+                        break;
+                    default:
+                        throw new ServiceError(400, `Categoría de gasto no reconocida: ${item.type}`);
+                }
+            }
+        }
+
         // Ingresos por ventas a crédito - cuentas por cobrar
         if (body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Credito") {
             await incomeAccountsReceivable(body, newTransaction.id, userId);
@@ -87,13 +110,13 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
         }
 
         // Crear datos en la tabla de Sustainability para indicadores de sostenibilidad
-        const isSustainabilityExpense = body.expenseCategory !== undefined && ['Acueducto', 'Energia', 'Gas', 'Internet', 'Celular/Plan de datos'].includes(body.expenseCategory);
+        const isSustainabilityExpense = body.otherExpenses !== undefined && ['Acueducto', 'Energia', 'Gas', 'Internet', 'Celular/Plan de datos'].includes(body.otherExpenses);
         if (isSustainabilityExpense) {
             const sustainabilityData = {
                 branchId: body.branchId,
                 registrationDate: body.registrationDate,
                 transactionDate: body.transactionDate,
-                expenseCategory: body.expenseCategory,
+                otherExpenses: body.otherExpenses,
                 periodPayService: body.periodPayService,
                 totalValue: body.totalValue,
                 accountsBookId: newTransaction.id,
@@ -117,12 +140,51 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
 export const getAccountsBooksData = async (userId: string): Promise<any> => {
     try {
         const allAccountsBook = await AccountsBook.findAll({
+            where: {
+                userId: userId,
+                transactionApproved: true,
+            },
+        });        
+        return allAccountsBook;
+    } catch (error) {
+        throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS, TANTO DE INGRESOS COMO DE GASTOS DEL USER
+export const getAccountsBooksApprovedData = async (userId: string): Promise<any> => {
+    try {
+        const allAccountsBook = await AccountsBook.findAll({
             where: { userId: userId },
         });        
         return allAccountsBook;
     } catch (error) {
         throw error;
     };
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS POR SEDE, TANTO DE INGRESOS COMO DE GASTOS DEL USER
+export const getAccountsBooksApprovedByBranchData = async (idBranch: string): Promise<any> => {
+    try {
+        const allAccountsBook = await AccountsBook.findAll({
+            where: {
+                branchId: idBranch,
+                transactionApproved: true 
+            },
+            order: [
+                ['transactionDate', 'DESC'] // Aquí se especifica el campo y el orden
+            ]
+        });
+        console.log('idBranch: ', idBranch)
+        console.log('allAccountsBook: ', allAccountsBook)
+        return allAccountsBook;
+    } catch (error) {
+        throw error;
+    }
 };
 
 
@@ -134,7 +196,7 @@ export const getIncomesApprovedData = async (userId: string): Promise<any> => {
             where: { 
                 userId: userId, 
                 transactionType: 'Ingreso', 
-                transactionApproved: true 
+                transactionApproved: true,
             },
             order: [
                 ['transactionDate', 'DESC'] // Aquí se especifica el campo y el orden

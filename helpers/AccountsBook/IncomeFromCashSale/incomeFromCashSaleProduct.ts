@@ -1,9 +1,9 @@
 import Product from "../../../schema/User/product.schema";
 import RawMaterial from "../../../schema/User/rawMaterial.schema";
-import { IItemsSold } from '../../../types/User/accountsBook.types';
+import { IItemsAccountsBook } from '../../../types/User/accountsBook.types';
 import { ServiceError } from '../../../types/Responses/responses.types';
 
-export const incomeFromCashSaleProduct = async (item: IItemsSold, branchId: string, transactionType: string): Promise<any> => {
+export const incomeFromCashSaleProduct = async (item: IItemsAccountsBook, branchId: string, transactionType: string): Promise<any> => {
     const productFound = await Product.findOne({
         where: { id: item.id, nameItem: item.nameItem, branchId: branchId },
     });
@@ -25,22 +25,6 @@ export const incomeFromCashSaleProduct = async (item: IItemsSold, branchId: stri
             }
         } else {
             throw new ServiceError(400, "La cantidad no está definida para el descuento en el inventario del producto");
-        }
-    } else if (transactionType === 'Gasto') {
-        if (item.quantity !== undefined) {
-            try {
-                productFound.inventory += item.quantity;
-
-                const currentDate = new Date().toISOString();
-                const quantity = item.quantity;
-
-                productFound.setDataValue('inventoryChanges', productFound.inventoryChanges.concat({ date: currentDate, quantity: quantity, type: 'Ingreso' }));
-                await productFound.save();    
-            } catch (error) {
-                throw error;
-            }
-        } else {
-            throw new ServiceError(400, "La cantidad no está definida para el ingreso en el inventario del producto");
         }
     }
 
