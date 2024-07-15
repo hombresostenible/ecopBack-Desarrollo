@@ -53,7 +53,7 @@ import { authRequired } from '../../../middlewares/Token/Token.middleware';
 const router = express.Router();
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE VENTAS DEL USUARIO
-router.get("/salesPerPeriod", authRequired,async (req: Request, res: Response) => {
+router.get("/sales-per-period", authRequired,async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getSalesPerPeriodService(id);
@@ -66,10 +66,10 @@ router.get("/salesPerPeriod", authRequired,async (req: Request, res: Response) =
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financialIndicators/salesPerPeriod
+}); //GET - http://localhost:3000/api/financial-indicator/sales-per-period
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE VENTAS DE UNA SEDE DEL USUARIO
-router.get("/salesPerPeriod/:idBranch", authRequired,async (req: Request, res: Response) => {
+router.get("/sales-per-period/:idBranch", authRequired,async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -83,12 +83,12 @@ router.get("/salesPerPeriod/:idBranch", authRequired,async (req: Request, res: R
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financialIndicators/salesPerPeriod/:idBranch
+}); //GET - http://localhost:3000/api/financial-indicator/sales-per-period/:idBranch
 
 
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE GASTOS DEL USUARIO
-router.get("/expensesPerPeriod", authRequired,async (req: Request, res: Response) => {
+router.get("/expenses-per-period", authRequired,async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getExpensesPerPeriodService(id);
@@ -101,10 +101,10 @@ router.get("/expensesPerPeriod", authRequired,async (req: Request, res: Response
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financialIndicators/expensesPerPeriod
+}); //GET - http://localhost:3000/api/financial-indicator/expenses-per-period
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE GASTOS DE UNA SEDE DEL USUARIO
-router.get("/expensesPerPeriod/:idBranch", authRequired,async (req: Request, res: Response) => {
+router.get("/expenses-per-period/:idBranch", authRequired,async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -118,12 +118,12 @@ router.get("/expensesPerPeriod/:idBranch", authRequired,async (req: Request, res
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financialIndicators/expensesPerPeriod/:idBranch
+}); //GET - http://localhost:3000/api/financial-indicator/expenses-per-period/:idBranch
 
 
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE GASTOS Y VENTAS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO
-router.get("/allTransactionsPerPeriod", authRequired,async (req: Request, res: Response) => {
+router.get("/all-transactions-per-period", authRequired,async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getAllTransactionsService(id);
@@ -136,10 +136,10 @@ router.get("/allTransactionsPerPeriod", authRequired,async (req: Request, res: R
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financialIndicators/allTransactionsPerPeriod
+}); //GET - http://localhost:3000/api/financial-indicator/all-transactions-per-period
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE GASTOS Y VENTAS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO
-router.get("/allTransactionsPerPeriod/:idBranch", authRequired,async (req: Request, res: Response) => {
+router.get("/all-transactions-per-period/:idBranch", authRequired,async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -153,12 +153,12 @@ router.get("/allTransactionsPerPeriod/:idBranch", authRequired,async (req: Reque
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financialIndicators/allTransactionsPerPeriod/:idBranch
+}); //GET - http://localhost:3000/api/financial-indicator/all-transactions-per-period/:idBranch
 
 
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DEL USUARIO
-router.get("/accountsReceivable", authRequired, async (req: Request, res: Response) => {
+router.get("/accounts-receivable", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getAccountsReceivableService(id);
@@ -171,10 +171,10 @@ router.get("/accountsReceivable", authRequired, async (req: Request, res: Respon
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financialIndicators/accountsReceivable
+}); //GET - http://localhost:3000/api/financial-indicator/accounts-receivable
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DE UNA SEDE DEL USUARIO
-router.get("/accountsReceivable/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/accounts-receivable/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -188,12 +188,12 @@ router.get("/accountsReceivable/:idBranch", authRequired, async (req: Request, r
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financialIndicators/accountsReceivable/:idBranch
+}); //GET - http://localhost:3000/api/financial-indicator/accounts-receivable/:idBranch
 
 
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DEL USUARIO
-router.get("/accountsPayable", authRequired, async (req: Request, res: Response) => {
+router.get("/accounts-payable", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getAccountsPayableService(id);
@@ -206,10 +206,10 @@ router.get("/accountsPayable", authRequired, async (req: Request, res: Response)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financialIndicators/accountsPayable
+}); //GET - http://localhost:3000/api/financial-indicator/accounts-payable
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DE UNA SEDE DEL USUARIO
-router.get("/accountsPayable/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/accounts-payable/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -223,12 +223,12 @@ router.get("/accountsPayable/:idBranch", authRequired, async (req: Request, res:
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financialIndicators/accountsPayable/:idBranch
+}); //GET - http://localhost:3000/api/financial-indicator/accounts-payable/:idBranch
 
 
 
 //CONTROLLER PARA OBTENER LISTA DE MEJORES CLIENTES POR VALOR DEL USUARIO
-router.get("/bestClientValue", authRequired, async (req: Request, res: Response) => {
+router.get("/best-client-value", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getBestClientValueService(id);
@@ -237,10 +237,10 @@ router.get("/bestClientValue", authRequired, async (req: Request, res: Response)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/bestClientValue
+}); // GET - http://localhost:3000/api/financial-indicator/best-client-value
 
 //CONTROLLER PARA OBTENER LISTA DE MEJORES CLIENTES POR VALOR DE UNA SEDE DEL USUARIO
-router.get("/bestClientValue/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/best-client-value/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -250,12 +250,12 @@ router.get("/bestClientValue/:idBranch", authRequired, async (req: Request, res:
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }    
-}); // GET - http://localhost:3000/api/financialIndicators/bestClientValue/:idBranch    
+}); // GET - http://localhost:3000/api/financial-indicator/best-client-value/:idBranch    
 
 
 
 //CONTROLLER PARA OBTENER LISTA DE CLIENTE FRECUENTE DEL USUARIO
-router.get("/bestClientQuantity", authRequired, async (req: Request, res: Response) => {
+router.get("/best-client-quantity", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getBestClientQuantityService(id);
@@ -264,10 +264,10 @@ router.get("/bestClientQuantity", authRequired, async (req: Request, res: Respon
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/bestClientQuantity
+}); // GET - http://localhost:3000/api/financial-indicator/best-client-quantity
 
 //CONTROLLER PARA OBTENER LISTA DE CLIENTE FRECUENTE POR SEDE DEL USUARIO
-router.get("/bestClientQuantity/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/best-client-quantity/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -277,12 +277,12 @@ router.get("/bestClientQuantity/:idBranch", authRequired, async (req: Request, r
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/bestClientQuantity/:idBranch
+}); // GET - http://localhost:3000/api/financial-indicator/best-client-quantity/:idBranch
 
 
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE VENTAS DEL USUARIO PARA CALCULAR EL TICKET PROMEDIO
-router.get("/averageTicketPerPeriod", authRequired,async (req: Request, res: Response) => {
+router.get("/average-ticket-per-period", authRequired,async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getAverageTicketTicketService(id);
@@ -295,10 +295,10 @@ router.get("/averageTicketPerPeriod", authRequired,async (req: Request, res: Res
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financialIndicators/averageTicketPerPeriod
+}); //GET - http://localhost:3000/api/financial-indicator/average-ticket-per-period
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE VENTAS DEL USUARIO PARA CALCULAR EL TICKET PROMEDIO POR SEDE
-router.get("/averageTicketPerPeriod/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/average-ticket-per-period/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -308,12 +308,12 @@ router.get("/averageTicketPerPeriod/:idBranch", authRequired, async (req: Reques
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/averageTicketPerPeriod/:idBranch
+}); // GET - http://localhost:3000/api/financial-indicator/average-ticket-per-period/:idBranch
 
 
 
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MAQUINAS DEL USUARIO
-router.get("/assetsInventory", authRequired, async (req: Request, res: Response) => {
+router.get("/assets-inventory", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getAssetsInventoryService(id);
@@ -322,10 +322,10 @@ router.get("/assetsInventory", authRequired, async (req: Request, res: Response)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/assetsInventory
+}); // GET - http://localhost:3000/api/financial-indicator/assets-inventory
 
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MAQUINAS POR SEDE DEL USUARIO
-router.get("/assetsInventory/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/assets-inventory/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -335,12 +335,12 @@ router.get("/assetsInventory/:idBranch", authRequired, async (req: Request, res:
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/assetsInventory/:idBranch
+}); // GET - http://localhost:3000/api/financial-indicator/assets-inventory/:idBranch
 
 
 
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MERCANCIA DEL USUARIO
-router.get("/merchandisesInventory", authRequired, async (req: Request, res: Response) => {
+router.get("/merchandises-inventory", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getMerchandisesInventoryService(id);
@@ -349,10 +349,10 @@ router.get("/merchandisesInventory", authRequired, async (req: Request, res: Res
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/merchandisesInventory
+}); // GET - http://localhost:3000/api/financial-indicator/merchandises-inventory
 
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MERCANCIA POR SEDE DEL USUARIO
-router.get("/merchandisesInventory/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/merchandises-inventory/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -362,12 +362,12 @@ router.get("/merchandisesInventory/:idBranch", authRequired, async (req: Request
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/merchandisesInventory/:idBranch
+}); // GET - http://localhost:3000/api/financial-indicator/merchandises-inventory/:idBranch
 
 
 
 //CONTROLLER PARA OBTENER EL INVENTARIO DE PRODUCTOS DEL USUARIO
-router.get("/productsInventory", authRequired, async (req: Request, res: Response) => {
+router.get("/products-inventory", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getProductsInventoryService(id);
@@ -376,10 +376,10 @@ router.get("/productsInventory", authRequired, async (req: Request, res: Respons
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/productsInventory
+}); // GET - http://localhost:3000/api/financial-indicator/products-inventory
 
 //CONTROLLER PARA OBTENER EL INVENTARIO DE PRODUCTOS POR SEDE DEL USUARIO
-router.get("/productsInventory/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/products-inventory/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -389,12 +389,12 @@ router.get("/productsInventory/:idBranch", authRequired, async (req: Request, re
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/productsInventory/:idBranch
+}); // GET - http://localhost:3000/api/financial-indicator/products-inventory/:idBranch
 
 
 
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS DEL USUARIO
-router.get("/rawmaterialsInventory", authRequired, async (req: Request, res: Response) => {
+router.get("/rawmaterials-inventory", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
         const serviceLayerResponse = await getRawMaterialsInventoryService(id);
@@ -403,10 +403,10 @@ router.get("/rawmaterialsInventory", authRequired, async (req: Request, res: Res
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/rawmaterialsInventory
+}); // GET - http://localhost:3000/api/financial-indicator/rawmaterials-inventory
 
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS POR SEDE DEL USUARIO
-router.get("/rawmaterialsInventory/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/rawmaterials-inventory/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -416,7 +416,7 @@ router.get("/rawmaterialsInventory/:idBranch", authRequired, async (req: Request
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/financialIndicators/rawmaterialsInventory/:idBranch
+}); // GET - http://localhost:3000/api/financial-indicator/rawmaterials-inventory/:idBranch
 
 
 
