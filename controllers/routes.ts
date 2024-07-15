@@ -41,7 +41,7 @@ function routerApi(app: any) {
     app.use("/api/userPlatform", userPlatformControllers);
     app.use("/api/item-by-barCode-or-name", itemByBarCodeOrNameControllers);
 
-    app.use("/api/financialIndicator", financialIndicatorsControllers);
+    app.use("/api/financial-indicator", financialIndicatorsControllers);
     app.use("/api/sustainabilityIndicator", sustainabilityIndicatorsControllers);
     app.use("/api/marketingIndicator", marketingIndicatorsControllers);
 };

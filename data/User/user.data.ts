@@ -40,7 +40,7 @@ export const postRegisterUserData = async (body: IUser): Promise<User | null> =>
             corporateName: body.corporateName,
             typeDocumentId: body.typeDocumentId,
             documentId: body.documentId,
-            verificationDigit: body.verificationDigit,
+            // verificationDigit: body.verificationDigit,
             commercialName: body.commercialName,
             logo: body.logo,
             typeRole: body.typeRole,
@@ -70,6 +70,7 @@ export const postRegisterUserData = async (body: IUser): Promise<User | null> =>
             throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
         }
     } catch (error) {
+        console.log('Error: ', error)
         await t.rollback();
         throw new ServiceError(500, `${error}`);
     }
