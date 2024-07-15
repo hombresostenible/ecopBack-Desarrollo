@@ -31,9 +31,9 @@ export const expensesAccountsPayable = async (body: IAccountsBook, newTransactio
             };
 
             //Relaciones con los modelos de Assets, Merchandise, Product, RawMaterial y Service
-            // if (body.expenseCategory === 'Assets') accountsPayable.assetId = body.itemId;
-            // if (body.expenseCategory === 'Merchandise') accountsPayable.merchandiseId = body.itemId;
-            // if (body.expenseCategory === 'RawMaterial') accountsPayable.rawMaterialId = body.itemId;
+            // if (body.otherExpenses === 'Assets') accountsPayable.assetId = body.itemId;
+            // if (body.otherExpenses === 'Merchandise') accountsPayable.merchandiseId = body.itemId;
+            // if (body.otherExpenses === 'RawMaterial') accountsPayable.rawMaterialId = body.itemId;
 
             const newAccountPayableTransaction = new AccountsPayable();
             Object.assign(newAccountPayableTransaction, accountsPayable);
