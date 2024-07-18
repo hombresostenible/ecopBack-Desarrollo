@@ -224,3 +224,16 @@ export interface IServiceLayerResponseItemByBarCodeOrName {
     message?: string;
     errorMessage?: unknown,
 };
+
+
+
+//INTERFACE DE RESPUESTA GENERICA PARA RETORNAR PRODUCTOS POR CODIGO DE BARRAS O POR NOMBRE
+export interface IServiceLayerResponseAllItems {
+    code: number,
+    result?: {
+        serResult: IAssets | IMerchandise | IProduct | IRawMaterial | IService,
+        token: string;
+    };
+    message?: string;
+    errorMessage?: unknown,
+};
