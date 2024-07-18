@@ -2,10 +2,25 @@ import express, { Request, Response } from "express";
 import {
     getItemBarCodeService,
     getNameItemService,
-} from '../../services/User/itemByBarCodeOrName.service';
+    getAllItemsService,
+} from '../../services/User/allItems.service';
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { ServiceError } from '../../types/Responses/responses.types';
 const router = express.Router();
+
+//BUSCA TODOS LOS ARTICULOS DEL USUARIO EN TODAS LAS TABLAS
+router.get("/", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { id } = req.user;
+        const serviceLayerResponse = await getAllItemsService(id);
+        res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/all-items
+
+
 
 //BUSCAR UN ITEM DE ASSETS, MERCHANDISE, PRODUCT O RAWMATERIAL POR CODIGO DE BARRAS
 router.get("/bar-code/:barCode", authRequired, async (req: Request, res: Response) => {
@@ -18,7 +33,7 @@ router.get("/bar-code/:barCode", authRequired, async (req: Request, res: Respons
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/item-by-barCode-or-name/bar-code/7702552000097
+}); // GET - http://localhost:3000/api/all-items/bar-code/7702552000097
 
 
 
@@ -30,15 +45,13 @@ router.get("/name-item/query?", authRequired, async (req: Request, res: Response
             return res.status(400).json({ error: 'El parámetro nameItem es requerido.' });
         }
         const { id } = req.user;
-        console.log('nameItem: ', nameItem)
-        console.log('id: ', id)
         const serviceLayerResponse = await getNameItemService(nameItem, id);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/item-by-barCode-or-name/name-item/query?nameItem=Cabello de ángel
+}); // GET - http://localhost:3000/api/all-items/name-item/query?nameItem=Cabello de ángel
 
 
 
