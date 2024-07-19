@@ -14,7 +14,7 @@ class Assets extends Model {
     public conditionAssets!: 'Nuevo' | 'Usado';
     public inventory!: number;
     public purchasePriceBeforeTax!: number;
-    public IVA!: number;
+    public IVA!: 0 | 5 | 19;
     public sellingPrice!: number;
     public inventoryOff!: InventoryOffItem[];
 
@@ -73,7 +73,10 @@ Assets.init(
         },
         IVA: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
+            validate: {
+              isIn: [[ 0, 5, 19]],
+            },
             defaultValue: 0,
         },
         sellingPrice: {

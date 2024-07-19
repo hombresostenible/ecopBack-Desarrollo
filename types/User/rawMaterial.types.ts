@@ -22,7 +22,6 @@ export interface IRawMaterial {
     periodicityAutomaticIncrease?: 'Diario' | 'Semanal' | 'Quincenal' | 'Mensual' | 'Bimestral' | 'Trimestral' | 'Semestral';
     automaticInventoryIncrease?: number;
     purchasePriceBeforeTax: number;
-    IVA: number;
     sellingPrice?: number;
     isDiscounted?: 'Si' | 'No';
     discountPercentage?: number;
@@ -42,7 +41,7 @@ export interface IRawMaterial {
     retentionPercentageIVA?: '15' | '100';
     retentionPercentageICA?: '2' | '3.4' | '4.14' | '5' | '6.9' | '8' | '9.66' | '11.04' | '13.8';
     // Impuestos
-    // IVA?: '0' | '5' | '19';
+    IVA?: 0 | 5 | 19;
     consumptionTax?: '8';
     ivaAiu?: number;
     taxesUltraProcessedSugarSweetenedBeverages?: number;
