@@ -21,7 +21,7 @@ class Product extends Model {
     public periodicityAutomaticIncrease!: 'Diario' | 'Semanal' | 'Quincenal' | 'Mensual' | 'Bimestral' | 'Trimestral' | 'Semestral';
     public automaticInventoryIncrease!: number;
     public productionPrice!: number;
-    public IVA!: number;
+    public IVA!: 0 | 5 | 19;
     public sellingPrice!: number;
     public isDiscounted!: 'Si' | 'No';
     public discountPercentage!: number;
@@ -146,6 +146,9 @@ Product.init(
         IVA: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            validate: {
+              isIn: [[ 0, 5, 19]],
+            },
             defaultValue: 0,
         },
         sellingPrice: {

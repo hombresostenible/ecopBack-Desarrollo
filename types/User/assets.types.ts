@@ -15,7 +15,7 @@ export interface IAssets {
     conditionAssets?: 'Nuevo' | 'Usado';
     inventory: number;
     purchasePriceBeforeTax: number;
-    IVA?: number;
+    IVA?: 0 | 5 | 19;
     sellingPrice?: number;
     inventoryOff?: InventoryOffItem[];
     
