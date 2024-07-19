@@ -43,7 +43,7 @@ class Merchandise extends Model {
     public IVA!: 0 | 5 | 19;
     public consumptionTax!: '4' | '8' | '16';
     public ivaAiu!: number;
-    public taxesUltraProcessedSugarSweetenedBeverages!: string;
+    public taxesUltraProcessedSugarSweetenedBeverages!: number;
     public valueTaxesUltraProcessedSugarSweetenedBeverages!: '0' | '18' | '28' | '35' | '38' | '55' | '65';
     public taxesUltraProcessedFoodProducts!: '10' | '15' | '20';
 
@@ -259,7 +259,6 @@ Merchandise.init(
                 isIn: [['2', '3.4', '4.14', '5', '6.9', '8', '9.66', '11.04', '13.8']],
             },
         },
-        
         
         // Impuestos
         IVA: {
