@@ -8,7 +8,7 @@ class Service extends Model {
     public nameItem!: string;
     public barCode!: string;
     public sellingPrice!: number;
-    public IVA!: number;    
+    public IVA!: 0 | 5 | 19;   
     public serviceAssets!: { nameItem: string; assetId?: string | null}[];
     public serviceProducts!: { nameItem: string; productId?: string | null; quantity: string}[];
     public serviceRawMaterials!: { nameItem: string; rawMaterialId?: string | null; quantity: string}[];
@@ -44,7 +44,10 @@ Service.init(
         },
         IVA: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
+            validate: {
+              isIn: [[ 0, 5, 19]],
+            },
             defaultValue: 0,
         },
         serviceAssets: {
