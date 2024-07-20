@@ -295,7 +295,7 @@ Merchandise.init(
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [['0', '18', '28', '35', '38', '55', '65']],
+                isIn: [['10', '15', '20']],
             },
         },
 
