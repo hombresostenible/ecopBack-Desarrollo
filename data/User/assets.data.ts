@@ -195,17 +195,17 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): 
         if (body.inventory !== undefined && body.inventory > existingAsset.inventory) throw new ServiceError(400, "No hay suficientes activos disponibles para dar de baja");
     
         if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
-            const inventoryOffItem = body.inventoryOff[0]; // Accede al primer elemento de inventoryOff
+            const IInventoryOffItem = body.inventoryOff[0]; // Accede al primer elemento de inventoryOff
             const currentDate = new Date(); // Obtener la fecha actual
 
             // Actualizar el inventario y agregar un nuevo elemento a inventoryOff
-            existingAsset.inventory -= inventoryOffItem.quantity || 0; // Restar la cantidad de activos dañados del inventario actual
+            existingAsset.inventory -= IInventoryOffItem.quantity || 0; // Restar la cantidad de activos dañados del inventario actual
 
             existingAsset.inventoryOff = existingAsset.inventoryOff.concat({ 
                 date: currentDate, 
-                quantity: (inventoryOffItem.quantity || 0),
-                reason: inventoryOffItem.reason || 'Baja de activo',
-                description: inventoryOffItem.description,
+                quantity: (IInventoryOffItem.quantity || 0),
+                reason: IInventoryOffItem.reason || 'Baja de activo',
+                description: IInventoryOffItem.description,
             });
         }
 

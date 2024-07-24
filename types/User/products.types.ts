@@ -1,4 +1,4 @@
-export interface InventoryOffItem {
+export interface IInventoryOffItem {
     date: Date;
     reason: "Activo en uso" | "Activo en reposo" | "Dañado" | "Donado" | "Desechado" | "Reciclado" | "Vendido";
     quantity: number;
@@ -10,7 +10,7 @@ export interface IProduct {
     barCode?: string;
     nameItem: string;
     brandItem?: string;
-    packaged: 'Si' | 'No';
+    packaged?: 'Si' | 'No';
     primaryPackageType?: 'Ninguno' | 'Papel' | 'Papel de archivo' | 'Carton' | 'Aluminio' | 'Plegadiza' | 'Vidrio' | 'PET / PETE Polietileno Tereftalato' | 'HDPE Polietileno de alta densidad' | 'PVC Policloruro de Vinilo' | 'LDPE Polietileno de baja densidad' | 'PP Polipropileno' | 'PS Poliestireno' | 'Otros plasticos (Policarbonato, estireno, nylon)' | 'Hierro' | 'Icopor' | 'Biodegradable' | 'Plastico de burbujas';
     individualPackaging?: 'Si' | 'No';
     secondaryPackageType?: 'Ninguno' | 'Papel' | 'Papel de archivo' | 'Carton' | 'Aluminio' | 'Plegadiza' | 'Vidrio' | 'PET / PETE Polietileno Tereftalato' | 'HDPE Polietileno de alta densidad' | 'PVC Policloruro de Vinilo' | 'LDPE Polietileno de baja densidad' | 'PP Polipropileno' | 'PS Poliestireno' | 'Otros plasticos (Policarbonato, estireno, nylon)' | 'Hierro' | 'Icopor' | 'Biodegradable' | 'Plastico de burbujas';
@@ -28,7 +28,7 @@ export interface IProduct {
     expirationDate?: Date;
     inventoryChanges?: { date: string; quantity: number, type: 'Ingreso' | 'Salida' }[];
     salesCount?: number;
-    inventoryOff?: InventoryOffItem[];
+    inventoryOff?: IInventoryOffItem[];
     reasonManualDiscountingInventory?: 'Donado' | 'Desechado' | 'Caducado' | 'Perdido' | 'Hurtado';
     quantityManualDiscountingInventory?: number;
     productAccesory?: 'Si' | 'No';

@@ -236,17 +236,17 @@ export const patchProductData = async (idProduct: string, body: Partial<IProduct
         if (body.inventory !== undefined && body.inventory > existingProduct.inventory) throw new ServiceError(400, "No hay suficiente cantidad de mercancía disponibles para dar de baja");
         
         if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
-            const inventoryOffItem = body.inventoryOff[0];                      // Accede al primer elemento de inventoryOff
+            const IInventoryOffItem = body.inventoryOff[0];                      // Accede al primer elemento de inventoryOff
             const currentDate = new Date();                                     // Obtener la fecha actual
             
             // Actualizar el inventario y agregar un nuevo elemento a inventoryOff
-            existingProduct.inventory -= inventoryOffItem.quantity || 0;    // Restar la cantidad de productos dañados del inventario actual
+            existingProduct.inventory -= IInventoryOffItem.quantity || 0;    // Restar la cantidad de productos dañados del inventario actual
 
             existingProduct.inventoryOff = existingProduct.inventoryOff.concat({ 
                 date: currentDate, 
-                quantity: (inventoryOffItem.quantity || 0),
-                reason: inventoryOffItem.reason || 'Baja de activo',
-                description: inventoryOffItem.description,
+                quantity: (IInventoryOffItem.quantity || 0),
+                reason: IInventoryOffItem.reason || 'Baja de activo',
+                description: IInventoryOffItem.description,
             });
         }
 

@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
-import { InventoryOffItem } from '../../types/User/merchandise.types';
+import { IInventoryOffItem, IWithholdingTax } from '../../types/User/merchandise.types';
 import Branch from './branch.schema';
 import User from './user.schema';
 
@@ -27,25 +27,18 @@ class Merchandise extends Model {
     public expirationDate!: Date;
     public inventoryChanges!: { date: string; quantity: number, type: 'Ingreso' | 'Salida' }[];    
     public salesCount!: number;
-    public inventoryOff!: InventoryOffItem[];
+    public inventoryOff!: IInventoryOffItem[];
     public reasonManualDiscountingInventory!: 'Donado' | 'Desechado' | 'Caducado' | 'Perdido' | 'Hurtado';
     public quantityManualDiscountingInventory!: number;
     // Retenciones
-    public retentionType!: 'No tiene' | 'Retefuente' | 'Rete IVA' | 'Rete ICA';
-    public retentionPercentageFeesConsulting?: '2' | '4' | '6' | '10' | '11';
-    public retentionPercentageServices!: '1' | '2' | '3.5' | '4' | '6';
-    public retentionPercentagePurchases!: '0.1' | '0.5' | '1' | '1.5' | '2.5' | '3' | '3.5';
-    public retentionPercentageOthers!: '2' | '2.5' | '3' | '4' | '7' | '10' | '20';
-    public retentionPercentageForeignPaymentsDividends!: '0' | '1' | '2' | '5' | '7' | '8' | '10' | '15' | '20' | '33' | '35' | '35 + Num. 51';
-    public retentionPercentageIVA!: '15' | '100';
-    public retentionPercentageICA!: '2' | '3.4' | '4.14' | '5' | '6.9' | '8' | '9.66' | '11.04' | '13.8';
+    public retentions!: IWithholdingTax[];
     // Impuestos
     public IVA!: 0 | 5 | 19;
-    public consumptionTax!: '4' | '8' | '16';
-    public ivaAiu!: number;
+    public consumptionTax!: 4 | 8 | 16;
+    public ivaAiu!: 0 | 1;
     public taxesUltraProcessedSugarSweetenedBeverages!: number;
-    public valueTaxesUltraProcessedSugarSweetenedBeverages!: '0' | '18' | '28' | '35' | '38' | '55' | '65';
-    public taxesUltraProcessedFoodProducts!: '10' | '15' | '20';
+    public valueTaxesUltraProcessedSugarSweetenedBeverages!: 0 | 18 | 28 | 35 | 38 | 55 | 65;
+    public taxesUltraProcessedFoodProducts!: 10 | 15 | 20;
 
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
@@ -74,7 +67,7 @@ Merchandise.init(
         },
         packaged: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
             validate: {
               isIn: [[ 'Si', 'No' ]],
             },
@@ -201,65 +194,14 @@ Merchandise.init(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-
-        // Retenciones
-        retentionType: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [['No tiene', 'Retefuente', 'Rete IVA', 'Rete ICA']],
-            },
-        },
-        retentionPercentageFeesConsulting: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [['2', '4', '6', '10', '11']],
-            },
-        },
-        retentionPercentageServices: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [['1', '2', '3.5', '4', '6']],
-            },
-        },
-        retentionPercentagePurchases: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [['0.1', '0.5', '1', '1.5', '2.5', '3', '3.5']],
-            },
-        },
-        retentionPercentageOthers: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [['2', '2.5', '3', '4', '7', '10', '20']],
-            },
-        },
-        retentionPercentageForeignPaymentsDividends: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [['0', '1', '2', '5', '7', '8', '10', '15', '20', '33', '35', '35 + Num. 51']],
-            },
-        },
-        retentionPercentageIVA: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [['15', '100']],
-            },
-        },
-        retentionPercentageICA: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [['2', '3.4', '4.14', '5', '6.9', '8', '9.66', '11.04', '13.8']],
-            },
-        },
         
+        // Retenciones
+        retentions: {
+            type: DataTypes.JSON,
+            allowNull: true,
+            defaultValue: [],
+        },
+
         // Impuestos
         IVA: {
             type: DataTypes.INTEGER,
@@ -273,29 +215,32 @@ Merchandise.init(
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [['4', '8', '16']],
+                isIn: [[4, 8, 16]],
             },
         },
         ivaAiu: {
             type: DataTypes.INTEGER,
             allowNull: true,
+            validate: {
+                isIn: [[0, 1]],
+            },
         },
         taxesUltraProcessedSugarSweetenedBeverages: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
         valueTaxesUltraProcessedSugarSweetenedBeverages: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: true,
             validate: {
-                isIn: [['0', '18', '28', '35', '38', '55', '65']],
+                isIn: [[0, 18, 28, 35, 38, 55, 65]],
             },
         },
         taxesUltraProcessedFoodProducts: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: true,
             validate: {
-                isIn: [['10', '15', '20']],
+                isIn: [[10, 15, 20]],
             },
         },
 

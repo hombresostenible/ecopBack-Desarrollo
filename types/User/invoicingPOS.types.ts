@@ -1,11 +1,12 @@
 // PARAMETROS
 export interface IParametros {
-    TokenEmpresa: string;
     VersionDocElectronico: number;
     NombreSistemaEmisor: string;
     VersionSistemaEmisor: number;
     ModoRespuesta: number;
     TipoAmbiente: number;
+    TokenEmpresa: string;
+    // PasswordEmpresa: string;
     TipoReporte: number;
     Personalizacion: number;
     ContactoReceptor: {
@@ -24,6 +25,7 @@ export interface IParametros {
         }
     ];
 };
+
 
 
 // EXTENCIONES
@@ -113,10 +115,10 @@ export interface IEncabezado {
     CodigoMoneda: {
         Value: string;
     };
-    CentroDeCostoCodigo: {
+    CentroDeCostoCodigo: {          //SOLO PARA POS
         Value: number;
     };
-    CentroDeCostoNombre: {
+    CentroDeCostoNombre: {          //SOLO PARA POS
         Value: string;
     };
     CantidadLineas: number;
@@ -288,12 +290,12 @@ export interface ITerceros {
                     Value: string;
                 };
                 NumeroIdTributario: {
-                    SmaIdNombre: number;
-                    Value: number;
+                    SmaIdNombre: string;
+                    Value: string;
                 };
                 EsquemaTributario: {
                     Id: {
-                        Value: number;
+                        Value: string;
                     };
                     Nombre: {
                         Value: string;
@@ -308,7 +310,7 @@ export interface ITerceros {
 // LINEAS
 export interface ILineas {
     Id: {
-        Value: number;
+        Value: string;
     };
     Nota: {
         Value: string;

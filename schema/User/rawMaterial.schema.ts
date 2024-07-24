@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
-import { InventoryOffItem } from '../../types/User/rawMaterial.types';
+import { IInventoryOffItem } from '../../types/User/rawMaterial.types';
 import Branch from './branch.schema';
 import User from './user.schema';
 
@@ -27,7 +27,7 @@ class RawMaterial extends Model {
     public salesCount!: number;
     public expirationDate!: Date;    
     public inventoryChanges!: { date: string; quantity: number, type: 'Ingreso' | 'Salida' }[];
-    public inventoryOff!: InventoryOffItem[];
+    public inventoryOff!: IInventoryOffItem[];
     public reasonManualDiscountingInventory!: 'Donado' | 'Desechado' | 'Caducado' | 'Perdido' | 'Hurtado';
     public quantityManualDiscountingInventory!: number;
     // Retenciones
@@ -74,7 +74,7 @@ RawMaterial.init(
         },
         packaged: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
             validate: {
                 isIn: [[ 'Si', 'No' ]],
             },
