@@ -1,11 +1,11 @@
 {
     "Parametros": {
-        "TokenEmpresa": "No Disponible",
         "VersionDocElectronico": "4.0",
         "NombreSistemaEmisor": "SoapUI",
         "VersionSistemaEmisor": "1",
         "ModoRespuesta": "1",
         "TipoAmbiente": "2",
+        "TokenEmpresa": "No Disponible",
         "TipoReporte": "1",
         "Personalizacion": "20",
         "ContactoReceptor": [
@@ -315,10 +315,10 @@
                         },
                         "EsquemaTributario": {
                             "Id": {
-                            "Value": "01"
+                                "Value": "01"
                             },
                             "Nombre": {
-                            "Value": "IVA"
+                                "Value": "IVA"
                             }
                         }
                     }
