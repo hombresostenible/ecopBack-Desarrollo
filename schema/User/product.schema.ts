@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
-import { InventoryOffItem } from '../../types/User/products.types';
+import { IInventoryOffItem } from '../../types/User/products.types';
 import Branch from './branch.schema';
 import User from './user.schema';
 
@@ -27,7 +27,7 @@ class Product extends Model {
     public expirationDate!: Date;
     public inventoryChanges!: { date: string; quantity: number, type: 'Ingreso' | 'Salida' }[];
     public salesCount!: number;
-    public inventoryOff!: InventoryOffItem[];
+    public inventoryOff!: IInventoryOffItem[];
     public reasonManualDiscountingInventory!: 'Donado' | 'Desechado' | 'Caducado' | 'Perdido' | 'Hurtado';
     public quantityManualDiscountingInventory!: number;
     public productAccesory!: 'Si' | 'No';
@@ -78,7 +78,7 @@ Product.init(
         },
         packaged: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
             validate: {
               isIn: [[ 'Si', 'No' ]],
             },

@@ -1,4 +1,4 @@
-export interface InventoryOffItem {
+export interface IInventoryOffItem {
     date: Date;
     reason: "Activo en uso" | "Activo en reposo" | "Dañado" | "Donado" | "Desechado" | "Reciclado" | "Vendido";
     quantity: number;
@@ -16,7 +16,7 @@ export interface IAssets {
     inventory: number;
     purchasePriceBeforeTax: number;
     sellingPrice?: number;
-    inventoryOff?: InventoryOffItem[];
+    inventoryOff?: IInventoryOffItem[];
     // Impuestos
     IVA: 0 | 5 | 19;
     

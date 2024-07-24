@@ -23,6 +23,7 @@ export const postBranchData = async (body: IBranch, userId: string): Promise<IBr
         await newBranch.save();
         return newBranch;
     } catch (error) {
+        console.log('error: ', error)
         throw error;
     };
 };

@@ -10,7 +10,7 @@ export interface IParametros {
     TipoReporte: string;                                    //"1"
     Personalizacion: string;                                //"20" - Para el tipo de documento a utilizar
     ContactoReceptor: {
-         CorreoElectronico: string;                          //"."correo electronico, donde nuestro cliente quiere que le llegue la factura de su cliente, es donde se transmite la factura electrónica
+        CorreoElectronico: string;                          //"."correo electronico, donde nuestro cliente quiere que le llegue la factura de su cliente, es donde se transmite la factura electrónica
         IdEtiquetaUbicacionCorreo: string;                  //"1" - Etiquetra de ese contacto, si queremo que se transmita a varios correos, los relacionamos, es un array de objetos, entonces el primero es etiqueta 1, el segundo es etiqueta 2 y así sucesivamente
         SoloEnvioCasoDeFalloSpecified: boolean;             //false - Siempre esta en false
     }[];
@@ -135,6 +135,14 @@ export interface IEncabezado {
     CodigoMoneda: {
         Value: string;                                      //"COP"
     };
+    /*
+    OPCIONALES PARA CONVERTIR DE POS A FACTURA ELECTRONICA
+    CentroDeCostoCodigo: {          //SOLO PARA POS
+        Value: number;
+    };
+    CentroDeCostoNombre: {          //SOLO PARA POS
+        Value: string;
+    };*/
     CantidadLineas: number;                                 //1.0   --ES LA CANTIDAD DE PRODUCTOS, UNA LINEA ES UN PRODUCTO
     CantidadLineasSpecified: boolean;                       //true
 };
@@ -145,7 +153,7 @@ export interface ITerceros {
     TerceroProveedorContable: {                             //^ESTOS SON LOS DATOS DE LA EMPRESA QUE EMITE LA FACTURA
         IdAdicional: {
             Value: string;
-        }[];   
+        }[];
         Tercero: {
             IndicaATravesDeSpecified: boolean;
             IndicaAtencionASpecified: boolean;
@@ -267,13 +275,24 @@ export interface ITerceros {
                 IndicaAccionesPagadasSpecified: boolean;    //false - DEJAR ASI, NO SE UTILIZAN
                 EsquemaRegistroCorporativo: {
                     Id: {
-                    Value: string;                          //"SETT" ES EL PREFIJO DE LA FACTURA
+                        Value: string;                       //"SETT" ES EL PREFIJO DE LA FACTURA
                     };
                     Nombre: {
                         Value: string;                      //"6496" ES EL NUMERO DE LA FACTURA QUE SE ESTA TRANSMITIENDO
                     };
                 };
             }[];
+            /*
+            Contacto: {
+                Nombre: {
+                    Value: string;
+                };
+                Email: {
+                    Value: string;
+                };
+                Nota: [];
+            };
+             */
         };
     };
     TerceroClienteContable: {                               //^ESTOS SON LOS DATOS DEL CLIENTE DE LA EMPRESA QUE EMITE LA FACTURA
@@ -335,7 +354,7 @@ export interface ITerceros {
                     Value: string;
                 };
                 NumeroIdTributario: {
-                    SmaIdCodigo: string;
+                    SmaIdCodigo?: string;
                     SmaIdNombre: string;
                     Value: string;
                 };
@@ -524,6 +543,25 @@ export interface IElectronicInvoicing {
     Lineas: ILineas;
     AgregadoComercial: IAgregadoComercial;
     Totales: ITotales;
+    /*
+        Notas: [
+        {
+            Value: string;
+        },
+        {
+            Value: string;
+        },
+        {
+            Value: string;
+        },
+        {
+            Value: string;
+        },
+        {
+            Value: string;
+        }
+    ];
+     */
     
     //RELACION CON OTRAS TABLAS
     branchId: string;
