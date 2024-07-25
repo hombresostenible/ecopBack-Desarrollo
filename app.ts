@@ -26,8 +26,8 @@ class Server {
         try {
             await db.authenticate();
             console.log('Base de datos conectada');
-            // await db.sync();
-            await db.sync({ force: true }); // En producción, puedes usar `await db.sync();` en lugar de `{ force: true }`,Esto elimina y recrea las tablas en cada reinicio
+            await db.sync();
+            // await db.sync({ force: true }); // En producción, puedes usar `await db.sync();` en lugar de `{ force: true }`,Esto elimina y recrea las tablas en cada reinicio
             console.log('Modelos sincronizados con la base de datos');
         } catch (error) {
             console.error('Error al conectar la base de datos:', error);
@@ -42,7 +42,7 @@ class Server {
     private middlewares() {
         // Middleware para verificar las cookies antes de CORS
         this.app.use((req: Request, res: Response, next: NextFunction) => {
-            // console.log('Cookies recibidas:', req.headers.cookie);
+            console.log('Cookies recibidas:', req.headers.cookie);
             next();
         });
 
