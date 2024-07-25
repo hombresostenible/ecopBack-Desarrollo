@@ -1,6 +1,8 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
-import { IInventoryOffItem, IWithholdingTax, IIvaAiu } from '../../types/User/merchandise.types';
+import { IInventoryOffItem } from '../../types/User/InventoryOffItem/iInventoryOffItem.types';
+import { IWithholdingTax } from '../../types/User/RetentonAndTaxes/withholdingTax.types';
+import { IIvaAiu } from '../../types/User/RetentonAndTaxes/ivaAiu.types';
 import Branch from './branch.schema';
 import User from './user.schema';
 
@@ -33,12 +35,12 @@ class Merchandise extends Model {
     // Retenciones
     public retentions!: IWithholdingTax[];
     // Impuestos
-    public IVA!: 0 | 5 | 19;
-    public consumptionTax!: 4 | 8 | 16;
+    public IVA!: 'No aplica' | 0 | 5 | 19;
+    public consumptionTax!: 'No aplica' | 4 | 8 | 16;
     public ivaAiu!: IIvaAiu;
     public taxesUltraProcessedSugarSweetenedBeverages!: number;
-    public valueTaxesUltraProcessedSugarSweetenedBeverages!: 0 | 18 | 28 | 35 | 38 | 55 | 65;
-    public taxesUltraProcessedFoodProducts!: 10 | 15 | 20;
+    public valueTaxesUltraProcessedSugarSweetenedBeverages!: 'No aplica' | 0 | 18 | 28 | 35 | 38 | 55 | 65;
+    public taxesUltraProcessedFoodProducts!: 'No aplica' | 10 | 15 | 20;
 
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
@@ -205,7 +207,7 @@ Merchandise.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             validate: {
-                isIn: [[ 0, 5, 19]],
+                isIn: [[ 'No aplica', 0, 5, 19]],
             },
             defaultValue: 0,
         },
@@ -213,14 +215,14 @@ Merchandise.init(
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [[4, 8, 16]],
+                isIn: [['No aplica', 4, 8, 16]],
             },
         },
         ivaAiu: {
             type: DataTypes.INTEGER,
             allowNull: true,
             validate: {
-                isIn: [[0, 1]],
+                isIn: [['No aplica', 0, 1]],
             },
         },
         taxesUltraProcessedSugarSweetenedBeverages: {
@@ -231,14 +233,14 @@ Merchandise.init(
             type: DataTypes.INTEGER,
             allowNull: true,
             validate: {
-                isIn: [[0, 18, 28, 35, 38, 55, 65]],
+                isIn: [['No aplica', 0, 18, 28, 35, 38, 55, 65]],
             },
         },
         taxesUltraProcessedFoodProducts: {
             type: DataTypes.INTEGER,
             allowNull: true,
             validate: {
-                isIn: [[10, 15, 20]],
+                isIn: [['No aplica', 10, 15, 20]],
             },
         },
 
