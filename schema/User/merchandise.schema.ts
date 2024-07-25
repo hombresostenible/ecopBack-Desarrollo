@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
-import { IInventoryOffItem, IWithholdingTax } from '../../types/User/merchandise.types';
+import { IInventoryOffItem, IWithholdingTax, IIvaAiu } from '../../types/User/merchandise.types';
 import Branch from './branch.schema';
 import User from './user.schema';
 
@@ -35,7 +35,7 @@ class Merchandise extends Model {
     // Impuestos
     public IVA!: 0 | 5 | 19;
     public consumptionTax!: 4 | 8 | 16;
-    public ivaAiu!: 0 | 1;
+    public ivaAiu!: IIvaAiu;
     public taxesUltraProcessedSugarSweetenedBeverages!: number;
     public valueTaxesUltraProcessedSugarSweetenedBeverages!: 0 | 18 | 28 | 35 | 38 | 55 | 65;
     public taxesUltraProcessedFoodProducts!: 10 | 15 | 20;

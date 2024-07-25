@@ -17,6 +17,12 @@ export interface IWithholdingTax {
     retentionPercentageICA?: '2' | '3.4' | '4.14' | '5' | '6.9' | '8' | '9.66' | '11.04' | '13.8';
 }
 
+export interface IIvaAiu {
+    administrativePercentage?: number;
+    unforeseenPercentage?: number;
+    utilityPercentage?: number;
+}
+
 export interface IMerchandise {
     id: string;
     barCode?: string;
@@ -48,7 +54,7 @@ export interface IMerchandise {
     // Impuestos
     IVA: 0 | 5 | 19;
     consumptionTax?: 4 | 8 | 16;
-    ivaAiu?: 0 | 1;
+    ivaAiu?: IIvaAiu;
     taxesUltraProcessedSugarSweetenedBeverages?: number;
     valueTaxesUltraProcessedSugarSweetenedBeverages?: 0 | 18 | 28 | 35 | 38 | 55 | 65;
     taxesUltraProcessedFoodProducts?: 10 | 15 | 20;
