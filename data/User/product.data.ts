@@ -232,7 +232,7 @@ export const patchProductData = async (idProduct: string, body: Partial<IProduct
             transaction: t,
         });
 
-        if (!existingProduct) throw new ServiceError(404, "No se encontró el activo");
+        if (!existingProduct) throw new ServiceError(404, "No se encontró el producto");
         if (body.inventory !== undefined && body.inventory > existingProduct.inventory) throw new ServiceError(400, "No hay suficiente cantidad de mercancía disponibles para dar de baja");
         
         if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
@@ -245,7 +245,7 @@ export const patchProductData = async (idProduct: string, body: Partial<IProduct
             existingProduct.inventoryOff = existingProduct.inventoryOff.concat({ 
                 date: currentDate, 
                 quantity: (IInventoryOffItem.quantity || 0),
-                reason: IInventoryOffItem.reason || 'Baja de activo',
+                reason: IInventoryOffItem.reason || 'Baja de producto',
                 description: IInventoryOffItem.description,
             });
         }
