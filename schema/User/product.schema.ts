@@ -235,10 +235,10 @@ Product.init(
 
         // Impuestos
         IVA: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isIn: [['No aplica', 0, 5, 19]],
+                isIn: [[ 'No aplica', 0, 5, 19 ]],
             },
             defaultValue: 0,
         },
@@ -246,15 +246,15 @@ Product.init(
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [['No aplica', 4, 8, 16]],
+                isIn: [[ 'No aplica', 4, 8, 16 ]],
             },
             defaultValue: 'No aplica',
         },
         ivaAiu: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [['No aplica', 0, 1]],
+                isIn: [[ 'No aplica', 0, 1 ]],
             },
             defaultValue: 'No aplica',
         },
@@ -263,18 +263,18 @@ Product.init(
             allowNull: true,
         },
         valueTaxesUltraProcessedSugarSweetenedBeverages: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [['No aplica', 0, 18, 28, 35, 38, 55, 65]],
+                isIn: [[ 'No aplica', 0, 18, 28, 35, 38, 55, 65 ]],
             },
             defaultValue: 'No aplica',
         },
         taxesUltraProcessedFoodProducts: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [['No aplica', 10, 15, 20]],
+                isIn: [[ 'No aplica', 10, 15, 20 ]],
             },
             defaultValue: 'No aplica',
         },
