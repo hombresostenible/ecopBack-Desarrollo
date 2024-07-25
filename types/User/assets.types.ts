@@ -1,9 +1,4 @@
-export interface IInventoryOffItem {
-    date: Date;
-    reason: "Activo en uso" | "Activo en reposo" | "Dañado" | "Donado" | "Desechado" | "Reciclado" | "Vendido";
-    quantity: number;
-    description?: string;
-}
+import { IInventoryOffAssets } from '../../types/User/InventoryOffItem/iInventoryOffItem.types';
 
 export interface IAssets {
     id: string;
@@ -16,9 +11,9 @@ export interface IAssets {
     inventory: number;
     purchasePriceBeforeTax: number;
     sellingPrice?: number;
-    inventoryOff?: IInventoryOffItem[];
+    inventoryOff?: IInventoryOffAssets[];
     // Impuestos
-    IVA: 0 | 5 | 19;
+    IVA: 'No aplica' | 0 | 5 | 19;
     
     //RELACION CON OTRAS TABLAS
     branchId: string;

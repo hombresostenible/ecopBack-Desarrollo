@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
-import { IWithholdingTax } from '../../types/User/services.types';
+import { IWithholdingTax } from '../../types/User/RetentonAndTaxes/withholdingTax.types';
+import { IIvaAiu } from '../../types/User/RetentonAndTaxes/ivaAiu.types';
 import User from './user.schema';
 import Branch from './branch.schema';
 
@@ -20,7 +21,7 @@ class Service extends Model {
     // Impuestos
     public IVA!: 0 | 5 | 19;
     public consumptionTax!: 4 | 8 | 16;
-    public ivaAiu!: 0 | 1;
+    public ivaAiu!: IIvaAiu;
     public taxesUltraProcessedSugarSweetenedBeverages!: number;
     public valueTaxesUltraProcessedSugarSweetenedBeverages!: 0 | 18 | 28 | 35 | 38 | 55 | 65;
     public taxesUltraProcessedFoodProducts!: 10 | 15 | 20;
@@ -88,13 +89,12 @@ Service.init(
             allowNull: true,
             defaultValue: [],
         },
-
         // Impuestos
         IVA: {
             type: DataTypes.INTEGER,
             allowNull: false,
             validate: {
-                isIn: [[ 0, 5, 19]],
+                isIn: [[ 'No aplica', 0, 5, 19]],
             },
             defaultValue: 0,
         },
@@ -102,14 +102,14 @@ Service.init(
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [[4, 8, 16]],
+                isIn: [['No aplica', 4, 8, 16]],
             },
         },
         ivaAiu: {
             type: DataTypes.INTEGER,
             allowNull: true,
             validate: {
-                isIn: [[0, 1]],
+                isIn: [['No aplica', 0, 1]],
             },
         },
         taxesUltraProcessedSugarSweetenedBeverages: {
@@ -120,14 +120,14 @@ Service.init(
             type: DataTypes.INTEGER,
             allowNull: true,
             validate: {
-                isIn: [[0, 18, 28, 35, 38, 55, 65]],
+                isIn: [['No aplica', 0, 18, 28, 35, 38, 55, 65]],
             },
         },
         taxesUltraProcessedFoodProducts: {
             type: DataTypes.INTEGER,
             allowNull: true,
             validate: {
-                isIn: [[10, 15, 20]],
+                isIn: [['No aplica', 10, 15, 20]],
             },
         },
 
