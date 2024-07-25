@@ -31,7 +31,7 @@ export const postRegisterCRMClientsData = async (body: ICrmClients, userId: stri
 export const getCRMClientsData = async (userId: string): Promise<any> => {
     try {
         const userCRMClients = await CrmClients.findAll({
-            where: { entityUserId: userId },
+            where: { userId: userId },
         });        
         return userCRMClients;
     } catch (error) {

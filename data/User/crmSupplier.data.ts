@@ -35,7 +35,7 @@ export const postRegisterCRMSupplierData = async (body: ICrmSuppliers, userId: s
 export const getCRMSuppliersData = async (userId: string): Promise<any> => {
     try {
         const userCRMSupplier = await CrmSupplier.findAll({
-            where: { entityUserId: userId },
+            where: { userId: userId },
         });        
         return userCRMSupplier;            
     } catch (error) {
