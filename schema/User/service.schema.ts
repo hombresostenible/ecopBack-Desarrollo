@@ -19,12 +19,12 @@ class Service extends Model {
     // Retenciones
     public retentions!: IWithholdingTax[];
     // Impuestos
-    public IVA!: 0 | 5 | 19;
-    public consumptionTax!: 4 | 8 | 16;
+    public IVA!: 'No aplica' | 0 | 5 | 19;
+    public consumptionTax!: 'No aplica' | 4 | 8 | 16;
     public ivaAiu!: IIvaAiu;
     public taxesUltraProcessedSugarSweetenedBeverages!: number;
-    public valueTaxesUltraProcessedSugarSweetenedBeverages!: 0 | 18 | 28 | 35 | 38 | 55 | 65;
-    public taxesUltraProcessedFoodProducts!: 10 | 15 | 20;
+    public valueTaxesUltraProcessedSugarSweetenedBeverages!: 'No aplica' | 0 | 18 | 28 | 35 | 38 | 55 | 65;
+    public taxesUltraProcessedFoodProducts!: 'No aplica' | 10 | 15 | 20;
 
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
@@ -89,12 +89,13 @@ Service.init(
             allowNull: true,
             defaultValue: [],
         },
+
         // Impuestos
         IVA: {
             type: DataTypes.INTEGER,
             allowNull: false,
             validate: {
-                isIn: [[ 'No aplica', 0, 5, 19]],
+                isIn: [['No aplica', 0, 5, 19]],
             },
             defaultValue: 0,
         },
@@ -104,6 +105,7 @@ Service.init(
             validate: {
                 isIn: [['No aplica', 4, 8, 16]],
             },
+            defaultValue: 'No aplica',
         },
         ivaAiu: {
             type: DataTypes.INTEGER,
@@ -111,6 +113,7 @@ Service.init(
             validate: {
                 isIn: [['No aplica', 0, 1]],
             },
+            defaultValue: 'No aplica',
         },
         taxesUltraProcessedSugarSweetenedBeverages: {
             type: DataTypes.INTEGER,
@@ -122,6 +125,7 @@ Service.init(
             validate: {
                 isIn: [['No aplica', 0, 18, 28, 35, 38, 55, 65]],
             },
+            defaultValue: 'No aplica',
         },
         taxesUltraProcessedFoodProducts: {
             type: DataTypes.INTEGER,
@@ -129,6 +133,7 @@ Service.init(
             validate: {
                 isIn: [['No aplica', 10, 15, 20]],
             },
+            defaultValue: 'No aplica',
         },
 
         //RELACION CON OTRAS TABLAS
