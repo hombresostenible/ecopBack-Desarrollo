@@ -50,8 +50,8 @@ export interface IProduct {
     consumptionTax?: 'No aplica' | 4 | 8 | 16;
     ivaAiu?: IIvaAiu;
     taxesUltraProcessedSugarSweetenedBeverages?: number;
-    valueTaxesUltraProcessedSugarSweetenedBeverages?: 0 | 18 | 28 | 35 | 38 | 55 | 65;
-    taxesUltraProcessedFoodProducts?: 10 | 15 | 20;
+    valueTaxesUltraProcessedSugarSweetenedBeverages?: 'No aplica' | 0 | 18 | 28 | 35 | 38 | 55 | 65;
+    taxesUltraProcessedFoodProducts?: 'No aplica' | 10 | 15 | 20;
     // IVA: number;
     
     //RELACION CON OTRAS TABLAS
