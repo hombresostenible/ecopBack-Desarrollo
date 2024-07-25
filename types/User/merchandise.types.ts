@@ -34,9 +34,9 @@ export interface IMerchandise {
     IVA: 'No aplica' | 0 | 5 | 19;
     consumptionTax?: 'No aplica' | 4 | 8 | 16;
     ivaAiu?: IIvaAiu;
-    taxesUltraProcessedSugarSweetenedBeverages?: number;
-    valueTaxesUltraProcessedSugarSweetenedBeverages?: 'No aplica' | 0 | 18 | 28 | 35 | 38 | 55 | 65;
-    taxesUltraProcessedFoodProducts?: 'No aplica' | 10 | 15 | 20;
+    taxesUltraProcessedSugarSweetenedBeverages?: number;//COMENTAR
+    valueTaxesUltraProcessedSugarSweetenedBeverages?: 'No aplica' | 0 | 18 | 28 | 35 | 38 | 55 | 65;//COMENTAR
+    taxesUltraProcessedFoodProducts?: 'No aplica' | 10 | 15 | 20;//COMENTAR
     //RELACION CON OTRAS TABLAS
     branchId: string;
     userId?: string;
