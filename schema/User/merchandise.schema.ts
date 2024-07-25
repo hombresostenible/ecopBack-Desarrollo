@@ -38,9 +38,9 @@ class Merchandise extends Model {
     public IVA!: 'No aplica' | 0 | 5 | 19;
     public consumptionTax!: 'No aplica' | 4 | 8 | 16;
     public ivaAiu!: IIvaAiu;
-    public taxesUltraProcessedSugarSweetenedBeverages!: number;
-    public valueTaxesUltraProcessedSugarSweetenedBeverages!: 'No aplica' | 0 | 18 | 28 | 35 | 38 | 55 | 65;
-    public taxesUltraProcessedFoodProducts!: 'No aplica' | 10 | 15 | 20;
+    // public taxesUltraProcessedSugarSweetenedBeverages!: number;
+    // public valueTaxesUltraProcessedSugarSweetenedBeverages!: 'No aplica' | 0 | 18 | 28 | 35 | 38 | 55 | 65;
+    // public taxesUltraProcessedFoodProducts!: 'No aplica' | 10 | 15 | 20;
 
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
@@ -227,26 +227,26 @@ Merchandise.init(
             },
             defaultValue: 'No aplica',
         },
-        taxesUltraProcessedSugarSweetenedBeverages: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        valueTaxesUltraProcessedSugarSweetenedBeverages: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [['No aplica', 0, 18, 28, 35, 38, 55, 65]],
-            },
-            defaultValue: 'No aplica',
-        },
-        taxesUltraProcessedFoodProducts: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [['No aplica', 10, 15, 20]],
-            },
-            defaultValue: 'No aplica',
-        },
+        // taxesUltraProcessedSugarSweetenedBeverages: {
+        //     type: DataTypes.INTEGER,
+        //     allowNull: true,
+        // },
+        // valueTaxesUltraProcessedSugarSweetenedBeverages: {
+        //     type: DataTypes.STRING,
+        //     allowNull: true,
+        //     validate: {
+        //         isIn: [['No aplica', 0, 18, 28, 35, 38, 55, 65]],
+        //     },
+        //     defaultValue: 'No aplica',
+        // },
+        // taxesUltraProcessedFoodProducts: {
+        //     type: DataTypes.STRING,
+        //     allowNull: true,
+        //     validate: {
+        //         isIn: [['No aplica', 10, 15, 20]],
+        //     },
+        //     defaultValue: 'No aplica',
+        // },
 
         //RELACION CON OTRAS TABLAS
         branchId: {
