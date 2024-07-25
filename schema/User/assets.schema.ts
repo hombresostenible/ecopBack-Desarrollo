@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
-import { IInventoryOffItem } from '../../types/User/assets.types';
+import { IInventoryOffAssets } from '../../types/User/InventoryOffItem/iInventoryOffItem.types';
 import Branch from './branch.schema';
 import User from './user.schema';
 
@@ -16,7 +16,7 @@ class Assets extends Model {
     public purchasePriceBeforeTax!: number;
     public IVA!: 0 | 5 | 19;
     public sellingPrice!: number;
-    public inventoryOff!: IInventoryOffItem[];
+    public inventoryOff!: IInventoryOffAssets[];
 
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
