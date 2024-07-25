@@ -126,7 +126,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
                 'Assets' as type, 
                 userId
             FROM assets
-            WHERE nameItem LIKE :nameItemPattern AND userId = :userId
+            WHERE nameItem LIKE :nameItem AND userId = :userId
 
             UNION ALL
 
@@ -135,7 +135,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
                 'Merchandise' as type, 
                 userId
             FROM merchandises
-            WHERE nameItem LIKE :nameItemPattern AND userId = :userId
+            WHERE nameItem LIKE :nameItem AND userId = :userId
 
             UNION ALL
 
@@ -144,7 +144,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
                 'Product' as type, 
                 userId
             FROM products
-            WHERE nameItem LIKE :nameItemPattern AND userId = :userId
+            WHERE nameItem LIKE :nameItem AND userId = :userId
 
             UNION ALL
 
@@ -153,7 +153,7 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
                 'RawMaterial' as type, 
                 userId
             FROM rawMaterials
-            WHERE nameItem LIKE :nameItemPattern AND userId = :userId
+            WHERE nameItem LIKE :nameItem AND userId = :userId
 
             UNION ALL
 
@@ -162,9 +162,9 @@ export const getNameItemData = async (nameItem: string, userId: string): Promise
                 'Service' as type, 
                 userId
             FROM services
-            WHERE nameItem LIKE :nameItemPattern AND userId = :userId
+            WHERE nameItem LIKE :nameItem AND userId = :userId
         `, {
-            replacements: { nameItemPattern: `%${nameItem}%`, userId },
+            replacements: { nameItem: `%${nameItem}%`, userId },
             type: QueryTypes.SELECT
         });
         return itemFound;
