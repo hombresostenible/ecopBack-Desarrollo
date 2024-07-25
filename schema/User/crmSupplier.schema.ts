@@ -9,7 +9,7 @@ class CrmSupplier extends Model {
     public lastName!: string;
     public corporateName!: string;
     public typeDocumentId!: 'NIT' | 'Cedula de Ciudadania' | 'Cedula de Extranjeria' | 'Pasaporte';
-    public documentId!: number;
+    public documentId!: string;
     public verificationDigit!: number;
     public email!: string;
     public phone!: string;
@@ -55,7 +55,7 @@ CrmSupplier.init(
             },
         },
         documentId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         verificationDigit: {
