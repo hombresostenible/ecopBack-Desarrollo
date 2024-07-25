@@ -71,11 +71,15 @@ Assets.init(
             allowNull: false,
             defaultValue: 0,
         },
+
+        // Retenciones
+
+        // Impuestos
         IVA: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
             validate: {
-              isIn: [['No aplica', 0, 5, 19]],
+              isIn: [[ 'No aplica', 0, 5, 19 ]],
             },
             defaultValue: 0,
         },

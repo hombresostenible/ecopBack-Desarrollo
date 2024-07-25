@@ -154,7 +154,7 @@ Merchandise.init(
             type: DataTypes.STRING,
             allowNull: true,
             validate: {
-                isIn: [['Si', 'No']],
+                isIn: [[ 'Si', 'No' ]],
             },
             defaultValue: 'No',
         },
@@ -220,7 +220,7 @@ Merchandise.init(
             defaultValue: 'No aplica',
         },
         ivaAiu: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: true,
             validate: {
                 isIn: [['No aplica', 0, 1]],
@@ -232,7 +232,7 @@ Merchandise.init(
             allowNull: true,
         },
         valueTaxesUltraProcessedSugarSweetenedBeverages: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: true,
             validate: {
                 isIn: [['No aplica', 0, 18, 28, 35, 38, 55, 65]],
@@ -240,7 +240,7 @@ Merchandise.init(
             defaultValue: 'No aplica',
         },
         taxesUltraProcessedFoodProducts: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: true,
             validate: {
                 isIn: [['No aplica', 10, 15, 20]],
