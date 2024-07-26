@@ -28,7 +28,12 @@ router.get("/bar-code/:barCode", authRequired, async (req: Request, res: Respons
         const { id } = req.user;
         const { barCode } = req.params;
         const serviceLayerResponse = await getItemBarCodeService(id, barCode);
-        res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
+        
+        if (serviceLayerResponse.result) {
+            res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
+        } else {
+            res.status(404).json({ message: 'Item no encontrado' });
+        }
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
@@ -40,14 +45,12 @@ router.get("/bar-code/:barCode", authRequired, async (req: Request, res: Respons
 //BUSCA UN ARTICULO POR NOMBRE EN TODAS LAS TABLAS
 router.get("/name-item/query?", authRequired, async (req: Request, res: Response) => {
     try {
+        const { id } = req.user;
         const nameItem = req.query.nameItem as string;
         if (!nameItem) {
             return res.status(400).json({ error: 'El parámetro nameItem es requerido.' });
         }
-        const { id } = req.user;
-        console.log('nameItem: ', nameItem)
-        console.log('id: ', id)
-        const serviceLayerResponse = await getNameItemService(nameItem, id);
+        const serviceLayerResponse = await getNameItemService(id, nameItem);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;

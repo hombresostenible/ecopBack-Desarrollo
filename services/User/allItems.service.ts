@@ -39,9 +39,9 @@ export const getItemBarCodeService = async (userId: string, barCode: string): Pr
 
 
 //BUSCAR UN ITEM DE ASSETS, MERCHANDISE, PRODUCT O RAWMATERIAL POR NOMBRE
-export const getNameItemService = async (nameItem: string, userId: string): Promise<IServiceLayerResponseItemByBarCodeOrName> => {
+export const getNameItemService = async (userId: string, nameItem: string): Promise<IServiceLayerResponseItemByBarCodeOrName> => {
     try {
-        const itemFound = await getNameItemData(nameItem, userId);
+        const itemFound = await getNameItemData(userId, nameItem);
         if (!itemFound) return { code: 404, message: 'Item no registrado' };
         return { code: 200, result: itemFound };
     } catch (error) {

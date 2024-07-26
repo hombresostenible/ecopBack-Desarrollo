@@ -217,10 +217,7 @@ export interface IServiceLayerResponseSalesFunnelCustomerDigital {
 //INTERFACE DE RESPUESTA GENERICA PARA RETORNAR PRODUCTOS POR CODIGO DE BARRAS O POR NOMBRE
 export interface IServiceLayerResponseItemByBarCodeOrName {
     code: number,
-    result?: {
-        serResult: IAssets | IMerchandise | IProduct | IRawMaterial | IService,
-        token: string;
-    };
+    result?: IAssets | IMerchandise | IProduct | IRawMaterial | IService;
     message?: string;
     errorMessage?: unknown,
 };
@@ -230,10 +227,7 @@ export interface IServiceLayerResponseItemByBarCodeOrName {
 //INTERFACE DE RESPUESTA GENERICA PARA RETORNAR PRODUCTOS POR CODIGO DE BARRAS O POR NOMBRE
 export interface IServiceLayerResponseAllItems {
     code: number,
-    result?: {
-        serResult: IAssets | IMerchandise | IProduct | IRawMaterial | IService,
-        token: string;
-    };
+    result?: IAssets | IMerchandise | IProduct | IRawMaterial | IService;
     message?: string;
     errorMessage?: unknown,
 };
