@@ -16,6 +16,8 @@ class Assets extends Model {
     public purchasePriceBeforeTax!: number;
     public IVA!: 'No aplica' | 0 | 5 | 19;
     public sellingPrice!: number;
+    public isDiscounted!: 'Si' | 'No';
+    public discountPercentage!: number;
     public inventoryOff!: IInventoryOffAssets[];
 
     //RELACION CON OTRAS TABLAS
@@ -84,6 +86,19 @@ Assets.init(
             defaultValue: 0,
         },
         sellingPrice: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            defaultValue: 0,
+        },
+        isDiscounted: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+                isIn: [[ 'Si', 'No' ]],
+            },
+            defaultValue: 'No',
+        },
+        discountPercentage: {
             type: DataTypes.INTEGER,
             allowNull: true,
             defaultValue: 0,
