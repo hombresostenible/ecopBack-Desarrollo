@@ -536,29 +536,29 @@ export interface ITotales {
     TotalImpuestos: [
         {
             ValorImpuesto: {
-                IdMoneda: string;
-                Value: number;
+                IdMoneda: string;                       //COP
+                Value: number;                          //VR EN DINERO DEL IMPUESTO (IVA)
             };
             ValorAjusteRedondeo: {
-                IdMoneda: string;
-                Value: number;
+                IdMoneda: string;                       //COP
+                Value: number;                          //VELOR DE LOS CENTAVOS PARA RECONDEO
             };
             IndicaEsSoloEvidenciaSpecified: boolean;
             IndicaImpuestoIncluidoSpecified: boolean;
             SubTotalImpuesto: {
-                BaseImponible: {
-                    IdMoneda: string;
-                    Value: number;
+                BaseImponible: {                        //TOTAL PRECIOS SIN IMPUESTOS
+                    IdMoneda: string;                   //COP
+                    Value: number;                      //VALOR TOTAL PRECIOS 
                 };
-                ValorImpuesto: {
-                    IdMoneda: string;
-                    Value: number;
+                ValorImpuesto: {                        //TOTALES IMPUESTOS
+                    IdMoneda: string;                   //TIPO DE MONEDA (COP)
+                    Value: number;                      //VALOR TOTAL DE IMPUESTOS 
                 };
                 SecuenciaNumericaSpecified: boolean;
                 PorcentajeSpecified: boolean;
                 PorcentajeRangoSpecified: boolean;
                 CategoriaImpuesto: {
-                    Porcentaje: number;
+                    Porcentaje: number;                 //ES 19, EL VALOR DEL IVA
                     PorcentajeSpecified: boolean;
                     PorcentajeRangoSpecified: boolean;
                     EsquemaTributario: {
@@ -574,22 +574,22 @@ export interface ITotales {
         },
         {
             ValorImpuesto: {
-                IdMoneda: string;
+                IdMoneda: string;       //COP
                 Value: number;
             };
             ValorAjusteRedondeo: {
-                IdMoneda: string;
+                IdMoneda: string;       //COP
                 Value: number;
             };
             IndicaEsSoloEvidenciaSpecified: boolean;
             IndicaImpuestoIncluidoSpecified: boolean;
             SubTotalImpuesto: {
                 BaseImponible: {
-                    IdMoneda: string;
+                    IdMoneda: string;       //COP
                     Value: number;
                 };
                 ValorImpuesto: {
-                    IdMoneda: string;
+                    IdMoneda: string;       //COP
                     Value: number;
                 };
                 SecuenciaNumericaSpecified: boolean;

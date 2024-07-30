@@ -584,6 +584,8 @@
         }
     ],
     "Totales": {
+
+
         "TotalImpuestos": [
             {
                 "ValorImpuesto": {
@@ -666,6 +668,10 @@
                 ]
             }
         ],
+
+
+
+        
         "TotalMonetario": {
             "ValorBruto": {
                 "IdMoneda": "COP",

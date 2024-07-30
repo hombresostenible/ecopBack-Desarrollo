@@ -45,8 +45,6 @@ router.get("/name-item/query?", authRequired, async (req: Request, res: Response
             return res.status(400).json({ error: 'El parámetro nameItem es requerido.' });
         }
         const { id } = req.user;
-        console.log('nameItem: ', nameItem)
-        console.log('id: ', id)
         const serviceLayerResponse = await getNameItemService(nameItem, id);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
