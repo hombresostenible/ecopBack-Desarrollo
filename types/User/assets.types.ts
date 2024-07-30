@@ -11,6 +11,8 @@ export interface IAssets {
     inventory: number;
     purchasePriceBeforeTax: number;
     sellingPrice?: number;
+    isDiscounted?: 'Si' | 'No';
+    discountPercentage?: number;
     inventoryOff?: IInventoryOffAssets[];
     // Impuestos
     IVA: 'No aplica' | 0 | 5 | 19;
