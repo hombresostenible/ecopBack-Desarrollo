@@ -9,7 +9,7 @@ class Assets extends Model {
     public barCode!: string;
     public nameItem!: string;
     public brandItem!: string;
-    public referenceAssets!: string;
+    public referenceItem!: string;
     public stateAssets!: 'Funciona correctamente' | 'Funciona requiere mantenimiento' | 'Dañada requiere cambio' | 'Dañada requiere reparacion';
     public conditionAssets!: 'Nuevo' | 'Usado';
     public inventory!: number;
@@ -45,7 +45,7 @@ Assets.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
-        referenceAssets: {
+        referenceItem: {
             type: DataTypes.STRING,
             allowNull: true,
         },
