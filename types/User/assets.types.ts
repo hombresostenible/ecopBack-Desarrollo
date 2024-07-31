@@ -5,7 +5,7 @@ export interface IAssets {
     barCode?: string;
     nameItem: string;
     brandItem?: string;
-    referenceAssets?: string;
+    referenceItem?: string;
     stateAssets?: 'Funciona correctamente' | 'Funciona requiere mantenimiento' | 'Dañada requiere cambio' | 'Dañada requiere reparacion';
     conditionAssets?: 'Nuevo' | 'Usado';
     inventory: number;
