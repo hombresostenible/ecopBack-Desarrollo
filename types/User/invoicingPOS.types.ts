@@ -101,7 +101,7 @@ export interface IExtensiones {
 export interface IEncabezado {
     TipoDocElectronico: number;
     IdPersonalizacion: {
-        Value: number;
+        Value: string;
     };
     PrefijoDocumento: string;
     NumeroDocumento: number;
@@ -109,14 +109,14 @@ export interface IEncabezado {
     FechaYHoraDocumento: Date;
     FechaDeVencimientoSpecified: boolean;
     TipoDeFactura: {
-        Value: number;
+        Value: string;
     };
     FechaTributariaSpecified: boolean;
     CodigoMoneda: {
         Value: string;
     };
     CentroDeCostoCodigo: {          //SOLO PARA POS
-        Value: number;
+        Value: string;
     };
     CentroDeCostoNombre: {          //SOLO PARA POS
         Value: string;
@@ -130,7 +130,7 @@ export interface IEncabezado {
 export interface ITerceros {
     TerceroProveedorContable: {
         IdAdicional: {
-            Value: number;
+            Value: string;
         }[];
         Tercero: {
             IndicaATravesDeSpecified: boolean;
@@ -149,7 +149,7 @@ export interface ITerceros {
             UbicacionFisica: {
                 Direccion: {
                     Id: {
-                        Value: number;
+                        Value: string;
                     };
                     Departamento: {
                         Value: string;
@@ -158,13 +158,13 @@ export interface ITerceros {
                         Value: string;
                     };
                     ZonaPostal: {
-                        Value: number;
+                        Value: string;
                     };
                     SubdivisionPais: {
                         Value: string;
                     };
                     SubdivisionPaisCodigo: {
-                        Value: number;
+                        Value: string;
                     };
                     LineaDireccion: {
                         TextoLinea: {

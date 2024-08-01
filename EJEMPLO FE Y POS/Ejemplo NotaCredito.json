@@ -1,0 +1,398 @@
+{
+    "Parametros": {
+        "NombreSistemaEmisor": "PruebaSimbaSistema",
+        "TipoAmbiente": "2",
+        "TokenEmpresa": "[Token Empresa]",
+        "VersionDocElectronico": "4.0",
+        "VersionSistemaEmisor": "1.2.0.12",
+        "ModoRespuesta": "1",
+        "PasswordEmpresa": "Bogota18*",
+        "TipoReporte": "1",
+        "ContactoReceptor": [
+            {
+                "CorreoElectronico": "dlancheros@simba.co",
+                "IdEtiquetaUbicacionCorreo": "1"
+            },
+            {
+                "CorreoElectronico": "jvillegas@stone.com.co",
+                "IdEtiquetaUbicacionCorreo": "2"
+            }
+        ]
+    },
+
+    "Encabezado": {
+        "TipoDocElectronico": "3",
+        "IdPersonalizacion": "10",
+        "PrefijoDocumento": "SETP",
+        "NumeroDocumento": "992160005",
+        "FechaYHoraDocumento": "2019-07-29T00:00:00.000-05:00",
+        "TipoDeNotaCredito": "91",
+        "CodigoMoneda": "COP",
+        "CantidadLineas": "1",
+        "RespuestaMotivoNota": {
+            "IdReferencia": "SETP3",
+            "CodRespuesta": "6",
+            "Descripcion": "Descripcion nota"
+        }
+    },
+    
+    "Terceros": {
+        "TerceroProveedorContable": {
+            "IdAdicional": "1",
+            "Tercero": {
+                "NombreTercero": "NOMBRE COMERCIAL PROVEEDOR",
+                "CodigoClasificacionIndustria": "223123",
+                "UbicacionFisica": {
+                    "Direccion": {
+                        "Id": "05125",
+                        "Departamento": "ANTIOQUIA",
+                        "Ciudad": "MEDELLIN",
+                        "SubdivisionPais": "Antioquia",
+                        "SubdivisionPaisCodigo": "05",
+                        "ZonaPostal": "050011",
+                        "LineaDireccion": {
+                            "TextoLinea": "Calle 94 A, N° 11 A-32 Oficina 203"
+                        },
+                        "Pais": {
+                            "Codigo": "CO",
+                            "Nombre": {
+                                "IdLenguaje": "es",
+                                "valor": "Colombia"
+                            }
+                        }
+                    }
+                },
+
+                "EsquemaTributarioTercero": {
+                    "NombreRegistrado": "RAZON SOCIAL PROVEEDOR S.A.S.",
+                    "NumeroIdTributario": {
+                        "SmaIdCodigo": "1",
+                        "SmaIdNombre": "31",
+                        "valor": "123465789"
+                    },
+                    "NivelTributario": {
+                        "ListaNombre": "04",
+                        "valor": "O-11;O-06"
+                    },
+                    "EsquemaTributario": {
+                        "Id": "01",
+                        "Nombre": "IVA"
+                    },
+                    "DireccionParaImpuestos": {
+                        "Id": "05125",
+                        "Departamento": "ANTIOQUIA",
+                        "Ciudad": "MEDELLIN",
+                        "SubdivisionPais": "Antioquia",
+                        "SubdivisionPaisCodigo": "05",
+                        "ZonaPostal": "050011",
+                        "LineaDireccion": {
+                            "TextoLinea": "Calle 94 A, N° 11 A-32 Oficina 203"
+                        },
+                        "Pais": {
+                            "Codigo": "CO",
+                            "Nombre": {
+                                "IdLenguaje": "es",
+                                "valor": "Colombia"
+                            }
+                        }
+                    }
+                },
+                "EntidadLegalTercero": {
+                    "NumeroIdLegal": {
+                        "SmaIdCodigo": "1",
+                        "SmaIdNombre": "31",
+                        "valor": "123465789"
+                    },
+                    "NombreRegistrado": "RAZON SOCIAL PROVEEDOR S.A.S.",
+                    "EsquemaRegistroCorporativo": {
+                        "Id": "SETP",
+                        "Nombre": "6201"
+                    }
+                },
+                "Contacto": {
+                    "Nombre": "BEATRIZ ELENA VILLADA YEPES",
+                    "Telefono": "1234567",
+                    "Email": "idiaz@stone.com.co"
+                }
+            }
+        },
+
+        "TerceroClienteContable": {
+            "IdAdicional": "1",
+            "Tercero": {
+                "IdTercero": {
+                    "SmaIdCodigo": "6",
+                    "SmaIdNombre": "31",
+                    "valor": "804016671"
+                },
+                "NombreTercero": "CAMPOLLO S.A .",
+                "UbicacionFisica": {
+                    "Direccion": {
+                        "Id": "05125",
+                        "Departamento": "ANTIOQUIA",
+                        "Ciudad": "MEDELLIN",
+                        "SubdivisionPais": "Antioquia",
+                        "SubdivisionPaisCodigo": "05",
+                        "ZonaPostal": "050011",
+                        "LineaDireccion": {
+                            "TextoLinea": "CR 29C N° 10C - 125"
+                        },
+                        "Pais": {
+                            "Codigo": "CO",
+                            "Nombre": {
+                                "IdLenguaje": "es",
+                                "valor": "Colombia"
+                            }
+                        }
+                    }
+                },
+                "EsquemaTributarioTercero": {
+                    "NumeroIdTributario": {
+                        "SmaIdNombre": "31",
+                        "SmaIdCodigo": "9",
+                        "valor": "804016671"
+                    },
+                    "NombreRegistrado": "CAMPOLLO S.A .",
+                    "NivelTributario": {
+                        "ListaNombre": "04",
+                        "valor": "O-99"
+                    },
+                    "DireccionParaImpuestos": {
+                        "Id": "05125",
+                        "Departamento": "ANTIOQUIA",
+                        "Ciudad": "MEDELLIN",
+                        "SubdivisionPais": "Antioquia",
+                        "SubdivisionPaisCodigo": "05",
+                        "LineaDireccion": {
+                            "TextoLinea": "CR 29C N° 10C - 125"
+                        },
+                        "Pais": {
+                            "Codigo": "CO",
+                            "Nombre": {
+                                "IdLenguaje": "es",
+                                "valor": "Colombia"
+                            }
+                        }
+                    },
+                    "EsquemaTributario": {
+                        "Id": "01",
+                        "Nombre": "IVA"
+                    }
+                },
+                "EntidadLegalTercero": {
+                    "NombreRegistrado": "CAMPOLLO S.A .",
+                    "NumeroIdLegal": {
+                        "SmaIdNombre": "31",
+                        "SmaIdCodigo": "9",
+                        "valor": "804016671"
+                    },
+                    "EsquemaRegistroCorporativo": {
+                        "Nombre": "6201"
+                    }
+                },
+                "Contacto": {
+                    "Id": "804016671-9",
+                    "Nombre": "CAMPOLLO S.A",
+                    "Telefono": "6572206",
+                    "Email": "auxiliar.logistica@campollo.net"
+                }
+            }
+        },
+        "TerceroRpteFiscal": {
+            "IdTercero": {
+                "SmaIdNombre": "31",
+                "valor": "804016671-9"
+            }
+        }
+    },
+
+
+    
+
+    "Lineas": {
+        "Id": 1,
+        "Cantidad": {
+            "CodUnidad": "KGM",
+            "valor": "3"
+        },
+        "ValorNeto": {
+            "IdMoneda": "COP",
+            "valor": "93600"
+        },
+        "TotalImpuesto": {
+            "ValorImpuesto": {
+                "IdMoneda": "COP",
+                "valor": "17184"
+            },
+            "IndicaEsSoloEvidencia": false,
+            "SubTotalImpuesto": {
+                "BaseImponible": {
+                    "IdMoneda": "COP",
+                    "valor": "93600"
+                },
+                "ValorImpuesto": {
+                    "IdMoneda": "COP",
+                    "valor": "17184"
+                },
+                "Porcentaje": 1,
+                "CategoriaImpuesto": {
+                    "Porcentaje": "19.00",
+                    "EsquemaTributario": {
+                        "Id": "01",
+                        "Nombre": "IVA"
+                    }
+                }
+            }
+        },
+
+        "TotalRetenciones": {
+            "ValorImpuesto": {
+                "IdMoneda": "COP",
+                "valor": "2340"
+            },
+            "IndicaEsSoloEvidencia": false,
+            "SubTotalImpuesto": {
+                "BaseImponible": {
+                    "IdMoneda": "COP",
+                    "valor": "93600"
+                },
+                "ValorImpuesto": {
+                    "IdMoneda": "COP",
+                    "valor": "2340"
+                },
+                "Porcentaje": "1",
+                "CategoriaImpuesto": {
+                    "Porcentaje": "2.5",
+                    "EsquemaTributario": {
+                        "Id": "06",
+                        "Nombre": "ReteFuente"
+                    }
+                }
+            }
+        },
+
+        "Item": {
+            "Descripcion": "Rebeca tricot basica",
+            "IdItemEstandar": {
+                "Id": {
+                    "SmaIdCodigo": "999",
+                    "valor": "Fev1656s"
+                }
+            },
+            "IdItemVendedor": {
+                "Id": "20"
+            }
+        },
+        "Precio": {
+            "ValorPrecio": {
+                "IdMoneda": "COP",
+                "valor": "31200"
+            },
+            "CantidadBase": {
+                "CodUnidad": "KGM",
+                "valor": "3"
+            }
+        }
+    },
+
+    "AgregadoComercial": {
+        "MediosDePago": [
+            {
+                "Id": "1",
+                "CodigoMedioDePago": "42",
+                "IdInstruccion": "BBVA- convenio 11354 -Cuenta corriente No. 001304930100010375",
+                "IdPago": "134"
+            },
+            {
+                "Id": "1",
+                "CodigoMedioDePago": "42",
+                "IdInstruccion": "Bancolombia -CONVENIO 12346- CUENTA CORRIENTE NO. 6544543847873",
+                "IdPago": "134"
+            }
+        ]
+    },
+
+    "Referencias": {
+        "ReferenciaFacturacion": {
+            "ReferenciaDocFactura": {
+                "Id": "SETT7",
+                "UID": "66468a55d88d61d48311dbf096f6c80872e2a7f109bec48ad6332bc64c4c8c19557a9d3bdd0ecbb9277911cae06461af",
+                "Fecha": "2019-09-02"
+            }
+        }
+    },
+
+    "Notas": "[VLetras Origen] SON: TRES MILLONES CUATROCIENTOS SESENTA Y OCHOCIENTOS CINCUENTA PESOS M.L.",
+
+    "Totales": {
+        "TotalImpuestos": {
+            "ValorImpuesto": {
+                "IdMoneda": "COP",
+                "value": "17184"
+            },
+            "IndicaEsSoloEvidencia": false,
+            "SubTotalImpuesto": {
+                "BaseImponible": {
+                    "IdMoneda": "COP",
+                    "value": "93600"
+                },
+                "ValorImpuesto": {
+                    "IdMoneda": "COP",
+                    "value": "17184"
+                },
+                "Porcentaje": "1",
+                "CategoriaImpuesto": {
+                    "Porcentaje": "19.00",
+                    "EsquemaTributario": {
+                        "Id": "01",
+                        "Nombre": "IVA"
+                    }
+                }
+            }
+        },
+
+        "TotalRetenciones": {
+            "ValorImpuesto": {
+                "IdMoneda": "COP",
+                "value": "2340"
+            },
+            "IndicaEsSoloEvidencia": false,
+            "SubTotalImpuesto": {
+                "BaseImponible": {
+                    "IdMoneda": "COP",
+                    "value": "93600"
+                },
+                "ValorImpuesto": {
+                    "IdMoneda": "COP",
+                    "value": "2340"
+                },
+                "Porcentaje": "1",
+                "CategoriaImpuesto": {
+                    "Porcentaje": "2.5",
+                    "EsquemaTributario": {
+                        "Id": "06",
+                        "Nombre": "ReteFuente"
+                    }
+                }
+            }
+        },
+        "TotalMonetario": {
+            "ValorBruto": {
+                "IdMoneda": "COP",
+                "value": "93600"
+            },
+            "TotalMasImpuestos": {
+                "IdMoneda": "COP",
+                "value": "110784"
+            },
+            "ValorBaseImpuestos": {
+                "IdMoneda": "COP",
+                "value": "93600"
+            },
+            "ValorAPagar": {
+                "IdMoneda": "COP",
+                "value": "108444"
+            }
+        }
+    }
+} 

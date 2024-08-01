@@ -135,14 +135,6 @@ export interface IEncabezado {
     CodigoMoneda: {
         Value: string;                                      //"COP"
     };
-    /*
-    OPCIONALES PARA CONVERTIR DE POS A FACTURA ELECTRONICA
-    CentroDeCostoCodigo: {          //SOLO PARA POS
-        Value: number;
-    };
-    CentroDeCostoNombre: {          //SOLO PARA POS
-        Value: string;
-    };*/
     CantidadLineas: number;                                 //1.0   --ES LA CANTIDAD DE PRODUCTOS, UNA LINEA ES UN PRODUCTO
     CantidadLineasSpecified: boolean;                       //true
 };
@@ -282,17 +274,6 @@ export interface ITerceros {
                     };
                 };
             }[];
-            /*
-            Contacto: {
-                Nombre: {
-                    Value: string;
-                };
-                Email: {
-                    Value: string;
-                };
-                Nota: [];
-            };
-             */
         };
     };
     TerceroClienteContable: {                               //^ESTOS SON LOS DATOS DEL CLIENTE DE LA EMPRESA QUE EMITE LA FACTURA
@@ -543,25 +524,6 @@ export interface IElectronicInvoicing {
     Lineas: ILineas;
     AgregadoComercial: IAgregadoComercial;
     Totales: ITotales;
-    /*
-        Notas: [
-        {
-            Value: string;
-        },
-        {
-            Value: string;
-        },
-        {
-            Value: string;
-        },
-        {
-            Value: string;
-        },
-        {
-            Value: string;
-        }
-    ];
-     */
     
     //RELACION CON OTRAS TABLAS
     branchId: string;
