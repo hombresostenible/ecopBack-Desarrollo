@@ -5,10 +5,8 @@
         "VersionSistemaEmisor": "v1.0.0.1",
         "ModoRespuesta": "1",
         "TipoAmbiente": "2",
-
         "TokenEmpresa": "89E33A03-23F7-4B45-A3A1-FE7B6D773B1A",
         "PasswordEmpresa": "",
-        
         "TipoReporte": "1",
         "Personalizacion": "20",
         "ContactoReceptor": [
