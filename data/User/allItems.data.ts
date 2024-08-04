@@ -8,6 +8,7 @@ import Service from '../../schema/User/service.schema';
 
 //BUSCA TODOS LOS ARTICULOS DEL USUARIO EN TODAS LAS TABLAS
 export const getAllItemsData = async (userId: string): Promise<any> => {
+    console.log('userId: ', userId)
     try {
         console.log('userId: ', userId)
         const assets = await Assets.findAll({
