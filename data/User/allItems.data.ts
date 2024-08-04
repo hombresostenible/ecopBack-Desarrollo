@@ -3,6 +3,7 @@ import sequelize from '../../db';
 
 //BUSCA TODOS LOS ARTICULOS DEL USUARIO EN TODAS LAS TABLAS
 export const getAllItemsData = async (userId: string): Promise<any> => {
+    console.log('userId: ', userId)
     try {
         const assets = await sequelize.query('SELECT *, "Assets" as type FROM assets WHERE userId = :userId', {
             replacements: { userId },
