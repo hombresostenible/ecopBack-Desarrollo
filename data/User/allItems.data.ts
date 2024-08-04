@@ -7,55 +7,27 @@ import RawMaterial from '../../schema/User/rawMaterial.schema';
 import Service from '../../schema/User/service.schema';
 
 //BUSCA TODOS LOS ARTICULOS DEL USUARIO EN TODAS LAS TABLAS
-export const getAllItemsData = async (userId: string): Promise<any> => {
+export const getAllItemsByBranchData = async (idBranch: string, userId: string): Promise<any> => {
     try {
-        console.log('userId: ', userId)
         const assets = await Assets.findAll({
-            where: { userId: userId },
+            where: { branchId: idBranch, userId: userId },
         });
         
         const merchandises = await Merchandise.findAll({
-            where: { userId: userId },
+            where: { branchId: idBranch, userId: userId },
         });
         
         const products = await Product.findAll({
-            where: { userId: userId },
+            where: { branchId: idBranch, userId: userId },
         });
+
         const rawMaterials = await RawMaterial.findAll({
-            where: { userId: userId },
+            where: { branchId: idBranch, userId: userId },
         });
+        
         const services = await Service.findAll({
-            where: { userId: userId },
+            where: { branchId: idBranch, userId: userId },
         });
-        // const assets = await sequelize.query('SELECT *, "Assets" as type FROM assets WHERE userId = :userId', {
-        //     replacements: { userId },
-        //     type: QueryTypes.SELECT,
-        // });
-
-        // const merchandises = await sequelize.query('SELECT *, "Merchandise" as type FROM merchandises WHERE userId = :userId', {
-        //     replacements: { userId },
-        //     type: QueryTypes.SELECT,
-        // });
-
-        // const products = await sequelize.query('SELECT *, "Product" as type FROM products WHERE userId = :userId', {
-        //     replacements: { userId },
-        //     type: QueryTypes.SELECT,
-        // });
-
-        // const rawMaterials = await sequelize.query('SELECT *, "RawMaterial" as type FROM rawMaterials WHERE userId = :userId', {
-        //     replacements: { userId },
-        //     type: QueryTypes.SELECT,
-        // });
-
-        // const services = await sequelize.query('SELECT *, "Service" as type FROM services WHERE userId = :userId', {
-        //     replacements: { userId },
-        //     type: QueryTypes.SELECT,
-        // });
-        console.log('assets: ', assets)
-        console.log('merchandises: ', merchandises)
-        console.log('products: ', products)
-        console.log('rawMaterials: ', rawMaterials)
-        console.log('services: ', services)
 
         const allItems = [
             ...assets,
@@ -64,7 +36,19 @@ export const getAllItemsData = async (userId: string): Promise<any> => {
             ...rawMaterials,
             ...services,
         ];
-        console.log('allItems: ', allItems)
+
+        // Ordenar los elementos por nameItem en orden ascendente
+        allItems.sort((a, b) => {
+            const nameA = a.nameItem.toUpperCase(); // Ignorar mayúsculas/minúsculas
+            const nameB = b.nameItem.toUpperCase(); // Ignorar mayúsculas/minúsculas
+            if (nameA < nameB) {
+                return -1;
+            }
+            if (nameA > nameB) {
+                return 1;
+            }
+            return 0;
+        });
         return allItems;
     } catch (error) {
         throw error;
