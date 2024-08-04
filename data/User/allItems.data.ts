@@ -36,7 +36,7 @@ export const getAllItemsData = async (userId: string): Promise<any> => {
             ...rawMaterials,
             ...services,
         ];
-
+        console.log('allItems: ', allItems)
         return allItems;
     } catch (error) {
         throw error;

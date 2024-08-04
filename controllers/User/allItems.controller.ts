@@ -12,7 +12,7 @@ const router = express.Router();
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
-        console.log('id: ', id)
+        console.log('all-items-id: ', id)
         const serviceLayerResponse = await getAllItemsService(id);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
