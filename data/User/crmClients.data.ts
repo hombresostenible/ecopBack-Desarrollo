@@ -33,7 +33,8 @@ export const getCRMClientsData = async (userId: string): Promise<any> => {
     try {
         const userCRMClients = await CrmClients.findAll({
             where: { userId: userId },
-        });        
+        });
+        // console.log('userCRMClients: ', userCRMClients)
         return userCRMClients;
     } catch (error) {
         throw error;

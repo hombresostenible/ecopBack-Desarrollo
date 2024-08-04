@@ -2,17 +2,18 @@ import express, { Request, Response } from "express";
 import {
     getItemBarCodeService,
     getNameItemService,
-    getAllItemsService,
+    getAllItemsByBranchService,
 } from '../../services/User/allItems.service';
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { ServiceError } from '../../types/Responses/responses.types';
 const router = express.Router();
 
 //BUSCA TODOS LOS ARTICULOS DEL USUARIO EN TODAS LAS TABLAS
-router.get("/", authRequired, async (req: Request, res: Response) => {
+router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { idBranch } = req.params;
         const { id } = req.user;
-        const serviceLayerResponse = await getAllItemsService(id);
+        const serviceLayerResponse = await getAllItemsByBranchService(idBranch, id);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;

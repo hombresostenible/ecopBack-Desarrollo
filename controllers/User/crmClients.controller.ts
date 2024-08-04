@@ -33,6 +33,7 @@ router.post("/", authRequired, validateSchema(crmClientsSchema), async (req: Req
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
         const { id } = req.user;
+        // console.log('crmClient-id: ', id)
         const serviceLayerResponse = await getCRMClientsUserService(id);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
