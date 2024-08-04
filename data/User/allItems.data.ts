@@ -27,30 +27,6 @@ export const getAllItemsData = async (userId: string): Promise<any> => {
         const services = await Service.findAll({
             where: { userId: userId },
         });
-        // const assets = await sequelize.query('SELECT *, "Assets" as type FROM assets WHERE userId = :userId', {
-        //     replacements: { userId },
-        //     type: QueryTypes.SELECT,
-        // });
-
-        // const merchandises = await sequelize.query('SELECT *, "Merchandise" as type FROM merchandises WHERE userId = :userId', {
-        //     replacements: { userId },
-        //     type: QueryTypes.SELECT,
-        // });
-
-        // const products = await sequelize.query('SELECT *, "Product" as type FROM products WHERE userId = :userId', {
-        //     replacements: { userId },
-        //     type: QueryTypes.SELECT,
-        // });
-
-        // const rawMaterials = await sequelize.query('SELECT *, "RawMaterial" as type FROM rawMaterials WHERE userId = :userId', {
-        //     replacements: { userId },
-        //     type: QueryTypes.SELECT,
-        // });
-
-        // const services = await sequelize.query('SELECT *, "Service" as type FROM services WHERE userId = :userId', {
-        //     replacements: { userId },
-        //     type: QueryTypes.SELECT,
-        // });
         console.log('assets: ', assets)
         console.log('merchandises: ', merchandises)
         console.log('products: ', products)
