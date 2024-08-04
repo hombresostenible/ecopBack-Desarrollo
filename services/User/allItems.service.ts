@@ -1,15 +1,15 @@
 import {  
     getItemBarCodeData,
     getNameItemData,
-    getAllItemsData,
+    getAllItemsByBranchData,
 } from "../../data/User/allItems.data";
 import { IServiceLayerResponseItemByBarCodeOrName, IServiceLayerResponseAllItems } from '../../types/Responses/responses.types';
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //BUSCA TODOS LOS ARTICULOS DEL USUARIO EN TODAS LAS TABLAS
-export const getAllItemsService = async (userId: string): Promise<IServiceLayerResponseAllItems> => {
+export const getAllItemsByBranchService = async (idBranch:string, userId: string): Promise<IServiceLayerResponseAllItems> => {
     try {
-        const itemFound = await getAllItemsData(userId);
+        const itemFound = await getAllItemsByBranchData(idBranch, userId);
         if (!itemFound) return { code: 404, message: 'Item no registrado' };
         return { code: 200, result: itemFound };
     } catch (error) {
