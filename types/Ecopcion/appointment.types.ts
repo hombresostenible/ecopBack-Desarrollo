@@ -12,7 +12,7 @@ export interface IAppointment {
     date: Date;
     hour: string;
     stateAppointment: 'Programada' | 'Cancelada' | 'Completada' | 'Reagendada';
-    acceptPersonalDataPolicy: boolean;
+    isAceptedConditions: boolean;
     typeAppointment?: 'Negocio' | 'Funcionamiento de la plataforma' | 'Otro';  
     typeAppointmentIndicator?: 'Finanzas' | 'Marketing' | 'Sostenibilidad';  
     typeAppointmentIndicatorFinantial?: 'VentasPeriodo' | 'GastosPeriodo' | 'UtilidadPeriodo' | 'ClienteValor' | 'ClienteCantidad' | 'TicketPromedio' | 'CuentasXPagar' | 'CuentasXCobrar' | 'InventarioProductos' | 'InventarioMateriasPrimas' | 'InventarioMercancia' | 'InventarioActivos';

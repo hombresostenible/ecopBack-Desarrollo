@@ -22,7 +22,7 @@ router.post("/", validateSchema(appointmentSchemaZod), async (req: Request, res:
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/appointment con { "typeClient": "User", "nameClient": "Carlos", "lastNameClient": "Reyes", "nameCompany": "", "nameCompanyLeader": "", "lastNameCompanyLeader": "", "email": "carlos@gmail.com", "phone": "3128082002", "date": "2023-12-27T00:00:00.000Z", "hour": "10:00", "stateAppointment": "Programada", "acceptPersonalDataPolicy": true, "typeAppointment": "Negocio", "typeAppointmentIndicator": "Finanzas", "typeAppointmentIndicatorFinantial": "VentasPeriodo", "typeAppointmentIndicatorMarketing": "", "typeAppointmentIndicatorSustainability": "", "typeAppointmentPlatform": "", "typeAppointmentOthers": "" }
+}); // POST - http://localhost:3000/api/appointment con { "typeClient": "User", "nameClient": "Carlos", "lastNameClient": "Reyes", "nameCompany": "", "nameCompanyLeader": "", "lastNameCompanyLeader": "", "email": "carlos@gmail.com", "phone": "3128082002", "date": "2023-12-27T00:00:00.000Z", "hour": "10:00", "stateAppointment": "Programada", "isAceptedConditions": true, "typeAppointment": "Negocio", "typeAppointmentIndicator": "Finanzas", "typeAppointmentIndicatorFinantial": "VentasPeriodo", "typeAppointmentIndicatorMarketing": "", "typeAppointmentIndicatorSustainability": "", "typeAppointmentPlatform": "", "typeAppointmentOthers": "" }
 
 
 
@@ -86,7 +86,7 @@ router.put("/:appointmentId", validateSchema(appointmentSchemaZod), async (req: 
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/appointment/:appointmentId con { "typeClient": "User", "email": "carlos@gmail.com", "phone": "3128082002", "date": "2023-12-27T00:00:00.000Z", "hour": "10:40", "stateAppointment": "Reagendada", "acceptPersonalDataPolicy": true }
+}); // PUT - http://localhost:3000/api/appointment/:appointmentId con { "typeClient": "User", "email": "carlos@gmail.com", "phone": "3128082002", "date": "2023-12-27T00:00:00.000Z", "hour": "10:40", "stateAppointment": "Reagendada", "isAceptedConditions": true }
 
 
 
