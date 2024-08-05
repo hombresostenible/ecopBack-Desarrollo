@@ -1,10 +1,13 @@
 import { z, ZodObject, ZodString, ZodBoolean } from 'zod';
 
+const selectedTopicEnum = z.enum(['Indicadores', 'Inventario', 'Facturacion electronica', 'Otro']);
+
 type ContactUsSchemaType = ZodObject<{
     email: ZodString;
     nameUser: ZodString;
     phone: ZodString;
     helpDescription: ZodString;
+    selectedTopic: typeof selectedTopicEnum;
     acceptPersonalDataPolicy: ZodBoolean;
 }>;
 
@@ -23,6 +26,7 @@ export const contactUsSchema: ContactUsSchemaType = z.object({
     helpDescription: z.string({
         required_error: 'Help Description is required',
     }),
+    selectedTopic: selectedTopicEnum,
     acceptPersonalDataPolicy: z.boolean({
         required_error: 'Accept Personal Data Policy is required',
     }),

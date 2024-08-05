@@ -12,7 +12,7 @@ export interface IServiceLayerResponseAppointment {
 //INTERFACE DE RESPUESTA GENERICA PARA CONTACTUS
 export interface IServiceLayerResponseContactUs {
     code: number,
-    result?: IContactUs | IContactUs[],
+    result?: IContactUs,
     message?: string;
     errorMessage?: unknown,
 };

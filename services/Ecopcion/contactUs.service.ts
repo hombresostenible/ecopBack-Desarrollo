@@ -3,7 +3,7 @@ import { IContactUs } from "../../types/Ecopcion/contactUs.types";
 import { IServiceLayerResponseContactUs } from '../../types/Ecopcion/responsesEcopcion.types';
 import { ServiceError } from '../../types/Responses/responses.types';
 
-//SERVICE PARA CREAR LA SUSCRIPCION A NEWSLETTERS
+//CREA REGISTRO DE CONTACTANOS
 export const postContactUsService = async (body: IContactUs): Promise<IServiceLayerResponseContactUs> => {
     try {
         const dataLayerResponse = await postContactUsData(body);
