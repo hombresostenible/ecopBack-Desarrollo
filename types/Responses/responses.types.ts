@@ -13,6 +13,7 @@ import { IInvoicingPOS } from "../User/invoicingPOS.types";
 import { ICrmClients } from '../User/crmClients.types';
 import { ICrmSuppliers } from '../User/crmSupplier.types';
 import { ISalesFunnelCustomerAcq, ISalesFunnelCustomerRet, ISalesFunnelSalesDigital } from "../User/salesFunnel.types";
+import { IContactUs } from "../User/contactUs.types";
 
 //INTERFACE DE ERRORES
 export class ServiceError extends Error {
@@ -236,4 +237,14 @@ export interface IServiceLayerResponseAllItems {
     };
     message?: string;
     errorMessage?: unknown,
+};
+
+
+
+// INTERFACE DE RESPUESTA PARA CONTACTANOS
+export interface IServiceLayerResponseContactUs {
+    code: number;
+    result?: IContactUs;
+    message?: string;
+    errorMessage?: unknown;
 };

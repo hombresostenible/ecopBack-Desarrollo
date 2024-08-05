@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { IContactUs } from "../types/Ecopcion/contactUs.types";
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -679,6 +680,136 @@ export const mailConfirmResetUserPassword = (email: string, name: string) => {
                         <p style="margin: 20px 40px; font-size: 16px;">El equipo de Ecopción</p>
                     </div>
 
+                    <div style="width: 100%; height: 80px; ">
+                        <p style="margin: 30px 0 10px 0; font-size: 16px; color: #ffb703; font-weight: 600; text-align: center;">¡Entérate de todo!</p>
+                        <div style="margin: auto; width: 200px; display: flex; align-items: center; justify-content: center;">
+                            <a href="https://www.linkedin.com/company/ecopcion" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; " src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/hiytaro1ubfiitblrrgt.png" alt="Linkedin" />
+                            </a>
+                            <a href="https://instagram.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/wdfrfzxibpqslzmqmgas.png" alt="Instagram" />
+                            </a>
+                            <a href="https://www.facebook.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/npptyynt0ctschep9tfq.png" alt="Facebook" />
+                            </a>
+                            <a href="https://twitter.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/i8qu6plo4g3vptevasdj.png" alt="Twitter" />
+                            </a>
+                            <a href="https://web.whatsapp.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/lvfqkvqlyzedr0wozxxp.png" alt="Whatsapp" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; height: 150px; ">
+                        <p style="margin: 30px 0 0 0; font-size: 16px; font-weight: 600; text-align: center; color: #ffb703;">¿Necesitas ayuda?</p>
+                        <div style="width: 700px; height: 90px; display: flex; align-items: center; justify-content: center;">                        
+                            <div style="width: 350px; height: 90px; padding: 0 40px;">                            
+                                <h3 style="text-align: center;">Email</h3>
+                                <p style="text-align: center; text-decoration: none">fhernandez@ecopcion.com</p>
+                            </div>
+                            <div style="width: 350px; height: 90px; padding: 0 40px;">                            
+                                <h3 style="text-align: center;">WhatsApp</h3>
+                                <p style="text-align: center;">321 327 0365</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+    };
+};
+
+
+
+//EMAIL DE NOTIFICACION A CLIENTE ECOPCION POR ENVIO DE FORMULARIO CONTACTUS
+export const mailEcopcionContactUsClient = (email: string, name: string) => {
+    return {
+        from: `Ecopción <${EMAIL}>`,
+        to: email,
+        subject: `¡Hola ${name}!, hemos recibido tu solicitud de contacto`,
+        html: `
+            <div style="background: #e9ecef; width: 100%; min-height: 900px;">
+                <div style="background: #ffffff; margin: auto; width: 700px; height: 100%">
+                    <div style="width: 100%; min-height: 670px;">
+                        <div style="background: #718bd8; padding: 20px;">
+                            <img style="width: 300px; margin: 0 auto; display: block;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1698187390/images/uysjyavwsqtbvl0dpunj.png" />
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; min-height: 300px;">
+                        <div style="background: #e4002b; padding: 20px;">
+                            <img style="width: 350px; margin: 0 auto; display: block;" src="https://res.cloudinary.com/dllm2rvow/image/upload/v1714146566/TopDriveBlanco_lpabi8.png" alt="Top Drive Group" />
+                        </div>
+                        <h6 style="margin: 20px 40px">¡Hola ${name},</h6>
+                        <p style="margin: 20px 40px; font-size: 16px;">¡Hemos recibido tu solicitud!</p>
+                        <br/>
+                        <p style="margin: 20px 40px; font-size: 16px;"><b>Pronto uno de nuestros asesores se pondrá en contacto contigo para resolver tu inquietud.</b></p>
+                    </div>
+                    
+                    <div style="width: 100%; height: 80px; ">
+                        <p style="margin: 30px 0 10px 0; font-size: 16px; color: #ffb703; font-weight: 600; text-align: center;">¡Entérate de todo!</p>
+                        <div style="margin: auto; width: 200px; display: flex; align-items: center; justify-content: center;">
+                            <a href="https://www.linkedin.com/company/ecopcion" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; " src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/hiytaro1ubfiitblrrgt.png" alt="Linkedin" />
+                            </a>
+                            <a href="https://instagram.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/wdfrfzxibpqslzmqmgas.png" alt="Instagram" />
+                            </a>
+                            <a href="https://www.facebook.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/npptyynt0ctschep9tfq.png" alt="Facebook" />
+                            </a>
+                            <a href="https://twitter.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/i8qu6plo4g3vptevasdj.png" alt="Twitter" />
+                            </a>
+                            <a href="https://web.whatsapp.com/" target="_blank" style="margin: 5px; height: 30px">
+                                <img style="width: 30px; height: 30px; margin: 0 auto;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1704560207/images/lvfqkvqlyzedr0wozxxp.png" alt="Whatsapp" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; height: 150px; ">
+                        <p style="margin: 30px 0 0 0; font-size: 16px; font-weight: 600; text-align: center; color: #ffb703;">¿Necesitas ayuda?</p>
+                        <div style="width: 700px; height: 90px; display: flex; align-items: center; justify-content: center;">                        
+                            <div style="width: 350px; height: 90px; padding: 0 40px;">                            
+                                <h3 style="text-align: center;">Email</h3>
+                                <p style="text-align: center; text-decoration: none">fhernandez@ecopcion.com</p>
+                            </div>
+                            <div style="width: 350px; height: 90px; padding: 0 40px;">                            
+                                <h3 style="text-align: center;">WhatsApp</h3>
+                                <p style="text-align: center;">321 327 0365</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+    };
+};
+
+
+
+//EMAIL DE NOTIFICACION A FUNCIONARIO ECOPCION POR RECEPCION DE FORMULARIO CONTACTUS
+export const mailEcopcionContactUs = (formData: IContactUs) => {
+    return {
+        from: `Formulario de contacto Ecopción <${EMAIL}>`,
+        to: `${EMAIL}`,
+        subject: 'Envío formulario de Contáctanos',
+        html: `
+            <div style="background: #e9ecef; width: 100%; min-height: 900px;">
+                <div style="background: #ffffff; margin: auto; width: 700px; height: 100%">
+                    <div style="width: 100%; min-height: 670px;">
+                        <div style="background: #718bd8; padding: 20px;">
+                            <img style="width: 300px; margin: 0 auto; display: block;" src="https://res.cloudinary.com/dmkklptzi/image/upload/v1698187390/images/uysjyavwsqtbvl0dpunj.png" />
+                        </div>
+                    </div>
+
+                    <p>Se ha recibido formulario de Contáctanos, estos son los datos del usuario</p>
+                    <div style="margin: 5px 40px; font-size: 16px;"><span style="font-weight: 600;">Email:</span> ${formData.email}</div>
+                    <div style="margin: 5px 40px; font-size: 16px;"><span style="font-weight: 600;">Nombre:</span> ${formData.nameUser}</div>
+                    <div style="margin: 5px 40px; font-size: 16px;"><span style="font-weight: 600;">Teléfono:</span> ${formData.phone}</div>
+                    <div style="margin: 5px 40px; font-size: 16px;"><span style="font-weight: 600;">Mensaje:</span> ${formData.helpDescription}</div>
+                    
                     <div style="width: 100%; height: 80px; ">
                         <p style="margin: 30px 0 10px 0; font-size: 16px; color: #ffb703; font-weight: 600; text-align: center;">¡Entérate de todo!</p>
                         <div style="margin: auto; width: 200px; display: flex; align-items: center; justify-content: center;">
