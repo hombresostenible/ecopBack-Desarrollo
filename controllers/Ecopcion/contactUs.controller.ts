@@ -15,7 +15,7 @@ router.post("/", validateSchema(contactUsSchema), async (req: Request, res: Resp
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST a http://localhost:3000/api/contact-us con { "email": "cmario.reyesp@gmail.com", "nameUser": "Carlos Reyes", "phone": "3128082002", "helpDescription": "Necesito ayuda para activar cuenta", "selectedTopic": "Indicadores", "acceptPersonalDataPolicy": true }
+}); // POST a http://localhost:3000/api/contact-us con { "email": "cmario.reyesp@gmail.com", "nameUser": "Carlos Reyes", "phone": "3128082002", "helpDescription": "Necesito ayuda para activar cuenta", "selectedTopic": "Indicadores", "isAceptedConditions": true }
 
 
 export default router;

@@ -6,9 +6,9 @@ type ContactUsSchemaType = ZodObject<{
     email: ZodString;
     nameUser: ZodString;
     phone: ZodString;
-    helpDescription: ZodString;
     selectedTopic: typeof selectedTopicEnum;
-    acceptPersonalDataPolicy: ZodBoolean;
+    helpDescription: ZodString;
+    isAceptedConditions: ZodBoolean;
 }>;
 
 export const contactUsSchema: ContactUsSchemaType = z.object({
@@ -23,11 +23,11 @@ export const contactUsSchema: ContactUsSchemaType = z.object({
     phone: z.string({
         required_error: 'Phone is required',
     }),
+    selectedTopic: selectedTopicEnum,
     helpDescription: z.string({
         required_error: 'Help Description is required',
     }),
-    selectedTopic: selectedTopicEnum,
-    acceptPersonalDataPolicy: z.boolean({
+    isAceptedConditions: z.boolean({
         required_error: 'Accept Personal Data Policy is required',
     }),
 });

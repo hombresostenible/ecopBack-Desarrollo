@@ -3,7 +3,7 @@ export interface IContactUs {
     email: string;
     nameUser: string;
     phone: string;
-    helpDescription: string;
     selectedTopic: 'Indicadores' | 'Inventario' | 'Facturacion electronica' | 'Otro';
-    acceptPersonalDataPolicy: boolean;
+    helpDescription: string;
+    isAceptedConditions: boolean;
 }

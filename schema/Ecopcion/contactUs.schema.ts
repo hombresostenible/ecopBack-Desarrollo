@@ -6,9 +6,9 @@ class ContactUs extends Model {
     public email!: string;
     public nameUser!: string;
     public phone!: string;
-    public helpDescription!: string;
     public selectedTopic!: 'Indicadores' | 'Inventario' | 'Facturacion electronica' | 'Otro';
-    public acceptPersonalDataPolicy!: boolean;
+    public helpDescription!: string;
+    public isAceptedConditions!: boolean;
 };
 
 ContactUs.init(
@@ -34,10 +34,6 @@ ContactUs.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        helpDescription: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
         selectedTopic: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -45,7 +41,11 @@ ContactUs.init(
                 isIn: [[ 'Indicadores', 'Inventario', 'Facturacion electronica', 'Otro' ]],
             },
         },
-        acceptPersonalDataPolicy: {
+        helpDescription: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        isAceptedConditions: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },

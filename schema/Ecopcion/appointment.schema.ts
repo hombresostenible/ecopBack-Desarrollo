@@ -15,7 +15,7 @@ class Appointment extends Model {
     public date!: Date;
     public hour!: string;
     public stateAppointment!: 'Programada' | 'Cancelada' | 'Completada' | 'Reagendada';
-    public acceptPersonalDataPolicy!: boolean;
+    public isAceptedConditions!: boolean;
     public typeAppointment!: 'Negocio' | 'Funcionamiento de la plataforma' | 'Otro';
     public typeAppointmentIndicator!: 'Finanzas' | 'Marketing' | 'Sostenibilidad';
     public typeAppointmentIndicatorFinantial!: 'VentasPeriodo' | 'GastosPeriodo' | 'UtilidadPeriodo' | 'ClienteValor' | 'ClienteCantidad' | 'TicketPromedio' | 'CuentasXPagar' | 'CuentasXCobrar' | 'InventarioProductos' | 'InventarioMateriasPrimas' | 'InventarioMercancia' | 'InventarioActivos';
@@ -87,7 +87,7 @@ Appointment.init(
             },
             allowNull: false,
         },
-        acceptPersonalDataPolicy: {
+        isAceptedConditions: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
