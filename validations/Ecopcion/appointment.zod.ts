@@ -7,7 +7,7 @@ type AppointmentSchemaType = ZodObject<{
     date: ZodString;
     hour: ZodString;
     stateAppointment: ZodString;
-    acceptPersonalDataPolicy: ZodBoolean;
+    isAceptedConditions: ZodBoolean;
 }>;
 
 
@@ -30,7 +30,7 @@ export const appointmentSchemaZod: AppointmentSchemaType = z.object({
     stateAppointment: z.string({
         required_error: 'State Appointment is required',
     }),
-    acceptPersonalDataPolicy: z.boolean({
+    isAceptedConditions: z.boolean({
         required_error: 'Accept Personal Data Policy is required',
     }),
 });
