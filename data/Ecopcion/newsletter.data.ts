@@ -10,7 +10,7 @@ import {
 //DATA PARA CREAR LA SUSCRIPCION A NEWSLETTERS
 export const postNewsletterData = async (body: INewsletter): Promise<any> => {
     try {
-        const [newsletter, created] = await Newsletter.findOrCreate({
+        const [newsletter] = await Newsletter.findOrCreate({
             where: { email: body.email }, // Busca un registro con la misma dirección de correo electrónico
             defaults: body as unknown as Optional<Record<string, unknown>, string> // Utiliza el tipo Optional para permitir propiedades opcionales en body
         });

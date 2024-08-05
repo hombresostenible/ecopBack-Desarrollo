@@ -5,7 +5,7 @@ import { contactUsSchema } from '../../validations/Ecopcion/contactUs.zod';
 import { ServiceError } from '../../types/Responses/responses.types';
 const router = express.Router();
 
-//CONTROLLER PARA CREAR LA SUSCRIPCION A NEWSLETTERS
+//CREA REGISTRO DE CONTACTANOS
 router.post("/", validateSchema(contactUsSchema), async (req: Request, res: Response) => {
     try {
         const body = req.body;
@@ -15,7 +15,7 @@ router.post("/", validateSchema(contactUsSchema), async (req: Request, res: Resp
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST a http://localhost:3000/api/contactUs con { "email": "cmario.reyesp@gmail.com", "nameUser": "Carlos Reyes", "phone": "3128082002", "helpDescription": "Necesito ayuda para activar cuenta", "selectedTopic": "Indicadores", "acceptPersonalDataPolicy": true }
+}); // POST a http://localhost:3000/api/contact-us con { "email": "cmario.reyesp@gmail.com", "nameUser": "Carlos Reyes", "phone": "3128082002", "helpDescription": "Necesito ayuda para activar cuenta", "selectedTopic": "Indicadores", "acceptPersonalDataPolicy": true }
 
 
 export default router;

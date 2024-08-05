@@ -24,7 +24,7 @@ function routerApi(app: any) {
     app.use("/api/auth", authControllers);
     app.use("/api/appointment", appointmentControllers);
     app.use("/api/newsletter", newsletterControllers);
-    app.use("/api/contactUs", contactUsControllers);
+    app.use("/api/contact-us", contactUsControllers);
 
     app.use("/api/accountsBook", accountsBookControllers);
     app.use("/api/asset", assetsControllers);

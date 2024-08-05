@@ -4,13 +4,12 @@ import db from '../../db';
 class ContactUs extends Model {
     public id!: string;
     public email!: string;
-    public nameUser!: string;
+    public userName!: string;
     public phone!: string;
     public helpDescription!: string;
-    public selectedTopic!: 'Indicadores' | 'Inventario' | 'Facturacion electronica' | 'Otro';
-    public acceptPersonalDataPolicy!: boolean;
+    public isAceptedConditions!: boolean;
 };
-
+    
 ContactUs.init(
     {
         id: {
@@ -22,11 +21,8 @@ ContactUs.init(
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate: {
-                isEmail: true,
-            },
         },
-        nameUser: {
+        userName: {
             type: DataTypes.STRING,
             allowNull: false,
         },
@@ -38,14 +34,7 @@ ContactUs.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        selectedTopic: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                isIn: [[ 'Indicadores', 'Inventario', 'Facturacion electronica', 'Otro' ]],
-            },
-        },
-        acceptPersonalDataPolicy: {
+        isAceptedConditions: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
