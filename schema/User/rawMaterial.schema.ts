@@ -32,15 +32,14 @@ class RawMaterial extends Model {
     public inventoryOff!: IInventoryOffItem[];
     public reasonManualDiscountingInventory!: 'Donado' | 'Desechado' | 'Caducado' | 'Perdido' | 'Hurtado';
     public quantityManualDiscountingInventory!: number;
-    // Retenciones
-    public retentions!: IWithholdingTax[];
-    // Impuestos
+    // Impuestos y rentenciones
     public IVA!: 'No aplica' | 0 | 5 | 19;
-    public consumptionTax!: 'No aplica' | 4 | 8 | 16;
     public ivaAiu!: IIvaAiu;
-    // public taxesUltraProcessedSugarSweetenedBeverages!: number;
-    // public valueTaxesUltraProcessedSugarSweetenedBeverages!: 'No aplica' | 0 | 18 | 28 | 35 | 38 | 55 | 65;
-    // public taxesUltraProcessedFoodProducts!: 'No aplica' | 10 | 15 | 20;
+    public consumptionTax!: 'No aplica' | 4 | 8 | 16;
+    public retentionType!: 'No aplica' | 'Honorarios y consultoria' | 'Servicios' | 'Compras' | 'Otros' | 'Pagos al exterior y dividendos';
+    public withholdingTax!: 'No aplica' | 0.1 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 6 | 7 | 8 | 10 | 11 | 15 | 20 | 33 | 35;
+    public withholdingIVA!: 'No aplica' | 15 | 100;
+    public withholdingICA!: 'No aplica' | 2 | 3.4 | 4.14 | 5 | 6.9 | 8 | 9.66 | 11.04 | 13.8;
     
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
@@ -194,14 +193,7 @@ RawMaterial.init(
             defaultValue: [],
         },
         
-        // Retenciones
-        retentions: {
-            type: DataTypes.JSON,
-            allowNull: true,
-            defaultValue: [],
-        },
-
-        // Impuestos
+        // Impuestos y rentenciones
         IVA: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -209,14 +201,6 @@ RawMaterial.init(
                 isIn: [[ 'No aplica', 0, 5, 19 ]],
             },
             defaultValue: 0,
-        },
-        consumptionTax: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            validate: {
-                isIn: [[ 'No aplica', 4, 8, 16 ]],
-            },
-            defaultValue: 'No aplica',
         },
         ivaAiu: {
             type: DataTypes.STRING,
@@ -226,26 +210,45 @@ RawMaterial.init(
             },
             defaultValue: 'No aplica',
         },
-        // taxesUltraProcessedSugarSweetenedBeverages: {
-        //     type: DataTypes.INTEGER,
-        //     allowNull: true,
-        // },
-        // valueTaxesUltraProcessedSugarSweetenedBeverages: {
-        //     type: DataTypes.STRING,
-        //     allowNull: true,
-        //     validate: {
-        //         isIn: [[ 'No aplica', 0, 18, 28, 35, 38, 55, 65 ]],
-        //     },
-        //     defaultValue: 'No aplica',
-        // },
-        // taxesUltraProcessedFoodProducts: {
-        //     type: DataTypes.STRING,
-        //     allowNull: true,
-        //     validate: {
-        //         isIn: [[ 'No aplica', 10, 15, 20 ]],
-        //     },
-        //     defaultValue: 'No aplica',
-        // },
+        consumptionTax: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+                isIn: [[ 'No aplica', 4, 8, 16 ]],
+            },
+            defaultValue: 'No aplica',
+        },
+        retentionType: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+              isIn: [[ 'No aplica', 'Honorarios y consultoria', 'Servicios', 'Compras', 'Otros', 'Pagos al exterior y dividendos' ]],
+            },
+        },
+        withholdingTax: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+              isIn: [[ 'No aplica', 0.1, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 6, 7, 8, 10, 11, 15, 20, 33, 35 ]],
+            },
+            defaultValue: 'No aplica',
+        },
+        withholdingIVA: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+              isIn: [[ 'No aplica', 15, 100 ]],
+            },
+            defaultValue: 'No aplica',
+        },
+        withholdingICA: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            validate: {
+              isIn: [[ 'No aplica', 2, 3.4, 4.14, 5, 6.9, 8, 9.66, 11.04, 13.8 ]],
+            },
+            defaultValue: 'No aplica',
+        },
 
         //RELACION CON OTRAS TABLAS
         branchId: {
