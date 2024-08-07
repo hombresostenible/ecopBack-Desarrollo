@@ -30,7 +30,6 @@ export const rawMaterialSchema: RawMaterialSchemaType = z.object({
 type ManyRawMaterialSchemaType = ZodArray<
     ZodObject<{
         nameItem: ZodString;
-        packaged: ZodString;
         unitMeasure: ZodString;
         branchId: ZodString;
     }>
@@ -40,9 +39,6 @@ export const manyRawMaterialSchema: ManyRawMaterialSchemaType = z.array(
     z.object({
         nameItem: z.string({
             required_error: 'El nombre de la materia prima es requerido',
-        }),
-        packaged: z.string({
-            required_error: 'Es requerido responder si viene o no empacada l amateria prima',
         }),
         unitMeasure: z.string({
             required_error: 'La unidad de medida de la materia prima es requerida',
