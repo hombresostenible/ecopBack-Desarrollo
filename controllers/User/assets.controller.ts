@@ -39,10 +39,9 @@ router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
+        console.log('bodyArray: ', bodyArray)
         const { id, typeRole } = req.user;
-        // Llamar a la capa de servicio para manejar la creación de múltiples activos
         const serviceLayerResponse = await postManyAssetService(bodyArray, id, typeRole);
-        // Enviar una respuesta al cliente
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;

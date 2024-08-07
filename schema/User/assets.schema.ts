@@ -14,11 +14,15 @@ class Assets extends Model {
     public conditionAssets!: 'Nuevo' | 'Usado';
     public inventory!: number;
     public purchasePriceBeforeTax!: number;
-    public IVA!: 'No aplica' | 0 | 5 | 19;
     public sellingPrice!: number;
     public isDiscounted!: 'Si' | 'No';
     public discountPercentage!: number;
     public inventoryOff!: IInventoryOffAssets[];
+    // Impuestos
+    public IVA!: 'No aplica' | 0 | 5 | 19;
+    public withholdingTax!: 'No aplica' | 0.1 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 6 | 7 | 8 | 10 | 11 | 15 | 20 | 33 | 35;
+    public withholdingIVA!: 'No aplica' | 15 | 100;
+    public withholdingICA!: 'No aplica' | 2 | 3.4 | 4.14 | 5 | 6.9 | 8 | 9.66 | 11.04 | 13.8;
 
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
@@ -73,18 +77,6 @@ Assets.init(
             allowNull: false,
             defaultValue: 0,
         },
-
-        // Retenciones
-
-        // Impuestos
-        IVA: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-              isIn: [[ 'No aplica', 0, 5, 19 ]],
-            },
-            defaultValue: 0,
-        },
         sellingPrice: {
             type: DataTypes.INTEGER,
             allowNull: true,
@@ -107,6 +99,40 @@ Assets.init(
             type: DataTypes.JSON,
             allowNull: true,
             defaultValue: [],
+        },
+
+        // Impuestos
+        IVA: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+              isIn: [[ 'No aplica', 0, 5, 19 ]],
+            },
+            defaultValue: 0,
+        },
+        withholdingTax: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+              isIn: [[ 'No aplica', 0.1, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 6, 7, 8, 10, 11, 15, 20, 33, 35 ]],
+            },
+            defaultValue: 0,
+        },
+        withholdingIVA: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+              isIn: [[ 'No aplica', 15, 100 ]],
+            },
+            defaultValue: 0,
+        },
+        withholdingICA: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+              isIn: [[ 'No aplica', 2, 3.4, 4.14, 5, 6.9, 8, 9.66, 11.04, 13.8 ]],
+            },
+            defaultValue: 0,
         },
 
         //RELACION CON OTRAS TABLAS
