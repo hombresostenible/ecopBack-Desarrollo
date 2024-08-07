@@ -18,6 +18,7 @@ const router = express.Router();
 router.post("/", authRequired, validateSchema(crmClientsSchema), async (req: Request, res: Response) => {
     try {
         const body = req.body;
+        console.log('body: ', body)
         const { id } = req.user;
         const serviceLayerResponse = await postRegisterCRMClientsService(body, id);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
