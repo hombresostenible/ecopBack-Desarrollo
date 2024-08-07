@@ -57,10 +57,8 @@ export const checkRoleArrayCreateUserPlatform = (req: Request, res: Response, ne
             // Verifica si el 'Administrador' está autorizado para crear usuarios en la misma sucursal
             // if (obj.branchId !== userBranchId) return res.status(403).json({ error: 'Acceso denegado. Tu rol no está autorizado para ejecutar esta acción para uno o más registros' });
         }
-        // Si todas las verificaciones pasan, pasa al siguiente middleware
         return next();
     }
-    // Si el usuario no es 'Superadmin' ni 'Administrador', se le niega el acceso
     return res.status(403).json({ error: 'Acceso denegado. Tu rol no está autorizado para ejecutar esta acción' });
 };
 
@@ -69,17 +67,13 @@ export const checkRoleArrayCreateUserPlatform = (req: Request, res: Response, ne
 // MIDDLEWARE QUE VERIFICA SI EL USUARIO TIENE EL ROL AUTORIZADO PARA CREAR MASIVAMENTE REGISTROS (ASSETS, MERCHANDISES, ETC)
 export const checkRoleArray = (req: Request, res: Response, next: NextFunction) => {
     const { user } = req;
-    // Verifica si el usuario está autenticado
     if (!user) return res.status(401).json({ error: 'Usuario no autenticado' });
     const { typeRole } = user;
     if (typeRole === 'Superadmin') {
-        // Si el usuario es 'Superadmin', pasa al siguiente middleware directamente
+        console.log('Pasa')
         return next();
     } else if (typeRole === 'Administrador') {
-        // Si el usuario es 'Administrador', verifica cada objeto en el array
         if (Array.isArray(req.body)) {
-            // for (const obj of req.body) if (obj.branchId !== userBranchId) return res.status(403).json({ error: 'Acceso denegado. Tu rol no está autorizado para ejecutar esta acción para uno o más registros' });
-            // Si todas las verificaciones pasan, pasa al siguiente middleware
             return next();
         } else return res.status(400).json({ error: 'Se esperaba un array en el cuerpo de la solicitud' });
     } else return res.status(403).json({ error: 'Acceso denegado. Tu rol no está autorizado para ejecutar esta acción' });

@@ -21,7 +21,7 @@ class Assets extends Model {
     // Impuestos y rentenciones
     public IVA!: 'No aplica' | 0 | 5 | 19;
     public consumptionTax!: 'No aplica' | 4 | 8 | 16;
-    public retentionType!: 'Honorarios y consultoria' | 'Servicios' | 'Compras' | 'Otros' | 'Pagos al exterior y dividendos';
+    public retentionType!: 'No aplica' | 'Honorarios y consultoria' | 'Servicios' | 'Compras' | 'Otros' | 'Pagos al exterior y dividendos';
     public withholdingTax!: 'No aplica' | 0.1 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 6 | 7 | 8 | 10 | 11 | 15 | 20 | 33 | 35;
     public withholdingIVA!: 'No aplica' | 15 | 100;
     public withholdingICA!: 'No aplica' | 2 | 3.4 | 4.14 | 5 | 6.9 | 8 | 9.66 | 11.04 | 13.8;
@@ -122,14 +122,14 @@ Assets.init(
         },
         retentionType: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
             validate: {
-              isIn: [[ 'Honorarios y consultoria', 'Servicios', 'Compras', 'Otros', 'Pagos al exterior y dividendos' ]],
+              isIn: [[ 'No aplica', 'Honorarios y consultoria', 'Servicios', 'Compras', 'Otros', 'Pagos al exterior y dividendos' ]],
             },
         },
         withholdingTax: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
             validate: {
               isIn: [[ 'No aplica', 0.1, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 6, 7, 8, 10, 11, 15, 20, 33, 35 ]],
             },
@@ -137,7 +137,7 @@ Assets.init(
         },
         withholdingIVA: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
             validate: {
               isIn: [[ 'No aplica', 15, 100 ]],
             },
@@ -145,7 +145,7 @@ Assets.init(
         },
         withholdingICA: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
             validate: {
               isIn: [[ 'No aplica', 2, 3.4, 4.14, 5, 6.9, 8, 9.66, 11.04, 13.8 ]],
             },
