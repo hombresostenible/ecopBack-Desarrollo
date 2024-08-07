@@ -18,8 +18,10 @@ class Assets extends Model {
     public isDiscounted!: 'Si' | 'No';
     public discountPercentage!: number;
     public inventoryOff!: IInventoryOffAssets[];
-    // Impuestos
+    // Impuestos y rentenciones
     public IVA!: 'No aplica' | 0 | 5 | 19;
+    public consumptionTax!: 'No aplica' | 4 | 8 | 16;
+    public retentionType!: 'Honorarios y consultoria' | 'Servicios' | 'Compras' | 'Otros' | 'Pagos al exterior y dividendos';
     public withholdingTax!: 'No aplica' | 0.1 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 6 | 7 | 8 | 10 | 11 | 15 | 20 | 33 | 35;
     public withholdingIVA!: 'No aplica' | 15 | 100;
     public withholdingICA!: 'No aplica' | 2 | 3.4 | 4.14 | 5 | 6.9 | 8 | 9.66 | 11.04 | 13.8;
@@ -110,13 +112,28 @@ Assets.init(
             },
             defaultValue: 0,
         },
+        consumptionTax: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+              isIn: [[ 'No aplica', 4, 8, 16 ]],
+            },
+            defaultValue: 'No aplica',
+        },
+        retentionType: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+              isIn: [[ 'Honorarios y consultoria', 'Servicios', 'Compras', 'Otros', 'Pagos al exterior y dividendos' ]],
+            },
+        },
         withholdingTax: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
               isIn: [[ 'No aplica', 0.1, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 6, 7, 8, 10, 11, 15, 20, 33, 35 ]],
             },
-            defaultValue: 0,
+            defaultValue: 'No aplica',
         },
         withholdingIVA: {
             type: DataTypes.STRING,
@@ -124,7 +141,7 @@ Assets.init(
             validate: {
               isIn: [[ 'No aplica', 15, 100 ]],
             },
-            defaultValue: 0,
+            defaultValue: 'No aplica',
         },
         withholdingICA: {
             type: DataTypes.STRING,
@@ -132,7 +149,7 @@ Assets.init(
             validate: {
               isIn: [[ 'No aplica', 2, 3.4, 4.14, 5, 6.9, 8, 9.66, 11.04, 13.8 ]],
             },
-            defaultValue: 0,
+            defaultValue: 'No aplica',
         },
 
         //RELACION CON OTRAS TABLAS

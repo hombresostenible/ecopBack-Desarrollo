@@ -445,6 +445,9 @@
             }
         }
     },
+
+
+
     "Lineas": [
         {
             "Id": {
@@ -508,6 +511,9 @@
             }
         }
     ],
+
+
+    
     "AgregadoComercial": {
         "MediosDePago": [
             {
@@ -532,6 +538,9 @@
             }
         ]
     },
+
+
+
     "Totales": {
         "TotalMonetario": {
             "ValorBruto": {
