@@ -39,7 +39,6 @@ router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        console.log('bodyArray: ', bodyArray)
         const { id, typeRole } = req.user;
         const serviceLayerResponse = await postManyAssetService(bodyArray, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);

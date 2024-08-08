@@ -2,10 +2,10 @@ import express, { Request, Response } from "express";
 import {
     postRegisterUserService,
     getSearchEmailUserPasswordChangeService,
+    putResetPasswordService,
     putProfileUserService,
     patchLogoUserService,
     patchDeleteLogoUserService,
-    putResetPasswordUserService,
     putResetPasswordUserIsBlockedService,
 } from "../../services/User/user.services";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
@@ -48,6 +48,25 @@ router.get("/email-user", async (req: Request, res: Response): Promise<void> => 
         res.status(errorController.code).json(errorController.message);
     }                
 }); // GET - http://localhost:3000/api/user/email-user?email=carlosmario.reyesp@yahoo.com
+
+
+
+//CAMBIO DE CONTRASEÑA USER O USUARIO DE PLATAFORMA
+router.put("/reset-password/:idUser/:passwordResetCode", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { idUser, passwordResetCode } = req.params;
+        const body = req.body;
+        const serviceLayerResponse = await putResetPasswordService(idUser, passwordResetCode, body);
+        if (!serviceLayerResponse) {
+            res.status(401).json({ message: 'Usuario no encontrado' });
+            return;
+        }    
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }    
+}); // PUT - http://localhost:3000/api/user/reset-password/:idUser/:passwordResetCode con { "email": "carlosmario.reyesp@gmail.com", "password": "passwordC" }
 
 
 
@@ -96,25 +115,6 @@ router.patch("/delete-logo-user", authRequired, async (req: Request, res: Respon
         res.status(errorController.code).json(errorController.message);
     }
 });  // PATCH - http://localhost:3000/api/user/delete-logo-user con { "logo": "" }
-
-
-
-//CAMBIO DE CONTRASEÑA USER O USUARIO DE PLATAFORMA
-router.put("/reset-password-user/:idUser/:passwordResetCode", async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { idUser, passwordResetCode } = req.params;
-        const body = req.body;
-        const serviceLayerResponse = await putResetPasswordUserService(idUser, passwordResetCode, body);
-        if (!serviceLayerResponse) {
-            res.status(401).json({ message: 'Usuario no encontrado' });
-            return;
-        }    
-        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }    
-}); // PUT - http://localhost:3000/api/user/reset-password-user/:idUser/:passwordResetCode con { "email": "carlosmario.reyesp@gmail.com", "password": "passwordC" }
 
 
 

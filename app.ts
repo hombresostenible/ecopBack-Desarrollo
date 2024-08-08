@@ -42,7 +42,7 @@ class Server {
     private middlewares() {
         // Middleware para verificar las cookies antes de CORS
         this.app.use((req: Request, res: Response, next: NextFunction) => {
-            // console.log('Cookies recibidas:', req.headers.cookie);
+            console.log('Cookies recibidas:', req.headers.cookie);
             next();
         });
 
