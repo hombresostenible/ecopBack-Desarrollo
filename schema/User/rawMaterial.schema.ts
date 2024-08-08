@@ -1,7 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
 import { IInventoryOffItem } from '../../types/User/InventoryOffItem/iInventoryOffItem.types';
-import { IWithholdingTax } from '../../types/User/RetentonAndTaxes/withholdingTax.types';
 import { IIvaAiu } from '../../types/User/RetentonAndTaxes/ivaAiu.types';
 import Branch from './branch.schema';
 import User from './user.schema';
