@@ -94,6 +94,21 @@ export const getSearchEmailUserPasswordChangeData = async (email: string, token:
 
 
 
+//CAMBIO DE CONTRASEÑA USER O USUARIO DE PLATAFORMA
+export const putResetPasswordData = async (id: string): Promise<User | null> => {
+    try {
+        const userFound = await User.findOne({ where: { id: id } });
+        if (!userFound) {
+            throw new Error("usuario no encontrado")
+        } else if (userFound.isBlocked === true) throw new Error("Tu cuenta se encuentra bloqueada, por favor realiza el proceso de desbloqueo");
+        return userFound;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //ACTUALIZAR EL PERFIL DEL USER
 export const putProfileUserData = async (body: IUser, userId: string): Promise<IUser | null> => {
     const t = await sequelize.transaction();
@@ -159,21 +174,6 @@ export const patchDeleteLogoUserData = async (userId: string) => {
             await existingUser.save();
         }
         return existingUser;
-    } catch (error) {
-        throw error;
-    }
-};
-
-
-
-//CAMBIO DE CONTRASEÑA USER O USUARIO DE PLATAFORMA
-export const findUserData = async (id: string): Promise<User | null> => {
-    try {
-        const userFound = await User.findOne({ where: { id: id } });
-        if (!userFound) {
-            throw new Error("usuario no encontrado")
-        } else if (userFound.isBlocked === true) throw new Error("Tu cuenta se encuentra bloqueada, por favor realiza el proceso de desbloqueo");
-        return userFound;
     } catch (error) {
         throw error;
     }
