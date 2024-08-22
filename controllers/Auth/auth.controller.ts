@@ -21,12 +21,13 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
         }
         if (user.result) {
             const { serResult, token } = user.result;
-            res.cookie("token", token, {
-                httpOnly: false,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "none",
-                // maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-            });
+            res.cookie("token", token)
+            // res.cookie("token", token, {
+            //     httpOnly: false,
+            //     secure: process.env.NODE_ENV === "production",
+            //     sameSite: "none",
+            //     // maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+            // });
             res.json({ serResult, token });
         } else res.status(user.code).json({ message: user.message });
     } catch (error) {
