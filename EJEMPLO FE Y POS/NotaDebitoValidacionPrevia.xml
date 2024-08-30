@@ -1,0 +1,282 @@
+<soapenv:Body>
+	<Parametros>
+		<NombreSistemaEmisor>PruebaSimbaSistema</NombreSistemaEmisor>
+		<TipoAmbiente>2</TipoAmbiente>
+		<TokenEmpresa>[Token Empresa]</TokenEmpresa>
+		<VersionDocElectronico>4.0</VersionDocElectronico>
+		<VersionSistemaEmisor>1.2.0.12</VersionSistemaEmisor>
+		<ModoRespuesta>1</ModoRespuesta>
+		<PasswordEmpresa>Bogota18*</PasswordEmpresa>
+		<TipoReporte>1</TipoReporte>
+		<ContactoReceptor>
+			<CorreoElectronico>dlancheros@simba.co</CorreoElectronico>
+			<IdEtiquetaUbicacionCorreo>1</IdEtiquetaUbicacionCorreo>
+		</ContactoReceptor>
+		<ContactoReceptor>
+			<CorreoElectronico>jvillegas@stone.com.co</CorreoElectronico>
+			<IdEtiquetaUbicacionCorreo>2</IdEtiquetaUbicacionCorreo>
+		</ContactoReceptor>
+	</Parametros>
+
+	<Encabezado>
+		<TipoDocElectronico>2</TipoDocElectronico>
+		<IdPersonalizacion>10</IdPersonalizacion>
+		<PrefijoDocumento>SETP</PrefijoDocumento>
+		<NumeroDocumento>992160005</NumeroDocumento>
+		<FechaYHoraDocumento>2019-07-29T00:00:00.000-05:00</FechaYHoraDocumento>
+		<CodigoMoneda>COP</CodigoMoneda>
+		<CantidadLineas>1</CantidadLineas>
+		<RespuestaMotivoNota>
+			<IdReferencia>SETP3</IdReferencia>
+			<CodRespuesta>6</CodRespuesta>
+			<Descripcion>Descripcion nota</Descripcion>
+		</RespuestaMotivoNota>
+	</Encabezado>
+
+	<Terceros>
+		<TerceroProveedorContable>
+			<IdAdicional>1</IdAdicional>
+			<Tercero>
+				<NombreTercero>NOMBRE COMERCIAL PROVEEDOR</NombreTercero>
+				<CodigoClasificacionIndustria>223123</CodigoClasificacionIndustria>
+				<UbicacionFisica>
+					<Direccion>
+						<Id>05125</Id>
+						<Departamento>ANTIOQUIA</Departamento>
+						<Ciudad>MEDELLIN</Ciudad>
+						<SubdivisionPais>Antioquia</SubdivisionPais>
+						<SubdivisionPaisCodigo>05</SubdivisionPaisCodigo>
+						<ZonaPostal>050011</ZonaPostal>
+						<LineaDireccion>
+							<TextoLinea>Calle 94 A, N° 11 A-32 Oficina 203</TextoLinea>
+						</LineaDireccion>
+						<Pais>
+							<Codigo>CO</Codigo>
+							<Nombre IdLenguaje="es">Colombia</Nombre>
+						</Pais>
+					</Direccion>
+				</UbicacionFisica>
+				<EsquemaTributarioTercero>
+					<NombreRegistrado>RAZON SOCIAL PROVEEDOR S.A.S.</NombreRegistrado>
+					<NumeroIdTributario SmaIdCodigo="1" SmaIdNombre="31">123465789</NumeroIdTributario>																								
+					<NivelTributario ListaNombre="04">O-11;O-06</NivelTributario>
+					<EsquemaTributario>
+						<Id>01</Id>
+						<Nombre>IVA</Nombre>
+					</EsquemaTributario>
+					<DireccionParaImpuestos>
+						<Id>05125</Id>
+						<Departamento>ANTIOQUIA</Departamento>
+						<Ciudad>MEDELLIN</Ciudad>
+						<SubdivisionPais>Antioquia</SubdivisionPais>
+						<SubdivisionPaisCodigo>05</SubdivisionPaisCodigo>
+						<ZonaPostal>050011</ZonaPostal>
+						<LineaDireccion>
+							<TextoLinea>Calle 94 A, N° 11 A-32 Oficina 203</TextoLinea>
+						</LineaDireccion>
+						<Pais>
+							<Codigo>CO</Codigo>
+							<Nombre IdLenguaje="es">Colombia</Nombre>
+						</Pais>
+					</DireccionParaImpuestos>
+				</EsquemaTributarioTercero>
+				<EntidadLegalTercero>
+					<NumeroIdLegal SmaIdCodigo="1" SmaIdNombre="31">123465789</NumeroIdLegal>																					
+					<NombreRegistrado>RAZON SOCIAL PROVEEDOR S.A.S.</NombreRegistrado>
+					<EsquemaRegistroCorporativo>
+						<Id>SETP</Id>
+						<Nombre>6201</Nombre>
+					</EsquemaRegistroCorporativo>
+				</EntidadLegalTercero>
+				<Contacto>
+					<Nombre>BEATRIZ ELENA VILLADA YEPES</Nombre>
+					<Telefono>1234567</Telefono>
+					<Email>idiaz@stone.com.co</Email>
+				</Contacto>
+			</Tercero>
+		</TerceroProveedorContable>
+		<TerceroClienteContable>
+			<IdAdicional>1</IdAdicional>
+			<Tercero>
+				<IdTercero SmaIdCodigo="6" SmaIdNombre="31">804016671</IdTercero>
+				<NombreTercero>CAMPOLLO S.A .</NombreTercero>
+				<UbicacionFisica>
+					<Direccion>
+						<Id>05125</Id>
+						<Departamento>ANTIOQUIA</Departamento>
+						<Ciudad>MEDELLIN</Ciudad>
+						<SubdivisionPais>Antioquia</SubdivisionPais>
+						<SubdivisionPaisCodigo>05</SubdivisionPaisCodigo>
+						<ZonaPostal>050011</ZonaPostal>
+						<LineaDireccion>
+							<TextoLinea>CR 29C N° 10C - 125</TextoLinea>
+						</LineaDireccion>
+						<Pais>
+							<Codigo>CO</Codigo>
+							<Nombre IdLenguaje="es">Colombia</Nombre>
+						</Pais>
+					</Direccion>
+				</UbicacionFisica>
+				<EsquemaTributarioTercero>
+					<NumeroIdTributario SmaIdNombre="31" SmaIdCodigo="9">804016671</NumeroIdTributario>
+					<NombreRegistrado>CAMPOLLO S.A .</NombreRegistrado>
+					<NivelTributario ListaNombre="04">O-99</NivelTributario>
+					<DireccionParaImpuestos>
+						<Id>05125</Id>
+						<Departamento>ANTIOQUIA</Departamento>
+						<Ciudad>MEDELLIN</Ciudad>
+						<SubdivisionPais>Antioquia</SubdivisionPais>
+						<SubdivisionPaisCodigo>05</SubdivisionPaisCodigo>
+						<LineaDireccion>
+							<TextoLinea>CR 29C N° 10C - 125</TextoLinea>
+						</LineaDireccion>
+						<Pais>
+							<Codigo>CO</Codigo>
+							<Nombre IdLenguaje="es">Colombia</Nombre>
+						</Pais>
+					</DireccionParaImpuestos>
+					<EsquemaTributario>
+						<Id>01</Id>
+						<Nombre>IVA</Nombre>
+					</EsquemaTributario>
+				</EsquemaTributarioTercero>
+				<EntidadLegalTercero>
+					<NombreRegistrado>CAMPOLLO S.A .</NombreRegistrado>
+					<NumeroIdLegal SmaIdNombre="31" SmaIdCodigo="9">804016671</NumeroIdLegal>
+					<EsquemaRegistroCorporativo>
+						<Nombre>6201</Nombre>
+					</EsquemaRegistroCorporativo>
+				</EntidadLegalTercero>
+				<Contacto>
+					<Id>804016671-9</Id>
+					<Nombre>CAMPOLLO S.A</Nombre>
+					<Telefono>6572206</Telefono>
+					<Email>auxiliar.logistica@campollo.net</Email>
+				</Contacto>
+			</Tercero>
+		</TerceroClienteContable>
+		<TerceroRpteFiscal>
+			<IdTercero SmaIdNombre="31">804016671-9</IdTercero>
+		</TerceroRpteFiscal>
+	</Terceros>
+
+	<Lineas>
+		<Id>1</Id>
+		<Cantidad CodUnidad="KGM">3</Cantidad>
+		<ValorNeto IdMoneda="COP">93600</ValorNeto>
+		<TotalImpuesto>
+			<ValorImpuesto IdMoneda="COP">17184</ValorImpuesto>
+			<IndicaEsSoloEvidencia>false</IndicaEsSoloEvidencia>
+			<SubTotalImpuesto>
+				<ValorImpuesto IdMoneda="COP">17184</ValorImpuesto>
+				<BaseImponible IdMoneda="COP">93600</BaseImponible>
+				<Porcentaje>1</Porcentaje>
+				<CategoriaImpuesto>
+					<Porcentaje>19.00</Porcentaje>
+					<EsquemaTributario>
+						<Id>01</Id>
+						<Nombre>IVA</Nombre>
+					</EsquemaTributario>
+				</CategoriaImpuesto>
+			</SubTotalImpuesto>
+		</TotalImpuesto>
+		<TotalRetenciones>
+			<ValorImpuesto IdMoneda="COP">2340</ValorImpuesto>
+			<IndicaEsSoloEvidencia>false</IndicaEsSoloEvidencia>
+			<SubTotalImpuesto>
+				<BaseImponible IdMoneda="COP">93600</BaseImponible>
+				<ValorImpuesto IdMoneda="COP">2340</ValorImpuesto>
+				<Porcentaje>1</Porcentaje>
+				<CategoriaImpuesto>
+					<Porcentaje>2.5</Porcentaje>
+					<EsquemaTributario>
+						<Id>06</Id>
+						<Nombre>ReteFuente</Nombre>
+					</EsquemaTributario>
+				</CategoriaImpuesto>
+			</SubTotalImpuesto>
+		</TotalRetenciones>
+		<Item>
+			<Descripcion>Rebeca tricot basica</Descripcion>
+			<IdItemEstandar>
+				<Id SmaIdCodigo="999">Fev1656s</Id>
+			</IdItemEstandar>
+			<IdItemVendedor>
+				<Id>20</Id>
+			</IdItemVendedor>
+		</Item>
+		<Precio>
+			<ValorPrecio IdMoneda="COP">31200</ValorPrecio>
+			<CantidadBase CodUnidad="KGM">3</CantidadBase>
+		</Precio>
+	</Lineas>
+
+	<AgregadoComercial>
+		<MediosDePago>
+			<Id>1</Id>
+			<CodigoMedioDePago>42</CodigoMedioDePago>
+			<IdInstruccion>BBVA- convenio 11354 -Cuenta corriente No. 001304930100010375</IdInstruccion>
+			<IdPago>134</IdPago>
+		</MediosDePago>
+		<MediosDePago>
+			<Id>1</Id>
+			<CodigoMedioDePago>42</CodigoMedioDePago>
+			<IdInstruccion>Bancolombia -CONVENIO 12346- CUENTA CORRIENTE NO. 6544543847873</IdInstruccion>
+			<IdPago>134</IdPago>
+		</MediosDePago>
+	</AgregadoComercial>
+
+	<Referencias>
+		<ReferenciaFacturacion>
+			<ReferenciaDocFactura>
+				<Id>SETT7</Id>
+				<UID SmaIdNombre="CUFE-SHA384">66468a55d88d61d48311dbf096f6c80872e2a7f109bec48ad6332bc64c4c8c19557a9d3bdd0ecbb9277911cae06461af</UID>
+				<Fecha>2019-09-02</Fecha>
+			</ReferenciaDocFactura>
+		</ReferenciaFacturacion>
+	</Referencias>
+
+	<Notas>[VLetras Origen] SON: TRES MILLONES CUATROCIENTOS SESENTA Y OCHO MIL OCHOCIENTOS CINCUENTA PESOS M.L.</Notas>
+	
+	<Totales>
+		<TotalImpuestos>
+			<ValorImpuesto IdMoneda="COP">17184</ValorImpuesto>
+			<IndicaEsSoloEvidencia>false</IndicaEsSoloEvidencia>
+			<SubTotalImpuesto>
+				<BaseImponible IdMoneda="COP">93600</BaseImponible>
+				<ValorImpuesto IdMoneda="COP">17184</ValorImpuesto>
+				<Porcentaje>1</Porcentaje>
+				<CategoriaImpuesto>
+					<Porcentaje>19.00</Porcentaje>
+					<EsquemaTributario>
+						<Id>01</Id>
+						<Nombre>IVA</Nombre>
+					</EsquemaTributario>
+				</CategoriaImpuesto>
+			</SubTotalImpuesto>
+		</TotalImpuestos>
+		
+		<TotalRetenciones>
+			<ValorImpuesto IdMoneda="COP">2340</ValorImpuesto>
+			<IndicaEsSoloEvidencia>false</IndicaEsSoloEvidencia>
+			<SubTotalImpuesto>
+				<BaseImponible IdMoneda="COP">93600</BaseImponible>
+				<ValorImpuesto IdMoneda="COP">2340</ValorImpuesto>
+				<Porcentaje>1</Porcentaje>
+				<CategoriaImpuesto>
+					<Porcentaje>2.5</Porcentaje>
+					<EsquemaTributario>
+						<Id>06</Id>
+						<Nombre>ReteFuente</Nombre>
+					</EsquemaTributario>
+				</CategoriaImpuesto>
+			</SubTotalImpuesto>
+		</TotalRetenciones>
+		<TotalMonetario>
+			<ValorBruto IdMoneda="COP">93600</ValorBruto>
+			<TotalMasImpuestos IdMoneda="COP">110784</TotalMasImpuestos>
+			<ValorBaseImpuestos IdMoneda="COP">93600</ValorBaseImpuestos>
+			<ValorAPagar IdMoneda="COP">108444</ValorAPagar>
+		</TotalMonetario>
+	</Totales>
+</soapenv:Body>
