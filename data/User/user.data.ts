@@ -3,7 +3,7 @@ import sequelize from '../../db';
 import User from '../../schema/User/user.schema';
 import {
     transporterZoho,
-    mailUserWelcome,
+    // mailUserWelcome,
     mailUpdateUserProfile,
 } from '../../libs/nodemailer';
 import { extractPublicIdFromUrlCloudinaryProfiles } from '../../helpers/Cloudinary/cloudinary.helper';
@@ -58,19 +58,20 @@ export const postRegisterUserData = async (body: IUser): Promise<User | null> =>
             password: body.password,
             isAceptedConditions: body.isAceptedConditions,
         });
-        const nameToUse = body.name ?? body.corporateName;
-        try {
-            const mailOptions = mailUserWelcome(body.email, nameToUse || '');
-            await newUser.save({ transaction: t });
-            await transporterZoho.sendMail(mailOptions);
-            console.log('Correo electrónico de bienvenida enviado con éxito.');
-            await t.commit();
-            return newUser;
-        } catch (emailError) {
-            await t.rollback();
-            throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
-        }
+        // const nameToUse = body.name ?? body.corporateName;
+        await newUser.save({ transaction: t });
+        // await transporterZoho.sendMail(mailOptions);
+        // console.log('Correo electrónico de bienvenida enviado con éxito.');
+        await t.commit();
+        return newUser;
+        // try {
+            // const mailOptions = mailUserWelcome(body.email, nameToUse || '');
+        // } catch (emailError) {
+        //     await t.rollback();
+        //     throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
+        // }
     } catch (error) {
+        console.log('Error: ', error)
         await t.rollback();
         throw new ServiceError(500, `${error}`);
     }
