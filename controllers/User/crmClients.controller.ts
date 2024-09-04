@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import {
     postRegisterCRMClientsService,
+    postManyCRMClientsService,
     getCRMClientsUserService,
     getCRMClientsBranchService,
     getCRMClientByIdService,
@@ -9,8 +10,8 @@ import {
 } from "../../services/User/crmClients.service";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
-import { checkRole } from '../../middlewares/User/Role.middleware';
-import { crmClientsSchema } from '../../validations/User/crmClients.zod';
+import { checkRole, checkRoleArray  } from '../../middlewares/User/Role.middleware';
+import { crmClientsSchema, manyCRMClientsSchemaType  } from '../../validations/User/crmClients.zod';
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 
@@ -25,7 +26,24 @@ router.post("/", authRequired, validateSchema(crmClientsSchema), async (req: Req
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/crmClient con { "entityUserId": "6dde1b74-2e3c-4915-bc93-6e39ac77afc8", "name": "Carlos", "lastName": "Reyes", "typeDocumentId": "Cedula de Ciudadania", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
+}); // POST - http://localhost:3000/api/crm-client con { "entityUserId": "6dde1b74-2e3c-4915-bc93-6e39ac77afc8", "name": "Carlos", "lastName": "Reyes", "typeDocumentId": "Cedula de Ciudadania", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
+
+
+
+
+//CREAR MUCHOS CLIENTES DESDE EL EXCEL
+router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRMClientsSchemaType), async (req: Request, res: Response) => {
+    try {
+        const { id } = req.user;
+        const bodyArray = req.body;
+        const serviceLayerResponse = await postManyCRMClientsService(bodyArray, id);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // POST - http://localhost:3000/api/crm-client/create-many con [{"entityUserId":"6dde1b74-2e3c-4915-bc93-6e39ac77afc8","name":"Carlos","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"777777999","email":"carlosmario.reyesp@outlook.com","phone":"3128082002","department":"Tolima","city":"Ibagué","codeDane":"73001","subregionCodeDane":"73","address":"Cra 100 # 200 - 300"},{"entityUserId":"6dde1b74-2e3c-4915-bc93-6e39ac77afc8","name":"Carlos","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"7788999999","email":"carlosmario.reyesp@outlook.com","phone":"3128082002","department":"Tolima","city":"Ibagué","codeDane":"73001","subregionCodeDane":"73","address":"Cra 100 # 200 - 300"}]
+
 
 
 
@@ -43,7 +61,7 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/crmClient
+}); // GET - http://localhost:3000/api/crm-client
 
 
 
@@ -58,12 +76,12 @@ router.get("/:idCrmClient", authRequired, async (req: Request, res: Response) =>
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/crmClient/:idCrmClient
+}); // GET - http://localhost:3000/api/crm-client/:idCrmClient
 
 
 
 //CONTROLLER PARA OBTENER TODOS LOS CLIENTES POR SEDE DE USER
-router.get("/crmClients-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/crm-clients-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
         const { id } = req.user;
@@ -77,7 +95,7 @@ router.get("/crmClients-branch/:idBranch", authRequired, async (req: Request, re
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/crmClient/crmClients-branch/:idBranch
+}); // GET - http://localhost:3000/api/crm-client/crm-clients-branch/:idBranch
 
 
 
@@ -93,7 +111,7 @@ router.put("/:idCrmClient", authRequired, validateSchema(crmClientsSchema), asyn
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/crmClient/:idCrmClient con { "entityUserId": "6dde1b74-2e3c-4915-bc93-6e39ac77afc8", "name": "Carlos", "lastName": "Reyes", "typeDocumentId": "Cedula de Ciudadania", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
+}); // PUT - http://localhost:3000/api/crm-client/:idCrmClient con { "entityUserId": "6dde1b74-2e3c-4915-bc93-6e39ac77afc8", "name": "Carlos", "lastName": "Reyes", "typeDocumentId": "Cedula de Ciudadania", "documentId": "1110521285", "email": "carlosmario.reyesp@outlook.com", "phone": "3128082002", "department": "Caldas", "city": "La Dorada", "address": "Cra 100 # 200 - 300" }
 
 
 
@@ -108,7 +126,7 @@ router.delete('/:idCrmClient', authRequired, checkRole, async (req: Request, res
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // DELETE - http://localhost:3000/api/crmClient/:idCrmClient
+}); // DELETE - http://localhost:3000/api/crm-client/:idCrmClient
 
 
 

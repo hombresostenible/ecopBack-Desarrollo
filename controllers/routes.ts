@@ -29,8 +29,8 @@ function routerApi(app: any) {
     app.use("/api/accountsBook", accountsBookControllers);
     app.use("/api/asset", assetsControllers);
     app.use("/api/branch", branchControllers);
-    app.use("/api/crmClient", crmClientControllers);
-    app.use("/api/crmSupplier", crmSupplierControllers);
+    app.use("/api/crm-client", crmClientControllers);
+    app.use("/api/crm-supplier", crmSupplierControllers);
     app.use("/api/electronicInvoicing", electronicInvoicingControllers);
     app.use("/api/electronicInvoicing", invoicingPOSControllers);
     app.use("/api/merchandise", merchandiseControllers);

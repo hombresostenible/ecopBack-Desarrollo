@@ -1,5 +1,6 @@
 import {
     postRegisterCRMSupplierData,
+    postManyCRMSuppliersData,
     getCRMSuppliersData,
     getCRMSuppliersBranchData,
     getCRMSupplierByIdData,
@@ -18,6 +19,30 @@ export const postRegisterCRMSuppliersService = async (body: ICrmSuppliers, userI
         const dataLayerResponse = await postRegisterCRMSupplierData(body, userId);
         if (!dataLayerResponse) throw new ServiceError(400, "El proveedor ya existe");
         return { code: 201, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//CREAR MUCHOS PROVEEDORES DESDE EL EXCEL
+export const postManyCRMSuppliersService = async (bodyArray: ICrmSuppliers[], userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+    const uniqueCRMSupplier: ICrmSuppliers[] = [];
+    const duplicatedCRMSupplier: ICrmSuppliers[] = [];
+    try {
+        for (const crmSupplier of bodyArray) {           
+            // Crear el proveedor
+            const createdCRMSupplier = await postManyCRMSuppliersData(crmSupplier, userId);
+            if (createdCRMSupplier) {
+                uniqueCRMSupplier.push(createdCRMSupplier);
+            } else duplicatedCRMSupplier.push(crmSupplier);
+        }
+        // Devolver una respuesta adecuada
+        return { code: 201, result: uniqueCRMSupplier };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;

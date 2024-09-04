@@ -1,5 +1,6 @@
 import {
     postRegisterCRMClientsData,
+    postManyCRMClientsData,
     getCRMClientsData,
     getCRMClientsBranchData,
     getCRMClientByIdData,
@@ -18,6 +19,30 @@ export const postRegisterCRMClientsService = async (userId: string, body: ICrmCl
         const dataLayerResponse = await postRegisterCRMClientsData(userId, body);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe un cliente con el mismo documento de identidad");
         return { code: 201, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//CREAR MUCHOS CLIENTES DESDE EL EXCEL
+export const postManyCRMClientsService = async (bodyArray: ICrmClients[], userId: string): Promise<ICrmClientsServiceLayerResponse> => {
+    const uniqueCRMClient: ICrmClients[] = [];
+    const duplicatedCRMClients: ICrmClients[] = [];
+    try {
+        for (const crmClient of bodyArray) {           
+            // Crear el cliente
+            const createdCRMClient = await postManyCRMClientsData(crmClient, userId);
+            if (createdCRMClient) {
+                uniqueCRMClient.push(createdCRMClient);
+            } else duplicatedCRMClients.push(crmClient);
+        }
+        // Devolver una respuesta adecuada
+        return { code: 201, result: uniqueCRMClient };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
