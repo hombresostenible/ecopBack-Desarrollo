@@ -1,4 +1,5 @@
 import { Op } from 'sequelize';
+import sequelize from '../../db';
 import CrmClients from '../../schema/User/crmClients.schema';
 import { ICrmClients } from '../../types/User/crmClients.types';
 import { ServiceError } from '../../types/Responses/responses.types';
@@ -19,6 +20,34 @@ export const postRegisterCRMClientsData = async (userId: string, body: ICrmClien
             userId: userId,
         });
         await newCRMClient.save();
+        return newCRMClient;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//CREAR MUCHOS CLIENTES DESDE EL EXCEL
+export const postManyCRMClientsData = async (body: ICrmClients, userId: string): Promise<any> => {
+    const t = await sequelize.transaction();
+    try {
+        // Verificar si el cliente ya existe
+        const existingCRMClient = await CrmClients.findOne({
+            where: { documentId: body.documentId },
+            transaction: t,
+        });
+        // Si el cliente ya existe, devuelve null
+        if (existingCRMClient) {
+            await t.rollback();
+            return null;
+        }
+        // Si el cliente no existe, crearlo en la base de datos
+        const newCRMClient = await CrmClients.create({
+            ...body,
+            entityUserId: userId,
+        }, { transaction: t });
+        await t.commit();
         return newCRMClient;
     } catch (error) {
         throw error;

@@ -31,6 +31,34 @@ export const postRegisterCRMSupplierData = async (body: ICrmSuppliers, userId: s
 
 
 
+//CREAR MUCHOS PROVEEDORES DESDE EL EXCEL
+export const postManyCRMSuppliersData = async (body: ICrmSuppliers, userId: string): Promise<any> => {
+    const t = await sequelize.transaction();
+    try {
+        // Verificar si el proveedor ya existe
+        const existingCRMSupplier = await CrmSupplier.findOne({
+            where: { documentId: body.documentId },
+            transaction: t,
+        });
+        // Si el proveedor ya existe, devuelve null
+        if (existingCRMSupplier) {
+            await t.rollback();
+            return null;
+        }
+        // Si el proveedor no existe, crearlo en la base de datos
+        const newCRMSupplier = await CrmSupplier.create({
+            ...body,
+            entityUserId: userId,
+        }, { transaction: t });
+        await t.commit();
+        return newCRMSupplier;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA OBTENER TODOS LOS PROVEEDORES DE UN USER
 export const getCRMSuppliersData = async (userId: string): Promise<any> => {
     try {
