@@ -108,7 +108,7 @@ export const putBranchData = async (idBranch: string, body: IBranch, userId: str
             where: { userId: userId, nameBranch: body.nameBranch, id: { [Op.not]: idBranch } },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la sede porque ya existe una sede con el mismo nombre");
-        const [rowsUpdated] = await Branch.update(body, { where: { id: idBranch } });
+        const [rowsUpdated] = await Branch.update(body, { where: { userId: idBranch } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna sede para actualizar");
         const updatedbranch = await Branch.findByPk(idBranch);
         if (!updatedbranch) throw new ServiceError(404, "No se encontró ninguna sede actualizada");
@@ -123,9 +123,9 @@ export const putBranchData = async (idBranch: string, body: IBranch, userId: str
 //DATA PARA ELIMINAR UNA SEDE PERTENECIENTE AL USER
 export const deleteBranchData = async (idBranch: string): Promise<void> => {
     try {
-        const branchFound = await Branch.findOne({ where: { id: idBranch } });
+        const branchFound = await Branch.findOne({ where: { userId: idBranch } });
         if (!branchFound) throw new Error('Sede no encontrada');
-        await Branch.destroy({ where: { id: idBranch } });
+        await Branch.destroy({ where: { userId: idBranch } });
     } catch (error) {
         throw error;
     }

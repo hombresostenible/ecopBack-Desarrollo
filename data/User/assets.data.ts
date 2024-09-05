@@ -74,7 +74,7 @@ export const getAssetsData = async (userId: string): Promise<any> => {
 export const getAssetByIdData = async (idAssets: string): Promise<any> => {
     try {
         const assetFound = await Assets.findOne({
-            where: { id: idAssets },
+            where: { userId: idAssets },
             order: [ ['nameItem', 'ASC'] ]
         });
         return assetFound;
@@ -146,7 +146,7 @@ export const putAssetData = async (idAssets: string, body: IAssets, userId: stri
             where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idAssets } },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el equipo, máquina o herramienta porque ya existe una con ese mismo nombre");
-        const [rowsUpdated] = await Assets.update(body, { where: { id: idAssets } });
+        const [rowsUpdated] = await Assets.update(body, { where: { userId: idAssets } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún equipo, máquina o herramienta para actualizar");
         const updatedAsset = await Assets.findByPk(idAssets);
         if (!updatedAsset) throw new ServiceError(404, "No se encontró ningún equipo, máquina o herramienta para actualizar");
@@ -168,7 +168,7 @@ export const putUpdateManyAssetData = async (body: IAssets, userId: string): Pro
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el equipo, máquina o herramienta porque ya existe una con ese mismo nombre");
         // Actualizar el activo
-        const [rowsUpdated] = await Assets.update(body, { where: { id: body.id } });
+        const [rowsUpdated] = await Assets.update(body, { where: { userId: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún equipo, máquina o herramienta para actualizar");
         const updatedAsset = await Assets.findByPk(body.id);
         if (!updatedAsset) throw new ServiceError(404, "No se encontró ningún equipo, máquina o herramienta para actualizar");
@@ -185,7 +185,7 @@ export const putUpdateManyAssetData = async (body: IAssets, userId: string): Pro
 export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): Promise<IAssets | null> => {
     const t = await sequelize.transaction();
     try {
-        let whereClause: Record<string, any> = { id: idAssets };
+        let whereClause: Record<string, any> = { userId: idAssets };
         const existingAsset = await Assets.findOne({
             where: whereClause,
             transaction: t,
@@ -237,7 +237,7 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): 
 //AUMENTA UNIDADES DEL INVENTARIO DE UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const patchAddInventoryAssetData = async (idAssets: string, body: Partial<IAssets>, userId: string): Promise<IAssets | null> => {
     try {
-        let whereClause: Record<string, any> = { id: idAssets };
+        let whereClause: Record<string, any> = { userId: idAssets };
         whereClause.userId = userId;
         const existingAsset = await Assets.findOne({
             where: whereClause,
@@ -261,9 +261,9 @@ export const patchAddInventoryAssetData = async (idAssets: string, body: Partial
 //ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 export const deleteAssetData = async (idAssets: string): Promise<void> => {
     try {
-        const productFound = await Assets.findOne({ where: { id: idAssets } });
+        const productFound = await Assets.findOne({ where: { userId: idAssets } });
         if (!productFound) throw new Error("equipo, Máquina o herramienta no encontrada");
-        await Assets.destroy({ where: { id: idAssets } });
+        await Assets.destroy({ where: { userId: idAssets } });
     } catch (error) {
         throw error;
     }

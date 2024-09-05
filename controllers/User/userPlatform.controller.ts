@@ -14,23 +14,23 @@ const router = express.Router();
 //CREAR UN USUARIO DE PLATAFORMA
 router.post("/", authRequired, checkRoleCreateUserPlatform, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await postUserPlatformService(body, id);
+        const serviceLayerResponse = await postUserPlatformService(body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/userPlatform con {"branchId":"450df933-b11b-4279-b992-701cc16a15b5","name":"Mario","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"1110111222","logo":null,"userType":"User","typeRole":"Administrador","economicSector":null,"email":"mario_cr07@hotmail.es","password":"password","phone":"3001002020","department":"Tolima","city":"Ibagué","address":"Cra 10 # 3 - 20","isBlocked":true,"isAceptedConditions":true}
+}); // POST - http://localhost:3000/api/user-platform con {"branchId":"bc0a2090-669b-4568-9fe1-c70175a0d149","name":"Mario","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"1110111222","logo":null,"userType":"User","typeRole":"Administrador","economicSector":null,"email":"mario_cr07@hotmail.es","password":"password","phone":"3001002020","department":"Tolima","city":"Ibagué","codeDane":"73001","subregionCodeDane":"73","address":"Cra 10 # 3 - 20","isBlocked":true,"isAceptedConditions":true}
 
 
 
 //CONTROLLER PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getUserPlatformService(id);      
+        const { userId } = req.user;
+        const serviceLayerResponse = await getUserPlatformService(userId);      
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener los usuario del usuario" });
@@ -38,16 +38,16 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/userPlatform
+}); // GET - http://localhost:3000/api/user-platform
 
 
 
 //CONTROLLER PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA PERTENECIENTES A UNA SEDE DE UN USER
-router.get("/usersPlatform-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/users-platform-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getUserPlatformBranchService(idBranch, id);
+        const serviceLayerResponse = await getUserPlatformBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "No se pudieron obtener los usuarios por sede" });
@@ -55,16 +55,16 @@ router.get("/usersPlatform-branch/:idBranch", authRequired, async (req: Request,
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/userPlatform/usersPlatform-branch/:idBranch
+}); // GET - http://localhost:3000/api/user-platform/users-platform-branch/:idBranch
 
 
 
 //CONTROLLER PARA ACTUALIZAR EL PERFIL DE UN USUARIO DE PLATAFORMA
 router.put("/", authRequired, async (req: Request, res: Response): Promise<void> => {
     try {
+        const { userId } = req.user;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await putProfileUserPlatformService(body, id);
+        const serviceLayerResponse = await putProfileUserPlatformService(body, userId);
         if (!serviceLayerResponse) {
             res.status(401).json({ message: 'Usuario no encontrado' });
             return;
@@ -74,22 +74,22 @@ router.put("/", authRequired, async (req: Request, res: Response): Promise<void>
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/userPlatform
+}); // PUT - http://localhost:3000/api/user-platform
 
 
 
 //CONTROLLER PARA ELIMINAR UN USUARIO DE PLATAFORMA PERTENECIENTE A UN USER
 router.delete('/:idUserPlatform', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user
         const { idUserPlatform } = req.params;
-        const { id } = req.user
-        const serviceLayerResponse = await deleteUserPlatformService(idUserPlatform, id); 
+        const serviceLayerResponse = await deleteUserPlatformService(idUserPlatform, userId); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // DELETE - http://localhost:3000/api/userPlatform/:idUserPlatform
+}); // DELETE - http://localhost:3000/api/user-platform/:idUserPlatform
 
 
 export default router;

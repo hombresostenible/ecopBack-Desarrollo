@@ -18,9 +18,9 @@ const router = express.Router();
 //CONTROLLER PARA CREAR UN PROVEEDOR DEL USER
 router.post("/", authRequired, validateSchema(crmSupplierSchema), async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await postRegisterCRMSuppliersService(body, id);
+        const serviceLayerResponse = await postRegisterCRMSuppliersService(body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -33,9 +33,9 @@ router.post("/", authRequired, validateSchema(crmSupplierSchema), async (req: Re
 //CREAR MUCHOS PROVEEDORES DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRMSupplierSchemaType), async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
+        const { userId } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await postManyCRMSuppliersService(bodyArray, id);
+        const serviceLayerResponse = await postManyCRMSuppliersService(bodyArray, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -48,8 +48,8 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRM
 //CONTROLLER PARA OBTENER TODOS LOS PROVEEDORES DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getCRMSuppliersUserService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getCRMSuppliersUserService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -66,9 +66,9 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 //CONTROLLER PARA OBTENER UN PROVEEDOR POR ID PERTENECIENTE AL USER
 router.get("/:idCrmSupplier", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idCrmSupplier } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getCRMSupplierByIdService(idCrmSupplier, id);
+        const serviceLayerResponse = await getCRMSupplierByIdService(idCrmSupplier, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -81,9 +81,9 @@ router.get("/:idCrmSupplier", authRequired, async (req: Request, res: Response) 
 //CONTROLLER PARA OBTENER TODOS LOS PROVEEDORES POR SEDE DE USER
 router.get("/crm-supplier-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getCRMSuppliersBranchService(idBranch, id);
+        const serviceLayerResponse = await getCRMSuppliersBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -100,10 +100,10 @@ router.get("/crm-supplier-branch/:idBranch", authRequired, async (req: Request, 
 //CONTROLLER PARA ACTUALIZAR UN PROVEEDOR PERTENECIENTE AL USER
 router.put("/:idCrmSupplier", authRequired, validateSchema(crmSupplierSchema), async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idCrmSupplier } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await putCRMSupplierService(idCrmSupplier, body, id);
+        const serviceLayerResponse = await putCRMSupplierService(idCrmSupplier, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -116,9 +116,9 @@ router.put("/:idCrmSupplier", authRequired, validateSchema(crmSupplierSchema), a
 //CONTROLLER PARA ELIMINAR UN PROVEEDOR PERTENECIENTE AL USER
 router.delete('/:idCrmSupplier', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idCrmSupplier } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await deleteCRMSupplierService(idCrmSupplier, id); 
+        const serviceLayerResponse = await deleteCRMSupplierService(idCrmSupplier, userId); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

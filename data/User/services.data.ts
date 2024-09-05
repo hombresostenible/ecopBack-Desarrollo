@@ -106,7 +106,7 @@ export const getServiceBranchByIdData = async (idBranch: string): Promise<any> =
 //DATA PARA OBTENER UN SERVICIO POR ID PERTENECIENTE AL USER
 export const getServicesByIdData = async (idService: string): Promise<any> => {
     try {
-        const servicesFound = await Service.findOne({ where: { id: idService } });
+        const servicesFound = await Service.findOne({ where: { userId: idService } });
         return servicesFound;
     } catch (error) {
         throw error;
@@ -121,7 +121,7 @@ export const putServicesData = async (idService: string, body: IService, userId:
     try {
         transaction = await sequelize.transaction();
         const serviceExists = await Service.findOne({
-            where: { id: idService },
+            where: { userId: idService },
             transaction,
         });
         if (!serviceExists) throw new ServiceError(404, "No se encontró ningún servicio para actualizar");
@@ -130,7 +130,7 @@ export const putServicesData = async (idService: string, body: IService, userId:
             transaction,
         });
         if (existingServiceWithSameName) throw new ServiceError(403, "No es posible actualizar el servicio porque ya existe uno con ese mismo nombre");
-        const [rowsUpdated] = await Service.update(body, { where: { id: idService }, transaction });
+        const [rowsUpdated] = await Service.update(body, { where: { userId: idService }, transaction });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún servicio para actualizar");
 
         // Lógica para actualizar ServiceRawMaterial
@@ -159,7 +159,7 @@ export const putUpdateManyServiceData = async (body: IService, userId: string): 
             where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el servicio porque ya existe una con ese mismo nombre");
-        const [rowsUpdated] = await Service.update(body, { where: { id: body.id } });
+        const [rowsUpdated] = await Service.update(body, { where: { userId: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún servicio para actualizar");
         const updatedService = await Service.findByPk(body.id);
         if (!updatedService) throw new ServiceError(404, "No se encontró ningún servicio para actualizar");
@@ -198,7 +198,7 @@ export const deleteServicesData = async (idService: string): Promise<void> => {
 
         // Eliminar el servicio principal
         await Service.destroy({
-            where: { id: idService },
+            where: { userId: idService },
             transaction,
         });
         await transaction.commit();

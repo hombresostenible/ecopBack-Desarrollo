@@ -20,8 +20,8 @@ const router = express.Router();
 router.post("/", authRequired, checkRole, validateSchema(serviceSchemaZod), async (req: Request, res: Response) => {
     try {
         const body = req.body;
-        const { id, typeRole } = req.user;
-        const serviceLayerResponse = await postServicesService(body, id, typeRole);
+        const { userId, typeRole } = req.user;
+        const serviceLayerResponse = await postServicesService(body, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -35,8 +35,8 @@ router.post("/", authRequired, checkRole, validateSchema(serviceSchemaZod), asyn
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyServiceSchemaZod), async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, typeRole } = req.user;
-        const serviceLayerResponse = await postManyServicesService(bodyArray, id, typeRole);
+        const { userId, typeRole } = req.user;
+        const serviceLayerResponse = await postManyServicesService(bodyArray, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -49,8 +49,8 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manySer
 //CONTROLLER PARA OBTENER TODOS LOS SERVICIOS DEL USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-      const { id } = req.user;
-      const serviceLayerResponse = await getServicesUserService(id);      
+      const { userId } = req.user;
+      const serviceLayerResponse = await getServicesUserService(userId);      
       if (Array.isArray(serviceLayerResponse.result)) {
         res.status(200).json(serviceLayerResponse.result);
       } else {
@@ -68,8 +68,8 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 router.get("/:idService", authRequired, async (req: Request, res: Response) => {
     try {
         const { idService } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getServicesService(idService, id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getServicesService(idService, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -83,8 +83,8 @@ router.get("/:idService", authRequired, async (req: Request, res: Response) => {
 router.get("/services-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getServicesBranchService(idBranch, id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getServicesBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -103,8 +103,8 @@ router.put("/:idService", authRequired, checkRole, async (req: Request, res: Res
     try {
         const { idService } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await putServicesService(idService, body, id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await putServicesService(idService, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -118,8 +118,8 @@ router.put("/:idService", authRequired, checkRole, async (req: Request, res: Res
 router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res: Response) => {
     try {
         const bodyArray = req.body;
-        const { id, typeRole } = req.user;
-        const serviceLayerResponse = await putUpdateManyServiceService(bodyArray, id, typeRole);
+        const { userId, typeRole } = req.user;
+        const serviceLayerResponse = await putUpdateManyServiceService(bodyArray, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -132,8 +132,8 @@ router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res
 router.delete('/:idService', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { idService } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await deleteServicesService(idService, id); 
+        const { userId } = req.user;
+        const serviceLayerResponse = await deleteServicesService(idService, userId); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

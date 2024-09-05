@@ -98,7 +98,7 @@ export const getSearchEmailUserPasswordChangeData = async (email: string, token:
 //CAMBIO DE CONTRASEÑA USER O USUARIO DE PLATAFORMA
 export const putResetPasswordData = async (id: string): Promise<User | null> => {
     try {
-        const userFound = await User.findOne({ where: { id: id } });
+        const userFound = await User.findOne({ where: { userId: id } });
         if (!userFound) {
             throw new Error("usuario no encontrado")
         } else if (userFound.isBlocked === true) throw new Error("Tu cuenta se encuentra bloqueada, por favor realiza el proceso de desbloqueo");
@@ -114,7 +114,7 @@ export const putResetPasswordData = async (id: string): Promise<User | null> => 
 export const putProfileUserData = async (body: IUser, userId: string): Promise<IUser | null> => {
     const t = await sequelize.transaction();
     try {
-        const [rowsUpdated] = await User.update(body, { where: { id: userId }, transaction: t });
+        const [rowsUpdated] = await User.update(body, { where: { userId: userId }, transaction: t });
         if (rowsUpdated === 0) {
             await t.rollback();
             throw new ServiceError(403, "No se encontró ningún usuario para actualizar");
@@ -146,7 +146,7 @@ export const putProfileUserData = async (body: IUser, userId: string): Promise<I
 export const patchLogoUserData = async (idUser: string, body: Partial<IUser>): Promise<IUser | null> => {
     try {
         const existingUser = await User.findOne({
-            where: { id: idUser },
+            where: { userId: idUser },
         });
         if (!existingUser) throw new ServiceError(404, "No se encontró el usuario");
         if (existingUser && body.logo) {
@@ -190,7 +190,7 @@ export const patchDeleteLogoUserData = async (userId: string) => {
 
         // Volver a buscar el usuario actualizado (opcional, dependiendo de cómo se quiera manejar el flujo)
         const existingUser = await User.findOne({
-            where: { id: userId }
+            where: { userId: userId }
         });
         if (!existingUser) throw new ServiceError(404, "No se encontró el usuario");
 
@@ -207,7 +207,7 @@ export const patchDeleteLogoUserData = async (userId: string) => {
 //DESBLOQUEO DE CUENTA Y CAMBIO DE CONTRASEÑA USER
 export const findUserBlockedData = async (idUser: string): Promise<User | null> => {
     try {
-        const userFound = await User.findOne({ where: { id: idUser } });
+        const userFound = await User.findOne({ where: { userId: idUser } });
         if (!userFound) throw new Error("usuario no encontrado");
         return userFound;
     } catch (error) {
@@ -221,7 +221,7 @@ export const findUserBlockedData = async (idUser: string): Promise<User | null> 
 export const patchApplicationPasswordData = async (idUser: string, body: Partial<IUser>): Promise<IUser | null> => {
     try {
         const existingUser = await User.findOne({
-            where: { id: idUser },
+            where: { userId: idUser },
         });
         if (!existingUser) throw new ServiceError(404, "No se encontró el usuario");
         if (body.emailProvider) existingUser.emailProvider = body.emailProvider;

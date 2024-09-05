@@ -135,7 +135,7 @@ export const getProductsBranchByIdData = async (idBranch: string): Promise<any> 
 //DATA PARA OBTENER UN PRODUCTO POR ID PERTENECIENTE AL USER
 export const getProductByIdData = async (idProduct: string): Promise<any> => {
     try {
-        const productFound = await Product.findOne({where: { id: idProduct } });
+        const productFound = await Product.findOne({where: { userId: idProduct } });
         return productFound;
     } catch (error) {
         throw error;
@@ -188,7 +188,7 @@ export const putProductData = async (idProduct: string, body: IProduct, userId: 
             where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idProduct } },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el producto porque ya existe uno con ese mismo nombre");
-        const [rowsUpdated] = await Product.update(body, { where: { id: idProduct } });
+        const [rowsUpdated] = await Product.update(body, { where: { userId: idProduct } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún producto para actualizar");
         const updatedProduct = await Product.findByPk(idProduct);
         if (!updatedProduct) throw new ServiceError(404, "No se encontró ningún producto para actualizar");
@@ -209,7 +209,7 @@ export const putUpdateManyProductData = async (body: IProduct, userId: string): 
             where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el producto porque ya existe un con ese mismo nombre");
-        const [rowsUpdated] = await Product.update(body, { where: { id: body.id } });
+        const [rowsUpdated] = await Product.update(body, { where: { userId: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún producto para actualizar");
         const updatedProduct = await Product.findByPk(body.id);
         if (!updatedProduct) throw new ServiceError(404, "No se encontró ningún producto para actualizar");
@@ -226,7 +226,7 @@ export const putUpdateManyProductData = async (body: IProduct, userId: string): 
 export const patchProductData = async (idProduct: string, body: Partial<IProduct>): Promise<IProduct | null> => {
     const t = await sequelize.transaction();
     try {
-        let whereClause: Record<string, any> = { id: idProduct };
+        let whereClause: Record<string, any> = { userId: idProduct };
         const existingProduct = await Product.findOne({
             where: whereClause,
             transaction: t,
@@ -278,7 +278,7 @@ export const patchProductData = async (idProduct: string, body: Partial<IProduct
 //AUMENTA UNIDADES DEL INVENTARIO DE UN PRODUCTO DEL USER
 export const patchAddInventoryProductData = async (idProduct: string, body: Partial<IProduct>, userId: string): Promise<IProduct | null> => {
     try {
-        let whereClause: Record<string, any> = { id: idProduct };
+        let whereClause: Record<string, any> = { userId: idProduct };
         whereClause.userId = userId;
         const existingProduct = await Product.findOne({
             where: whereClause,
@@ -302,9 +302,9 @@ export const patchAddInventoryProductData = async (idProduct: string, body: Part
 //DATA PARA ELIMINAR UN PRODUCTO PERTENECIENTE AL USER
 export const deleteProductData = async (idProduct: string): Promise<void> => {
     try {
-        const productFound = await Product.findOne({ where: { id: idProduct } });
+        const productFound = await Product.findOne({ where: { userId: idProduct } });
         if (!productFound) throw new Error("Producto no encontrado");
-        await Product.destroy({ where: { id: idProduct } });
+        await Product.destroy({ where: { userId: idProduct } });
     } catch (error) {
         throw error;
     }

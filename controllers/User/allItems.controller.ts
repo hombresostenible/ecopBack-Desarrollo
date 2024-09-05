@@ -11,9 +11,9 @@ const router = express.Router();
 //BUSCA TODOS LOS ARTICULOS DEL USUARIO EN TODAS LAS TABLAS
 router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getAllItemsByBranchService(idBranch, id);
+        const serviceLayerResponse = await getAllItemsByBranchService(idBranch, userId);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;
@@ -26,9 +26,9 @@ router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
 //BUSCAR UN ITEM DE ASSETS, MERCHANDISE, PRODUCT O RAWMATERIAL POR CODIGO DE BARRAS
 router.get("/bar-code/:barCode", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
+        const { userId } = req.user;
         const { barCode } = req.params;
-        const serviceLayerResponse = await getItemBarCodeService(id, barCode);
+        const serviceLayerResponse = await getItemBarCodeService(userId, barCode);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;
@@ -41,12 +41,12 @@ router.get("/bar-code/:barCode", authRequired, async (req: Request, res: Respons
 //BUSCA UN ARTICULO POR NOMBRE EN TODAS LAS TABLAS
 router.get("/name-item/query?", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const nameItem = req.query.nameItem as string;
         if (!nameItem) {
             return res.status(400).json({ error: 'El parámetro nameItem es requerido.' });
         }
-        const { id } = req.user;
-        const serviceLayerResponse = await getNameItemService(nameItem, id);
+        const serviceLayerResponse = await getNameItemService(nameItem, userId);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;

@@ -119,7 +119,7 @@ export const getMerchandiseBranchByIdData = async (idBranch: string): Promise<an
 //DATA PARA OBTENER UNA MERCANCIA POR ID PERTENECIENTE AL USER
 export const getMerchandiseByIdData = async (idMerchandise: string): Promise<any> => {
     try {
-        const merchandiseFound = await Merchandise.findOne({ where: { id: idMerchandise } });
+        const merchandiseFound = await Merchandise.findOne({ where: { userId: idMerchandise } });
         return merchandiseFound;
     } catch (error) {
         throw error;
@@ -172,7 +172,7 @@ export const putMerchandiseData = async (idMerchandise: string, body: IMerchandi
             where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idMerchandise } },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la mercancía porque ya existe uno con ese mismo nombre");
-        const [rowsUpdated] = await Merchandise.update(body, { where: { id: idMerchandise } });
+        const [rowsUpdated] = await Merchandise.update(body, { where: { userId: idMerchandise } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna mercancía para actualizar");
         const updatedMerchandise = await Merchandise.findByPk(idMerchandise);
         if (!updatedMerchandise) throw new ServiceError(404, "No se encontró ninguna mercancía para actualizar");
@@ -192,7 +192,7 @@ export const putUpdateManyMerchandiseData = async (body: IMerchandise, userId: s
             where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la mercancía porque ya existe una con ese mismo nombre");
-        const [rowsUpdated] = await Merchandise.update(body, { where: { id: body.id } });
+        const [rowsUpdated] = await Merchandise.update(body, { where: { userId: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna mercancía para actualizar");
         const updatedMachinery = await Merchandise.findByPk(body.id);
         if (!updatedMachinery) throw new ServiceError(404, "No se encontró ninguna mercancía para actualizar");
@@ -209,7 +209,7 @@ export const putUpdateManyMerchandiseData = async (body: IMerchandise, userId: s
 export const patchMerchandiseData = async (idMerchandise: string, body: Partial<IMerchandise>): Promise<IMerchandise | null> => {
     const t = await sequelize.transaction();
     try {
-        let whereClause: Record<string, any> = { id: idMerchandise };
+        let whereClause: Record<string, any> = { userId: idMerchandise };
         const existingMerchandise = await Merchandise.findOne({
             where: whereClause,
             transaction: t,
@@ -261,7 +261,7 @@ export const patchMerchandiseData = async (idMerchandise: string, body: Partial<
 //AUMENTA UNIDADES DEL INVENTARIO DE UNA MERCANCIA DEL USER
 export const patchAddInventoryMerchandiseData = async (idMerchandise: string, body: Partial<IMerchandise>, userId: string): Promise<IMerchandise | null> => {
     try {
-        let whereClause: Record<string, any> = { id: idMerchandise };
+        let whereClause: Record<string, any> = { userId: idMerchandise };
         whereClause.userId = userId;
         const existingMerchandise = await Merchandise.findOne({
             where: whereClause,
@@ -285,9 +285,9 @@ export const patchAddInventoryMerchandiseData = async (idMerchandise: string, bo
 //DATA PARA ELIMINAR UNA MERCANCIA PERTENECIENTE AL USER
 export const deleteMerchandiseData = async (idMerchandise: string): Promise<void> => {
     try {
-        const merchandiseFound = await Merchandise.findOne({ where: { id: idMerchandise } });
+        const merchandiseFound = await Merchandise.findOne({ where: { userId: idMerchandise } });
         if (!merchandiseFound) throw new Error("Maercancía no encontrada");
-        await Merchandise.destroy({ where: { id: idMerchandise } });
+        await Merchandise.destroy({ where: { userId: idMerchandise } });
     } catch (error) {
         throw error;
     }

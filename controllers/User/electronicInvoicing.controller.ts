@@ -11,9 +11,9 @@ const router = express.Router();
 //CONTROLLER PARA CREAR LA FACTURA ELECTRÓNICA
 router.post("/", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await postElectronicInvoicingService(body, id);
+        const serviceLayerResponse = await postElectronicInvoicingService(body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -39,9 +39,9 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 //CONTROLLER PARA OBTENER UNA FACTURA ELECTRONICA POR ID
 router.get("/:idElectronicInvoicing", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idElectronicInvoicing } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getElectronicInvoicingByIdService(idElectronicInvoicing, id);
+        const serviceLayerResponse = await getElectronicInvoicingByIdService(idElectronicInvoicing, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;

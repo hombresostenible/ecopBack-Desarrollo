@@ -39,7 +39,7 @@ export const getSalesPerPeriodBranchData = async (idBranch: string, userId: stri
 export const getPermissionSalesBranchData = async (idBranch: string): Promise<any> => {
     try {
         const branch = await Branch.findAll({ 
-            where: { id: idBranch },
+            where: { userId: idBranch },
         });
         return branch;
     } catch (error) {

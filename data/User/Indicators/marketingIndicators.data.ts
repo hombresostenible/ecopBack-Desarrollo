@@ -52,7 +52,7 @@ export const getCustomerAcqBranchByIdData = async (idBranch: string): Promise<an
 //DATA PARA OBTENER UN CUSTOMERACQUISITION POR ID PERTENECIENTE AL USER
 export const getCustomerAcqByIdData = async (idAccountsBook: string): Promise<any> => {
     try {
-        const customerAcquisitionFound = await SalesFunnelCustomerAcq.findOne({ where: { id: idAccountsBook } });
+        const customerAcquisitionFound = await SalesFunnelCustomerAcq.findOne({ where: { userId: idAccountsBook } });
         return customerAcquisitionFound;
     } catch (error) {
         throw error;
@@ -62,11 +62,11 @@ export const getCustomerAcqByIdData = async (idAccountsBook: string): Promise<an
 
 
 //DATA PARA ACTUALIZAR UN CUSTOMERACQUISITION PERTENECIENTE AL USER
-export const putSalesFunnelCustomerAcqData = async (id: string, body: ISalesFunnelCustomerAcq): Promise<ISalesFunnelCustomerAcq | null> => {
+export const putSalesFunnelCustomerAcqData = async (userId: string, body: ISalesFunnelCustomerAcq): Promise<ISalesFunnelCustomerAcq | null> => {
     try {
-        const [rowsUpdated] = await SalesFunnelCustomerAcq.update(body, { where: { id } });
+        const [rowsUpdated] = await SalesFunnelCustomerAcq.update(body, { where: { userId } });
         if (rowsUpdated === 0) return null;
-        const updatedSalesFunnelCustomerAcq = await SalesFunnelCustomerAcq.findByPk(id);
+        const updatedSalesFunnelCustomerAcq = await SalesFunnelCustomerAcq.findByPk(userId);
         if (!updatedSalesFunnelCustomerAcq) return null;
         return updatedSalesFunnelCustomerAcq;
     } catch (error) {
@@ -79,9 +79,9 @@ export const putSalesFunnelCustomerAcqData = async (id: string, body: ISalesFunn
 //CONTROLLER PARA ELIMINAR UN REGISTRO DEL CUSTOMERACQUISITION PERTENECIENTE AL USER
 export const deleteSalesFunnelCustomerAcqData = async (idCustomerAcquisition: string): Promise<void> => {
     try {
-        const salesFunnelCustomerAcqFound = await SalesFunnelCustomerAcq.findOne({ where: { id: idCustomerAcquisition } });
+        const salesFunnelCustomerAcqFound = await SalesFunnelCustomerAcq.findOne({ where: { userId: idCustomerAcquisition } });
         if (!salesFunnelCustomerAcqFound) throw new Error('CUSTOMERACQUISITION no encontrado');
-        await SalesFunnelCustomerAcq.destroy({ where: { id: idCustomerAcquisition } });
+        await SalesFunnelCustomerAcq.destroy({ where: { userId: idCustomerAcquisition } });
     } catch (error) {
         throw error;
     }
@@ -144,7 +144,7 @@ export const getCustomerRetBranchByIdData = async (idBranch: string): Promise<an
 //DATA PARA OBTENER UN CUSTOMERRETENTION POR ID PERTENECIENTE AL USER
 export const getCustomerRetByIdData = async (idAccountsBook: string): Promise<any> => {
     try {
-        const customerRetentionFound = await SalesFunnelCustomerRet.findOne({ where: { id: idAccountsBook } });
+        const customerRetentionFound = await SalesFunnelCustomerRet.findOne({ where: { userId: idAccountsBook } });
         return customerRetentionFound;
     } catch (error) {
         throw error;
@@ -156,7 +156,7 @@ export const getCustomerRetByIdData = async (idAccountsBook: string): Promise<an
 //SERVICE PARA ACTUALIZAR UN CUSTOMERRETENTION PERTENECIENTE AL USER
 export const putSalesFunnelCustomerRetData = async (idCustomerRetention: string, body: ISalesFunnelCustomerRet): Promise<ISalesFunnelCustomerRet | null> => {
     try {
-        const [rowsUpdated] = await SalesFunnelCustomerRet.update(body, { where: { id: idCustomerRetention } });
+        const [rowsUpdated] = await SalesFunnelCustomerRet.update(body, { where: { userId: idCustomerRetention } });
         if (rowsUpdated === 0) return null;
         const updatedSalesFunnelCustomerRet = await SalesFunnelCustomerRet.findByPk(idCustomerRetention);
         if (!updatedSalesFunnelCustomerRet) return null;
@@ -171,9 +171,9 @@ export const putSalesFunnelCustomerRetData = async (idCustomerRetention: string,
 //DATA PARA ELIMINAR UN REGISTRO DEL CUSTOMERRETENTION PERTENECIENTE AL USER
 export const deleteSalesFunnelCustomerRetData = async (idCustomerRetention: string): Promise<void> => {
     try {
-        const salesFunnelCustomerRetFound = await SalesFunnelCustomerRet.findOne({ where: { id: idCustomerRetention } });
+        const salesFunnelCustomerRetFound = await SalesFunnelCustomerRet.findOne({ where: { userId: idCustomerRetention } });
         if (!salesFunnelCustomerRetFound) throw new Error('CUSTOMERRETENTION no encontrada');
-        await SalesFunnelCustomerRet.destroy({ where: { id: idCustomerRetention } });
+        await SalesFunnelCustomerRet.destroy({ where: { userId: idCustomerRetention } });
     } catch (error) {
         throw error;
     }
@@ -236,7 +236,7 @@ export const getCustomerDigitalBranchByIdData = async (idBranch: string): Promis
 //DATA PARA OBTENER UN CUSTOMERACQUISITION POR ID PERTENECIENTE AL USER
 export const getCustomerDigitalByIdData = async (idAccountsBook: string): Promise<any> => {
     try {
-        const customerDigitalFound = await SalesFunnelSalesDigital.findOne({ where: { id: idAccountsBook } });
+        const customerDigitalFound = await SalesFunnelSalesDigital.findOne({ where: { userId: idAccountsBook } });
         return customerDigitalFound;
     } catch (error) {
         throw error;
@@ -248,7 +248,7 @@ export const getCustomerDigitalByIdData = async (idAccountsBook: string): Promis
 //DATA PARA ACTUALIZAR UN CUSTOMERDIGITAL PERTENECIENTE AL USER
 export const putSalesFunnelSalesDigitalData = async (idCustomerDigital: string, body: ISalesFunnelSalesDigital): Promise<ISalesFunnelSalesDigital | null> => {
     try {
-        const [rowsUpdated] = await SalesFunnelSalesDigital.update(body, { where: { id: idCustomerDigital } });
+        const [rowsUpdated] = await SalesFunnelSalesDigital.update(body, { where: { userId: idCustomerDigital } });
         if (rowsUpdated === 0) return null;
         const updatedSalesFunnelSalesDigital = await SalesFunnelSalesDigital.findByPk(idCustomerDigital);
         if (!updatedSalesFunnelSalesDigital) return null;
@@ -263,9 +263,9 @@ export const putSalesFunnelSalesDigitalData = async (idCustomerDigital: string, 
 //DATA PARA ELIMINAR UN REGISTRO DEL CUSTOMERDIGITAL PERTENECIENTE AL USER
 export const deleteSalesFunnelSalesDigitalData = async (idCustomerDigital: string): Promise<void> => {
     try {
-        const salesFunnelSalesDigitalFound = await SalesFunnelSalesDigital.findOne({ where: { id: idCustomerDigital } });
+        const salesFunnelSalesDigitalFound = await SalesFunnelSalesDigital.findOne({ where: { userId: idCustomerDigital } });
         if (!salesFunnelSalesDigitalFound) throw new Error('CUSTOMERDIGITAL no encontrada');
-        await SalesFunnelSalesDigital.destroy({ where: { id: idCustomerDigital } });
+        await SalesFunnelSalesDigital.destroy({ where: { userId: idCustomerDigital } });
     } catch (error) {
         throw error;
     }

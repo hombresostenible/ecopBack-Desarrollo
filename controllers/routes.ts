@@ -25,24 +25,23 @@ function routerApi(app: any) {
     app.use("/api/appointment", appointmentControllers);
     app.use("/api/newsletter", newsletterControllers);
     app.use("/api/contact-us", contactUsControllers);
-    app.use("/api/accountsBook", accountsBookControllers);
+    app.use("/api/accounts-book", accountsBookControllers);
     app.use("/api/asset", assetsControllers);
     app.use("/api/branch", branchControllers);
     app.use("/api/crm-client", crmClientControllers);
     app.use("/api/crm-supplier", crmSupplierControllers);
-    app.use("/api/electronicInvoicing", electronicInvoicingControllers);
-    app.use("/api/electronicInvoicing", invoicingPOSControllers);
+    app.use("/api/electronic-invoicing", electronicInvoicingControllers);
+    app.use("/api/invoicing-pos", invoicingPOSControllers);
     app.use("/api/merchandise", merchandiseControllers);
     app.use("/api/product", productControllers);
-    app.use("/api/rawMaterial", rawMaterialControllers);
+    app.use("/api/raw-material", rawMaterialControllers);
     app.use("/api/service", serviceControllers);
     app.use("/api/user", userControllers);
-    app.use("/api/userPlatform", userPlatformControllers);
+    app.use("/api/user-platform", userPlatformControllers);
     app.use("/api/all-items", allItemsControllers);
-
     app.use("/api/financial-indicator", financialIndicatorsControllers);
-    app.use("/api/sustainabilityIndicator", sustainabilityIndicatorsControllers);
-    app.use("/api/marketingIndicator", marketingIndicatorsControllers);
+    app.use("/api/sustainability-indicator", sustainabilityIndicatorsControllers);
+    app.use("/api/marketing-indicator", marketingIndicatorsControllers);
 };
 
 export { routerApi };

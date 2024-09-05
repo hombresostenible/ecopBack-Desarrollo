@@ -90,7 +90,7 @@ export const getConsultAdAppointmentData = async (appointmentId: string): Promis
 export const getIdAppointmentData = async (appointmentId: string): Promise<any> => {
     try {
         const appointments = await Appointment.findOne({
-            where: { id: appointmentId },
+            where: { userId: appointmentId },
         });
         return appointments;
     } catch (error) {
@@ -104,7 +104,7 @@ export const getIdAppointmentData = async (appointmentId: string): Promise<any> 
 export const putAppointmentData = async (appointmentId: string, body: IAppointment): Promise<IAppointment | null> => {
     const t = await sequelize.transaction();
     try {
-        const [rowsUpdated] = await Appointment.update(body, { where: { id: appointmentId }, transaction: t });
+        const [rowsUpdated] = await Appointment.update(body, { where: { userId: appointmentId }, transaction: t });
 
         if (rowsUpdated === 0) {
             await t.rollback();
@@ -156,9 +156,9 @@ export const putAppointmentData = async (appointmentId: string, body: IAppointme
 //DATA PARA ELIMINAR UN PRODUCTO PERTENECIENTE AL USER
 export const deleteAppointmentData = async (appointmentId: string): Promise<void> => {
     try {
-        const appointmentFound = await Appointment.findOne({ where: { id: appointmentId } });
+        const appointmentFound = await Appointment.findOne({ where: { userId: appointmentId } });
         if (!appointmentFound) throw new Error("Cita no encontrada");
-        await Appointment.destroy({ where: { id: appointmentId } });
+        await Appointment.destroy({ where: { userId: appointmentId } });
     } catch (error) {
         throw error;
     }

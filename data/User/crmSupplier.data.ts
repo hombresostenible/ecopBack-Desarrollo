@@ -91,7 +91,7 @@ export const getCRMSuppliersBranchData = async (idBranch: string, userId: string
 export const getCRMSupplierByIdData = async (idCrmSupplier: string, userId: string): Promise<any> => {
     try {
         const cRMSupplierFound = await CrmSupplier.findOne({
-            where: { id: idCrmSupplier, entityUserId: userId }
+            where: { userId: idCrmSupplier, entityUserId: userId }
         });
         return cRMSupplierFound;
     } catch (error) {
@@ -109,7 +109,7 @@ export const putCRMSupplierData = async (idCrmSupplier: string, body: ICrmSuppli
         });
         if (existingWithSameId) throw new ServiceError(403, "No es posible actualizar el proveedor porque ya existe uno con ese mismo número de identidad");
         if (body.entityUserId !== userId) throw new ServiceError(403, "No tienes permiso para actualizar el proveedor");
-        const [rowsUpdated] = await CrmSupplier.update(body, { where: { id: idCrmSupplier } });
+        const [rowsUpdated] = await CrmSupplier.update(body, { where: { userId: idCrmSupplier } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún proveedor para actualizar");
         const updatedCRMClient = await CrmSupplier.findByPk(idCrmSupplier);
         if (!updatedCRMClient) throw new ServiceError(404, "No se encontró ningún proveedor para actualizar");
@@ -125,10 +125,10 @@ export const putCRMSupplierData = async (idCrmSupplier: string, body: ICrmSuppli
 export const deleteCRMSupplierData = async (idCrmSupplier: string, userId: string): Promise<void> => {
     try {
         const cRMSupplierFound = await CrmSupplier.findOne({
-            where: { id: idCrmSupplier, entityUserId: userId }
+            where: { userId: idCrmSupplier, entityUserId: userId }
         });
         if (!cRMSupplierFound) throw new Error("Proveedor no encontrado");
-        await CrmSupplier.destroy({ where: { id: idCrmSupplier } });
+        await CrmSupplier.destroy({ where: { userId: idCrmSupplier } });
     } catch (error) {
         throw error;
     }

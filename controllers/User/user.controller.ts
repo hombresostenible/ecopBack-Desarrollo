@@ -81,9 +81,9 @@ router.put("/reset-password/:idUser/:passwordResetCode", async (req: Request, re
 //ACTUALIZAR EL PERFIL DEL USER
 router.put("/profile-user", authRequired, async (req: Request, res: Response): Promise<void> => {
     try {
+        const { userId } = req.user;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await putProfileUserService(body, id);
+        const serviceLayerResponse = await putProfileUserService(body, userId);
         if (!serviceLayerResponse) {
             res.status(401).json({ message: 'Usuario no encontrado' });
             return;
@@ -100,9 +100,9 @@ router.put("/profile-user", authRequired, async (req: Request, res: Response): P
 //SUBIR LA IMAGEN DE PERFIL DEL USER
 router.patch("/logo-user", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await patchLogoUserService(id, body);
+        const serviceLayerResponse = await patchLogoUserService(userId, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -115,8 +115,8 @@ router.patch("/logo-user", authRequired, async (req: Request, res: Response) => 
 //ELIMINAR LA IMAGEN DE PERFIL DEL USER
 router.patch("/delete-logo", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await patchDeleteLogoUserService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await patchDeleteLogoUserService(userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -148,9 +148,9 @@ router.put("/reset-password-user-blocked/:idUser", async (req: Request, res: Res
 //ACTUALIZAR CONTRASEÑA DE APLICACIONES
 router.patch("/update-application-password", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
+        const { userId } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await patchApplicationPasswordService(id, body);
+        const serviceLayerResponse = await patchApplicationPasswordService(userId, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;

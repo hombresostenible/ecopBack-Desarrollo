@@ -281,7 +281,7 @@ export const getAccountsBooksExpesesData = async (userId: string): Promise<any> 
 //Chequea si el registro del libro diario pertenece al User
 export const getAccountsBookByIdData = async (idAccountsBook: string): Promise<any> => {
     try {
-        const transactionFound = await AccountsBook.findOne({ where: { id: idAccountsBook } });
+        const transactionFound = await AccountsBook.findOne({ where: { userId: idAccountsBook } });
         return transactionFound;
     } catch (error) {
         throw error;
@@ -294,7 +294,7 @@ export const getAccountsBookByIdData = async (idAccountsBook: string): Promise<a
 export const getAccountsBookByBranchData = async (idAccountsBook: string): Promise<any> => {
     try {
         const accountsBookFound = await AccountsBook.findOne({
-            where: { id: idAccountsBook }
+            where: { userId: idAccountsBook }
         });
         return accountsBookFound;
     } catch (error) {
@@ -307,7 +307,7 @@ export const getAccountsBookByBranchData = async (idAccountsBook: string): Promi
 //ACTUALIZA UN REGISTRO EN EL LIBRO DIARIO PERTENECIENTE AL USER
 export const putAccountsBookData = async (idAccountsBook: string, body: IAccountsBook): Promise<IAccountsBook | null> => {
     try {
-        const [rowsUpdated] = await AccountsBook.update(body, { where: { id: idAccountsBook } });
+        const [rowsUpdated] = await AccountsBook.update(body, { where: { userId: idAccountsBook } });
         if (rowsUpdated === 0) return null;
         const updatedTransaction = await AccountsBook.findByPk(idAccountsBook);
         if (!updatedTransaction) return null;
@@ -321,7 +321,7 @@ export const putAccountsBookData = async (idAccountsBook: string, body: IAccount
 
 export const patchIncomesNotApprovedData = async (idAssets: string, userId: string): Promise<IAccountsBook | null> => {
     try {
-        let whereClause: Record<string, any> = { id: idAssets };
+        let whereClause: Record<string, any> = { userId: idAssets };
         whereClause.userId = userId;
         const existingIncomesNotApproved = await AccountsBook.findOne({
             where: whereClause,
@@ -345,7 +345,7 @@ export const patchIncomesNotApprovedData = async (idAssets: string, userId: stri
 export const deleteAccountsBookData = async (idAccountsBook: string): Promise<void> => {
     const transaction = await sequelize.transaction();
     try {
-        const transactionFound = await AccountsBook.findOne({ where: { id: idAccountsBook }, transaction });
+        const transactionFound = await AccountsBook.findOne({ where: { userId: idAccountsBook }, transaction });
         if (!transactionFound) throw new Error('Registro del libro diario no encontrado');
         // Iteración y procesamiento de itemsSold
         if (transactionFound.itemsSold && transactionFound.itemsSold.length > 0) {
@@ -377,7 +377,7 @@ export const deleteAccountsBookData = async (idAccountsBook: string): Promise<vo
         await deleteRelatedRecords(idAccountsBook, transaction);
 
         // Eliminación del registro del libro diario
-        await AccountsBook.destroy({ where: { id: idAccountsBook }, transaction });
+        await AccountsBook.destroy({ where: { userId: idAccountsBook }, transaction });
 
         await transaction.commit();
     } catch (error) {
@@ -389,7 +389,7 @@ export const deleteAccountsBookData = async (idAccountsBook: string): Promise<vo
 // Función para procesar mercancías
 const processMerchandise = async (transactionFound: any, itemSold: any, transaction: any) => {
     const merchandiseFound = await Merchandise.findOne({
-        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        where: { userId: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
     if (!merchandiseFound) throw new ServiceError(400, "No se encontró la mercancía de este registro");
@@ -405,7 +405,7 @@ const processMerchandise = async (transactionFound: any, itemSold: any, transact
 // Función para procesar productos
 const processProduct = async (transactionFound: any, itemSold: any, transaction: any) => {
     const productFound = await Product.findOne({
-        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        where: { userId: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
     if (!productFound) throw new ServiceError(400, "No se encontró el producto de este registro");
@@ -421,7 +421,7 @@ const processProduct = async (transactionFound: any, itemSold: any, transaction:
 // Función para procesar materias primas
 const processRawMaterial = async (transactionFound: any, itemSold: any, transaction: any) => {
     const rawMaterialFound = await RawMaterial.findOne({
-        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        where: { userId: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
     if (!rawMaterialFound) throw new ServiceError(400, "No se encontró la materia prima de este registro");
@@ -437,7 +437,7 @@ const processRawMaterial = async (transactionFound: any, itemSold: any, transact
 // Función para procesar servicios
 const processService = async (transactionFound: any, itemSold: any, transaction: any) => {
     const serviceFound = await Service.findOne({
-        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        where: { userId: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
     if (!serviceFound) throw new ServiceError(400, "No se encontró el servicio de este registro");

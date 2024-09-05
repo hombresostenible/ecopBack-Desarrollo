@@ -41,7 +41,7 @@ export const postUserPlatformData = async (body: IUserPlatform, userId: string):
                 unlockCode: generateCodes(),
                 isAceptedConditions: body.isAceptedConditions,
                 branchId: body.branchId,
-                userId: body.userId,
+                userId: userId,
             });
             try {
                 await newUser.save();
@@ -58,6 +58,7 @@ export const postUserPlatformData = async (body: IUserPlatform, userId: string):
             }
         }
     } catch (error) {
+        console.log('Error: ', error)
         await t.rollback();
         throw error;
     }
@@ -101,7 +102,7 @@ export const putProfileUserPlatformData = async (body: IUserPlatform, userId: st
             await t.rollback();
             throw new ServiceError(400, "Datos del usuario incompletos o inválidos");
         }
-        const [rowsUpdated] = await UserPlatform.update(body, { where: { id: body.id }, transaction: t });        
+        const [rowsUpdated] = await UserPlatform.update(body, { where: { userId: body.id }, transaction: t });        
         if (rowsUpdated === 0) {
             await t.rollback();
             throw new ServiceError(403, "No se encontró ningún usuario para actualizar");
@@ -123,7 +124,7 @@ export const putProfileUserPlatformData = async (body: IUserPlatform, userId: st
 //DATA PARA OBTENER POR ID UN USUARIO DE PLATAFORMA PERTENECIENTE A UN USER
 export const getUserPlatformByIdData = async (idUserPlatform: string, userId: string): Promise<any> => {
     try {
-        const userPlatformFound = await UserPlatform.findOne({ where: { id: idUserPlatform, userId: userId } });
+        const userPlatformFound = await UserPlatform.findOne({ where: { userId: idUserPlatform } });
         return userPlatformFound;
     } catch (error) {
         throw error;
@@ -135,9 +136,9 @@ export const getUserPlatformByIdData = async (idUserPlatform: string, userId: st
 //DATA PARA ELIMINAR UN USUARIO DE PLATAFORMA PERTENECIENTE A UN USER
 export const deleteUserPlatformData = async (idUserPlatform: string): Promise<void> => {
     try {
-        const userPlatformFound = await UserPlatform.findOne({ where: { id: idUserPlatform } });
+        const userPlatformFound = await UserPlatform.findOne({ where: { userId: idUserPlatform } });
         if (!userPlatformFound) throw new Error("Usuario de platafora no encontrado");
-        await UserPlatform.destroy({ where: { id: idUserPlatform } });
+        await UserPlatform.destroy({ where: { userId: idUserPlatform } });
     } catch (error) {
         throw error;
     };

@@ -126,7 +126,7 @@ export const putSustainabilityData = async (idSustainability: string, body: ISus
             where: { userId: userId, id: idSustainability },
         });
         if (!existingSustainability) throw new ServiceError(403, "No se encontró el registro");
-        const [rowsUpdated] = await Sustainability.update(body, { where: { id: idSustainability } });
+        const [rowsUpdated] = await Sustainability.update(body, { where: { userId: idSustainability } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún registro para actualizar");
         const updatedProduct = await Sustainability.findByPk(idSustainability);
         if (!updatedProduct) throw new ServiceError(404, "No se encontró ningún registro para actualizar");
@@ -145,7 +145,7 @@ export const deleteSustainabilityData = async (idSustainability: string, userId:
             where: { id: idSustainability, userId: userId }
         });
         if (!sustainabilityFound) throw new Error("Registro no encontrado");
-        await Sustainability.destroy({ where: { id: idSustainability } });
+        await Sustainability.destroy({ where: { userId: idSustainability } });
     } catch (error) {
         throw error;
     }

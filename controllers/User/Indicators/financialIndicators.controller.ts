@@ -55,8 +55,8 @@ const router = express.Router();
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE VENTAS DEL USUARIO
 router.get("/sales-per-period", authRequired,async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getSalesPerPeriodService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getSalesPerPeriodService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -73,9 +73,9 @@ router.get("/sales-per-period", authRequired,async (req: Request, res: Response)
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE VENTAS DE UNA SEDE DEL USUARIO
 router.get("/sales-per-period/:idBranch", authRequired,async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getSalesPerPeriodBranchService(idBranch, id);
+        const serviceLayerResponse = await getSalesPerPeriodBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -92,8 +92,8 @@ router.get("/sales-per-period/:idBranch", authRequired,async (req: Request, res:
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE GASTOS DEL USUARIO
 router.get("/expenses-per-period", authRequired,async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getExpensesPerPeriodService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getExpensesPerPeriodService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -108,9 +108,9 @@ router.get("/expenses-per-period", authRequired,async (req: Request, res: Respon
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE GASTOS DE UNA SEDE DEL USUARIO
 router.get("/expenses-per-period/:idBranch", authRequired,async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getExpensesPerPeriodBranchService(idBranch, id);
+        const serviceLayerResponse = await getExpensesPerPeriodBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -127,8 +127,8 @@ router.get("/expenses-per-period/:idBranch", authRequired,async (req: Request, r
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE GASTOS Y VENTAS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO
 router.get("/all-transactions-per-period", authRequired,async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getAllTransactionsService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getAllTransactionsService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -143,9 +143,9 @@ router.get("/all-transactions-per-period", authRequired,async (req: Request, res
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE GASTOS Y VENTAS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO
 router.get("/all-transactions-per-period/:idBranch", authRequired,async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getAllTransactionsBranchService(idBranch, id);
+        const serviceLayerResponse = await getAllTransactionsBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -162,8 +162,8 @@ router.get("/all-transactions-per-period/:idBranch", authRequired,async (req: Re
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DEL USUARIO
 router.get("/accounts-receivable", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getAccountsReceivableService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getAccountsReceivableService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -178,9 +178,9 @@ router.get("/accounts-receivable", authRequired, async (req: Request, res: Respo
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DE UNA SEDE DEL USUARIO
 router.get("/accounts-receivable/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getAccountsReceivableBranchService(idBranch, id);
+        const serviceLayerResponse = await getAccountsReceivableBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -197,8 +197,8 @@ router.get("/accounts-receivable/:idBranch", authRequired, async (req: Request, 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DEL USUARIO
 router.get("/accounts-payable", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getAccountsPayableService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getAccountsPayableService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -215,10 +215,9 @@ router.get("/accounts-payable", authRequired, async (req: Request, res: Response
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DE UNA SEDE DEL USUARIO
 router.get("/accounts-payable/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        console.log('idBranch: ', idBranch)
-        const serviceLayerResponse = await getAccountsPayableBranchService(idBranch, id);
+        const serviceLayerResponse = await getAccountsPayableBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -235,8 +234,8 @@ router.get("/accounts-payable/:idBranch", authRequired, async (req: Request, res
 //CONTROLLER PARA OBTENER LISTA DE MEJORES CLIENTES POR VALOR DEL USUARIO
 router.get("/best-client-value", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getBestClientValueService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getBestClientValueService(userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -247,9 +246,9 @@ router.get("/best-client-value", authRequired, async (req: Request, res: Respons
 //CONTROLLER PARA OBTENER LISTA DE MEJORES CLIENTES POR VALOR DE UNA SEDE DEL USUARIO
 router.get("/best-client-value/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getBestClientValueBranchService(idBranch, id);
+        const serviceLayerResponse = await getBestClientValueBranchService(idBranch, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -262,8 +261,8 @@ router.get("/best-client-value/:idBranch", authRequired, async (req: Request, re
 //CONTROLLER PARA OBTENER LISTA DE CLIENTE FRECUENTE DEL USUARIO
 router.get("/best-client-quantity", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getBestClientQuantityService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getBestClientQuantityService(userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -274,9 +273,9 @@ router.get("/best-client-quantity", authRequired, async (req: Request, res: Resp
 //CONTROLLER PARA OBTENER LISTA DE CLIENTE FRECUENTE POR SEDE DEL USUARIO
 router.get("/best-client-quantity/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getBestClientQuantityBranchService(idBranch, id);
+        const serviceLayerResponse = await getBestClientQuantityBranchService(idBranch, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -289,8 +288,8 @@ router.get("/best-client-quantity/:idBranch", authRequired, async (req: Request,
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE VENTAS DEL USUARIO PARA CALCULAR EL TICKET PROMEDIO
 router.get("/average-ticket-per-period", authRequired,async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getAverageTicketTicketService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getAverageTicketTicketService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -305,9 +304,9 @@ router.get("/average-ticket-per-period", authRequired,async (req: Request, res: 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE VENTAS DEL USUARIO PARA CALCULAR EL TICKET PROMEDIO POR SEDE
 router.get("/average-ticket-per-period/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getAverageTicketTicketBranchService(idBranch, id);
+        const serviceLayerResponse = await getAverageTicketTicketBranchService(idBranch, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -320,8 +319,8 @@ router.get("/average-ticket-per-period/:idBranch", authRequired, async (req: Req
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MAQUINAS DEL USUARIO
 router.get("/assets-inventory", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getAssetsInventoryService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getAssetsInventoryService(userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -332,9 +331,9 @@ router.get("/assets-inventory", authRequired, async (req: Request, res: Response
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MAQUINAS POR SEDE DEL USUARIO
 router.get("/assets-inventory/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getaAssetsInventoryBranchService(idBranch, id);
+        const serviceLayerResponse = await getaAssetsInventoryBranchService(idBranch, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -347,8 +346,8 @@ router.get("/assets-inventory/:idBranch", authRequired, async (req: Request, res
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MERCANCIA DEL USUARIO
 router.get("/merchandises-inventory", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getMerchandisesInventoryService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getMerchandisesInventoryService(userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -359,9 +358,9 @@ router.get("/merchandises-inventory", authRequired, async (req: Request, res: Re
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MERCANCIA POR SEDE DEL USUARIO
 router.get("/merchandises-inventory/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getaMerchandisesInventoryBranchService(idBranch, id);
+        const serviceLayerResponse = await getaMerchandisesInventoryBranchService(idBranch, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -374,8 +373,8 @@ router.get("/merchandises-inventory/:idBranch", authRequired, async (req: Reques
 //CONTROLLER PARA OBTENER EL INVENTARIO DE PRODUCTOS DEL USUARIO
 router.get("/products-inventory", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getProductsInventoryService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getProductsInventoryService(userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -386,9 +385,9 @@ router.get("/products-inventory", authRequired, async (req: Request, res: Respon
 //CONTROLLER PARA OBTENER EL INVENTARIO DE PRODUCTOS POR SEDE DEL USUARIO
 router.get("/products-inventory/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getProductsInventoryBranchService(idBranch, id);
+        const serviceLayerResponse = await getProductsInventoryBranchService(idBranch, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -401,8 +400,8 @@ router.get("/products-inventory/:idBranch", authRequired, async (req: Request, r
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS DEL USUARIO
 router.get("/rawmaterials-inventory", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getRawMaterialsInventoryService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getRawMaterialsInventoryService(userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -413,9 +412,9 @@ router.get("/rawmaterials-inventory", authRequired, async (req: Request, res: Re
 //CONTROLLER PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS POR SEDE DEL USUARIO
 router.get("/rawmaterials-inventory/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getRawMaterialsInventoryBranchService(idBranch, id);
+        const serviceLayerResponse = await getRawMaterialsInventoryBranchService(idBranch, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;

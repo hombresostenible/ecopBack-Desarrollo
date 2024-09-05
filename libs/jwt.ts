@@ -6,8 +6,10 @@ const TOKEN_SECRET = process.env.TOKEN_SECRET || 'default_token_secret';
 
 //Aquí se setean las propiedades que lleva el token
 interface Payload {
-    id: string;                 //ID DEL USER O USERPLATFORM
+    userId: string;                 //ID DEL USER O USERPLATFORM
     typeRole: string;           //TIPO DE ROL
+    userBranchId?: string;      //ID DE LA SEDE DEL USUARIO
+    employerId?: string;
 }
 
 export function createAccessToken(payload: Payload): Promise<string> {

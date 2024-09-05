@@ -35,7 +35,7 @@ export const postRegisterUserService = async (body: IUser): Promise<IUserService
         body.password = hashedPassword;
         const serResult = await postRegisterUserData(body);
         if (serResult) {
-            const token = await createAccessToken({ id: serResult.id, typeRole: serResult.typeRole });
+            const token = await createAccessToken({ userId: serResult.id, typeRole: serResult.typeRole });
             return { code: 201, result: { serResult, token } };
         } else return { code: 400, message: 'El email ya se encuentra registrado' };
     } catch (error) {
@@ -93,7 +93,7 @@ export const putResetPasswordService = async (idUser: string, passwordResetCode:
         if (passwordResetCode === user.passwordResetCode && minutesDifference <= 30) {
             user.loginAttempts = 0;
             const password = await bcrypt.hash(body.password, 10);
-            const [rowsUpdated] = await User.update({ password, loginAttempts: 0 }, { where: { id: user.id } });
+            const [rowsUpdated] = await User.update({ password, loginAttempts: 0 }, { where: { userId: user.id } });
             if (rowsUpdated === 0) throw new ServiceError(500, "No se pudo actualizar la contraseña");
             const mailOptions = mailConfirmResetUserPassword(user.email, user.name);
             transporterZoho.sendMail(mailOptions, (error, info) => {
@@ -175,7 +175,7 @@ export const putResetPasswordUserIsBlockedService = async (idUser: string, body:
             const password = await bcrypt.hash(body.resetPassword, 10);
             const [rowsUpdated] = await User.update(
                 { password, loginAttempts: 0, isBlocked: false },
-                { where: { id: idUser } }
+                { where: { userId: idUser } }
             );
             if (rowsUpdated === 0) throw new ServiceError(500, "No se logró desbloquear tu cuenta ni actualizar la contraseña");
             const mailOptions = mailResetPasswordUserBlocked(user.email, user.name);

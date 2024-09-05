@@ -6,7 +6,7 @@ import { ServiceError } from '../../../types/Responses/responses.types';
 
 export const incomeFromCashSaleServices = async (item: IItemsAccountsBook, branchId: string, transactionType: string): Promise<any> => {
     const serviceFound = await Service.findOne({
-        where: { id: item.id, branchId: branchId },
+        where: { userId: item.id, branchId: branchId },
     });
     if (!serviceFound) throw new ServiceError(400, "El servicio no existe en esta sede");
 
@@ -28,7 +28,7 @@ export const incomeFromCashSaleServices = async (item: IItemsAccountsBook, branc
         await Promise.all(serviceFound.serviceProducts.map(async (product) => {
             const { productId, quantity } = product;
             const productRecord = await Product.findOne({
-                where: { id: productId },
+                where: { userId: productId },
             });
             // Validación de inventario suficiente de Producto
             if (productRecord) {
@@ -55,7 +55,7 @@ export const incomeFromCashSaleServices = async (item: IItemsAccountsBook, branc
         await Promise.all(serviceFound.serviceRawMaterials.map(async (rawMaterial) => {
             const { rawMaterialId, quantity } = rawMaterial;
             const rawMaterialRecord = await RawMaterial.findOne({
-                where: { id: rawMaterialId },
+                where: { userId: rawMaterialId },
             });
             // Validación de inventario suficiente de Producto
             if (rawMaterialRecord) {

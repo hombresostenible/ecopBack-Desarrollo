@@ -18,9 +18,9 @@ const router = express.Router();
 //CONTROLLER PARA CREAR UN CLIENTE DEL USER
 router.post("/", authRequired, validateSchema(crmClientsSchema), async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
+        const { userId } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await postRegisterCRMClientsService(id, body);
+        const serviceLayerResponse = await postRegisterCRMClientsService(userId, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {        
         const errorController = error as ServiceError;
@@ -33,9 +33,9 @@ router.post("/", authRequired, validateSchema(crmClientsSchema), async (req: Req
 //CREAR MUCHOS CLIENTES DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRMClientsSchemaType), async (req: Request, res: Response) => {
     try {
-        const { id, typeRole } = req.user;
+        const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await postManyCRMClientsService(bodyArray, id, typeRole);
+        const serviceLayerResponse = await postManyCRMClientsService(bodyArray, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -48,8 +48,8 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRM
 //CONTROLLER PARA OBTENER TODOS LOS CLIENTES DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getCRMClientsUserService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getCRMClientsUserService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -66,9 +66,9 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 //CONTROLLER PARA OBTENER UN CLIENTE POR ID PERTENECIENTE AL USER
 router.get("/:idCrmClient", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idCrmClient } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getCRMClientByIdService(idCrmClient, id);
+        const serviceLayerResponse = await getCRMClientByIdService(idCrmClient, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -81,9 +81,9 @@ router.get("/:idCrmClient", authRequired, async (req: Request, res: Response) =>
 //CONTROLLER PARA OBTENER TODOS LOS CLIENTES POR SEDE DE USER
 router.get("/crm-clients-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getCRMClientsBranchService(idBranch, id);
+        const serviceLayerResponse = await getCRMClientsBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -100,10 +100,10 @@ router.get("/crm-clients-branch/:idBranch", authRequired, async (req: Request, r
 //CONTROLLER PARA ACTUALIZAR UN CLIENTE PERTENECIENTE AL USER
 router.put("/:idCrmClient", authRequired, validateSchema(crmClientsSchema), async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idCrmClient } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await putCRMClientService(idCrmClient, body, id);
+        const serviceLayerResponse = await putCRMClientService(idCrmClient, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -116,9 +116,9 @@ router.put("/:idCrmClient", authRequired, validateSchema(crmClientsSchema), asyn
 //CONTROLLER PARA ELIMINAR UN CLIENTE PERTENECIENTE AL USER
 router.delete('/:idCrmClient', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idCrmClient } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await deleteCRMClientService(idCrmClient, id); 
+        const serviceLayerResponse = await deleteCRMClientService(idCrmClient, userId); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

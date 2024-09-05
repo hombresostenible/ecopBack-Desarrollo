@@ -30,7 +30,7 @@ export const loginService = async (email: string, password: string): Promise<ILo
         if (isMatch === true) {
             userFound.loginAttempts = 0;
             await userFound.save();
-            const token = await createAccessToken({ id: userFound.id, typeRole: userFound.typeRole });
+            const token = await createAccessToken({ userId: userFound.id, typeRole: userFound.typeRole });
             return { code: 200, result: { serResult: userFound, token } };
         } else {
             userFound.loginAttempts += 1;

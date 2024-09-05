@@ -23,9 +23,9 @@ const router = express.Router();
 //CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
 router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await postAssetService(body, id);
+        const serviceLayerResponse = await postAssetService(body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -38,9 +38,9 @@ router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async
 //CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
+        const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const { id, typeRole } = req.user;
-        const serviceLayerResponse = await postManyAssetService(bodyArray, id, typeRole);
+        const serviceLayerResponse = await postManyAssetService(bodyArray, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -53,8 +53,8 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyAss
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getAssetsService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getAssetsService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas del usuario" });
@@ -69,8 +69,8 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
 router.get("/assets-off", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getAssetsOffService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getAssetsOffService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas dadas de baja del usuario" });
@@ -85,9 +85,9 @@ router.get("/assets-off", authRequired, async (req: Request, res: Response) => {
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
 router.get("/assets-off/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getAssetsOffByBranchService(idBranch, id);
+        const serviceLayerResponse = await getAssetsOffByBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas dadas de baja del usuario" });
@@ -102,9 +102,9 @@ router.get("/assets-off/:idBranch", authRequired, async (req: Request, res: Resp
 //OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 router.get("/:idAssets", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idAssets } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getAssetByIdService(idAssets, id);
+        const serviceLayerResponse = await getAssetByIdService(idAssets, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -117,9 +117,9 @@ router.get("/:idAssets", authRequired, async (req: Request, res: Response) => {
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE PARA USER
 router.get("/assets-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getAssetBranchService(idBranch, id);
+        const serviceLayerResponse = await getAssetBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas del usuario por sede" });
@@ -134,10 +134,10 @@ router.get("/assets-branch/:idBranch", authRequired, async (req: Request, res: R
 //ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 router.put("/:idAssets", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idAssets } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await putAssetService(idAssets, body, id);
+        const serviceLayerResponse = await putAssetService(idAssets, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -150,10 +150,10 @@ router.put("/:idAssets", authRequired, checkRole, async (req: Request, res: Resp
 //ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER
 router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAssetsSchemaZod), async (req: Request, res: Response) => {
     try {
+        const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const { id, typeRole } = req.user;
         // Llamar a la capa de servicio para manejar la creación de múltiples activos
-        const serviceLayerResponse = await putUpdateManyAssetService(bodyArray, id, typeRole);
+        const serviceLayerResponse = await putUpdateManyAssetService(bodyArray, userId, typeRole);
         // Enviar una respuesta al cliente
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
@@ -167,10 +167,10 @@ router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAsset
 //DAR DE BAJA UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 router.patch("/:idAssets", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idAssets } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await patchAssetService(idAssets, body, id);
+        const serviceLayerResponse = await patchAssetService(idAssets, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -183,10 +183,10 @@ router.patch("/:idAssets", authRequired, checkRole, async (req: Request, res: Re
 //AUMENTA UNIDADES DEL INVENTARIO DE UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 router.patch("/add-inventory/:idAssets", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idAssets } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await patchAddInventoryAssetService(idAssets, body, id);
+        const serviceLayerResponse = await patchAddInventoryAssetService(idAssets, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;
@@ -199,9 +199,9 @@ router.patch("/add-inventory/:idAssets", authRequired, checkRole, async (req: Re
 //ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
 router.delete('/:idAssets', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idAssets } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await deleteAssetService(idAssets, id);
+        const serviceLayerResponse = await deleteAssetService(idAssets, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

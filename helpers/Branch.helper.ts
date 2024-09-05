@@ -41,7 +41,7 @@ export const isBranchAssociatedWithUserRole = async ( branchId: string, userId: 
     try {
         if (typeRole === 'Superadmin') {
             const branch = await Branch.findOne({
-                where: { id: branchId, userId: userId },
+                where: { branchId: branchId, userId: userId },
             });
             return !!branch;
         };
@@ -64,7 +64,7 @@ export const isBranchAssociatedWithUserRole = async ( branchId: string, userId: 
 export const isRegisterTransactionAssociatedWithUser = async (userId: string, branchId: string): Promise<boolean> => {
     try {
         const branch = await Branch.findOne({
-            where: { id: branchId, userId: userId },
+            where: { branchId: branchId, userId: userId },
         });
         return !!branch;
     } catch (error) {

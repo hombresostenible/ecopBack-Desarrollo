@@ -39,7 +39,7 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
 
 
 //VERIFICA EL TOKEN PARA PERMITIR LA NAVEGACION EN RUTAS PROTEGIDAS
-router.get("/verifyToken", async (req: Request, res: Response): Promise<void> => {
+router.get("/verify-token", async (req: Request, res: Response): Promise<void> => {
     try {
         const { token } = req.cookies;
         const user = await verifyUserTokenService(token);  
@@ -52,15 +52,15 @@ router.get("/verifyToken", async (req: Request, res: Response): Promise<void> =>
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/auth/verifyToken
+}); // GET - http://localhost:3000/api/auth/verify-token
 
 
 
 //INFORMACION DE PERFIL DEL USER
 router.get("/profile", authRequired, async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getProfileUserService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getProfileUserService(userId);
         if (!serviceLayerResponse) {
             res.status(401).json({ message: 'Cliente no encontrado' });
             return;

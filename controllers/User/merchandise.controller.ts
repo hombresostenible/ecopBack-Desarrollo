@@ -23,9 +23,9 @@ const router = express.Router();
 //CREAR UNA MERCANCIA POR SEDE PARA USER
 router.post("/", authRequired, checkRole, validateSchema(merchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
+        const { userId, typeRole } = req.user;
         const body = req.body;
-        const { id, typeRole } = req.user;
-        const serviceLayerResponse = await postMerchandiseService(body, id, typeRole);
+        const serviceLayerResponse = await postMerchandiseService(body, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -38,9 +38,9 @@ router.post("/", authRequired, checkRole, validateSchema(merchandiseSchemaZod), 
 //CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
-        const { id, typeRole } = req.user;
+        const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await postManyMerchandiseService(bodyArray, id, typeRole);
+        const serviceLayerResponse = await postManyMerchandiseService(bodyArray, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -53,8 +53,8 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyMer
 //OBTENER TODA LA MERCANCIA DEL USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-      const { id } = req.user;
-      const serviceLayerResponse = await getMerchandiseUserService(id);      
+      const { userId } = req.user;
+      const serviceLayerResponse = await getMerchandiseUserService(userId);      
       if (Array.isArray(serviceLayerResponse.result)) {
         res.status(200).json(serviceLayerResponse.result);
       } else {
@@ -71,8 +71,8 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
 router.get("/merchandises-off", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getMerchandiseOffService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getMerchandiseOffService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas dadas de baja del usuario" });
@@ -87,9 +87,9 @@ router.get("/merchandises-off", authRequired, async (req: Request, res: Response
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
 router.get("/merchandises-off/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getMerchandiseSOffByBranchService(idBranch, id);
+        const serviceLayerResponse = await getMerchandiseSOffByBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas dadas de baja del usuario" });
@@ -104,9 +104,9 @@ router.get("/merchandises-off/:idBranch", authRequired, async (req: Request, res
 //OBTENER UNA MERCANCIA POR ID PERTENECIENTE AL USER
 router.get("/:idMerchandise", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idMerchandise } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getMerchandiseService(idMerchandise, id);
+        const serviceLayerResponse = await getMerchandiseService(idMerchandise, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -119,9 +119,9 @@ router.get("/:idMerchandise", authRequired, async (req: Request, res: Response) 
 //OBTENER TODA LA MERCANCIA DE UNA SEDE PARA USER
 router.get("/merchandises-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getMerchandiseBranchService(idBranch, id);
+        const serviceLayerResponse = await getMerchandiseBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -138,10 +138,10 @@ router.get("/merchandises-branch/:idBranch", authRequired, async (req: Request, 
 //ACTUALIZAR UNA MERCANCIA PERTENECIENTE AL USER
 router.put("/:idMerchandise", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idMerchandise } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await putMerchandiseService(idMerchandise, body, id);
+        const serviceLayerResponse = await putMerchandiseService(idMerchandise, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -154,9 +154,9 @@ router.put("/:idMerchandise", authRequired, checkRole, async (req: Request, res:
 //ACTUALIZAR DE FORMA MASIVA VARIAS MERCANCIAS
 router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res: Response) => {
     try {
+        const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const { id, typeRole } = req.user;
-        const serviceLayerResponse = await putUpdateManyMerchandiseService(bodyArray, id, typeRole);
+        const serviceLayerResponse = await putUpdateManyMerchandiseService(bodyArray, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -169,10 +169,10 @@ router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res
 //DAR DE BAJA UNA MERCANCIA DEL USER
 router.patch("/:idMerchandise", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idMerchandise } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await patchMerchandiseService(idMerchandise, body, id);
+        const serviceLayerResponse = await patchMerchandiseService(idMerchandise, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;
@@ -185,10 +185,10 @@ router.patch("/:idMerchandise", authRequired, checkRole, async (req: Request, re
 //AUMENTA UNIDADES DEL INVENTARIO DE UNA MERCANCIA DEL USER
 router.patch("/add-inventory/:idMerchandise", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idMerchandise } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await patchAddInventoryMerchandiseService(idMerchandise, body, id);
+        const serviceLayerResponse = await patchAddInventoryMerchandiseService(idMerchandise, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;
@@ -201,9 +201,9 @@ router.patch("/add-inventory/:idMerchandise", authRequired, checkRole, async (re
 //ELIMINAR UNA MERCANCIA PERTENECIENTE AL USER
 router.delete('/:idMerchandise', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idMerchandise } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await deleteMerchandiseService(idMerchandise, id); 
+        const serviceLayerResponse = await deleteMerchandiseService(idMerchandise, userId); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

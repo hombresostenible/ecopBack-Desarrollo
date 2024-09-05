@@ -25,9 +25,9 @@ const router = express.Router();
 //CREAR UN REGISTRO CONTABLE DEL USER
 router.post("/", authRequired, validateSchema(accountsBookSchemaZod), async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
+        const { userId } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await postAccountsBookService(body, id);
+        const serviceLayerResponse = await postAccountsBookService(body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -40,8 +40,8 @@ router.post("/", authRequired, validateSchema(accountsBookSchemaZod), async (req
 //OBTENER TODOS LOS REGISTROS CONTABLES DEL USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getAccountsBooksService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getAccountsBooksService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -58,8 +58,8 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 //OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS, TANTO DE INGRESOS COMO DE GASTOS DEL USER
 router.get("/approved", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getAccountsBooksApprovedService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getAccountsBooksApprovedService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -76,9 +76,9 @@ router.get("/approved", authRequired, async (req: Request, res: Response) => {
 //OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS POR SEDE, TANTO DE INGRESOS COMO DE GASTOS DEL USER
 router.get("/approved/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getAccountsBooksApprovedByBranchService(idBranch, id);
+        const serviceLayerResponse = await getAccountsBooksApprovedByBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -95,8 +95,8 @@ router.get("/approved/:idBranch", authRequired, async (req: Request, res: Respon
 //OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS DEL USER
 router.get("/incomes", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getIncomesApprovedService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getIncomesApprovedService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -113,9 +113,9 @@ router.get("/incomes", authRequired, async (req: Request, res: Response) => {
 //OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
 router.get("/incomes-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getIncomesApprovedByBranchService(idBranch, id);
+        const serviceLayerResponse = await getIncomesApprovedByBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener los registros de ingresos aprobados del usuario por sede" });
@@ -130,8 +130,8 @@ router.get("/incomes-branch/:idBranch", authRequired, async (req: Request, res: 
 //OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
 router.get("/incomes-not-approved", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getIncomesNotApprovedService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getIncomesNotApprovedService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -148,9 +148,9 @@ router.get("/incomes-not-approved", authRequired, async (req: Request, res: Resp
 //OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
 router.get("/incomes-not-approved/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getIncomesNotApprovedByBranchService(idBranch, id);
+        const serviceLayerResponse = await getIncomesNotApprovedByBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -167,8 +167,8 @@ router.get("/incomes-not-approved/:idBranch", authRequired, async (req: Request,
 //OBTENER TODOS LOS REGISTROS DE GASTOS DEL USER
 router.get("/expenses", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getAccountsBooksExpesesService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getAccountsBooksExpesesService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -185,9 +185,9 @@ router.get("/expenses", authRequired, async (req: Request, res: Response) => {
 //OBTENER UN REGISTRO CONTABLE POR ID DEL USER
 router.get("/:idAccountsBook", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idAccountsBook } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getAccountsBookByIdService(idAccountsBook, id);
+        const serviceLayerResponse = await getAccountsBookByIdService(idAccountsBook, userId);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;
@@ -200,9 +200,9 @@ router.get("/:idAccountsBook", authRequired, async (req: Request, res: Response)
 //OBTENER TODOS LOS REGISTROS CONTABLES POR SEDE DEL USER
 router.get("/accountsBook-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getAccountsBookByBranchService(idBranch, id);
+        const serviceLayerResponse = await getAccountsBookByBranchService(idBranch, userId);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;
@@ -215,10 +215,10 @@ router.get("/accountsBook-branch/:idBranch", authRequired, async (req: Request, 
 //ACTUALIZAR UN REGISTRO CONTABLE DEL USER
 router.put("/:idAccountsBook", authRequired, checkRole, validateSchema(accountsBookSchemaZod), async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idAccountsBook } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await putAccountsBookService(idAccountsBook, body, id);
+        const serviceLayerResponse = await putAccountsBookService(idAccountsBook, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -231,9 +231,9 @@ router.put("/:idAccountsBook", authRequired, checkRole, validateSchema(accountsB
 //APROBAR UN REGISTRO DE INGRESO DEL USER
 router.patch("/incomes-not-approved/:idAccountsBook", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idAccountsBook } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await patchIncomesNotApprovedService(idAccountsBook, id);
+        const serviceLayerResponse = await patchIncomesNotApprovedService(idAccountsBook, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;
@@ -246,9 +246,9 @@ router.patch("/incomes-not-approved/:idAccountsBook", authRequired, checkRole, a
 //ELIMINAR UN REGISTRO CONTABLE DEL USER
 router.delete('/:idAccountsBook', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idAccountsBook } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await deleteAccountsBookService(idAccountsBook, id);
+        const serviceLayerResponse = await deleteAccountsBookService(idAccountsBook, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

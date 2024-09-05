@@ -23,9 +23,9 @@ const router = express.Router();
 //CONTROLLER PARA CREAR MATERIA PRIMA POR SEDE PARA USER
 router.post("/", authRequired, checkRole, validateSchema(rawMaterialSchema), async (req: Request, res: Response) => {
     try {
+        const { userId, typeRole } = req.user;
         const body = req.body;
-        const { id, typeRole } = req.user;
-        const serviceLayerResponse = await postRawMaterialService(body, id, typeRole);
+        const serviceLayerResponse = await postRawMaterialService(body, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -38,9 +38,9 @@ router.post("/", authRequired, checkRole, validateSchema(rawMaterialSchema), asy
 //CONTROLLER PARA CREAR MUCHAS MATERIAS PRIMAS POR SEDE PARA USER DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyRawMaterialSchema), async (req: Request, res: Response) => {
     try {
+        const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const { id, typeRole } = req.user;
-        const serviceLayerResponse = await postManyRawMaterialService(bodyArray, id, typeRole);
+        const serviceLayerResponse = await postManyRawMaterialService(bodyArray, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -53,8 +53,8 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyRaw
 //CONTROLLER PARA OBTENER TODAS LAS MATERIAS PRIMAS DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getRawMaterialsService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getRawMaterialsService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
           } else {
@@ -71,8 +71,8 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 //OBTENER TODAS LAS MATERIAS PRIMAS DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
 router.get("/rawMaterials-off", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getRawMaterialsOffService(id);
+        const { userId } = req.user;
+        const serviceLayerResponse = await getRawMaterialsOffService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las materias primas dadas de baja del usuario" });
@@ -87,9 +87,9 @@ router.get("/rawMaterials-off", authRequired, async (req: Request, res: Response
 //OBTENER TODAS LAS MATERIAS PRIMAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
 router.get("/rawMaterials-off/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getRawMaterialsOffByBranchService(idBranch, id);
+        const serviceLayerResponse = await getRawMaterialsOffByBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las materias primas dadas de baja del usuario" });
@@ -104,9 +104,9 @@ router.get("/rawMaterials-off/:idBranch", authRequired, async (req: Request, res
 //CONTROLLER PARA OBTENER UNA MATERIA PRIMA POR ID PERTENECIENTE AL USER
 router.get("/:idRawMaterial", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idRawMaterial } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getRawMaterialService(idRawMaterial, id);
+        const serviceLayerResponse = await getRawMaterialService(idRawMaterial, userId);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;
@@ -119,9 +119,9 @@ router.get("/:idRawMaterial", authRequired, async (req: Request, res: Response) 
 //CONTROLLER PARA OBTENER TODAS LAS MATERIAS PRIMAS DE UNA SEDE DE USER
 router.get("/rawMaterials-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getRawMaterialBranchService(idBranch, id);
+        const serviceLayerResponse = await getRawMaterialBranchService(idBranch, userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -138,10 +138,10 @@ router.get("/rawMaterials-branch/:idBranch", authRequired, async (req: Request, 
 //CONTROLLER PARA ACTUALIZAR UNA MATERIA PRIMA PERTENECIENTE AL USER
 router.put("/:idRawMaterial", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idRawMaterial } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await putRawMaterialService(idRawMaterial, body, id);
+        const serviceLayerResponse = await putRawMaterialService(idRawMaterial, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -154,9 +154,9 @@ router.put("/:idRawMaterial", authRequired, checkRole, async (req: Request, res:
 //CONTROLLER PARA ACTUALIZAR DE FORMA MASIVA VARIAS MATERIAS PRIMAS
 router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res: Response) => {
     try {
+        const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const { id, typeRole } = req.user;
-        const serviceLayerResponse = await putUpdateManyRawMaterialService(bodyArray, id, typeRole);
+        const serviceLayerResponse = await putUpdateManyRawMaterialService(bodyArray, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -169,10 +169,10 @@ router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res
 //CONTROLLER PARA DAR DE BAJA UNA MATERIA PRIMAS DEL USER
 router.patch("/:idRawMaterial", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idRawMaterial } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await patchRawMaterialService(idRawMaterial, body, id);
+        const serviceLayerResponse = await patchRawMaterialService(idRawMaterial, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;
@@ -185,10 +185,10 @@ router.patch("/:idRawMaterial", authRequired, checkRole, async (req: Request, re
 //AUMENTA UNIDADES DEL INVENTARIO DE UNA MATERIA PRIMA DEL USER
 router.patch("/add-inventory/:idRawMaterial", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idRawMaterial } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await patchAddInventoryRawMaterialService(idRawMaterial, body, id);
+        const serviceLayerResponse = await patchAddInventoryRawMaterialService(idRawMaterial, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;
@@ -201,9 +201,9 @@ router.patch("/add-inventory/:idRawMaterial", authRequired, checkRole, async (re
 //CONTROLLER PARA ELIMINAR UNA MATERIA PRIMA PERTENECIENTE AL USER
 router.delete('/:idRawMaterial', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idRawMaterial } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await deleteRawMaterialService(idRawMaterial, id);  
+        const serviceLayerResponse = await deleteRawMaterialService(idRawMaterial, userId);  
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

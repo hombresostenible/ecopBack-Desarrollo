@@ -17,9 +17,9 @@ const router = express.Router();
 //CONTROLLER PARA CREAR UNA SEDE PARA USER
 router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await postBranchService(body, id);
+        const serviceLayerResponse = await postBranchService(body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -32,9 +32,9 @@ router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), 
 //CONTROLLER PARA CREAR MASIVAMENTE SEDES PARA USER DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleAdmin, validateSchema(manyBranchsSchemaType), async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const bodyArray = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await postManyBranchService(bodyArray, id);
+        const serviceLayerResponse = await postManyBranchService(bodyArray, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -47,8 +47,8 @@ router.post("/create-many", authRequired, checkRoleAdmin, validateSchema(manyBra
 //CONTROLLER PARA OBTENER TODAS LAS SEDES DE UN USER
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
-        const serviceLayerResponse = await getBranchsUserService(id);      
+        const { userId } = req.user;
+        const serviceLayerResponse = await getBranchsUserService(userId);      
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -65,9 +65,9 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 //CONTROLLER PARA OBTENER UNA SEDE POR ID PERTENECIENTE AL USER
 router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await getBranchService(idBranch, id);
+        const serviceLayerResponse = await getBranchService(idBranch, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -80,10 +80,10 @@ router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
 //CONTROLLER PARA ACTUALIZAR UNA SEDE PERTENECIENTE AL USER
 router.put("/:idBranch", authRequired, checkRoleAdmin, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
         const body = req.body;
-        const { id } = req.user;
-        const serviceLayerResponse = await putBranchService(idBranch, body, id);
+        const serviceLayerResponse = await putBranchService(idBranch, body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -96,9 +96,9 @@ router.put("/:idBranch", authRequired, checkRoleAdmin, async (req: Request, res:
 //CONTROLLER PARA ELIMINAR UNA SEDE PERTENECIENTE AL USER
 router.delete('/:idBranch', authRequired, checkRoleAdmin, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idBranch } = req.params;
-        const { id } = req.user;
-        const serviceLayerResponse = await deleteBranchService(idBranch, id);  
+        const serviceLayerResponse = await deleteBranchService(idBranch, userId);  
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;
