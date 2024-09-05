@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
 import {
     postUserPlatformService,
-    getUserPlatformService,
+    getUsersPlatformService,
+    getUserPlatformByIdService,
     getUserPlatformBranchService,
     putProfileUserPlatformService,
     deleteUserPlatformService,
@@ -30,7 +31,7 @@ router.post("/", authRequired, checkRoleCreateUserPlatform, async (req: Request,
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const serviceLayerResponse = await getUserPlatformService(userId);      
+        const serviceLayerResponse = await getUsersPlatformService(userId);      
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener los usuario del usuario" });
@@ -42,12 +43,27 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
+//OBTENER UN USUARIO DE PLATAFORMA POR ID PERTENECIENTE AL USER
+router.get("/:idUserPlatform", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user;
+        const { idUserPlatform } = req.params;
+        const serviceLayerResponse = await getUserPlatformByIdService(userId, idUserPlatform);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/user-platform/:idUserPlatform
+
+
+
 //CONTROLLER PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA PERTENECIENTES A UNA SEDE DE UN USER
 router.get("/users-platform-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getUserPlatformBranchService(idBranch, userId);
+        const serviceLayerResponse = await getUserPlatformBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "No se pudieron obtener los usuarios por sede" });

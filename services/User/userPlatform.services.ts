@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
 import {
     postUserPlatformData,
-    getUserPlatformData,
+    getUsersPlatformData,
+    getUserPlatformByIdData,
     getUserPlatformBranchByIdData,
     putProfileUserPlatformData,
     deleteUserPlatformData,
@@ -33,10 +34,28 @@ export const postUserPlatformService = async (body: IUserPlatform, userId: strin
 
 
 //SERVICE PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
-export const getUserPlatformService = async (userId: string): Promise<IServiceLayerResponseUserPlatform> => {
+export const getUsersPlatformService = async (userId: string): Promise<IServiceLayerResponseUserPlatform> => {
     try {
-        const dataLayerResponse = await getUserPlatformData(userId);
+        const dataLayerResponse = await getUsersPlatformData(userId);
         return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//OBTENER UN USUARIO DE PLATAFORMA POR ID PERTENECIENTE AL USER
+export const getUserPlatformByIdService = async (userId: string, idUserPlatform: string): Promise<IServiceLayerResponseUserPlatform> => {
+    try {
+        const hasPermission = await checkPermissionForUserPlatformBranch(userId, idUserPlatform);
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a esta mercancía");
+        const merchandiseFound = await getUserPlatformByIdData(userId, idUserPlatform);
+        if (!merchandiseFound) return { code: 404, message: "Producto no encontrado" };
+        return { code: 200, result: merchandiseFound };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;

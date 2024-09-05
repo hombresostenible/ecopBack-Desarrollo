@@ -58,7 +58,6 @@ export const postUserPlatformData = async (body: IUserPlatform, userId: string):
             }
         }
     } catch (error) {
-        console.log('Error: ', error)
         await t.rollback();
         throw error;
     }
@@ -66,7 +65,7 @@ export const postUserPlatformData = async (body: IUserPlatform, userId: string):
 
 
 //DATA PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
-export const getUserPlatformData = async (userId: string): Promise<any> => {
+export const getUsersPlatformData = async (userId: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const usersPlatform = await UserPlatform.findAll({
@@ -77,6 +76,18 @@ export const getUserPlatformData = async (userId: string): Promise<any> => {
     } catch (error) {
         throw error;
     };
+};
+
+
+
+//OBTENER UN USUARIO DE PLATAFORMA POR ID PERTENECIENTE AL USER
+export const getUserPlatformByIdData = async (userId: string, idUserPlatform: string): Promise<any> => {
+    try {
+        const usersPlatformFound = await UserPlatform.findOne({ where: { userId: userId, id: idUserPlatform } });
+        return usersPlatformFound;
+    } catch (error) {
+        throw error;
+    }
 };
 
 
@@ -118,17 +129,6 @@ export const putProfileUserPlatformData = async (body: IUserPlatform, userId: st
         await t.rollback();
         throw error;
     }
-};
-
-
-//DATA PARA OBTENER POR ID UN USUARIO DE PLATAFORMA PERTENECIENTE A UN USER
-export const getUserPlatformByIdData = async (idUserPlatform: string, userId: string): Promise<any> => {
-    try {
-        const userPlatformFound = await UserPlatform.findOne({ where: { userId: idUserPlatform } });
-        return userPlatformFound;
-    } catch (error) {
-        throw error;
-    };
 };
 
 
