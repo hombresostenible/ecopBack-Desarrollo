@@ -41,7 +41,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRM
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/crm-client/create-many con [{"entityUserId":"6dde1b74-2e3c-4915-bc93-6e39ac77afc8","name":"Carlos","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"777777999","email":"carlosmario.reyesp@outlook.com","phone":"3128082002","department":"Tolima","city":"Ibagué","codeDane":"73001","subregionCodeDane":"73","address":"Cra 100 # 200 - 300"},{"entityUserId":"6dde1b74-2e3c-4915-bc93-6e39ac77afc8","name":"Carlos","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"7788999999","email":"carlosmario.reyesp@outlook.com","phone":"3128082002","department":"Tolima","city":"Ibagué","codeDane":"73001","subregionCodeDane":"73","address":"Cra 100 # 200 - 300"}]
+}); // POST - http://localhost:3000/api/crm-client/create-many con [{"address":"Casa 10 # 10 - 20, etapa 3","city":"Bogotá D.C.","corporateName":null,"department":"Bogota D.C.","documentId":"1110555666","email":"cmario.reyesp@gmail.com","lastName":"Doe","name":"Carlos","phone":"3128082002","typeDocumentId":"Cedula de Ciudadania","verificationDigit":null},{"address":"Km 20 vía Medellín Bogotá","city":"Medellín","corporateName":"Distribuidora El Comercio SAS","department":"Amazonas","documentId":"890890890","email":"distribuidoraelcomerciosas@gmail.com","lastName":null,"name":null,"phone":"6012033","typeDocumentId":"NIT","verificationDigit":5}]
 
 
 

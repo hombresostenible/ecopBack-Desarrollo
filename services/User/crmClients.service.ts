@@ -34,14 +34,13 @@ export const postManyCRMClientsService = async (bodyArray: ICrmClients[], userId
     const uniqueCRMClient: ICrmClients[] = [];
     const duplicatedCRMClients: ICrmClients[] = [];
     try {
-        for (const crmClient of bodyArray) {           
+        for (const crmClient of bodyArray) {
             // Crear el cliente
             const createdCRMClient = await postManyCRMClientsData(crmClient, userId, typeRole);
             if (createdCRMClient) {
                 uniqueCRMClient.push(createdCRMClient);
             } else duplicatedCRMClients.push(crmClient);
         }
-        // Devolver una respuesta adecuada
         return { code: 201, result: uniqueCRMClient };
     } catch (error) {
         if (error instanceof Error) {

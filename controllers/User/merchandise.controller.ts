@@ -38,8 +38,8 @@ router.post("/", authRequired, checkRole, validateSchema(merchandiseSchemaZod), 
 //CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyMerchandiseSchemaZod), async (req: Request, res: Response) => {
     try {
-        const bodyArray = req.body;
         const { id, typeRole } = req.user;
+        const bodyArray = req.body;
         const serviceLayerResponse = await postManyMerchandiseService(bodyArray, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {

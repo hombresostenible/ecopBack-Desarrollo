@@ -51,12 +51,12 @@ export const postManyCRMClientsData = async (body: ICrmClients, userId: string, 
             return newCRMClient;
         }
         if (typeRole === 'Administrador') {
-            const newMerchandise = await CrmClients.create({
+            const newCRMClient = await CrmClients.create({
                 ...body,
                 entityUserId: userId,
             }, { transaction: t });        
             await t.commit();
-            return newMerchandise;            
+            return newCRMClient;            
         }
     } catch (error) {
         throw error;
@@ -69,7 +69,7 @@ export const postManyCRMClientsData = async (body: ICrmClients, userId: string, 
 export const getCRMClientsData = async (userId: string): Promise<any> => {
     try {
         const userCRMClients = await CrmClients.findAll({
-            where: { userId: userId },
+            where: { entityUserId: userId },
         });
         return userCRMClients;
     } catch (error) {
