@@ -30,20 +30,18 @@ router.post("/", authRequired, validateSchema(crmClientsSchema), async (req: Req
 
 
 
-
 //CREAR MUCHOS CLIENTES DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRMClientsSchemaType), async (req: Request, res: Response) => {
     try {
-        const { id } = req.user;
+        const { id, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await postManyCRMClientsService(bodyArray, id);
+        const serviceLayerResponse = await postManyCRMClientsService(bodyArray, id, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
 }); // POST - http://localhost:3000/api/crm-client/create-many con [{"entityUserId":"6dde1b74-2e3c-4915-bc93-6e39ac77afc8","name":"Carlos","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"777777999","email":"carlosmario.reyesp@outlook.com","phone":"3128082002","department":"Tolima","city":"Ibagué","codeDane":"73001","subregionCodeDane":"73","address":"Cra 100 # 200 - 300"},{"entityUserId":"6dde1b74-2e3c-4915-bc93-6e39ac77afc8","name":"Carlos","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"7788999999","email":"carlosmario.reyesp@outlook.com","phone":"3128082002","department":"Tolima","city":"Ibagué","codeDane":"73001","subregionCodeDane":"73","address":"Cra 100 # 200 - 300"}]
-
 
 
 

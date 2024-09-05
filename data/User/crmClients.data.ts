@@ -29,7 +29,7 @@ export const postRegisterCRMClientsData = async (userId: string, body: ICrmClien
 
 
 //CREAR MUCHOS CLIENTES DESDE EL EXCEL
-export const postManyCRMClientsData = async (body: ICrmClients, userId: string): Promise<any> => {
+export const postManyCRMClientsData = async (body: ICrmClients, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         // Verificar si el cliente ya existe
@@ -42,13 +42,22 @@ export const postManyCRMClientsData = async (body: ICrmClients, userId: string):
             await t.rollback();
             return null;
         }
-        // Si el cliente no existe, crearlo en la base de datos
-        const newCRMClient = await CrmClients.create({
-            ...body,
-            entityUserId: userId,
-        }, { transaction: t });
-        await t.commit();
-        return newCRMClient;
+        if (typeRole === 'Superadmin') {
+            const newCRMClient = await CrmClients.create({
+                ...body,
+                entityUserId: userId,
+            }, { transaction: t });
+            await t.commit();
+            return newCRMClient;
+        }
+        if (typeRole === 'Administrador') {
+            const newMerchandise = await CrmClients.create({
+                ...body,
+                entityUserId: userId,
+            }, { transaction: t });        
+            await t.commit();
+            return newMerchandise;            
+        }
     } catch (error) {
         throw error;
     }

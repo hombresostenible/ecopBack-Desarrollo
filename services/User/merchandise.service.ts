@@ -39,7 +39,6 @@ export const postMerchandiseService = async (body: IMerchandise, userId: string,
 export const postManyMerchandiseService = async (merchandises: IMerchandise[], userId: string, typeRole: string): Promise<IServiceLayerResponseMerchandise> => {
     const uniqueMerchandises: IMerchandise[] = [];
     const duplicatedMerchandises: IMerchandise[] = [];
-
     try {
         for (const merchandise of merchandises) {
             // Verificar los permisos del usuario para crear mercancías en la sede específica

@@ -51,7 +51,6 @@ export const postMerchandiseData = async (body: IMerchandise, userId: string, ty
 //DATA PARA CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
 export const postManyMerchandiseData = async (body: IMerchandise, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
-
     try {
         // Verificar si ls mercancía ya existe en la sede proporcionada
         const existingMerchandise = await Merchandise.findOne({
