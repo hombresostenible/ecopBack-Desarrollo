@@ -23,9 +23,8 @@ const TOKEN_SECRET = process.env.TOKEN_SECRET || 'default_token_secret';
 export const loginService = async (email: string, password: string): Promise<ILoginServiceLayerResponse | null> => {
     try {
         const userFound = await searchUserByEmail(email);   //BUSCA EL CORREO REGISTRADO EN LA BASE DE DATOS
-        if (userFound?.isBlocked) return { code: 401, message: "Usuario bloqueado" };
         if (!userFound) return null;
-
+        if (userFound?.isBlocked) return { code: 401, message: "Usuario bloqueado" };
         const isMatch = await bcrypt.compare(password, userFound.password);
         if (isMatch === true) {
             userFound.loginAttempts = 0;
@@ -38,7 +37,6 @@ export const loginService = async (email: string, password: string): Promise<ILo
                 userFound.isBlocked = true;
                 userFound.unlockCode = generateCodes();
                 await userFound.save();
-
                 // Extraer el nombre del usuario solo si el tipo lo permite
                 let userName: string;
                 if ('name' in userFound) {

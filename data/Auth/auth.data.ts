@@ -25,7 +25,7 @@ export const searchUserByEmail = async (email: string) => {
 //VERIFICA EL TOKEN PARA PERMITIR LA NAVEGACION EN RUTAS PROTEGIDAS
 export const verifyUserTokenData = async (userId: string) => {
     try {  
-        const user = await User.findOne({ where: { userId } });  
+        const user = await User.findOne({ where: { id: userId } });
         return user || null;
     } catch (error) {
         throw error;
@@ -37,7 +37,7 @@ export const verifyUserTokenData = async (userId: string) => {
 //INFORMACION DE PERFIL DEL USER
 export const getProfileUserData = async (userId: string): Promise<any | null> => {
     try {
-        const dataLayerResponse = await User.findOne({ where: { userId } });
+        const dataLayerResponse = await User.findOne({ where: { id: userId } });
         if (!dataLayerResponse) throw new ServiceError(400, "Usuario no encontrado");
         return dataLayerResponse || null;
     } catch (error) {

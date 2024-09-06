@@ -1,14 +1,13 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
 import dotenv from 'dotenv';
-
 dotenv.config();
 const TOKEN_SECRET = process.env.TOKEN_SECRET || 'default_token_secret';
 
 //Aquí se setean las propiedades que lleva el token
 interface Payload {
-    userId: string;                 //ID DEL USER O USERPLATFORM
-    typeRole: string;           //TIPO DE ROL
-    userBranchId?: string;      //ID DE LA SEDE DEL USUARIO
+    userId: string;
+    typeRole: string;
+    userBranchId?: string;
     employerId?: string;
 }
 
