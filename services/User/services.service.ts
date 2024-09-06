@@ -32,16 +32,16 @@ export const postServicesService = async (body: IService, userId: string, typeRo
 
 
 //SERVICE PARA CREAR MUCHOS SERVICIOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyServicesService = async (services: IService[], userId: string, typeRole: string): Promise<IServiceLayerResponseService> => {
+export const postManyServicesService = async (userId: string, typeRole: string, services: IService[]): Promise<IServiceLayerResponseService> => {
     const uniqueServices: IService[] = [];
     const duplicatedServices: IService[] = [];
     try {
         for (const service of services) {
             // Verificar los permisos del usuario para crear servicios en la sede específica
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(service.branchId, userId, typeRole);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, service.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear servicio en esta sede");
             // Crear la servicio
-            const createdService = await postManyServicesData(service, userId, typeRole);
+            const createdService = await postManyServicesData(userId, typeRole, service);
             if (createdService) {
                 uniqueServices.push(createdService);
             } else duplicatedServices.push(service);

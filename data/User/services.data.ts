@@ -8,12 +8,12 @@ import { ServiceError } from '../../types/Responses/responses.types';
 export const postServicesData = async (body: IService, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        const existingServices = await Service.findOne({
+        const existingRegister = await Service.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-        if (existingServices) {
-            if (existingServices.getDataValue('userId') === userId) {
+        if (existingRegister) {
+            if (existingRegister.getDataValue('userId') === userId) {
                 await t.rollback();
                 return null;
             }
@@ -21,20 +21,20 @@ export const postServicesData = async (body: IService, userId: string, typeRole:
             throw new ServiceError(400, "El servicio ya existe en esta sede");
         }
         if (typeRole === 'Superadmin') {
-            const newService = await Service.create({
+            const newRegister = await Service.create({
                 ...body,
                 userId: userId,
             }, { transaction: t });
             await t.commit();
-            return newService;            
+            return newRegister;            
         }
         if (typeRole === 'Administrador') {
-            const newService = await Service.create({
+            const newRegister = await Service.create({
                 ...body,
                 userId: userId,
             }, { transaction: t });
             await t.commit();
-            return newService;
+            return newRegister;
         }
     } catch (error) {
         await t.rollback();
@@ -45,24 +45,33 @@ export const postServicesData = async (body: IService, userId: string, typeRole:
 
 
 //DATA PARA CREAR MUCHOS SERVICIOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyServicesData = async (body: IService, userId: string, typeRole: string): Promise<any> => {
+export const postManyServicesData = async (userId: string, typeRole: string, body: IService): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        const existingServices = await Service.findOne({
+        const existingRegister = await Service.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-        // Si el servicio ya existe, devuelve null
-        if (existingServices) {
+        if (existingRegister) {
             await t.rollback();
             return null;
         }
-        // Si el servicio no existe, crearlo en la base de datos
-        const newService = await Service.create({
-            ...body,
-        }, { transaction: t });
-        await t.commit();
-        return newService;
+        if (typeRole === 'Superadmin') {
+            const newRegister = await Service.create({
+                ...body,
+                userId: userId,
+            }, { transaction: t });
+            await t.commit();
+            return newRegister;
+        }
+        if (typeRole === 'Administrador') {
+            const newRegister = await Service.create({
+                ...body,
+                userId: userId,
+            }, { transaction: t });
+            await t.commit();
+            return newRegister;
+        }
     } catch (error) {
         await t.rollback();
         throw error;

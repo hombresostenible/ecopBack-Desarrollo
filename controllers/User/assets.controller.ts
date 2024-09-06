@@ -40,7 +40,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyAss
     try {
         const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await postManyAssetService(bodyArray, userId, typeRole);
+        const serviceLayerResponse = await postManyAssetService(userId, typeRole, bodyArray);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;

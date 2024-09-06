@@ -7,19 +7,19 @@ import { ServiceError } from '../../types/Responses/responses.types';
 //CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
 export const postAssetData = async (body: IAssets, userId: string): Promise<any> => {
     try {
-        const existingAsset = await Assets.findOne({
+        const existingRegister = await Assets.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
         });
-        if (existingAsset) {
-            if (existingAsset.userId === userId) return null;
+        if (existingRegister) {
+            if (existingRegister.userId === userId) return null;
             throw new ServiceError(400, "Ya existe un equipo, máquina o herramienta con el mismo nombre en esta sede, cámbialo");
         }
         // Si el activo no existe, crearlo en la base de datos
-        const newAsset = await Assets.create({
+        const newRegister = await Assets.create({
             ...body,
             userId: userId,
         });
-        return newAsset;
+        return newRegister;
     } catch (error) {
         throw error;
     }
@@ -28,25 +28,33 @@ export const postAssetData = async (body: IAssets, userId: string): Promise<any>
 
 
 //CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER DESDE EL EXCEL
-export const postManyAssetData = async (body: IAssets, userId: string, typeRole: string): Promise<any> => {
+export const postManyAssetData = async (userId: string, typeRole: string, body: IAssets): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        // Verificar si el activo ya existe en la sede proporcionada
-        const existingAsset = await Assets.findOne({
+        const existingRegister = await Assets.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-        // Si el activo ya existe, devuelve null
-        if (existingAsset) {
+        if (existingRegister) {
             await t.rollback();
             return null;
         }
-        // Si el activo no existe, crearlo en la base de datos
-        const newAsset = await Assets.create({
-            ...body,
-        }, { transaction: t });
-        await t.commit();
-        return newAsset;
+        if (typeRole === 'Superadmin') {
+            const newRegister = await Assets.create({
+                ...body,
+                userId: userId,
+            }, { transaction: t });
+            await t.commit();
+            return newRegister;
+        }
+        if (typeRole === 'Administrador') {
+            const newRegister = await Assets.create({
+                ...body,
+                userId: userId,
+            }, { transaction: t });
+            await t.commit();
+            return newRegister;
+        }
     } catch (error) {
         await t.rollback();
         throw error;
@@ -186,22 +194,22 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): 
     const t = await sequelize.transaction();
     try {
         let whereClause: Record<string, any> = { userId: idAssets };
-        const existingAsset = await Assets.findOne({
+        const existingRegister = await Assets.findOne({
             where: whereClause,
             transaction: t,
         });
 
-        if (!existingAsset) throw new ServiceError(404, "No se encontró el activo");
-        if (body.inventory !== undefined && body.inventory > existingAsset.inventory) throw new ServiceError(400, "No hay suficientes activos disponibles para dar de baja");
+        if (!existingRegister) throw new ServiceError(404, "No se encontró el activo");
+        if (body.inventory !== undefined && body.inventory > existingRegister.inventory) throw new ServiceError(400, "No hay suficientes activos disponibles para dar de baja");
     
         if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
             const IInventoryOffItem = body.inventoryOff[0]; // Accede al primer elemento de inventoryOff
             const currentDate = new Date(); // Obtener la fecha actual
 
             // Actualizar el inventario y agregar un nuevo elemento a inventoryOff
-            existingAsset.inventory -= IInventoryOffItem.quantity || 0; // Restar la cantidad de activos dañados del inventario actual
+            existingRegister.inventory -= IInventoryOffItem.quantity || 0; // Restar la cantidad de activos dañados del inventario actual
 
-            existingAsset.inventoryOff = existingAsset.inventoryOff.concat({ 
+            existingRegister.inventoryOff = existingRegister.inventoryOff.concat({ 
                 date: currentDate, 
                 quantity: (IInventoryOffItem.quantity || 0),
                 reason: IInventoryOffItem.reason || 'Baja de activo',
@@ -210,8 +218,8 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): 
         }
 
         const [rowsUpdated] = await Assets.update({
-            inventory: existingAsset.inventory,
-            inventoryOff: existingAsset.inventoryOff
+            inventory: existingRegister.inventory,
+            inventoryOff: existingRegister.inventoryOff
         }, {
             where: whereClause,
             transaction: t,
@@ -239,11 +247,11 @@ export const patchAddInventoryAssetData = async (idAssets: string, body: Partial
     try {
         let whereClause: Record<string, any> = { userId: idAssets };
         whereClause.userId = userId;
-        const existingAsset = await Assets.findOne({
+        const existingRegister = await Assets.findOne({
             where: whereClause,
         });
-        if (!existingAsset) throw new ServiceError(404, "No se encontró el equipo, máquina o herramienta");
-        const addInventory = existingAsset.inventory + (body?.inventory ?? 0);
+        if (!existingRegister) throw new ServiceError(404, "No se encontró el equipo, máquina o herramienta");
+        const addInventory = existingRegister.inventory + (body?.inventory ?? 0);
         const [rowsUpdated] = await Assets.update({ inventory: addInventory }, {
             where: whereClause,
         });

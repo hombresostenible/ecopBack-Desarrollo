@@ -73,17 +73,16 @@ export const postProductService = async (body: IProduct, userId: string, typeRol
 
 
 //CREAR MUCHOS PRODUCTOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyProductService = async (products: IProduct[], userId: string, typeRole: string): Promise<IServiceLayerResponseProduct> => {
+export const postManyProductService = async (userId: string, typeRole: string, products: IProduct[]): Promise<IServiceLayerResponseProduct> => {
     const uniqueProducts: IProduct[] = [];
     const duplicatedProducts: IProduct[] = [];
-
     try {
         for (const product of products) {
             // Verificar los permisos del usuario para crear productos en la sede específica
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(product.branchId, userId, typeRole);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, product.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear productos en esta sede");
             // Crear el producto
-            const createdProduct = await postManyProductsData(product, userId, typeRole);
+            const createdProduct = await postManyProductsData(userId, typeRole, product);
             if (createdProduct) {
                 uniqueProducts.push(createdProduct);
             } else duplicatedProducts.push(product);

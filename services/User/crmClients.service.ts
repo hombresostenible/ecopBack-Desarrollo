@@ -116,9 +116,9 @@ export const putCRMClientService = async (idCrmClient: string, body: ICrmClients
 
 
 //SERVICE PARA ELIMINAR UN CLIENTE PERTENECIENTE AL USER
-export const deleteCRMClientService = async (idCrmClient: string, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const deleteCRMClientService = async (userId: string, idCrmClient: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        await deleteCRMClientData(idCrmClient, userId);
+        await deleteCRMClientData(userId, idCrmClient);
         return { code: 200, message: "Cliente eliminado exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

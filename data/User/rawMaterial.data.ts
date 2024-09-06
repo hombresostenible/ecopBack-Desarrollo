@@ -5,15 +5,15 @@ import { IRawMaterial } from "../../types/User/rawMaterial.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR MATERIA PRIMA POR SEDE PARA USER
-export const postRawMaterialData = async (body: IRawMaterial, userId: string, typeRole: string): Promise<any> => {
+export const postRawMaterialData = async (userId: string, typeRole: string, body: IRawMaterial): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        const existingRawMaterial = await RawMaterial.findOne({
+        const existingRegister = await RawMaterial.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-        if (existingRawMaterial) {
-            if (existingRawMaterial.getDataValue('userId') === userId) {
+        if (existingRegister) {
+            if (existingRegister.getDataValue('userId') === userId) {
                 await t.rollback();
                 return null;
             }
@@ -24,22 +24,22 @@ export const postRawMaterialData = async (body: IRawMaterial, userId: string, ty
         const initialInventory = body.inventory || 0;
 
         if (typeRole === 'Superadmin') {
-            const newRawMaterial = await RawMaterial.create({
+            const newRegister = await RawMaterial.create({
                 ...body,
                 userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
-            return newRawMaterial;            
+            return newRegister;            
         }
         if (typeRole === 'Administrador') {
-            const newRawMaterial = await RawMaterial.create({
+            const newRegister = await RawMaterial.create({
                 ...body,
                 userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
-            return newRawMaterial;
+            return newRegister;
         }
     } catch (error) {
         throw error;
@@ -49,32 +49,32 @@ export const postRawMaterialData = async (body: IRawMaterial, userId: string, ty
 
 
 //DATA PARA CREAR MUCHAS MATERIAS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyRawMaterialData = async (body: IRawMaterial, userId: string, typeRole: string): Promise<any> => {
+export const postManyRawMaterialData = async (userId: string, typeRole: string, body: IRawMaterial): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        const existingRawMaterial = await RawMaterial.findOne({
+        const existingRegister = await RawMaterial.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-        if (existingRawMaterial) {
+        if (existingRegister) {
             await t.rollback();
             return null;
         }
         if (typeRole === 'Superadmin') {
-            const newRawMaterial = await RawMaterial.create({
+            const newRegister = await RawMaterial.create({
                 ...body,
                 userId: userId,
             }, { transaction: t });        
             await t.commit();
-            return newRawMaterial;
+            return newRegister;
         }
         if (typeRole === 'Administrador') {
-            const newRawMaterial = await RawMaterial.create({
+            const newRegister = await RawMaterial.create({
                 ...body,
                 userId: userId,
             }, { transaction: t });        
             await t.commit();
-            return newRawMaterial;
+            return newRegister;
         }
     } catch (error) {
         throw error;
@@ -206,21 +206,21 @@ export const patchRawMaterialData = async (idRawMaterial: string, body: Partial<
     const t = await sequelize.transaction();
     try {
         let whereClause: Record<string, any> = { userId: idRawMaterial };
-        const existingRawMaterial = await RawMaterial.findOne({
+        const existingRegister = await RawMaterial.findOne({
             where: whereClause,
             transaction: t,
         });
-        if (!existingRawMaterial) throw new ServiceError(404, "No se encontró el activo");
-        if (body.inventory !== undefined && body.inventory > existingRawMaterial.inventory) throw new ServiceError(400, "No hay suficiente cantidad de materia prima disponibles para dar de baja");
+        if (!existingRegister) throw new ServiceError(404, "No se encontró el activo");
+        if (body.inventory !== undefined && body.inventory > existingRegister.inventory) throw new ServiceError(400, "No hay suficiente cantidad de materia prima disponibles para dar de baja");
         
         if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
             const IInventoryOffItem = body.inventoryOff[0];                      // Accede al primer elemento de inventoryOff
             const currentDate = new Date();                                     // Obtener la fecha actual
             
             // Actualizar el inventario y agregar un nuevo elemento a inventoryOff
-            existingRawMaterial.inventory -= IInventoryOffItem.quantity || 0;    // Restar la cantidad de materia prima dañadas del inventario actual
+            existingRegister.inventory -= IInventoryOffItem.quantity || 0;    // Restar la cantidad de materia prima dañadas del inventario actual
 
-            existingRawMaterial.inventoryOff = existingRawMaterial.inventoryOff.concat({ 
+            existingRegister.inventoryOff = existingRegister.inventoryOff.concat({ 
                 date: currentDate, 
                 quantity: (IInventoryOffItem.quantity || 0),
                 reason: IInventoryOffItem.reason || 'Baja de activo',
@@ -229,8 +229,8 @@ export const patchRawMaterialData = async (idRawMaterial: string, body: Partial<
         }
 
         const [rowsUpdated] = await RawMaterial.update({
-            inventory: existingRawMaterial.inventory,
-            inventoryOff: existingRawMaterial.inventoryOff
+            inventory: existingRegister.inventory,
+            inventoryOff: existingRegister.inventoryOff
         }, {
             where: whereClause,
             transaction: t,
@@ -259,11 +259,11 @@ export const patchAddInventoryRawMaterialData = async (idRawMaterial: string, bo
     try {
         let whereClause: Record<string, any> = { userId: idRawMaterial };
         whereClause.userId = userId;
-        const existingRawMaterial = await RawMaterial.findOne({
+        const existingRegister = await RawMaterial.findOne({
             where: whereClause,
         });
-        if (!existingRawMaterial) throw new ServiceError(404, "No se encontró la materia prima");
-        const addInventory = existingRawMaterial.inventory + (body?.inventory ?? 0);
+        if (!existingRegister) throw new ServiceError(404, "No se encontró la materia prima");
+        const addInventory = existingRegister.inventory + (body?.inventory ?? 0);
         const [rowsUpdated] = await RawMaterial.update({ inventory: addInventory }, {
             where: whereClause,
         });

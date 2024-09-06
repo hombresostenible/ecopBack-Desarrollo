@@ -117,9 +117,9 @@ export const putCRMSupplierService = async (idCrmSupplier: string, body: ICrmSup
 
 
 //SERVICE PARA ELIMINAR UN PROVEEDOR PERTENECIENTE AL USER
-export const deleteCRMSupplierService = async (idCrmSupplier: string, userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const deleteCRMSupplierService = async (userId: string, idCrmSupplier: string): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
-        await deleteCRMSupplierData(idCrmSupplier, userId);
+        await deleteCRMSupplierData(userId, idCrmSupplier);
         return { code: 200, message: "Proveedor eliminado exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

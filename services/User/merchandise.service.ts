@@ -36,16 +36,16 @@ export const postMerchandiseService = async (body: IMerchandise, userId: string,
 
 
 //SERVICE PARA CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyMerchandiseService = async (merchandises: IMerchandise[], userId: string, typeRole: string): Promise<IServiceLayerResponseMerchandise> => {
+export const postManyMerchandiseService = async (userId: string, typeRole: string, merchandises: IMerchandise[]): Promise<IServiceLayerResponseMerchandise> => {
     const uniqueMerchandises: IMerchandise[] = [];
     const duplicatedMerchandises: IMerchandise[] = [];
     try {
         for (const merchandise of merchandises) {
             // Verificar los permisos del usuario para crear mercancías en la sede específica
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(merchandise.branchId, userId, typeRole);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, merchandise.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear mercancías en esta sede");
             // Crear la mercancía
-            const createdMerchandise = await postManyMerchandiseData(merchandise, userId, typeRole);
+            const createdMerchandise = await postManyMerchandiseData(userId, typeRole, merchandise);
             if (createdMerchandise) {
                 uniqueMerchandises.push(createdMerchandise);
             } else duplicatedMerchandises.push(merchandise);

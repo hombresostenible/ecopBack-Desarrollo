@@ -83,11 +83,9 @@ export const getBranchService = async (idBranch: string, userId: string): Promis
 
 
 //SERVICE PARA ACTUALIZAR UNA SEDE PERTENECIENTE AL USER
-export const putBranchService = async (idBranch: string, body: IBranch, userId: string): Promise<IServiceLayerResponseBranch> => {
+export const putBranchService = async (userId: string, idBranch: string, body: IBranch): Promise<IServiceLayerResponseBranch> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar esta sede");
-        const updateBranch = await putBranchData(idBranch, body, userId);
+        const updateBranch = await putBranchData(userId, idBranch, body);
         if (!updateBranch) throw new ServiceError(404, 'Sede no encontrada');
         return { code: 200, message: 'Sede actualizada exitosamente', result: updateBranch };
     } catch (error) {
@@ -101,11 +99,11 @@ export const putBranchService = async (idBranch: string, body: IBranch, userId: 
 
 
 //SERVICE PARA ELIMINAR UNA SEDE PERTENECIENTE AL USER
-export const deleteBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseBranch> => {
+export const deleteBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseBranch> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar esta sede");
-        await deleteBranchData(idBranch);
+        // const hasPermission = await checkPermissionForBranch(userId, idBranch);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar esta sede");
+        await deleteBranchData(userId, idBranch);
         return { code: 200, message: "Sede eliminada exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

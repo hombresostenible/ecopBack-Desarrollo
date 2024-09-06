@@ -40,7 +40,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyMer
     try {
         const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await postManyMerchandiseService(bodyArray, userId, typeRole);
+        const serviceLayerResponse = await postManyMerchandiseService(userId, typeRole, bodyArray);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
