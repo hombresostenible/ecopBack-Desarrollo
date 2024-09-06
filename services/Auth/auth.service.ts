@@ -76,7 +76,7 @@ export const verifyUserTokenService = async (token: string) => {
             jwt.verify(token, TOKEN_SECRET, async (err, decodedToken) => {
                 if (err) return resolve(undefined);
                 if (typeof decodedToken !== 'undefined' && typeof decodedToken !== 'string') {
-                    const userFound = await verifyUserTokenData(decodedToken.id);
+                    const userFound = await verifyUserTokenData(decodedToken.userId);
                     if (userFound) {
                         const newClient: IUser = {
                             id: userFound.id,
@@ -122,9 +122,9 @@ export const verifyUserTokenService = async (token: string) => {
 
 
 //INFORMACION DE PERFIL DEL USER
-export const getProfileUserService = async (id: string): Promise<IUserServiceLayerResponse | null> => {
+export const getProfileUserService = async (userId: string): Promise<IUserServiceLayerResponse | null> => {
     try {
-        const profileFound = await getProfileUserData(id);
+        const profileFound = await getProfileUserData(userId);
         if (!profileFound) return null;
         return { code: 200, result: profileFound };
     } catch (error) {
