@@ -30,13 +30,13 @@ export const postRegisterCRMSuppliersService = async (body: ICrmSuppliers, userI
 
 
 //CREAR MUCHOS PROVEEDORES DESDE EL EXCEL
-export const postManyCRMSuppliersService = async (bodyArray: ICrmSuppliers[], userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const postManyCRMSuppliersService = async (bodyArray: ICrmSuppliers[], userId: string, typeRole: string): Promise<ICrmSuppliersServiceLayerResponse> => {
     const uniqueCRMSupplier: ICrmSuppliers[] = [];
     const duplicatedCRMSupplier: ICrmSuppliers[] = [];
     try {
         for (const crmSupplier of bodyArray) {           
             // Crear el proveedor
-            const createdCRMSupplier = await postManyCRMSuppliersData(crmSupplier, userId);
+            const createdCRMSupplier = await postManyCRMSuppliersData(crmSupplier, userId, typeRole);
             if (createdCRMSupplier) {
                 uniqueCRMSupplier.push(createdCRMSupplier);
             } else duplicatedCRMSupplier.push(crmSupplier);
