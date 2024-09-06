@@ -27,13 +27,13 @@ router.post("/", authRequired, validateSchema(accountsBookSchemaZod), async (req
     try {
         const { userId } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await postAccountsBookService(body, userId);
+        const serviceLayerResponse = await postAccountsBookService(userId, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //POST - http://localhost:3000/api/accountsBook con { "registrationDate": "2024-09-19T12:00:00.000Z", "transactionDate": "2024-09-19T12:00:00.000Z", "transactionType": "Ingreso", "creditCash": "Contado", "meanPayment": "Efectivo", "otherExpenses": null, "periodicityPayService": null, "periodPayService": null, "itemsSold": [ { "nameItem": "Arroz Roa", "itemId": "9c9d27ad-0ce5-4f33-b1b8-28d0477524b9", "type": "Mercancia", "sellingPrice": 2100, "quantity": 10, "subTotalValue": 21000 }, { "nameItem": "Harina de trigo", "itemId": "f2244600-1302-4ede-8f83-e29b75afd5fb", "type": "Materia Prima", "sellingPrice": 1560, "quantity": 5, "subTotalValue": 7800 } ], "totalValue": 28800, "creditDescription": null, "creditWithInterest": null, "creditInterestRate": null, "numberOfPayments": null, "paymentValue": null, "paymentNumber": null, "accountsReceivable": null, "accountsPayable": null, "transactionCounterpartId": "1110521285", "transactionApproved": true, "seller": "Mario", "branchId": "a3e4c52b-3fc6-4d3f-a981-3fcf40338e0b" }
+}); //POST - http://localhost:3000/api/accounts-book con { "registrationDate": "2024-09-19T12:00:00.000Z", "transactionDate": "2024-09-19T12:00:00.000Z", "transactionType": "Ingreso", "creditCash": "Contado", "meanPayment": "Efectivo", "otherExpenses": null, "periodicityPayService": null, "periodPayService": null, "itemsSold": [ { "nameItem": "Arroz Roa", "itemId": "9c9d27ad-0ce5-4f33-b1b8-28d0477524b9", "type": "Mercancia", "sellingPrice": 2100, "quantity": 10, "subTotalValue": 21000 }, { "nameItem": "Harina de trigo", "itemId": "f2244600-1302-4ede-8f83-e29b75afd5fb", "type": "Materia Prima", "sellingPrice": 1560, "quantity": 5, "subTotalValue": 7800 } ], "totalValue": 28800, "creditDescription": null, "creditWithInterest": null, "creditInterestRate": null, "numberOfPayments": null, "paymentValue": null, "paymentNumber": null, "accountsReceivable": null, "accountsPayable": null, "transactionCounterpartId": "1110521285", "transactionApproved": true, "seller": "Mario", "branchId": "a3e4c52b-3fc6-4d3f-a981-3fcf40338e0b" }
 
 
 
@@ -198,7 +198,7 @@ router.get("/:idAccountsBook", authRequired, async (req: Request, res: Response)
 
 
 //OBTENER TODOS LOS REGISTROS CONTABLES POR SEDE DEL USER
-router.get("/accountsBook-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
+router.get("/accounts-book-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
@@ -248,7 +248,7 @@ router.delete('/:idAccountsBook', authRequired, checkRole, async (req: Request, 
     try {
         const { userId } = req.user;
         const { idAccountsBook } = req.params;
-        const serviceLayerResponse = await deleteAccountsBookService(idAccountsBook, userId);
+        const serviceLayerResponse = await deleteAccountsBookService(userId, idAccountsBook);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

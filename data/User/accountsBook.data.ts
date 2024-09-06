@@ -2,6 +2,7 @@ import sequelize from '../../db';
 import AccountsBook from '../../schema/User/accountsBook.schema';
 import AccountsPayable from '../../schema/User/accountsPayable.schema';
 import AccountsReceivable from '../../schema/User/accountsReceivable.schema';
+import Assets from "../../schema/User/assets.schema";
 import Merchandise from "../../schema/User/merchandise.schema";
 import Product from "../../schema/User/product.schema";
 import RawMaterial from "../../schema/User/rawMaterial.schema";
@@ -31,14 +32,12 @@ import { IAccountsBook } from "../../types/User/accountsBook.types";
 import { ServiceError } from "../../types/Responses/responses.types";
 
 //CREAR UN REGISTRO CONTABLE DEL USER
-export const postAccountsBookData = async (body: IAccountsBook, userId: string): Promise<IAccountsBook> => {
+export const postAccountsBookData = async (userId: string, body: IAccountsBook): Promise<IAccountsBook> => {
     try {
         // Establecer transactionApproved basado en meanPayment
         if ((body.transactionType === 'Ingreso' || body.transactionType === 'Gasto') && body.meanPayment === 'Efectivo' && body.creditCash === 'Contado') {
             body.transactionApproved = true;
-        } else {
-            body.transactionApproved = false;
-        }
+        } else body.transactionApproved = false;
 
         // Guardar la transacción en AccountsBook
         const newTransaction = new AccountsBook({
@@ -46,7 +45,6 @@ export const postAccountsBookData = async (body: IAccountsBook, userId: string):
             userId: userId,
         });
         await newTransaction.save();
-        
         //^ Actualizar inventario según los artículos vendidos
         if (body.itemsSold) {
             for (const item of body.itemsSold) {
@@ -140,7 +138,7 @@ export const getAccountsBooksData = async (userId: string): Promise<any> => {
                 userId: userId,
                 transactionApproved: true,
             },
-        });        
+        });
         return allAccountsBook;
     } catch (error) {
         throw error;
@@ -154,7 +152,7 @@ export const getAccountsBooksApprovedData = async (userId: string): Promise<any>
     try {
         const allAccountsBook = await AccountsBook.findAll({
             where: { userId: userId },
-        });        
+        });
         return allAccountsBook;
     } catch (error) {
         throw error;
@@ -342,43 +340,46 @@ export const patchIncomesNotApprovedData = async (idAssets: string, userId: stri
 
 
 //ELIMINA UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER
-export const deleteAccountsBookData = async (idAccountsBook: string): Promise<void> => {
+export const deleteAccountsBookData = async (userId: string, idAccountsBook: string): Promise<void> => {
     const transaction = await sequelize.transaction();
     try {
-        const transactionFound = await AccountsBook.findOne({ where: { userId: idAccountsBook }, transaction });
-        if (!transactionFound) throw new Error('Registro del libro diario no encontrado');
-        // Iteración y procesamiento de itemsSold
-        if (transactionFound.itemsSold && transactionFound.itemsSold.length > 0) {
-            for (const itemSold of transactionFound.itemsSold) {
-                switch (itemSold.type) {
+        // ENCONTRAMOS LA TRANSACCION
+        const transactionFound = await AccountsBook.findOne({ where: { userId: userId, id: idAccountsBook }, transaction });
+        if (!transactionFound) throw new Error('Registro del libro diario no encontrado');       
+        // PROCEDEMOS A REVERTIR LOS REGISTROS DE ASSETS, MERCHANDISES, PRODUCTS, RAWMATERIALS Y SERVICES, PARA REAJUSTAR INVENTARIOS
+        const items = transactionFound.transactionType === 'Gasto' ? transactionFound.itemsBuy : transactionFound.itemsSold;
+        if (items && items.length > 0) {
+            for (const item of items) {
+                switch (item.type) {
+                    case 'Asset': {
+                        await processAsset(transactionFound, item, transaction);
+                        break;
+                    }
                     case 'Merchandise': {
-                        await processMerchandise(transactionFound, itemSold, transaction);
+                        await processMerchandise(transactionFound, item, transaction);
                         break;
                     }
                     case 'Product': {
-                        await processProduct(transactionFound, itemSold, transaction);
+                        await processProduct(transactionFound, item, transaction);
                         break;
                     }
                     case 'RawMaterial': {
-                        await processRawMaterial(transactionFound, itemSold, transaction);
+                        await processRawMaterial(transactionFound, item, transaction);
                         break;
                     }
                     case 'Service': {
-                        await processService(transactionFound, itemSold, transaction);
+                        await processService(transactionFound, item, transaction);
                         break;
                     }
                     default:
-                        throw new ServiceError(400, `Categoría de ingreso desconocida: ${itemSold.type}`);
+                        throw new ServiceError(400, `Categoría de ingreso desconocida: ${item.type}`);
                 }
             }
         }
-
         // Eliminación de registros relacionados
         await deleteRelatedRecords(idAccountsBook, transaction);
-
         // Eliminación del registro del libro diario
-        await AccountsBook.destroy({ where: { userId: idAccountsBook }, transaction });
-
+        await AccountsBook.destroy({ where: { id: idAccountsBook }, transaction });
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();
@@ -386,72 +387,88 @@ export const deleteAccountsBookData = async (idAccountsBook: string): Promise<vo
     }
 };
 
-// Función para procesar mercancías
+// REVERSION DEL AUMENTO O DESCUENTO EN EL INVENTARIO DE ASSETS
+const processAsset = async (transactionFound: any, itemSold: any, transaction: any) => {
+    const itemFound = await Assets.findOne({
+        where: { userId: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        transaction
+    });
+    if (!itemFound) throw new ServiceError(400, "No se encontró la mercancía de este registro");
+    if (transactionFound.transactionType === 'Ingreso') {
+        itemFound.inventory += itemSold.quantity;
+    } else if (transactionFound.transactionType === 'Gasto') {
+        itemFound.inventory -= itemSold.quantity;
+    }
+    await itemFound.save({ transaction });
+};
+
+
+// REVERSION DEL AUMENTO O DESCUENTO EN EL INVENTARIO DE MERCHANDISES
 const processMerchandise = async (transactionFound: any, itemSold: any, transaction: any) => {
-    const merchandiseFound = await Merchandise.findOne({
+    const itemFound = await Merchandise.findOne({
         where: { userId: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
-    if (!merchandiseFound) throw new ServiceError(400, "No se encontró la mercancía de este registro");
+    if (!itemFound) throw new ServiceError(400, "No se encontró la mercancía de este registro");
     if (transactionFound.transactionType === 'Ingreso') {
-        merchandiseFound.inventory += itemSold.quantity;
-        merchandiseFound.salesCount -= itemSold.quantity;
+        itemFound.inventory += itemSold.quantity;
+        itemFound.salesCount -= itemSold.quantity;
     } else if (transactionFound.transactionType === 'Gasto') {
-        merchandiseFound.inventory -= itemSold.quantity;
+        itemFound.inventory -= itemSold.quantity;
     }
-    await merchandiseFound.save({ transaction });
+    await itemFound.save({ transaction });
 };
 
-// Función para procesar productos
+// REVERSION DEL AUMENTO O DESCUENTO EN EL INVENTARIO DE PRODUCTS
 const processProduct = async (transactionFound: any, itemSold: any, transaction: any) => {
-    const productFound = await Product.findOne({
-        where: { userId: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+    const itemFound = await Product.findOne({
+        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
-    if (!productFound) throw new ServiceError(400, "No se encontró el producto de este registro");
+    if (!itemFound) throw new ServiceError(400, "No se encontró el producto de este registro");
     if (transactionFound.transactionType === 'Ingreso') {
-        productFound.inventory += itemSold.quantity;
-        productFound.salesCount -= itemSold.quantity;
+        itemFound.inventory += itemSold.quantity;
+        itemFound.salesCount -= itemSold.quantity;
     } else if (transactionFound.transactionType === 'Gasto') {
-        productFound.inventory -= itemSold.quantity;
+        itemFound.inventory -= itemSold.quantity;
     }
-    await productFound.save({ transaction });
+    await itemFound.save({ transaction });
 };
 
-// Función para procesar materias primas
+// REVERSION DEL AUMENTO O DESCUENTO EN EL INVENTARIO DE RAWMATERIALS
 const processRawMaterial = async (transactionFound: any, itemSold: any, transaction: any) => {
-    const rawMaterialFound = await RawMaterial.findOne({
-        where: { userId: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+    const itemFound = await RawMaterial.findOne({
+        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
-    if (!rawMaterialFound) throw new ServiceError(400, "No se encontró la materia prima de este registro");
+    if (!itemFound) throw new ServiceError(400, "No se encontró la materia prima de este registro");
     if (transactionFound.transactionType === 'Ingreso') {
-        rawMaterialFound.inventory += itemSold.quantity;
-        rawMaterialFound.salesCount -= itemSold.quantity;
+        itemFound.inventory += itemSold.quantity;
+        itemFound.salesCount -= itemSold.quantity;
     } else if (transactionFound.transactionType === 'Gasto') {
-        rawMaterialFound.inventory -= itemSold.quantity;
+        itemFound.inventory -= itemSold.quantity;
     }
-    await rawMaterialFound.save({ transaction });
+    await itemFound.save({ transaction });
 };
 
-// Función para procesar servicios
+// REVERSION DEL AUMENTO O DESCUENTO EN EL INVENTARIO DE SERVICES
 const processService = async (transactionFound: any, itemSold: any, transaction: any) => {
-    const serviceFound = await Service.findOne({
-        where: { userId: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+    const itemFound = await Service.findOne({
+        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
-    if (!serviceFound) throw new ServiceError(400, "No se encontró el servicio de este registro");
+    if (!itemFound) throw new ServiceError(400, "No se encontró el servicio de este registro");
     if (transactionFound.transactionType === 'Ingreso') {
-        serviceFound.salesCount -= itemSold.quantity;
+        itemFound.salesCount -= itemSold.quantity;
     }
-    await serviceFound.save({ transaction });
+    await itemFound.save({ transaction });
 };
 
-// Función para eliminar registros relacionados
+// REVERSION DE REGISTROS EN CXC CXP Y SUSTAINABILITY
 const deleteRelatedRecords = async (idAccountsBook: string, transaction: any) => {
     await Promise.all([
-        AccountsReceivable.destroy({ where: { accountsBookId: idAccountsBook }, transaction }),
-        AccountsPayable.destroy({ where: { accountsBookId: idAccountsBook }, transaction }),
-        Sustainability.destroy({ where: { accountsBookId: idAccountsBook }, transaction })
+        AccountsReceivable.destroy({ where: { id: idAccountsBook }, transaction }),
+        AccountsPayable.destroy({ where: { id: idAccountsBook }, transaction }),
+        Sustainability.destroy({ where: { id: idAccountsBook }, transaction })
     ]);
 };

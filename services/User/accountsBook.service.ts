@@ -19,9 +19,9 @@ import { IServiceLayerResponseAccountsBook } from '../../types/Responses/respons
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //CREAR UN REGISTRO CONTABLE DEL USER
-export const postAccountsBookService = async (body: IAccountsBook, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const postAccountsBookService = async (userId: string, body: IAccountsBook): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        const dataLayerResponse = await postAccountsBookData(body, userId);
+        const dataLayerResponse = await postAccountsBookData(userId, body);
         if (!dataLayerResponse) throw new ServiceError(400, "No se puede registrar en el libro diario");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -232,9 +232,9 @@ export const patchIncomesNotApprovedService = async (idAssets: string, userId: s
 
 
 //SERVICE PARA ELIMINAR UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER
-export const deleteAccountsBookService = async (idAccountsBook: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const deleteAccountsBookService = async (userId: string, idAccountsBook: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        await deleteAccountsBookData(idAccountsBook);
+        await deleteAccountsBookData(userId, idAccountsBook);
         return { code: 200, message: 'Registro eliminado exitosamente' };
     } catch (error) {
         if (error instanceof Error) {
