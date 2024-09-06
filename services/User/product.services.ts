@@ -196,11 +196,11 @@ export const getProductsOffByBranchService = async (idBranch: string, userId: st
 
 
 //ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
-export const putProductService = async (idProduct: string, body: IProduct, userId: string): Promise<IServiceLayerResponseProduct> => {
+export const putProductService = async (userId: string, idProduct: string, body: IProduct): Promise<IServiceLayerResponseProduct> => {
     try {
-        const hasPermission = await checkPermissionForProduct(idProduct, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este producto");
-        const updateProduct = await putProductData(idProduct, body, userId);
+        // const hasPermission = await checkPermissionForProduct(userId, idProduct);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este producto");
+        const updateProduct = await putProductData(userId, idProduct, body);
         if (!updateProduct) throw new ServiceError(404, "Producto no encontrado");
         return { code: 200, message: "Producto actualizado exitosamente", result: updateProduct };
     } catch (error) {
@@ -282,11 +282,11 @@ export const patchAddInventoryProductService = async (idProduct: string, body: a
 
 
 //SERVICE PARA ELIMINAR UN PRODUCTO PERTENECIENTE AL USER
-export const deleteProductService = async (idProduct: string, userId: string): Promise<IServiceLayerResponseProduct> => {
+export const deleteProductService = async (userId: string, idProduct: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        const hasPermission = await checkPermissionForProduct(idProduct, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este producto");
-        await deleteProductData(idProduct);
+        // const hasPermission = await checkPermissionForProduct(userId, idProduct);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este producto");
+        await deleteProductData(userId, idProduct);
         return { code: 200, message: "Producto eliminado exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

@@ -144,11 +144,11 @@ export const getMerchandiseSOffByBranchService = async (idBranch: string, userId
 
 
 //SERVICE PARA ACTUALIZAR UNA MERCANCIA PERTENECIENTE AL USER
-export const putMerchandiseService = async (idMerchandise: string, body: IMerchandise, userId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const putMerchandiseService = async (userId: string, idMerchandise: string, body: IMerchandise): Promise<IServiceLayerResponseMerchandise> => {
     try {
-        const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar esta mercancía");
-        const updateMerchandise = await putMerchandiseData(idMerchandise, body, userId);
+        // const hasPermission = await checkPermissionForMerchandise(userId, idMerchandise);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar esta mercancía");
+        const updateMerchandise = await putMerchandiseData(userId, idMerchandise, body);
         if (!updateMerchandise) throw new ServiceError(404, "Mercancia no encontrada");
         return { code: 200, message: "Mercancia actualizado exitosamente", result: updateMerchandise };
     } catch (error) {
@@ -228,11 +228,11 @@ export const patchAddInventoryMerchandiseService = async (idMerchandise: string,
 
 
 //SERVICE PARA ELIMINAR UNA MERCANCIA PERTENECIENTE AL USER
-export const deleteMerchandiseService = async (idMerchandise: string, userId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const deleteMerchandiseService = async (userId: string, idMerchandise: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
-        const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar esta mercancía");
-        await deleteMerchandiseData(idMerchandise);
+        // const hasPermission = await checkPermissionForMerchandise(userId, idMerchandise);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar esta mercancía");
+        await deleteMerchandiseData(userId, idMerchandise);
         return { code: 200, message: "Mercancia eliminada exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

@@ -125,34 +125,28 @@ export const getServicesByIdData = async (idService: string): Promise<any> => {
 
 
 //DATA PARA ACTUALIZAR UN SERVICIO DEL USER
-export const putServicesData = async (idService: string, body: IService, userId: string): Promise<IService | null> => {
-    let transaction;
+export const putServicesData = async (userId: string, idService: string, body: IService): Promise<IService | null> => {
+    //ACTUALIZAR LAS CANTIDADES DE PRODUTOS, MATERIAS PRIMAS, ETC
     try {
-        transaction = await sequelize.transaction();
-        const serviceExists = await Service.findOne({
-            where: { userId: idService },
-            transaction,
+        // Verificar si ya existe otro registro con el mismo nombre (ignorar el que se está actualizando)
+        const existingBranchWithSameName = await Service.findOne({
+            where: {
+                userId: userId,
+                nameItem: body.nameItem,
+                id: { [Op.not]: idService } // Verificar duplicados ignorando el registro actual
+            },
         });
-        if (!serviceExists) throw new ServiceError(404, "No se encontró ningún servicio para actualizar");
-        const existingServiceWithSameName = await Service.findOne({
-            where: { userId, nameItem: body.nameItem, id: { [Op.not]: idService } },
-            transaction,
+        if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el equipo, máquina o herramienta porque ya existe una con ese mismo nombre");
+        // Actualizar el registro si no existe duplicado
+        const [rowsUpdated] = await Service.update(body, {
+            where: { id: idService, userId: userId }
         });
-        if (existingServiceWithSameName) throw new ServiceError(403, "No es posible actualizar el servicio porque ya existe uno con ese mismo nombre");
-        const [rowsUpdated] = await Service.update(body, { where: { userId: idService }, transaction });
-        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún servicio para actualizar");
-
-        // Lógica para actualizar ServiceRawMaterial
-        // if (body.serviceRawMaterials && body.serviceRawMaterials.length > 0) {
-        //     await updateServiceRawMaterials(idService, body.serviceRawMaterials, transaction);
-        // }
-
-        await transaction.commit();
-        const updatedService = await Service.findByPk(idService);
-        if (!updatedService) throw new ServiceError(404, "No se encontró ningún servicio para actualizar");
-        return updatedService as unknown as IService;
+        if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún equipo, máquina o herramienta para actualizar");
+        // Recuperar y devolver el registro actualizado
+        const updatedAsset = await Service.findByPk(idService);
+        if (!updatedAsset) throw new ServiceError(404, "No se encontró ningún equipo, máquina o herramienta para actualizar");
+        return updatedAsset;
     } catch (error) {
-        if (transaction) await transaction.rollback();
         throw error;
     }
 };
@@ -182,37 +176,14 @@ export const putUpdateManyServiceData = async (body: IService, userId: string): 
 
 
 //DATA PARA ELIMINAR UN SERVICIO DEL USER
-export const deleteServicesData = async (idService: string): Promise<void> => {
-    let transaction;
+export const deleteServicesData = async (userId: string, idService: string): Promise<void> => {
+    // ELIMINAR LOS EQUIPOS, PRODUCTOS, MATERIAS PRIMAS
     try {
-        transaction = await sequelize.transaction();
-
-        // // Eliminar registros en ServiceRawMaterial
-        // await ServiceRawMaterial.destroy({
-        //     where: { serviceId: idService },
-        //     transaction,
-        // });
-
-        // // Eliminar registros en ServiceAssets
-        // await ServiceAssets.destroy({
-        //     where: { serviceId: idService },
-        //     transaction,
-        // });
-
-        // // Eliminar registros en ServiceProduct
-        // await ServiceProduct.destroy({
-        //     where: { serviceId: idService },
-        //     transaction,
-        // });
-
-        // Eliminar el servicio principal
-        await Service.destroy({
-            where: { userId: idService },
-            transaction,
-        });
-        await transaction.commit();
+        const productFound = await Service.findOne({ where: { id: idService } });
+        if (!productFound) throw new Error("Servicio no encontrada");
+        await Service.destroy({ where: { userId: userId, id: idService } });
     } catch (error) {
-        if (transaction) await transaction.rollback();
+        throw error;
         throw error;
     }
 };

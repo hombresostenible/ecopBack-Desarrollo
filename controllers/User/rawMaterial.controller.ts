@@ -141,7 +141,7 @@ router.put("/:idRawMaterial", authRequired, checkRole, async (req: Request, res:
         const { userId } = req.user;
         const { idRawMaterial } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await putRawMaterialService(idRawMaterial, body, userId);
+        const serviceLayerResponse = await putRawMaterialService(userId, idRawMaterial, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -203,7 +203,7 @@ router.delete('/:idRawMaterial', authRequired, checkRole, async (req: Request, r
     try {
         const { userId } = req.user;
         const { idRawMaterial } = req.params;
-        const serviceLayerResponse = await deleteRawMaterialService(idRawMaterial, userId);  
+        const serviceLayerResponse = await deleteRawMaterialService(userId, idRawMaterial);  
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

@@ -162,13 +162,19 @@ export const getRawMaterialsOffByBranchData = async (idBranch: string, userId: s
 
 
 //DATA PARA ACTUALIZAR UNA MATERIA PRIMA PERTENECIENTE AL USER
-export const putRawMaterialData = async (idRawMaterial: string, body: IRawMaterial, userId: string): Promise<IRawMaterial | null> => {
+export const putRawMaterialData = async (userId: string, idRawMaterial: string, body: IRawMaterial): Promise<IRawMaterial | null> => {
     try {
         const existingBranchWithSameName = await RawMaterial.findOne({
-            where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idRawMaterial } },
+            where: {
+                userId: userId,
+                nameItem: body.nameItem,
+                id: { [Op.not]: idRawMaterial }
+            },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la materia prima porque ya existe una con ese mismo nombre");
-        const [rowsUpdated] = await RawMaterial.update(body, { where: { userId: idRawMaterial } });
+        const [rowsUpdated] = await RawMaterial.update(body, {
+            where: { id: idRawMaterial, userId: userId }
+        });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna materia prima para actualizar");
         const updatedRawMaterial = await RawMaterial.findByPk(idRawMaterial);
         if (!updatedRawMaterial) throw new ServiceError(404, "No se encontró ningún producto para actualizar");
@@ -279,11 +285,11 @@ export const patchAddInventoryRawMaterialData = async (idRawMaterial: string, bo
 
 
 //DATA PARA ELIMINAR UNA MATERIA PRIMA PERTENECIENTE AL USER
-export const deleteRawMaterialData = async (userId: string): Promise<void> => {
+export const deleteRawMaterialData = async (userId: string, idRawMaterial: string): Promise<void> => {
     try {
-        const rawMaterialFound = await RawMaterial.findOne({ where: { userId } });
+        const rawMaterialFound = await RawMaterial.findOne({ where: { id: idRawMaterial } });
         if (!rawMaterialFound) throw new Error('Materia prima no encontrada');
-        await RawMaterial.destroy({ where: { userId } });
+        await RawMaterial.destroy({ where: { userId: userId, id: idRawMaterial } });
     } catch (error) {
         throw error;
     }

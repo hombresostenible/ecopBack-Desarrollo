@@ -27,7 +27,7 @@ class Service extends Model {
 
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
-    public userId!: string | null;
+    public userId?: string;
 }
 
 Service.init(

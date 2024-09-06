@@ -144,11 +144,11 @@ export const getAssetsOffByBranchService = async (idBranch: string, userId: stri
 
 
 //ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
-export const putAssetService = async (idAssets: string, body: IAssets, userId: string): Promise<IServiceLayerResponseAssets> => {
+export const putAssetService = async (userId: string, idAssets: string, body: IAssets): Promise<IServiceLayerResponseAssets> => {
     try {
-        const hasPermission = await checkPermissionForAssets(idAssets, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este equipo, máquina o herramienta");
-        const updateAsset = await putAssetData(idAssets, body, userId);
+        // const hasPermission = await checkPermissionForAssets(userId, idAssets);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este equipo, máquina o herramienta");
+        const updateAsset = await putAssetData(userId, idAssets, body);
         if (!updateAsset) throw new ServiceError(404, "Equipo, máquina o herramienta no encontrado");
         return { code: 200, message: "Equipo, máquina o herramienta actualizada exitosamente", result: updateAsset };
     } catch (error) {
@@ -231,11 +231,11 @@ export const patchAddInventoryAssetService = async (idAssets: string, body: any,
 
 
 //ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
-export const deleteAssetService = async (idAssets: string, userId: string): Promise<IServiceLayerResponseAssets> => {
+export const deleteAssetService = async (userId: string, idAssets: string): Promise<IServiceLayerResponseAssets> => {
     try {
-        const hasPermission = await checkPermissionForAssets(idAssets, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este equipo, máquina o herramienta");
-        await deleteAssetData(idAssets);
+        // const hasPermission = await checkPermissionForAssets(userId, idAssets);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este equipo, máquina o herramienta");
+        await deleteAssetData(userId, idAssets);
         return { code: 200, message: "Equipo, máquina o herramienta eliminada exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

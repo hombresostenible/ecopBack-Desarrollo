@@ -99,21 +99,21 @@ export const getBranchByIdData = async (idBranch: string): Promise<any> => {
 //DATA PARA ACTUALIZAR UNA SEDE PERTENECIENTE AL USER
 export const putBranchData = async (userId: string, idBranch: string, body: IBranch): Promise<IBranch> => {
     try {
-        // Verificar si ya existe otra sede con el mismo nombre (ignorar la sede que se está actualizando)
+        // Verificar si ya existe otro registro con el mismo nombre (ignorar el que se está actualizando)
         const existingBranchWithSameName = await Branch.findOne({
             where: { 
                 userId: userId, 
                 nameBranch: body.nameBranch, 
-                id: { [Op.not]: idBranch } // Verificar duplicados ignorando la sede actual
+                id: { [Op.not]: idBranch } // Verificar duplicados ignorando el registro actual
             },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la sede porque ya existe una sede con el mismo nombre");
-        // Actualizar la sede si no existe duplicado
+        // Actualizar el registro si no existe duplicado
         const [rowsUpdated] = await Branch.update(body, { 
-            where: { id: idBranch, userId: userId }  // Condición corregida
+            where: { id: idBranch, userId: userId }
         });
         if (rowsUpdated === 0) throw new ServiceError(404, "No se encontró ninguna sede para actualizar");
-        // Recuperar y devolver la sede actualizada
+        // Recuperar y devolver el registro actualizado
         const updatedBranch = await Branch.findByPk(idBranch);
         if (!updatedBranch) throw new ServiceError(404, "No se encontró ninguna sede actualizada");
         return updatedBranch;

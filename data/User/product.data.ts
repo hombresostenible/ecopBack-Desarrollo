@@ -179,13 +179,18 @@ export const getProductsOffByBranchData = async (idBranch: string, userId: strin
 
 
 //DATA PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
-export const putProductData = async (idProduct: string, body: IProduct, userId: string): Promise<IProduct | null> => {
+export const putProductData = async (userId: string, idProduct: string, body: IProduct): Promise<IProduct | null> => {
     try {
         const existingBranchWithSameName = await Product.findOne({
-            where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idProduct } },
+            where: {
+                userId: userId,
+                nameItem: body.nameItem,
+                id: { [Op.not]: idProduct }
+            },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el producto porque ya existe uno con ese mismo nombre");
-        const [rowsUpdated] = await Product.update(body, { where: { userId: idProduct } });
+        const [rowsUpdated] = await Product.update(body, {
+            where: { id: idProduct, userId: userId } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún producto para actualizar");
         const updatedProduct = await Product.findByPk(idProduct);
         if (!updatedProduct) throw new ServiceError(404, "No se encontró ningún producto para actualizar");
@@ -297,11 +302,11 @@ export const patchAddInventoryProductData = async (idProduct: string, body: Part
 
 
 //DATA PARA ELIMINAR UN PRODUCTO PERTENECIENTE AL USER
-export const deleteProductData = async (idProduct: string): Promise<void> => {
+export const deleteProductData = async (userId: string, idProduct: string): Promise<void> => {
     try {
-        const productFound = await Product.findOne({ where: { userId: idProduct } });
+        const productFound = await Product.findOne({ where: { id: idProduct } });
         if (!productFound) throw new Error("Producto no encontrado");
-        await Product.destroy({ where: { userId: idProduct } });
+        await Product.destroy({ where: { userId: userId, id: idProduct } });
     } catch (error) {
         throw error;
     }

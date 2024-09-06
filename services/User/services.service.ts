@@ -111,11 +111,11 @@ export const getServicesService = async (idMachinery: string, userId: string): P
 
 
 //SERVICE PARA ACTUALIZAR UN SERVICIO DEL USER
-export const putServicesService = async (idService: string, body: IService, userId: string): Promise<IServiceLayerResponseService> => {
+export const putServicesService = async (userId: string, idService: string, body: IService): Promise<IServiceLayerResponseService> => {
     try {
-        const hasPermission = await checkPermissionForServices(idService, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este servicio");
-        const updateServices = await putServicesData(idService, body, userId);
+        // const hasPermission = await checkPermissionForServices(userId, idService);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este servicio");
+        const updateServices = await putServicesData(userId, idService, body);
         if (!updateServices) throw new ServiceError(404, "Servicio no encontrado");
         return { code: 200, message: "Servicio actualizado exitosamente", result: updateServices };
     } catch (error) {
@@ -154,11 +154,11 @@ export const putUpdateManyServiceService = async (services: IService[], userId: 
 
 
 //SERVICE PARA ELIMINAR UN SERVICIO DEL USER
-export const deleteServicesService = async (idService: string, userId: string): Promise<IServiceLayerResponseService> => {
+export const deleteServicesService = async (userId: string, idService: string): Promise<IServiceLayerResponseService> => {
     try {
-        const hasPermission = await checkPermissionForServices(idService, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este service");
-        await deleteServicesData(idService);
+        // const hasPermission = await checkPermissionForServices(userId, idService);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este service");
+        await deleteServicesData(userId, idService);
         return { code: 200, message: "Servicio eliminado exitosamente" };
     } catch (error) {
         if (error instanceof Error) {
