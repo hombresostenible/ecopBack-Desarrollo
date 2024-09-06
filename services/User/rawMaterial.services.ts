@@ -18,11 +18,11 @@ import { IRawMaterial } from "../../types/User/rawMaterial.types";
 import { ServiceError, IServiceLayerResponseRawMaterial } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR MATERIA PRIMA POR SEDE PARA USER
-export const postRawMaterialService = async (body: IRawMaterial, userId: string, typeRole: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const postRawMaterialService = async (userId: string, typeRole: string, body: IRawMaterial): Promise<IServiceLayerResponseRawMaterial> => {
     try {
-        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, body.branchId);
         if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear una materia en esta sede");
-        const dataLayerResponse = await postRawMaterialData(body, userId, typeRole);
+        const dataLayerResponse = await postRawMaterialData(userId, typeRole, body);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe una materia prima con el mismo nombre en esta sede, cámbialo");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -36,16 +36,16 @@ export const postRawMaterialService = async (body: IRawMaterial, userId: string,
 
 
 //DATA PARA CREAR MUCHAS MATERIAS PRIMAS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyRawMaterialService = async (rawMaterials: IRawMaterial[], userId: string, typeRole: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const postManyRawMaterialService = async (userId: string, typeRole: string, rawMaterials: IRawMaterial[]): Promise<IServiceLayerResponseRawMaterial> => {
     const uniqueRawMaterials: IRawMaterial[] = [];
     const duplicatedRawMaterials: IRawMaterial[] = [];
     try {
         for (const rawMaterial of rawMaterials) {
             // Verificar los permisos del usuario para crear materias primas en la sede específica
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(rawMaterial.branchId, userId, typeRole);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, rawMaterial.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear materias primas en esta sede");
             // Crear la materia prima
-            const createdRawMaterial = await postManyRawMaterialData(rawMaterial, userId, typeRole);
+            const createdRawMaterial = await postManyRawMaterialData(userId, typeRole, rawMaterial);
             if (createdRawMaterial) {
                 uniqueRawMaterials.push(createdRawMaterial);
             } else duplicatedRawMaterials.push(rawMaterial);

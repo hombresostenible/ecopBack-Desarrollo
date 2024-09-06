@@ -118,7 +118,7 @@ router.delete('/:idCrmSupplier', authRequired, checkRole, async (req: Request, r
     try {
         const { userId } = req.user;
         const { idCrmSupplier } = req.params;
-        const serviceLayerResponse = await deleteCRMSupplierService(idCrmSupplier, userId); 
+        const serviceLayerResponse = await deleteCRMSupplierService(userId, idCrmSupplier); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

@@ -138,13 +138,16 @@ export const putCRMSupplierData = async (idCrmSupplier: string, body: ICrmSuppli
 
 
 //DATA PARA ELIMINAR UN PROVEEDORES PERTENECIENTE AL USER
-export const deleteCRMSupplierData = async (idCrmSupplier: string, userId: string): Promise<void> => {
+export const deleteCRMSupplierData = async (userId: string, idCrmSupplier: string): Promise<void> => {
     try {
         const cRMSupplierFound = await CrmSupplier.findOne({
-            where: { userId: idCrmSupplier, entityUserId: userId }
+            where: { entityUserId: userId, id: idCrmSupplier }
         });
         if (!cRMSupplierFound) throw new Error("Proveedor no encontrado");
-        await CrmSupplier.destroy({ where: { userId: idCrmSupplier } });
+        // Eliminar el proveedor usando la misma condición que en la búsqueda
+        await CrmSupplier.destroy({
+            where: { entityUserId: userId, id: idCrmSupplier }
+        });
     } catch (error) {
         throw error;
     }

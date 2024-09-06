@@ -35,16 +35,16 @@ export const postAssetService = async (body: IAssets, userId: string): Promise<I
 
 
 //CREAR DE FORMA MASIVA UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER O DESDE EL EXCEL
-export const postManyAssetService = async (assets: IAssets[], userId: string, typeRole: string): Promise<IServiceLayerResponseAssets> => {
+export const postManyAssetService = async (userId: string, typeRole: string, assets: IAssets[]): Promise<IServiceLayerResponseAssets> => {
     const uniqueAssets: IAssets[] = [];
     const duplicatedAssets: IAssets[] = [];
     try {
         for (const asset of assets) {
             // Verificar los permisos del usuario para crear activos en la sede específica
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(asset.branchId, userId, typeRole);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, asset.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear un equipo, máquina o herramienta en esta sede");
             // Crear el activo
-            const createdAsset = await postManyAssetData(asset, userId, typeRole);
+            const createdAsset = await postManyAssetData(userId, typeRole, asset);
             if (createdAsset) {
                 uniqueAssets.push(createdAsset);
             } else duplicatedAssets.push(asset);

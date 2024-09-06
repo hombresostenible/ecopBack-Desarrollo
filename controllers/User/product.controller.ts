@@ -38,9 +38,9 @@ router.post("/", authRequired, checkRole, validateSchema(productSchemaZod), asyn
 //CONTROLLER PARA CREAR MUCHOS PRODUCTOS POR SEDE PARA USER DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyProductSchemaZod), async (req: Request, res: Response) => {
     try {
-        const bodyArray = req.body;
         const { userId, typeRole } = req.user;
-        const serviceLayerResponse = await postManyProductService(bodyArray, userId, typeRole);
+        const bodyArray = req.body;
+        const serviceLayerResponse = await postManyProductService(userId, typeRole, bodyArray);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;

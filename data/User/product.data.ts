@@ -8,12 +8,12 @@ import { ServiceError } from '../../types/Responses/responses.types';
 export const postProductsData = async (body: IProduct, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        const existingProduct = await Product.findOne({
+        const existingRegister = await Product.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-        if (existingProduct) {
-            if (existingProduct.getDataValue('userId') === userId) {
+        if (existingRegister) {
+            if (existingRegister.getDataValue('userId') === userId) {
                 await t.rollback();
                 return null;
             }
@@ -23,22 +23,22 @@ export const postProductsData = async (body: IProduct, userId: string, typeRole:
         const currentDate = new Date().toISOString();
         const initialInventory = body.inventory || 0;
         if (typeRole === 'Superadmin') {
-            const newProduct = await Product.create({
+            const newRegister = await Product.create({
                 ...body,
                 userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
-            return newProduct;
+            return newRegister;
         }
         if (typeRole === 'Administrador') {
-            const newProduct = await Product.create({
+            const newRegister = await Product.create({
                 ...body,
                 userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
-            return newProduct;
+            return newRegister;
         }
     } catch (error) {
         await t.rollback();
@@ -49,36 +49,33 @@ export const postProductsData = async (body: IProduct, userId: string, typeRole:
 
 
 //DATA PARA CREAR MUCHOS PRODUCTOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyProductsData = async (body: IProduct, userId: string, typeRole: string): Promise<any> => {
+export const postManyProductsData = async (userId: string, typeRole: string, body: IProduct): Promise<any> => {
     const t = await sequelize.transaction();
-
     try {
-        const existingProduct = await Product.findOne({
+        const existingRegister = await Product.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-
         // Si el producto ya existe, devuelve null
-        if (existingProduct) {
+        if (existingRegister) {
             await t.rollback();
             return null;
         }
-        
         if (typeRole === 'Superadmin') {
-            const newProduct = await Product.create({
+            const newRegister = await Product.create({
                 ...body,
                 userId: userId,
             }, { transaction: t });      
             await t.commit();
-            return newProduct;            
+            return newRegister;            
         }
         if (typeRole === 'Administrador') {
-            const newProduct = await Product.create({
+            const newRegister = await Product.create({
                 ...body,
                 userId: userId,
             }, { transaction: t });      
             await t.commit();
-            return newProduct;   
+            return newRegister;   
         }
     } catch (error) {
         await t.rollback();
@@ -227,22 +224,22 @@ export const patchProductData = async (idProduct: string, body: Partial<IProduct
     const t = await sequelize.transaction();
     try {
         let whereClause: Record<string, any> = { userId: idProduct };
-        const existingProduct = await Product.findOne({
+        const existingRegister = await Product.findOne({
             where: whereClause,
             transaction: t,
         });
 
-        if (!existingProduct) throw new ServiceError(404, "No se encontró el producto");
-        if (body.inventory !== undefined && body.inventory > existingProduct.inventory) throw new ServiceError(400, "No hay suficiente cantidad de mercancía disponibles para dar de baja");
+        if (!existingRegister) throw new ServiceError(404, "No se encontró el producto");
+        if (body.inventory !== undefined && body.inventory > existingRegister.inventory) throw new ServiceError(400, "No hay suficiente cantidad de mercancía disponibles para dar de baja");
         
         if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
             const IInventoryOffItem = body.inventoryOff[0];                      // Accede al primer elemento de inventoryOff
             const currentDate = new Date();                                     // Obtener la fecha actual
             
             // Actualizar el inventario y agregar un nuevo elemento a inventoryOff
-            existingProduct.inventory -= IInventoryOffItem.quantity || 0;    // Restar la cantidad de productos dañados del inventario actual
+            existingRegister.inventory -= IInventoryOffItem.quantity || 0;    // Restar la cantidad de productos dañados del inventario actual
 
-            existingProduct.inventoryOff = existingProduct.inventoryOff.concat({ 
+            existingRegister.inventoryOff = existingRegister.inventoryOff.concat({ 
                 date: currentDate, 
                 quantity: (IInventoryOffItem.quantity || 0),
                 reason: IInventoryOffItem.reason || 'Baja de producto',
@@ -251,8 +248,8 @@ export const patchProductData = async (idProduct: string, body: Partial<IProduct
         }
 
         const [rowsUpdated] = await Product.update({
-            inventory: existingProduct.inventory,
-            inventoryOff: existingProduct.inventoryOff
+            inventory: existingRegister.inventory,
+            inventoryOff: existingRegister.inventoryOff
         }, {
             where: whereClause,
             transaction: t,
@@ -280,11 +277,11 @@ export const patchAddInventoryProductData = async (idProduct: string, body: Part
     try {
         let whereClause: Record<string, any> = { userId: idProduct };
         whereClause.userId = userId;
-        const existingProduct = await Product.findOne({
+        const existingRegister = await Product.findOne({
             where: whereClause,
         });
-        if (!existingProduct) throw new ServiceError(404, "No se encontró el producto");
-        const addInventory = existingProduct.inventory + (body?.inventory ?? 0);
+        if (!existingRegister) throw new ServiceError(404, "No se encontró el producto");
+        const addInventory = existingRegister.inventory + (body?.inventory ?? 0);
         const [rowsUpdated] = await Product.update({ inventory: addInventory }, {
             where: whereClause,
         });

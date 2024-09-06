@@ -83,7 +83,7 @@ router.put("/:idBranch", authRequired, checkRoleAdmin, async (req: Request, res:
         const { userId } = req.user;
         const { idBranch } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await putBranchService(idBranch, body, userId);
+        const serviceLayerResponse = await putBranchService(userId, idBranch, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -98,7 +98,7 @@ router.delete('/:idBranch', authRequired, checkRoleAdmin, async (req: Request, r
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await deleteBranchService(idBranch, userId);  
+        const serviceLayerResponse = await deleteBranchService(userId, idBranch);  
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

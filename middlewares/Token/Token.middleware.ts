@@ -17,7 +17,6 @@ export const authRequired = (req: Request, res: Response, next: NextFunction) =>
     jwt.verify(token, TOKEN_SECRET, (err: any, user: any) => {
         if (err) return res.status(403).json({ message: 'User not found authRequired' });
         req.user = user;
-        console.log('pasa')
         next();
     });
 };

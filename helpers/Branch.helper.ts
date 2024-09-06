@@ -3,7 +3,7 @@ import Branch from '../schema/User/branch.schema';
 import { ServiceError } from '../types/Responses/responses.types';
 
 //CHEQUEA SI LA BRANCH PERTENECE A UN USER
-export const checkPermissionForBranch = async (idBranch: string, userId: string): Promise<boolean> => {
+export const checkPermissionForBranch = async (userId: string, idBranch: string): Promise<boolean> => {
     try {
         const branch = await getBranchByIdData(idBranch);
         if (!branch) return false;
@@ -37,17 +37,17 @@ export const isBranchAssociatedUserSuperadminRole = async ( userId: string, type
 
 
 //VALIDA SI EL ROL ES SUPERADMIN O ADMINISTRADOR Y LA SEDE PERTENECE AL MISMO USER
-export const isBranchAssociatedWithUserRole = async ( branchId: string, userId: string, typeRole: string): Promise<boolean> => {
+export const isBranchAssociatedWithUserRole = async (userId: string, typeRole: string, branchId: string): Promise<boolean> => {
     try {
         if (typeRole === 'Superadmin') {
             const branch = await Branch.findOne({
-                where: { branchId: branchId, userId: userId },
+                where: { userId: userId },
             });
             return !!branch;
         };
         if (typeRole === 'Administrador') {
             const branch = await Branch.findOne({
-                where: { userId: userId },
+                where: { userId: userId, branchId: branchId },
             });
             return !!branch;
         };

@@ -70,11 +70,9 @@ export const checkRoleArray = (req: Request, res: Response, next: NextFunction) 
     if (!user) return res.status(401).json({ error: 'Usuario no autenticado' });
     const { typeRole } = user;
     if (typeRole === 'Superadmin') {
-        console.log('Pasa Superadmin')
         return next();
     } else if (typeRole === 'Administrador') {
         if (Array.isArray(req.body)) {
-            console.log('Pasa Admin')
             return next();
         } else return res.status(400).json({ error: 'Se esperaba un array en el cuerpo de la solicitud' });
     } else return res.status(403).json({ error: 'Acceso denegado. Tu rol no está autorizado para ejecutar esta acción' });

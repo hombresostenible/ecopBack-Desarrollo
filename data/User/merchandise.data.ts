@@ -8,12 +8,12 @@ import { ServiceError } from '../../types/Responses/responses.types';
 export const postMerchandiseData = async (body: IMerchandise, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        const existingMerchandise = await Merchandise.findOne({
+        const existingRegister = await Merchandise.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-        if (existingMerchandise) {
-            if (existingMerchandise.getDataValue('userId') === userId) {
+        if (existingRegister) {
+            if (existingRegister.getDataValue('userId') === userId) {
                 await t.rollback();
                 return null;
             }
@@ -24,22 +24,22 @@ export const postMerchandiseData = async (body: IMerchandise, userId: string, ty
         const currentDate = new Date().toISOString(); // Obtén la fecha actual en formato ISO
         const initialInventory = body.inventory || 0;
         if (typeRole === 'Superadmin') {
-            const newMerchandise = await Merchandise.create({
+            const newRegister = await Merchandise.create({
                 ...body,
                 userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
-            return newMerchandise;
+            return newRegister;
         }
         if (typeRole === 'Administrador') {            
-            const newMerchandise = await Merchandise.create({
+            const newRegister = await Merchandise.create({
                 ...body,
                 userId: userId,
                 inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
-            return newMerchandise;
+            return newRegister;
         }
     } catch (error) {
         throw error;
@@ -49,35 +49,35 @@ export const postMerchandiseData = async (body: IMerchandise, userId: string, ty
 
 
 //DATA PARA CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyMerchandiseData = async (body: IMerchandise, userId: string, typeRole: string): Promise<any> => {
+export const postManyMerchandiseData = async (userId: string, typeRole: string, body: IMerchandise): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         // Verificar si ls mercancía ya existe en la sede proporcionada
-        const existingMerchandise = await Merchandise.findOne({
+        const existingRegister = await Merchandise.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
         // Si la mercancía ya existe, devuelve null
-        if (existingMerchandise) {
+        if (existingRegister) {
             await t.rollback();
             return null;
         }
-        // Si la mercancía no existe, crearlo en la base de datos
+        // Si el registro no existe, crearlo en la base de datos
         if (typeRole === 'Superadmin') {
-            const newMerchandise = await Merchandise.create({
+            const newRegister = await Merchandise.create({
                 ...body,
                 userId: userId,
             }, { transaction: t });
             await t.commit();
-            return newMerchandise;
+            return newRegister;
         }
         if (typeRole === 'Administrador') {
-            const newMerchandise = await Merchandise.create({
+            const newRegister = await Merchandise.create({
                 ...body,
                 userId: userId,
-            }, { transaction: t });        
+            }, { transaction: t });
             await t.commit();
-            return newMerchandise;            
+            return newRegister;
         }
     } catch (error) {
         throw error;
@@ -210,22 +210,22 @@ export const patchMerchandiseData = async (idMerchandise: string, body: Partial<
     const t = await sequelize.transaction();
     try {
         let whereClause: Record<string, any> = { userId: idMerchandise };
-        const existingMerchandise = await Merchandise.findOne({
+        const existingRegister = await Merchandise.findOne({
             where: whereClause,
             transaction: t,
         });
 
-        if (!existingMerchandise) throw new ServiceError(404, "No se encontró el activo");
-        if (body.inventory !== undefined && body.inventory > existingMerchandise.inventory) throw new ServiceError(400, "No hay suficiente cantidad de mercancía disponibles para dar de baja");
+        if (!existingRegister) throw new ServiceError(404, "No se encontró el activo");
+        if (body.inventory !== undefined && body.inventory > existingRegister.inventory) throw new ServiceError(400, "No hay suficiente cantidad de mercancía disponibles para dar de baja");
         
         if (body.inventoryOff !== undefined && body.inventoryOff.length > 0) {
             const IInventoryOffItem = body.inventoryOff[0];                      // Accede al primer elemento de inventoryOff
             const currentDate = new Date();                                     // Obtener la fecha actual
             
             // Actualizar el inventario y agregar un nuevo elemento a inventoryOff
-            existingMerchandise.inventory -= IInventoryOffItem.quantity || 0;    // Restar la cantidad de mercacías dañadas del inventario actual
+            existingRegister.inventory -= IInventoryOffItem.quantity || 0;    // Restar la cantidad de mercacías dañadas del inventario actual
 
-            existingMerchandise.inventoryOff = existingMerchandise.inventoryOff.concat({ 
+            existingRegister.inventoryOff = existingRegister.inventoryOff.concat({ 
                 date: currentDate, 
                 quantity: (IInventoryOffItem.quantity || 0),
                 reason: IInventoryOffItem.reason || 'Baja de activo',
@@ -234,8 +234,8 @@ export const patchMerchandiseData = async (idMerchandise: string, body: Partial<
         }
 
         const [rowsUpdated] = await Merchandise.update({
-            inventory: existingMerchandise.inventory,
-            inventoryOff: existingMerchandise.inventoryOff
+            inventory: existingRegister.inventory,
+            inventoryOff: existingRegister.inventoryOff
         }, {
             where: whereClause,
             transaction: t,
@@ -263,11 +263,11 @@ export const patchAddInventoryMerchandiseData = async (idMerchandise: string, bo
     try {
         let whereClause: Record<string, any> = { userId: idMerchandise };
         whereClause.userId = userId;
-        const existingMerchandise = await Merchandise.findOne({
+        const existingRegister = await Merchandise.findOne({
             where: whereClause,
         });
-        if (!existingMerchandise) throw new ServiceError(404, "No se encontró la mercancía");
-        const addInventory = existingMerchandise.inventory + (body?.inventory ?? 0);
+        if (!existingRegister) throw new ServiceError(404, "No se encontró la mercancía");
+        const addInventory = existingRegister.inventory + (body?.inventory ?? 0);
         const [rowsUpdated] = await Merchandise.update({ inventory: addInventory }, {
             where: whereClause,
         });

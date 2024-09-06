@@ -127,13 +127,13 @@ export const putCRMClientData = async (idCrmClient: string, body: ICrmClients, u
 
 
 //DATA PARA ELIMINAR UN PRODUCTO PERTENECIENTE AL USER
-export const deleteCRMClientData = async (idCrmClient: string, userId: string): Promise<void> => {
+export const deleteCRMClientData = async (userId: string, idCrmClient: string, ): Promise<void> => {
     try {
         const cRMClientFound = await CrmClients.findOne({
-            where: { userId: idCrmClient, entityUserId: userId }
+            where: { entityUserId: userId, id: idCrmClient}
         });
         if (!cRMClientFound) throw new Error("Cliente no encontrado");
-        await CrmClients.destroy({ where: { userId: idCrmClient } });
+        await CrmClients.destroy({ where: { entityUserId: userId, id: idCrmClient } });
     } catch (error) {
         throw error;
     }
