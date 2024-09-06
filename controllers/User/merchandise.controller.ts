@@ -141,7 +141,7 @@ router.put("/:idMerchandise", authRequired, checkRole, async (req: Request, res:
         const { userId } = req.user;
         const { idMerchandise } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await putMerchandiseService(idMerchandise, body, userId);
+        const serviceLayerResponse = await putMerchandiseService(userId, idMerchandise, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -156,7 +156,7 @@ router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res
     try {
         const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await putUpdateManyMerchandiseService(bodyArray, userId, typeRole);
+        const serviceLayerResponse = await putUpdateManyMerchandiseService(userId, typeRole, bodyArray);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -203,7 +203,7 @@ router.delete('/:idMerchandise', authRequired, checkRole, async (req: Request, r
     try {
         const { userId } = req.user;
         const { idMerchandise } = req.params;
-        const serviceLayerResponse = await deleteMerchandiseService(idMerchandise, userId); 
+        const serviceLayerResponse = await deleteMerchandiseService(userId, idMerchandise); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

@@ -24,7 +24,7 @@ export const checkPermissionForBranchAssets = async (idBranch: string, userId: s
 
 
 //CHEQUEA SI EL EQUIPO, HERRAMIENTA O MAQUINA PERTENECEN A LA SEDE DE USER
-export const checkPermissionForAssets = async (idAssets: string, userId: string): Promise<boolean> => {
+export const checkPermissionForAssets = async (userId: string, idAssets: string): Promise<boolean> => {
     try {
         const asset = await getAssetByIdData(idAssets);
         if (!asset) return false;

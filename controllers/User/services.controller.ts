@@ -101,10 +101,10 @@ router.get("/services-branch/:idBranch", authRequired, async (req: Request, res:
 //CONTROLLER PARA ACTUALIZAR UN SERVICIO DEL USER
 router.put("/:idService", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idService } = req.params;
         const body = req.body;
-        const { userId } = req.user;
-        const serviceLayerResponse = await putServicesService(idService, body, userId);
+        const serviceLayerResponse = await putServicesService(userId, idService, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -131,9 +131,9 @@ router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res
 //CONTROLLER PARA ELIMINAR UNSERVICIO DEL USER
 router.delete('/:idService', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
-        const { idService } = req.params;
         const { userId } = req.user;
-        const serviceLayerResponse = await deleteServicesService(idService, userId); 
+        const { idService } = req.params;
+        const serviceLayerResponse = await deleteServicesService(userId, idService); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

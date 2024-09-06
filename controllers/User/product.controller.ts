@@ -138,10 +138,10 @@ router.get("/products-branch/:idBranch", authRequired, async (req: Request, res:
 //CONTROLLER PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
 router.put("/:idProduct", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idProduct } = req.params;
         const body = req.body;
-        const { userId } = req.user;
-        const serviceLayerResponse = await putProductService(idProduct, body, userId);
+        const serviceLayerResponse = await putProductService(userId, idProduct, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -200,9 +200,9 @@ router.patch("/add-inventory/:idProduct", authRequired, checkRole, async (req: R
 //CONTROLLER PARA ELIMINAR UN PRODUCTO PERTENECIENTE AL USER
 router.delete('/:idProduct', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
-        const { idProduct } = req.params;
         const { userId } = req.user;
-        const serviceLayerResponse = await deleteProductService(idProduct, userId); 
+        const { idProduct } = req.params;
+        const serviceLayerResponse = await deleteProductService(userId, idProduct); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

@@ -144,11 +144,11 @@ export const getRawMaterialsOffByBranchService = async (idBranch: string, userId
 
 
 //SERVICE PARA ACTUALIZAR UNA MATERIA PRIMA PERTENECIENTE AL USER
-export const putRawMaterialService = async (idRawMaterial: string, body: IRawMaterial, userId: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const putRawMaterialService = async (userId: string, idRawMaterial: string, body: IRawMaterial): Promise<IServiceLayerResponseRawMaterial> => {
     try {
-        const hasPermission = await checkPermissionForRawMaterial(idRawMaterial, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar esta materia prima");
-        const updateRawMaterial = await putRawMaterialData(idRawMaterial, body, userId);
+        // const hasPermission = await checkPermissionForRawMaterial(userId, idRawMaterial);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar esta materia prima");
+        const updateRawMaterial = await putRawMaterialData(userId, idRawMaterial, body);
         if (!updateRawMaterial) throw new ServiceError(404, 'Materia prima no encontrada');
         return { code: 200, message: 'Materia prima actualizado exitosamente', result: updateRawMaterial };
     } catch (error) {
@@ -228,11 +228,11 @@ export const patchAddInventoryRawMaterialService = async (idRawMaterial: string,
 
 
 //SERVICE PARA ELIMINAR UNA MATERIA PRIMA PERTENECIENTE AL USER
-export const deleteRawMaterialService = async (idRawMaterial: string, userId: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const deleteRawMaterialService = async (userId: string, idRawMaterial: string): Promise<IServiceLayerResponseRawMaterial> => {
     try {
-        const hasPermission = await checkPermissionForRawMaterial(idRawMaterial, userId);
-        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar esta materia prima");
-        await deleteRawMaterialData(idRawMaterial);
+        // const hasPermission = await checkPermissionForRawMaterial(userId, idRawMaterial);
+        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar esta materia prima");
+        await deleteRawMaterialData(userId, idRawMaterial);
         return { code: 200, message: "Materia prima eliminada exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

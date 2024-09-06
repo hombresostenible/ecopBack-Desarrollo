@@ -137,7 +137,7 @@ router.put("/:idAssets", authRequired, checkRole, async (req: Request, res: Resp
         const { userId } = req.user;
         const { idAssets } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await putAssetService(idAssets, body, userId);
+        const serviceLayerResponse = await putAssetService(userId, idAssets, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -201,7 +201,7 @@ router.delete('/:idAssets', authRequired, checkRole, async (req: Request, res: R
     try {
         const { userId } = req.user;
         const { idAssets } = req.params;
-        const serviceLayerResponse = await deleteAssetService(idAssets, userId);
+        const serviceLayerResponse = await deleteAssetService(userId, idAssets);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

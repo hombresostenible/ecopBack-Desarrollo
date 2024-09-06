@@ -166,13 +166,19 @@ export const getMerchandisesOffByBranchData = async (idBranch: string, userId: s
 
 
 //DATA PARA ACTUALIZAR UN PRODUCTO PERTENECIENTE AL USER
-export const putMerchandiseData = async (idMerchandise: string, body: IMerchandise, userId: string): Promise<IMerchandise | null> => {
+export const putMerchandiseData = async (userId: string, idMerchandise: string, body: IMerchandise): Promise<IMerchandise | null> => {
     try {
         const existingBranchWithSameName = await Merchandise.findOne({
-            where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idMerchandise } },
+            where: {
+                userId: userId,
+                nameItem: body.nameItem,
+                id: { [Op.not]: idMerchandise }
+            },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la mercancía porque ya existe uno con ese mismo nombre");
-        const [rowsUpdated] = await Merchandise.update(body, { where: { userId: idMerchandise } });
+        const [rowsUpdated] = await Merchandise.update(body, {
+            where: { id: idMerchandise, userId: userId }
+        });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna mercancía para actualizar");
         const updatedMerchandise = await Merchandise.findByPk(idMerchandise);
         if (!updatedMerchandise) throw new ServiceError(404, "No se encontró ninguna mercancía para actualizar");
@@ -283,11 +289,11 @@ export const patchAddInventoryMerchandiseData = async (idMerchandise: string, bo
 
 
 //DATA PARA ELIMINAR UNA MERCANCIA PERTENECIENTE AL USER
-export const deleteMerchandiseData = async (idMerchandise: string): Promise<void> => {
+export const deleteMerchandiseData = async (userId: string, idMerchandise: string): Promise<void> => {
     try {
-        const merchandiseFound = await Merchandise.findOne({ where: { userId: idMerchandise } });
+        const merchandiseFound = await Merchandise.findOne({ where: { id: idMerchandise } });
         if (!merchandiseFound) throw new Error("Maercancía no encontrada");
-        await Merchandise.destroy({ where: { userId: idMerchandise } });
+        await Merchandise.destroy({ where: { userId: userId, id: idMerchandise } });
     } catch (error) {
         throw error;
     }

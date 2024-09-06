@@ -148,14 +148,23 @@ export const getAssetsOffByBranchData = async (idBranch: string, userId: string)
 
 
 //ACTUALIZAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
-export const putAssetData = async (idAssets: string, body: IAssets, userId: string): Promise<IAssets | null> => {
+export const putAssetData = async (userId: string, idAssets: string, body: IAssets): Promise<IAssets | null> => {
     try {
+        // Verificar si ya existe otro registro con el mismo nombre (ignorar el que se está actualizando)
         const existingBranchWithSameName = await Assets.findOne({
-            where: { userId: userId, nameItem: body.nameItem, id: { [Op.not]: idAssets } },
+            where: {
+                userId: userId,
+                nameItem: body.nameItem,
+                id: { [Op.not]: idAssets } // Verificar duplicados ignorando el registro actual
+            },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el equipo, máquina o herramienta porque ya existe una con ese mismo nombre");
-        const [rowsUpdated] = await Assets.update(body, { where: { userId: idAssets } });
+        // Actualizar el registro si no existe duplicado
+        const [rowsUpdated] = await Assets.update(body, {
+            where: { id: idAssets, userId: userId }
+        });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún equipo, máquina o herramienta para actualizar");
+        // Recuperar y devolver el registro actualizado
         const updatedAsset = await Assets.findByPk(idAssets);
         if (!updatedAsset) throw new ServiceError(404, "No se encontró ningún equipo, máquina o herramienta para actualizar");
         return updatedAsset;
@@ -172,7 +181,11 @@ export const putUpdateManyAssetData = async (body: IAssets, userId: string): Pro
     try {
         // Verificar si el activo ya existe en la sede proporcionado
         const existingBranchWithSameName = await Assets.findOne({
-            where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
+            where: {
+                nameItem: body.nameItem,
+                branchId: body.branchId,
+                id: { [Op.not]: body.id }
+            },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el equipo, máquina o herramienta porque ya existe una con ese mismo nombre");
         // Actualizar el activo
@@ -267,11 +280,11 @@ export const patchAddInventoryAssetData = async (idAssets: string, body: Partial
 
 
 //ELIMINAR UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
-export const deleteAssetData = async (idAssets: string): Promise<void> => {
+export const deleteAssetData = async (userId: string, idAssets: string): Promise<void> => {
     try {
-        const productFound = await Assets.findOne({ where: { userId: idAssets } });
-        if (!productFound) throw new Error("equipo, Máquina o herramienta no encontrada");
-        await Assets.destroy({ where: { userId: idAssets } });
+        const productFound = await Assets.findOne({ where: { id: idAssets } });
+        if (!productFound) throw new Error("Equipo, máquina o herramienta no encontrada");
+        await Assets.destroy({ where: { userId: userId, id: idAssets } });
     } catch (error) {
         throw error;
     }
