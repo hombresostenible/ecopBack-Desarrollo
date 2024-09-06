@@ -32,7 +32,7 @@ export const postRegisterCRMSupplierData = async (body: ICrmSuppliers, userId: s
 
 
 //CREAR MUCHOS PROVEEDORES DESDE EL EXCEL
-export const postManyCRMSuppliersData = async (body: ICrmSuppliers, userId: string): Promise<any> => {
+export const postManyCRMSuppliersData = async (body: ICrmSuppliers, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         // Verificar si el proveedor ya existe
@@ -44,6 +44,22 @@ export const postManyCRMSuppliersData = async (body: ICrmSuppliers, userId: stri
         if (existingCRMSupplier) {
             await t.rollback();
             return null;
+        }
+        if (typeRole === 'Superadmin') {
+            const newCRMSupplier = await CrmSupplier.create({
+                ...body,
+                entityUserId: userId,
+            }, { transaction: t });
+            await t.commit();
+            return newCRMSupplier;
+        }
+        if (typeRole === 'Administrador') {
+            const newCRMSupplier = await CrmSupplier.create({
+                ...body,
+                entityUserId: userId,
+            }, { transaction: t });        
+            await t.commit();
+            return newCRMSupplier;            
         }
         // Si el proveedor no existe, crearlo en la base de datos
         const newCRMSupplier = await CrmSupplier.create({
@@ -63,7 +79,7 @@ export const postManyCRMSuppliersData = async (body: ICrmSuppliers, userId: stri
 export const getCRMSuppliersData = async (userId: string): Promise<any> => {
     try {
         const userCRMSupplier = await CrmSupplier.findAll({
-            where: { userId: userId },
+            where: { entityUserId: userId },
         });        
         return userCRMSupplier;            
     } catch (error) {

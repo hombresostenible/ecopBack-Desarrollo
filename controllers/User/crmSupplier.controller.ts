@@ -33,9 +33,9 @@ router.post("/", authRequired, validateSchema(crmSupplierSchema), async (req: Re
 //CREAR MUCHOS PROVEEDORES DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRMSupplierSchemaType), async (req: Request, res: Response) => {
     try {
-        const { userId } = req.user;
+        const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await postManyCRMSuppliersService(bodyArray, userId);
+        const serviceLayerResponse = await postManyCRMSuppliersService(bodyArray, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
