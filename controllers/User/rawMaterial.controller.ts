@@ -25,7 +25,7 @@ router.post("/", authRequired, checkRole, validateSchema(rawMaterialSchema), asy
     try {
         const { userId, typeRole } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await postRawMaterialService(body, userId, typeRole);
+        const serviceLayerResponse = await postRawMaterialService(userId, typeRole, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -89,7 +89,7 @@ router.get("/rawMaterials-off/:idBranch", authRequired, async (req: Request, res
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getRawMaterialsOffByBranchService(idBranch, userId);
+        const serviceLayerResponse = await getRawMaterialsOffByBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las materias primas dadas de baja del usuario" });
@@ -106,7 +106,7 @@ router.get("/:idRawMaterial", authRequired, async (req: Request, res: Response) 
     try {
         const { userId } = req.user;
         const { idRawMaterial } = req.params;
-        const serviceLayerResponse = await getRawMaterialService(idRawMaterial, userId);
+        const serviceLayerResponse = await getRawMaterialService(userId, idRawMaterial);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;
@@ -121,7 +121,7 @@ router.get("/rawMaterials-branch/:idBranch", authRequired, async (req: Request, 
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getRawMaterialBranchService(idBranch, userId);
+        const serviceLayerResponse = await getRawMaterialBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -156,7 +156,7 @@ router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res
     try {
         const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await putUpdateManyRawMaterialService(bodyArray, userId, typeRole);
+        const serviceLayerResponse = await putUpdateManyRawMaterialService(userId, typeRole, bodyArray);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -172,7 +172,7 @@ router.patch("/:idRawMaterial", authRequired, checkRole, async (req: Request, re
         const { userId } = req.user;
         const { idRawMaterial } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await patchRawMaterialService(idRawMaterial, body, userId);
+        const serviceLayerResponse = await patchRawMaterialService(userId, idRawMaterial, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;
@@ -188,7 +188,7 @@ router.patch("/add-inventory/:idRawMaterial", authRequired, checkRole, async (re
         const { userId } = req.user;
         const { idRawMaterial } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await patchAddInventoryRawMaterialService(idRawMaterial, body, userId);
+        const serviceLayerResponse = await patchAddInventoryRawMaterialService(userId, idRawMaterial, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;

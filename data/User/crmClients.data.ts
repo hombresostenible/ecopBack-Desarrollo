@@ -29,7 +29,7 @@ export const postRegisterCRMClientsData = async (userId: string, body: ICrmClien
 
 
 //CREAR MUCHOS CLIENTES DESDE EL EXCEL
-export const postManyCRMClientsData = async (body: ICrmClients, userId: string, typeRole: string): Promise<any> => {
+export const postManyCRMClientsData = async (userId: string, typeRole: string, body: ICrmClients): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         // Verificar si el cliente ya existe
@@ -80,7 +80,7 @@ export const getCRMClientsData = async (userId: string): Promise<any> => {
 
 
 //DATA PARA OBTENER TODOS LOS CLIENTES POR SEDE DE UN USER
-export const getCRMClientsBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getCRMClientsBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const CRMClientsFound = await CrmClients.findAll({
             where: { branchId: idBranch, entityUserId: userId }
@@ -94,10 +94,10 @@ export const getCRMClientsBranchData = async (idBranch: string, userId: string):
 
 
 //DATA PARA OBTENER UN CLIENTE POR ID PERTENECIENTE AL USER
-export const getCRMClientByIdData = async (idCrmClient: string, userId: string): Promise<any> => {
+export const getCRMClientByIdData = async (userId: string, idCrmClient: string): Promise<any> => {
     try {
         const CRMClientFound = await CrmClients.findOne({
-            where: { userId: idCrmClient, entityUserId: userId }
+            where: { id: idCrmClient, entityUserId: userId }
         });
         return CRMClientFound;
     } catch (error) {
@@ -108,18 +108,19 @@ export const getCRMClientByIdData = async (idCrmClient: string, userId: string):
 
 
 //DATA PARA ACTUALIZAR UN CLIENTE PERTENECIENTE AL USER
-export const putCRMClientData = async (idCrmClient: string, body: ICrmClients, userId: string): Promise<ICrmClients | null> => {
+export const putCRMClientData = async (userId: string, idCrmClient: string, body: ICrmClients): Promise<ICrmClients | null> => {
     try {
         const existingWithSameId = await CrmClients.findOne({
             where: { entityUserId: userId, id: { [Op.not]: idCrmClient } },
         });
         if (existingWithSameId) throw new ServiceError(403, "No es posible actualizar el cliente porque ya existe uno con ese mismo número de identidad");
-        const [rowsUpdated] = await CrmClients.update(body, { where: { userId: idCrmClient } });
+        const [rowsUpdated] = await CrmClients.update(body, { where: { id: idCrmClient } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún cliente para actualizar");
         const updatedCRMClient = await CrmClients.findByPk(idCrmClient);
         if (!updatedCRMClient) throw new ServiceError(404, "No se encontró ningún cliente para actualizar");
         return updatedCRMClient as unknown as ICrmClients;
     } catch (error) {
+        console.log('Error: ', error)
         throw error;
     }
 };

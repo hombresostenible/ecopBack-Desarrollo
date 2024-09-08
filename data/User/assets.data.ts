@@ -5,7 +5,7 @@ import { IAssets } from "../../types/User/assets.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
-export const postAssetData = async (body: IAssets, userId: string): Promise<any> => {
+export const postAssetData = async (userId: string, body: IAssets): Promise<any> => {
     try {
         const existingRegister = await Assets.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
@@ -79,10 +79,10 @@ export const getAssetsData = async (userId: string): Promise<any> => {
 
 
 //OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
-export const getAssetByIdData = async (idAssets: string): Promise<any> => {
+export const getAssetByIdData = async (userId: string, idAssets: string): Promise<any> => {
     try {
         const assetFound = await Assets.findOne({
-            where: { userId: idAssets },
+            where: { id: idAssets, userId: userId },
             order: [ ['nameItem', 'ASC'] ]
         });
         return assetFound;
@@ -127,12 +127,12 @@ export const getAssetsOffData = async (userId: string): Promise<any> => {
 
 
 //OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getAssetsOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getAssetsOffByBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const assetsWithInventoryOff = await Assets.findAll({
             where: {
-                branchId: idBranch,
                 userId: userId,
+                branchId: idBranch,
                 [Op.and]: [
                     Sequelize.literal(`json_length(inventoryOff) > 0`)  // Filtrar donde inventoryOff no esté vacío
                 ]
@@ -176,12 +176,13 @@ export const putAssetData = async (userId: string, idAssets: string, body: IAsse
 
 
 //ACTUALIZAR DE FORMA MASIVA VARIOS EQUIPOS, HERRAMIENTAS O MAQUINAS DEL USER
-export const putUpdateManyAssetData = async (body: IAssets, userId: string): Promise<any> => {
+export const putUpdateManyAssetData = async (userId: string, body: IAssets): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         // Verificar si el activo ya existe en la sede proporcionado
         const existingBranchWithSameName = await Assets.findOne({
             where: {
+                userId: body.userId,
                 nameItem: body.nameItem,
                 branchId: body.branchId,
                 id: { [Op.not]: body.id }
@@ -206,7 +207,7 @@ export const putUpdateManyAssetData = async (body: IAssets, userId: string): Pro
 export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): Promise<IAssets | null> => {
     const t = await sequelize.transaction();
     try {
-        let whereClause: Record<string, any> = { userId: idAssets };
+        let whereClause: Record<string, any> = { id: idAssets };
         const existingRegister = await Assets.findOne({
             where: whereClause,
             transaction: t,
@@ -242,9 +243,7 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): 
         const updatedAsset = await Assets.findByPk(idAssets, {
             transaction: t,
         });
-
         if (!updatedAsset) throw new ServiceError(404, "No se encontró ningún equipo, máquina o herramienta para actualizar");
-
         await t.commit();
         return updatedAsset;
     } catch (error) {
@@ -256,9 +255,9 @@ export const patchAssetData = async (idAssets: string, body: Partial<IAssets>): 
 
 
 //AUMENTA UNIDADES DEL INVENTARIO DE UN EQUIPO, HERRAMIENTA O MAQUINA DEL USER
-export const patchAddInventoryAssetData = async (idAssets: string, body: Partial<IAssets>, userId: string): Promise<IAssets | null> => {
+export const patchAddInventoryAssetData = async (userId: string, idAssets: string, body: Partial<IAssets>): Promise<IAssets | null> => {
     try {
-        let whereClause: Record<string, any> = { userId: idAssets };
+        let whereClause: Record<string, any> = { id: idAssets };
         whereClause.userId = userId;
         const existingRegister = await Assets.findOne({
             where: whereClause,

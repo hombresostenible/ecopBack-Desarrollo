@@ -35,7 +35,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRM
     try {
         const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await postManyCRMClientsService(bodyArray, userId, typeRole);
+        const serviceLayerResponse = await postManyCRMClientsService(userId, typeRole, bodyArray);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -68,7 +68,7 @@ router.get("/:idCrmClient", authRequired, async (req: Request, res: Response) =>
     try {
         const { userId } = req.user;
         const { idCrmClient } = req.params;
-        const serviceLayerResponse = await getCRMClientByIdService(idCrmClient, userId);
+        const serviceLayerResponse = await getCRMClientByIdService(userId, idCrmClient);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -83,7 +83,7 @@ router.get("/crm-clients-branch/:idBranch", authRequired, async (req: Request, r
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getCRMClientsBranchService(idBranch, userId);
+        const serviceLayerResponse = await getCRMClientsBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -103,7 +103,7 @@ router.put("/:idCrmClient", authRequired, validateSchema(crmClientsSchema), asyn
         const { userId } = req.user;
         const { idCrmClient } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await putCRMClientService(idCrmClient, body, userId);
+        const serviceLayerResponse = await putCRMClientService(userId, idCrmClient, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;

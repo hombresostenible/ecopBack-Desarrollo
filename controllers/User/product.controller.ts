@@ -23,9 +23,9 @@ const router = express.Router();
 //CONTROLLER PARA CREAR UN PRODUCTO POR SEDE PARA USER
 router.post("/", authRequired, checkRole, validateSchema(productSchemaZod), async (req: Request, res: Response) => {
     try {
-        const body = req.body;
         const { userId, typeRole } = req.user;
-        const serviceLayerResponse = await postProductService(body, userId, typeRole);
+        const body = req.body;
+        const serviceLayerResponse = await postProductService(userId, typeRole, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -87,9 +87,9 @@ router.get("/products-off", authRequired, async (req: Request, res: Response) =>
 //OBTENER TODOS LOS PRODUCTOS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
 router.get("/products-off/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
-        const { idBranch } = req.params;
         const { userId } = req.user;
-        const serviceLayerResponse = await getProductsOffByBranchService(idBranch, userId);
+        const { idBranch } = req.params;
+        const serviceLayerResponse = await getProductsOffByBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener los productos dados de baja del usuario" });
@@ -104,9 +104,9 @@ router.get("/products-off/:idBranch", authRequired, async (req: Request, res: Re
 //CONTROLLER PARA OBTENER UN PRODUCTO POR ID PERTENECIENTE AL USER
 router.get("/:idProduct", authRequired, async (req: Request, res: Response) => {
     try {
-        const { idProduct } = req.params;
         const { userId } = req.user;
-        const serviceLayerResponse = await getProductByIdService(idProduct, userId);
+        const { idProduct } = req.params;
+        const serviceLayerResponse = await getProductByIdService(userId, idProduct);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -119,9 +119,9 @@ router.get("/:idProduct", authRequired, async (req: Request, res: Response) => {
 //CONTROLLER PARA OBTENER TODOS LOS PRODUCTOS POR SEDE DE USER
 router.get("/products-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
-        const { idBranch } = req.params;
         const { userId } = req.user;
-        const serviceLayerResponse = await getProductBranchService(idBranch, userId);
+        const { idBranch } = req.params;
+        const serviceLayerResponse = await getProductBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -154,9 +154,9 @@ router.put("/:idProduct", authRequired, checkRole, async (req: Request, res: Res
 //CONTROLLER PARA ACTUALIZAR DE FORMA MASIVA VARIOS PRODUCTOS
 router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res: Response) => {
     try {
-        const bodyArray = req.body;
         const { userId, typeRole } = req.user;
-        const serviceLayerResponse = await putUpdateManyProductService(bodyArray, userId, typeRole);
+        const bodyArray = req.body;
+        const serviceLayerResponse = await putUpdateManyProductService(userId, typeRole, bodyArray);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -168,10 +168,10 @@ router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res
 //CONTROLLER PARA DAR DE BAJA UN PRODUCTO DEL USER
 router.patch("/:idProduct", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idProduct } = req.params;
         const body = req.body;
-        const { userId } = req.user;
-        const serviceLayerResponse = await patchProductService(idProduct, body, userId);
+        const serviceLayerResponse = await patchProductService(userId, idProduct, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;
@@ -184,10 +184,10 @@ router.patch("/:idProduct", authRequired, checkRole, async (req: Request, res: R
 //AUMENTA UNIDADES DEL INVENTARIO DE UN PRODUCTO DEL USER
 router.patch("/add-inventory/:idProduct", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
+        const { userId } = req.user;
         const { idProduct } = req.params;
         const body = req.body;
-        const { userId } = req.user;
-        const serviceLayerResponse = await patchAddInventoryProductService(idProduct, body, userId);
+        const serviceLayerResponse = await patchAddInventoryProductService(userId, idProduct, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;

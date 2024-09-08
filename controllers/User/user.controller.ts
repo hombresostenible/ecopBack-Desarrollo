@@ -83,7 +83,7 @@ router.put("/profile-user", authRequired, async (req: Request, res: Response): P
     try {
         const { userId } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await putProfileUserService(body, userId);
+        const serviceLayerResponse = await putProfileUserService(userId, body);
         if (!serviceLayerResponse) {
             res.status(401).json({ message: 'Usuario no encontrado' });
             return;

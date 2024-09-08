@@ -25,7 +25,7 @@ router.post("/", authRequired, checkRole, validateSchema(assetsSchemaZod), async
     try {
         const { userId } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await postAssetService(body, userId);
+        const serviceLayerResponse = await postAssetService(userId, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -87,7 +87,7 @@ router.get("/assets-off/:idBranch", authRequired, async (req: Request, res: Resp
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getAssetsOffByBranchService(idBranch, userId);
+        const serviceLayerResponse = await getAssetsOffByBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas dadas de baja del usuario" });
@@ -104,7 +104,7 @@ router.get("/:idAssets", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const { idAssets } = req.params;
-        const serviceLayerResponse = await getAssetByIdService(idAssets, userId);
+        const serviceLayerResponse = await getAssetByIdService(userId, idAssets);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -119,7 +119,7 @@ router.get("/assets-branch/:idBranch", authRequired, async (req: Request, res: R
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getAssetBranchService(idBranch, userId);
+        const serviceLayerResponse = await getAssetBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else res.status(500).json({ message: "Error al obtener las maquinas, equipos y herramientas del usuario por sede" });
@@ -153,7 +153,7 @@ router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAsset
         const { userId, typeRole } = req.user;
         const bodyArray = req.body;
         // Llamar a la capa de servicio para manejar la creación de múltiples activos
-        const serviceLayerResponse = await putUpdateManyAssetService(bodyArray, userId, typeRole);
+        const serviceLayerResponse = await putUpdateManyAssetService(userId, typeRole, bodyArray);
         // Enviar una respuesta al cliente
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
@@ -170,7 +170,7 @@ router.patch("/:idAssets", authRequired, checkRole, async (req: Request, res: Re
         const { userId } = req.user;
         const { idAssets } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await patchAssetService(idAssets, body, userId);
+        const serviceLayerResponse = await patchAssetService(userId, idAssets, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -186,7 +186,7 @@ router.patch("/add-inventory/:idAssets", authRequired, checkRole, async (req: Re
         const { userId } = req.user;
         const { idAssets } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await patchAddInventoryAssetService(idAssets, body, userId);
+        const serviceLayerResponse = await patchAddInventoryAssetService(userId, idAssets, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;

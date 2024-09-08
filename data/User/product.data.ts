@@ -5,7 +5,7 @@ import { IProduct } from "../../types/User/products.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UN PRODUCTO POR SEDE PARA USER
-export const postProductsData = async (body: IProduct, userId: string, typeRole: string): Promise<any> => {
+export const postProductsData = async (userId: string, typeRole: string, body: IProduct): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingRegister = await Product.findOne({
@@ -132,7 +132,7 @@ export const getProductsBranchByIdData = async (idBranch: string): Promise<any> 
 //DATA PARA OBTENER UN PRODUCTO POR ID PERTENECIENTE AL USER
 export const getProductByIdData = async (idProduct: string): Promise<any> => {
     try {
-        const productFound = await Product.findOne({where: { userId: idProduct } });
+        const productFound = await Product.findOne({where: { id: idProduct } });
         return productFound;
     } catch (error) {
         throw error;
@@ -160,12 +160,12 @@ export const getProductOffData = async (userId: string): Promise<any> => {
 
 
 //OBTENER TODOS LOS PRODUCTOS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getProductsOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getProductsOffByBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const productsWithInventoryOff = await Product.findAll({
             where: {
-                branchId: idBranch,
                 userId: userId,
+                branchId: idBranch,
                 [Op.and]: [ Sequelize.literal(`json_length(inventoryOff) > 0`) ]
             },
             order: [ ['nameItem', 'ASC'] ]
@@ -203,7 +203,7 @@ export const putProductData = async (userId: string, idProduct: string, body: IP
 
 
 //DATA PARA ACTUALIZAR DE FORMA MASIVA VARIOS PRODUCTOS
-export const putUpdateManyProductData = async (body: IProduct, userId: string): Promise<any> => {
+export const putUpdateManyProductData = async (userId: string, body: IProduct): Promise<any> => {
     const t = await sequelize.transaction();
 
     try {
@@ -211,7 +211,7 @@ export const putUpdateManyProductData = async (body: IProduct, userId: string): 
             where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar el producto porque ya existe un con ese mismo nombre");
-        const [rowsUpdated] = await Product.update(body, { where: { userId: body.id } });
+        const [rowsUpdated] = await Product.update(body, { where: { id: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún producto para actualizar");
         const updatedProduct = await Product.findByPk(body.id);
         if (!updatedProduct) throw new ServiceError(404, "No se encontró ningún producto para actualizar");
@@ -228,7 +228,7 @@ export const putUpdateManyProductData = async (body: IProduct, userId: string): 
 export const patchProductData = async (idProduct: string, body: Partial<IProduct>): Promise<IProduct | null> => {
     const t = await sequelize.transaction();
     try {
-        let whereClause: Record<string, any> = { userId: idProduct };
+        let whereClause: Record<string, any> = { id: idProduct };
         const existingRegister = await Product.findOne({
             where: whereClause,
             transaction: t,
@@ -278,9 +278,9 @@ export const patchProductData = async (idProduct: string, body: Partial<IProduct
 
 
 //AUMENTA UNIDADES DEL INVENTARIO DE UN PRODUCTO DEL USER
-export const patchAddInventoryProductData = async (idProduct: string, body: Partial<IProduct>, userId: string): Promise<IProduct | null> => {
+export const patchAddInventoryProductData = async (userId: string, idProduct: string, body: Partial<IProduct>): Promise<IProduct | null> => {
     try {
-        let whereClause: Record<string, any> = { userId: idProduct };
+        let whereClause: Record<string, any> = { id: idProduct };
         whereClause.userId = userId;
         const existingRegister = await Product.findOne({
             where: whereClause,

@@ -30,13 +30,13 @@ export const postRegisterCRMClientsService = async (userId: string, body: ICrmCl
 
 
 //CREAR MUCHOS CLIENTES DESDE EL EXCEL
-export const postManyCRMClientsService = async (bodyArray: ICrmClients[], userId: string, typeRole: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const postManyCRMClientsService = async (userId: string, typeRole: string, bodyArray: ICrmClients[]): Promise<ICrmClientsServiceLayerResponse> => {
     const uniqueCRMClient: ICrmClients[] = [];
     const duplicatedCRMClients: ICrmClients[] = [];
     try {
         for (const crmClient of bodyArray) {
             // Crear el cliente
-            const createdCRMClient = await postManyCRMClientsData(crmClient, userId, typeRole);
+            const createdCRMClient = await postManyCRMClientsData(userId, typeRole, crmClient);
             if (createdCRMClient) {
                 uniqueCRMClient.push(createdCRMClient);
             } else duplicatedCRMClients.push(crmClient);
@@ -68,9 +68,9 @@ export const getCRMClientsUserService = async (userId: string): Promise<ICrmClie
 
 
 //SERVICE PARA OBTENER TODOS LOS CLIENTES POR SEDE DE USER
-export const getCRMClientsBranchService = async (idBranch: string, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const getCRMClientsBranchService = async (userId: string, idBranch: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        const cRMClientsFound = await getCRMClientsBranchData(idBranch, userId);
+        const cRMClientsFound = await getCRMClientsBranchData(userId, idBranch);
         if (!cRMClientsFound) return { code: 404, message: "Clientes no encontrados en esta sede" };
         return { code: 200, result: cRMClientsFound };
     } catch (error) {
@@ -84,9 +84,9 @@ export const getCRMClientsBranchService = async (idBranch: string, userId: strin
 
 
 //SERVICE PARA OBTENER UN CLIENTE POR ID PERTENECIENTE AL USER
-export const getCRMClientByIdService = async (idCrmClient: string, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const getCRMClientByIdService = async (userId: string, idCrmClient: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        const cRMClientFound = await getCRMClientByIdData(idCrmClient, userId);
+        const cRMClientFound = await getCRMClientByIdData(userId, idCrmClient);
         if (!cRMClientFound) return { code: 404, message: "Cliente no encontrado" };
         return { code: 200, result: cRMClientFound };
     } catch (error) {
@@ -100,9 +100,9 @@ export const getCRMClientByIdService = async (idCrmClient: string, userId: strin
 
 
 //SERVICE PARA ACTUALIZAR UN CLIENTE PERTENECIENTE AL USER
-export const putCRMClientService = async (idCrmClient: string, body: ICrmClients, userId: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const putCRMClientService = async (userId: string, idCrmClient: string, body: ICrmClients): Promise<ICrmClientsServiceLayerResponse> => {
     try {
-        const updateCRMClient = await putCRMClientData(idCrmClient, body, userId);
+        const updateCRMClient = await putCRMClientData(userId, idCrmClient, body);
         if (!updateCRMClient) throw new ServiceError(404, "Cliente no encontrado");
         return { code: 200, message: "Cliente actualizado exitosamente", result: updateCRMClient };
     } catch (error) {

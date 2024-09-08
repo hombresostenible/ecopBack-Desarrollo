@@ -5,7 +5,7 @@ import {
 import { ServiceError } from '../types/Responses/responses.types';
 
 //CHEQUEA SI LAS MERCHANDISES PERTENECEN A LA SEDE DE USER
-export const checkPermissionForBranchMerchandise = async (idBranch: string, userId: string): Promise<boolean> => {
+export const checkPermissionForBranchMerchandise = async (userId: string, idBranch: string): Promise<boolean> => {
     try {
         const merchandises = await getMerchandiseBranchByIdData(idBranch);
         if (!merchandises) return false;
@@ -24,9 +24,9 @@ export const checkPermissionForBranchMerchandise = async (idBranch: string, user
 
 
 //CHEQUEA SI LA MERCHANDISE PERTENECE A LA SEDE DE USER
-export const checkPermissionForMerchandise = async (idMerchandise: string, userId: string): Promise<boolean> => {
+export const checkPermissionForMerchandise = async (userId: string, idMerchandise: string): Promise<boolean> => {
     try {
-        const merchandise = await getMerchandiseByIdData(idMerchandise);
+        const merchandise = await getMerchandiseByIdData(userId, idMerchandise);
         if (!merchandise) return false;
         if (merchandise.userId !== userId) return false;
         return true;

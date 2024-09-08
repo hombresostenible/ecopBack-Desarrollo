@@ -5,11 +5,11 @@ import { IMerchandise } from "../../types/User/merchandise.types";
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UNA MERCANCIA POR SEDE PARA USER
-export const postMerchandiseData = async (body: IMerchandise, userId: string, typeRole: string): Promise<any> => {
+export const postMerchandiseData = async (userId: string, typeRole: string, body: IMerchandise): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingRegister = await Merchandise.findOne({
-            where: { nameItem: body.nameItem, branchId: body.branchId },
+            where: { userId: userId, nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
         if (existingRegister) {
@@ -117,9 +117,9 @@ export const getMerchandiseBranchByIdData = async (idBranch: string): Promise<an
 
 
 //DATA PARA OBTENER UNA MERCANCIA POR ID PERTENECIENTE AL USER
-export const getMerchandiseByIdData = async (idMerchandise: string): Promise<any> => {
+export const getMerchandiseByIdData = async (userId: string, idMerchandise: string): Promise<any> => {
     try {
-        const merchandiseFound = await Merchandise.findOne({ where: { userId: idMerchandise } });
+        const merchandiseFound = await Merchandise.findOne({ where: { userId: userId, id: idMerchandise } });
         return merchandiseFound;
     } catch (error) {
         throw error;
@@ -147,12 +147,12 @@ export const getMerchandiseOffData = async (userId: string): Promise<any> => {
 
 
 //OBTENER TODAS LAS MERCANCIAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getMerchandisesOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getMerchandisesOffByBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const merchandisesWithInventoryOff = await Merchandise.findAll({
             where: {
-                branchId: idBranch,
                 userId: userId,
+                branchId: idBranch,
                 [Op.and]: [ Sequelize.literal(`json_length(inventoryOff) > 0`) ]
             },
             order: [ ['nameItem', 'ASC'] ]
@@ -177,7 +177,7 @@ export const putMerchandiseData = async (userId: string, idMerchandise: string, 
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la mercancía porque ya existe uno con ese mismo nombre");
         const [rowsUpdated] = await Merchandise.update(body, {
-            where: { id: idMerchandise, userId: userId }
+            where: { userId: userId, id: idMerchandise }
         });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna mercancía para actualizar");
         const updatedMerchandise = await Merchandise.findByPk(idMerchandise);
@@ -198,7 +198,7 @@ export const putUpdateManyMerchandiseData = async (body: IMerchandise, userId: s
             where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la mercancía porque ya existe una con ese mismo nombre");
-        const [rowsUpdated] = await Merchandise.update(body, { where: { userId: body.id } });
+        const [rowsUpdated] = await Merchandise.update(body, { where: { id: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna mercancía para actualizar");
         const updatedMachinery = await Merchandise.findByPk(body.id);
         if (!updatedMachinery) throw new ServiceError(404, "No se encontró ninguna mercancía para actualizar");
@@ -215,7 +215,7 @@ export const putUpdateManyMerchandiseData = async (body: IMerchandise, userId: s
 export const patchMerchandiseData = async (idMerchandise: string, body: Partial<IMerchandise>): Promise<IMerchandise | null> => {
     const t = await sequelize.transaction();
     try {
-        let whereClause: Record<string, any> = { userId: idMerchandise };
+        let whereClause: Record<string, any> = { id: idMerchandise };
         const existingRegister = await Merchandise.findOne({
             where: whereClause,
             transaction: t,
@@ -265,9 +265,9 @@ export const patchMerchandiseData = async (idMerchandise: string, body: Partial<
 
 
 //AUMENTA UNIDADES DEL INVENTARIO DE UNA MERCANCIA DEL USER
-export const patchAddInventoryMerchandiseData = async (idMerchandise: string, body: Partial<IMerchandise>, userId: string): Promise<IMerchandise | null> => {
+export const patchAddInventoryMerchandiseData = async (userId: string, idMerchandise: string, body: Partial<IMerchandise>): Promise<IMerchandise | null> => {
     try {
-        let whereClause: Record<string, any> = { userId: idMerchandise };
+        let whereClause: Record<string, any> = { id: idMerchandise };
         whereClause.userId = userId;
         const existingRegister = await Merchandise.findOne({
             where: whereClause,

@@ -78,9 +78,9 @@ export const getRawMaterialsService = async (userId: string): Promise<IServiceLa
 
 
 //SERVICE PARA OBTENER TODAS LAS MATERIAS PRIMAS DE UNA SEDE DE USER
-export const getRawMaterialBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const getRawMaterialBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseRawMaterial> => {
     try {
-        const hasPermission = await checkPermissionForBranchRawMaterial(idBranch, userId);
+        const hasPermission = await checkPermissionForBranchRawMaterial(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener las materias primas de esta sede");
         const rawMaterialsFound = await getRawMaterialByBranchData(idBranch);
         if (!rawMaterialsFound) return { code: 404, message: "Materias primas no encontradas en esta sede" };
@@ -96,9 +96,9 @@ export const getRawMaterialBranchService = async (idBranch: string, userId: stri
 
 
 //SERVICE PARA OBTENER UNA MATERIA PRIMA POR ID PERTENECIENTE AL USER
-export const getRawMaterialService = async (idRawMaterial: string, userId: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const getRawMaterialService = async (userId: string, idRawMaterial: string): Promise<IServiceLayerResponseRawMaterial> => {
     try {
-        const hasPermission = await checkPermissionForRawMaterial(idRawMaterial, userId);
+        const hasPermission = await checkPermissionForRawMaterial(userId, idRawMaterial);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a esta materia prima");
         const rawMaterialFound = await getRawMaterialByIdData(idRawMaterial);
         if (!rawMaterialFound) return { code: 404, message: "Materia prima no encontrada" };
@@ -129,9 +129,9 @@ export const getRawMaterialsOffService = async (userId: string): Promise<IServic
 
 
 //OBTENER TODAS LAS MATERIAS PRIMAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getRawMaterialsOffByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const getRawMaterialsOffByBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseRawMaterial> => {
     try {
-        const dataLayerResponse = await getRawMaterialsOffByBranchData(idBranch, userId);
+        const dataLayerResponse = await getRawMaterialsOffByBranchData(userId, idBranch);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -162,14 +162,14 @@ export const putRawMaterialService = async (userId: string, idRawMaterial: strin
 
 
 //SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIAS MATERIAS PRIMAS
-export const putUpdateManyRawMaterialService = async (rawMaterials: IRawMaterial[], userId: string, typeRole: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const putUpdateManyRawMaterialService = async (userId: string, typeRole: string, rawMaterials: IRawMaterial[]): Promise<IServiceLayerResponseRawMaterial> => {
     const uniqueRawMaterials: IRawMaterial[] = [];
     const duplicatedRawMaterials: IRawMaterial[] = [];
     try {
         for (const rawMaterial of rawMaterials) {
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(rawMaterial.branchId, userId, typeRole);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, rawMaterial.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar las materias primas en esta sede");
-            const updatedRawMaterial = await putUpdateManyRawMaterialData(rawMaterial, userId,);
+            const updatedRawMaterial = await putUpdateManyRawMaterialData(userId, rawMaterial);
             if (updatedRawMaterial) {
                 uniqueRawMaterials.push(updatedRawMaterial);
             } else duplicatedRawMaterials.push(rawMaterial);
@@ -186,9 +186,9 @@ export const putUpdateManyRawMaterialService = async (rawMaterials: IRawMaterial
 
 
 //SERVICE PARA DAR DE BAJA UNA MATERIA PRIMAS DEL USER
-export const patchRawMaterialService = async (idRawMaterial: string, body: any, userId: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const patchRawMaterialService = async (userId: string, idRawMaterial: string, body: any): Promise<IServiceLayerResponseRawMaterial> => {
     try {
-        const hasPermission = await checkPermissionForRawMaterial(idRawMaterial, userId);
+        const hasPermission = await checkPermissionForRawMaterial(userId, idRawMaterial);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para retirar del inventario esta materia prima");
 
         // Verificar que inventoryOff sea un array
@@ -210,11 +210,11 @@ export const patchRawMaterialService = async (idRawMaterial: string, body: any, 
 
 
 //AUMENTA UNIDADES DEL INVENTARIO DE UNA MATERIA PRIMA DEL USER
-export const patchAddInventoryRawMaterialService = async (idRawMaterial: string, body: any, userId: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const patchAddInventoryRawMaterialService = async (userId: string, idRawMaterial: string, body: any): Promise<IServiceLayerResponseRawMaterial> => {
     try {
-        const hasPermission = await checkPermissionForRawMaterial(idRawMaterial, userId);
+        const hasPermission = await checkPermissionForRawMaterial(userId, idRawMaterial);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para aumentar unidades del inventario de esta materia prima");
-        const updateRawMaterial = await patchAddInventoryRawMaterialData(idRawMaterial, body, userId);
+        const updateRawMaterial = await patchAddInventoryRawMaterialData(userId, idRawMaterial, body);
         if (!updateRawMaterial) throw new ServiceError(404, "Materia prima no encontrado");
         return { code: 200, message: "Unidades de la materia prima añadidas al inventario exitosamente", result: updateRawMaterial };
     } catch (error) {

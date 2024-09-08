@@ -20,11 +20,11 @@ import { IProduct } from "../../types/User/products.types";
 import { ServiceError, IServiceLayerResponseProduct } from '../../types/Responses/responses.types';
 
 //CREAR UN PRODUCTO POR SEDE PARA USER
-export const postProductService = async (body: IProduct, userId: string, typeRole: string): Promise<IServiceLayerResponseProduct> => {
+export const postProductService = async (userId: string, typeRole: string, body: IProduct): Promise<IServiceLayerResponseProduct> => {
     try {
-        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, body.branchId);
         if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear un producto en esta sede");
-        const dataLayerResponse = await postProductsData(body, userId, typeRole);
+        const dataLayerResponse = await postProductsData(userId, typeRole, body);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe un producto con el mismo nombre en esta sede, cámbialo");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -130,9 +130,9 @@ export const getProductsUserService = async (userId: string): Promise<IServiceLa
 
 
 //OBTENER TODOS LOS PRODUCTOS DE UNA SEDE DE USER
-export const getProductBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseProduct> => {
+export const getProductBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        const hasPermission = await checkPermissionForBranchProduct(idBranch, userId);
+        const hasPermission = await checkPermissionForBranchProduct(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los productos de esta sede");
         const productsFound = await getProductsBranchByIdData(idBranch);
         if (!productsFound) return { code: 404, message: "Productos no encontrados en esta sede" };
@@ -148,9 +148,9 @@ export const getProductBranchService = async (idBranch: string, userId: string):
 
 
 //OBTENER UN PRODUCTO POR ID PERTENECIENTE AL USER
-export const getProductByIdService = async (idProduct: string, userId: string): Promise<IServiceLayerResponseProduct> => {
+export const getProductByIdService = async (userId: string, idProduct: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        const hasPermission = await checkPermissionForProduct(idProduct, userId);
+        const hasPermission = await checkPermissionForProduct(userId, idProduct);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a este producto");
         const productFound = await getProductByIdData(idProduct);
         if (!productFound) return { code: 404, message: "Producto no encontrado" };
@@ -181,9 +181,9 @@ export const getProductOffService = async (userId: string): Promise<IServiceLaye
 
 
 //OBTENER TODOS LOS PRODUCTOS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getProductsOffByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseProduct> => {
+export const getProductsOffByBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        const dataLayerResponse = await getProductsOffByBranchData(idBranch, userId);
+        const dataLayerResponse = await getProductsOffByBranchData(userId, idBranch);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -214,15 +214,15 @@ export const putProductService = async (userId: string, idProduct: string, body:
 
 
 //ACTUALIZAR DE FORMA MASIVA VARIOS PRODUCTOS
-export const putUpdateManyProductService = async (products: IProduct[], userId: string, typeRole: string): Promise<IServiceLayerResponseProduct> => {
+export const putUpdateManyProductService = async (userId: string, typeRole: string, products: IProduct[]): Promise<IServiceLayerResponseProduct> => {
     const uniqueProducts: IProduct[] = [];
     const duplicatedProducts: IProduct[] = [];
 
     try {
         for (const product of products) {
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(product.branchId, userId, typeRole);
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, product.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar los productos en esta sede");
-            const updatedProduct = await putUpdateManyProductData(product, userId,);
+            const updatedProduct = await putUpdateManyProductData(userId, product);
             if (updatedProduct) {
                 uniqueProducts.push(updatedProduct);
             } else duplicatedProducts.push(product);
@@ -240,9 +240,9 @@ export const putUpdateManyProductService = async (products: IProduct[], userId: 
 
 
 //DAR DE BAJA UN PRODUCTO DEL USER
-export const patchProductService = async (idProduct: string, body: any, userId: string): Promise<IServiceLayerResponseProduct> => {
+export const patchProductService = async (userId: string, idProduct: string, body: any): Promise<IServiceLayerResponseProduct> => {
     try {
-        const hasPermission = await checkPermissionForProduct(idProduct, userId);
+        const hasPermission = await checkPermissionForProduct(userId, idProduct);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para retirar del inventario este producto");
 
         // Verificar que inventoryOff sea un array
@@ -264,11 +264,11 @@ export const patchProductService = async (idProduct: string, body: any, userId: 
 
 
 //AUMENTA UNIDADES DEL INVENTARIO DE UN PRODUCTO DEL USER
-export const patchAddInventoryProductService = async (idProduct: string, body: any, userId: string): Promise<IServiceLayerResponseProduct> => {
+export const patchAddInventoryProductService = async (userId: string, idProduct: string, body: any): Promise<IServiceLayerResponseProduct> => {
     try {
-        const hasPermission = await checkPermissionForProduct(idProduct, userId);
+        const hasPermission = await checkPermissionForProduct(userId, idProduct);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para aumentar unidades del inventario de este productos");
-        const updateProduct = await patchAddInventoryProductData(idProduct, body, userId);
+        const updateProduct = await patchAddInventoryProductData(userId, idProduct, body);
         if (!updateProduct) throw new ServiceError(404, "Producto no encontrado");
         return { code: 200, message: "Unidades del producto añadidas al inventario exitosamente", result: updateProduct };
     } catch (error) {

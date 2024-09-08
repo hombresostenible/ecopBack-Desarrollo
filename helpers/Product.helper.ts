@@ -5,7 +5,7 @@ import {
 import { ServiceError } from '../types/Responses/responses.types';
 
 //CHEQUEA SI LOS PRODUCTS PERTENECEN A LA SEDE DE USER
-export const checkPermissionForBranchProduct = async (idBranch: string, userId: string): Promise<boolean> => {
+export const checkPermissionForBranchProduct = async (userId: string, idBranch: string): Promise<boolean> => {
     try {
         const products = await getProductsBranchByIdData(idBranch);
         if (!products) return false;
@@ -22,7 +22,7 @@ export const checkPermissionForBranchProduct = async (idBranch: string, userId: 
 
 
 //CHEQUEA SI EL PRODUCT PERTENECE A LA SEDE DE USER
-export const checkPermissionForProduct = async (idProduct: string, userId: string): Promise<boolean> => {
+export const checkPermissionForProduct = async (userId: string, idProduct: string): Promise<boolean> => {
     try {
         const product = await getProductByIdData(idProduct);
         if (!product) return false;

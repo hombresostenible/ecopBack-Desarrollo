@@ -9,7 +9,7 @@ export const postRawMaterialData = async (userId: string, typeRole: string, body
     const t = await sequelize.transaction();
     try {
         const existingRegister = await RawMaterial.findOne({
-            where: { nameItem: body.nameItem, branchId: body.branchId },
+            where: { userId: userId, nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
         if (existingRegister) {
@@ -115,7 +115,7 @@ export const getRawMaterialByBranchData = async (idBranch: string): Promise<any>
 //DATA PARA OBTENER UNA MATERIA PRIMA POR ID PERTENECIENTE AL USER
 export const getRawMaterialByIdData = async (idRawMaterial: string): Promise<any> => {
     try {
-        const rawMaterialFound = await RawMaterial.findOne({ where: { userId: idRawMaterial } });
+        const rawMaterialFound = await RawMaterial.findOne({ where: { id: idRawMaterial } });
         return rawMaterialFound;
     } catch (error) {
         throw error;
@@ -143,12 +143,12 @@ export const getRawMaterialsOffData = async (userId: string): Promise<any> => {
 
 
 //OBTENER TODAS LAS MATERIAS PRIMAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getRawMaterialsOffByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getRawMaterialsOffByBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const rawMaterialsWithInventoryOff = await RawMaterial.findAll({
             where: {
-                branchId: idBranch,
                 userId: userId,
+                branchId: idBranch,
                 [Op.and]: [ Sequelize.literal(`json_length(inventoryOff) > 0`) ]
             },
             order: [ ['nameItem', 'ASC'] ]
@@ -187,14 +187,14 @@ export const putRawMaterialData = async (userId: string, idRawMaterial: string, 
 
 
 //DATA PARA ACTUALIZAR DE FORMA MASIVA VARIAS MATERIAS PRIMAS
-export const putUpdateManyRawMaterialData = async (body: IRawMaterial, userId: string): Promise<any> => {
+export const putUpdateManyRawMaterialData = async (userId: string, body: IRawMaterial): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingBranchWithSameName = await RawMaterial.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId, id: { [Op.not]: body.id } },
         });
         if (existingBranchWithSameName) throw new ServiceError(403, "No es posible actualizar la materia prima porque ya existe una con ese mismo nombre");
-        const [rowsUpdated] = await RawMaterial.update(body, { where: { userId: body.id } });
+        const [rowsUpdated] = await RawMaterial.update(body, { where: { id: body.id } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ninguna materia prima para actualizar");
         const updatedRawMaterial = await RawMaterial.findByPk(body.id);
         if (!updatedRawMaterial) throw new ServiceError(404, "No se encontró ninguna materia prima para actualizar");
@@ -211,7 +211,7 @@ export const putUpdateManyRawMaterialData = async (body: IRawMaterial, userId: s
 export const patchRawMaterialData = async (idRawMaterial: string, body: Partial<IRawMaterial>): Promise<IRawMaterial | null> => {
     const t = await sequelize.transaction();
     try {
-        let whereClause: Record<string, any> = { userId: idRawMaterial };
+        let whereClause: Record<string, any> = { id: idRawMaterial };
         const existingRegister = await RawMaterial.findOne({
             where: whereClause,
             transaction: t,
@@ -261,9 +261,9 @@ export const patchRawMaterialData = async (idRawMaterial: string, body: Partial<
 
 
 //AUMENTA UNIDADES DEL INVENTARIO DE UNA MATERIA PRIMA DEL USER
-export const patchAddInventoryRawMaterialData = async (idRawMaterial: string, body: Partial<IRawMaterial>, userId: string): Promise<IRawMaterial | null> => {
+export const patchAddInventoryRawMaterialData = async (userId: string, idRawMaterial: string, body: Partial<IRawMaterial>): Promise<IRawMaterial | null> => {
     try {
-        let whereClause: Record<string, any> = { userId: idRawMaterial };
+        let whereClause: Record<string, any> = { id: idRawMaterial };
         whereClause.userId = userId;
         const existingRegister = await RawMaterial.findOne({
             where: whereClause,

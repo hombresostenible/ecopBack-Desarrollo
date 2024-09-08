@@ -3,7 +3,7 @@ import sequelize from '../../db';
 import User from '../../schema/User/user.schema';
 import {
     transporterZoho,
-    // mailUserWelcome,
+    mailUserWelcome,
     mailUpdateUserProfile,
 } from '../../libs/nodemailer';
 import { extractPublicIdFromUrlCloudinaryProfiles } from '../../helpers/Cloudinary/cloudinary.helper';
@@ -58,20 +58,19 @@ export const postRegisterUserData = async (body: IUser): Promise<User | null> =>
             password: body.password,
             isAceptedConditions: body.isAceptedConditions,
         });
-        // const nameToUse = body.name ?? body.corporateName;
-        await newUser.save({ transaction: t });
-        // await transporterZoho.sendMail(mailOptions);
-        // console.log('Correo electrónico de bienvenida enviado con éxito.');
-        await t.commit();
-        return newUser;
-        // try {
-            // const mailOptions = mailUserWelcome(body.email, nameToUse || '');
-        // } catch (emailError) {
-        //     await t.rollback();
-        //     throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
-        // }
+        const nameToUse = body.name ?? body.corporateName;
+        try {
+            const mailOptions = mailUserWelcome(body.email, nameToUse || '');
+            await newUser.save({ transaction: t });
+            await transporterZoho.sendMail(mailOptions);
+            console.log('Correo electrónico de bienvenida enviado con éxito.');
+            await t.commit();
+            return newUser;
+        } catch (emailError) {
+            await t.rollback();
+            throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
+        }
     } catch (error) {
-        console.log('Error: ', error)
         await t.rollback();
         throw new ServiceError(500, `${error}`);
     }
@@ -96,9 +95,9 @@ export const getSearchEmailUserPasswordChangeData = async (email: string, token:
 
 
 //CAMBIO DE CONTRASEÑA USER O USUARIO DE PLATAFORMA
-export const putResetPasswordData = async (id: string): Promise<User | null> => {
+export const putResetPasswordData = async (userId: string): Promise<User | null> => {
     try {
-        const userFound = await User.findOne({ where: { userId: id } });
+        const userFound = await User.findOne({ where: { id: userId } });
         if (!userFound) {
             throw new Error("usuario no encontrado")
         } else if (userFound.isBlocked === true) throw new Error("Tu cuenta se encuentra bloqueada, por favor realiza el proceso de desbloqueo");
@@ -111,10 +110,10 @@ export const putResetPasswordData = async (id: string): Promise<User | null> => 
 
 
 //ACTUALIZAR EL PERFIL DEL USER
-export const putProfileUserData = async (body: IUser, userId: string): Promise<IUser | null> => {
+export const putProfileUserData = async (userId: string, body: IUser): Promise<IUser | null> => {
     const t = await sequelize.transaction();
     try {
-        const [rowsUpdated] = await User.update(body, { where: { userId: userId }, transaction: t });
+        const [rowsUpdated] = await User.update(body, { where: { id: userId }, transaction: t });
         if (rowsUpdated === 0) {
             await t.rollback();
             throw new ServiceError(403, "No se encontró ningún usuario para actualizar");
@@ -146,7 +145,7 @@ export const putProfileUserData = async (body: IUser, userId: string): Promise<I
 export const patchLogoUserData = async (idUser: string, body: Partial<IUser>): Promise<IUser | null> => {
     try {
         const existingUser = await User.findOne({
-            where: { userId: idUser },
+            where: { id: idUser },
         });
         if (!existingUser) throw new ServiceError(404, "No se encontró el usuario");
         if (existingUser && body.logo) {
@@ -167,33 +166,22 @@ export const patchDeleteLogoUserData = async (userId: string) => {
         // Buscar el usuario por su ID
         const updateClient = await User.findByPk(userId);
         if (!updateClient) throw new Error("No se encontró el usuario para actualizar su logo");
-
-        // Guardar la URL del logo antes de actualizar
-        const logoUrl = updateClient.logo;
-
-        // Actualizar la propiedad logo a una cadena vacía y guardar los cambios
-        updateClient.logo = '';
+        const logoUrl = updateClient.logo;          // Guardar la URL del logo antes de actualizar
+        updateClient.logo = '';                     // Actualizar la propiedad logo a una cadena vacía y guardar los cambios
         await updateClient.save();
-
-        // Configurar Cloudinary (debería estar configurado en un lugar central)
-        cloudinary.config({
+        cloudinary.config({                         // Configurar Cloudinary (debería estar configurado en un lugar central)
             cloud_name: process.env.CLOUDINARY_NAME,
             api_key: process.env.CLOUDINARY_API_KEY,
             api_secret: process.env.CLOUDINARY_API_SECRET
         });
-
-        // Eliminar la imagen de Cloudinary si la URL del logo existía
-        if (logoUrl) {
+        if (logoUrl) {                              // Eliminar la imagen de Cloudinary si la URL del logo existía
             const publicId = extractPublicIdFromUrlCloudinaryProfiles(logoUrl);
             await cloudinary.uploader.destroy(publicId);
         }
-
-        // Volver a buscar el usuario actualizado (opcional, dependiendo de cómo se quiera manejar el flujo)
-        const existingUser = await User.findOne({
-            where: { userId: userId }
+        const existingUser = await User.findOne({   // Volver a buscar el usuario actualizado (opcional, dependiendo de cómo se quiera manejar el flujo)
+            where: { id: userId }
         });
         if (!existingUser) throw new ServiceError(404, "No se encontró el usuario");
-
         // Retornar el usuario actualizado
         return existingUser;
     } catch (error) {
@@ -207,7 +195,7 @@ export const patchDeleteLogoUserData = async (userId: string) => {
 //DESBLOQUEO DE CUENTA Y CAMBIO DE CONTRASEÑA USER
 export const findUserBlockedData = async (idUser: string): Promise<User | null> => {
     try {
-        const userFound = await User.findOne({ where: { userId: idUser } });
+        const userFound = await User.findOne({ where: { id: idUser } });
         if (!userFound) throw new Error("usuario no encontrado");
         return userFound;
     } catch (error) {
@@ -221,7 +209,7 @@ export const findUserBlockedData = async (idUser: string): Promise<User | null> 
 export const patchApplicationPasswordData = async (idUser: string, body: Partial<IUser>): Promise<IUser | null> => {
     try {
         const existingUser = await User.findOne({
-            where: { userId: idUser },
+            where: { id: idUser },
         });
         if (!existingUser) throw new ServiceError(404, "No se encontró el usuario");
         if (body.emailProvider) existingUser.emailProvider = body.emailProvider;

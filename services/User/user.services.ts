@@ -116,9 +116,9 @@ export const putResetPasswordService = async (idUser: string, passwordResetCode:
 
 
 //ACTUALIZAR EL PERFIL DEL USER
-export const putProfileUserService = async (body: IUser, userId: string): Promise<IServiceLayerResponseUser> => {
+export const putProfileUserService = async (userId: string, body: IUser): Promise<IServiceLayerResponseUser> => {
     try {
-        const userUpdate = await putProfileUserData(body, userId);
+        const userUpdate = await putProfileUserData(userId, body);
         if (!userUpdate) throw new ServiceError(404, "Usuario no encontrado");
         return { code: 200, message: "Usuario actualizado exitosamente", result: userUpdate };
     } catch (error) {

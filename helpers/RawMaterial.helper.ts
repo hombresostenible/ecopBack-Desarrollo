@@ -5,7 +5,7 @@ import {
 import { ServiceError } from '../types/Responses/responses.types';
 
 //CHEQUEA SI LAS RAWMATERIAL PERTENECEN A LA SEDE DE USER
-export const checkPermissionForBranchRawMaterial = async (idBranch: string, userId: string): Promise<boolean> => {
+export const checkPermissionForBranchRawMaterial = async (userId: string, idBranch: string): Promise<boolean> => {
     try {
         const products = await getRawMaterialByBranchData(idBranch);
         if (!products) return false;
@@ -22,7 +22,7 @@ export const checkPermissionForBranchRawMaterial = async (idBranch: string, user
 
 
 //CHEQUEA SI LA RAWMATERIAL PERTENECE A LA SEDE DE USER
-export const checkPermissionForRawMaterial = async (idRawMaterial: string, userId: string): Promise<boolean> => {
+export const checkPermissionForRawMaterial = async (userId: string, idRawMaterial: string): Promise<boolean> => {
     try {
         const rawMaterial = await getRawMaterialByIdData(idRawMaterial);
         if (!rawMaterial) return false;

@@ -18,11 +18,11 @@ import { IMerchandise } from "../../types/User/merchandise.types";
 import { ServiceError, IServiceLayerResponseMerchandise } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UNA MERCANCIA POR SEDE PARA USER
-export const postMerchandiseService = async (body: IMerchandise, userId: string, typeRole: string): Promise<IServiceLayerResponseMerchandise> => {
+export const postMerchandiseService = async (userId: string, typeRole: string, body: IMerchandise): Promise<IServiceLayerResponseMerchandise> => {
     try {
-        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(body.branchId, userId, typeRole);
+        const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, body.branchId);
         if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear una mercancía en esta sede");
-        const dataLayerResponse = await postMerchandiseData(body, userId, typeRole);
+        const dataLayerResponse = await postMerchandiseData(userId, typeRole, body);
         if (!dataLayerResponse) throw new ServiceError(400, "Ya existe una mercancía con el mismo nombre en esta sede, cámbialo");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -78,9 +78,9 @@ export const getMerchandiseUserService = async (userId: string): Promise<IServic
 
 
 //SERVICE PARA OBTENER TODA LA MERCANCIA DE UNA SEDE PARA USER
-export const getMerchandiseBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const getMerchandiseBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
-        const hasPermission = await checkPermissionForBranchMerchandise(idBranch, userId);
+        const hasPermission = await checkPermissionForBranchMerchandise(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener toda la mercancía de la sede");
         const merchandisesFound = await getMerchandiseBranchByIdData(idBranch);
         if (!merchandisesFound) return { code: 404, message: "No tienes permiso para obtener toda la mercancía de la sede" };
@@ -96,11 +96,11 @@ export const getMerchandiseBranchService = async (idBranch: string, userId: stri
 
 
 //SERVICE PARA OBTENER UNA MERCANCIA POR ID PERTENECIENTE AL USER
-export const getMerchandiseService = async (idMerchandise: string, userId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const getMerchandiseService = async (userId: string, idMerchandise: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
-        const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
+        const hasPermission = await checkPermissionForMerchandise(userId, idMerchandise);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a esta mercancía");
-        const merchandiseFound = await getMerchandiseByIdData(idMerchandise);
+        const merchandiseFound = await getMerchandiseByIdData(userId, idMerchandise);
         if (!merchandiseFound) return { code: 404, message: "Producto no encontrado" };
         return { code: 200, result: merchandiseFound };
     } catch (error) {
@@ -129,9 +129,9 @@ export const getMerchandiseOffService = async (userId: string): Promise<IService
 
 
 //OBTENER TODAS LAS MERCANCIAS POR SEDE DEL USER QUE TENGAN UNIDADES DADAS DE BAJA
-export const getMerchandiseSOffByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const getMerchandiseSOffByBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
-        const dataLayerResponse = await getMerchandisesOffByBranchData(idBranch, userId);
+        const dataLayerResponse = await getMerchandisesOffByBranchData(userId, idBranch);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -186,9 +186,9 @@ export const putUpdateManyMerchandiseService = async (merchandises: IMerchandise
 
 
 //SERVICE PARA DAR DE BAJA UNA MERCANCIA DEL USER
-export const patchMerchandiseService = async (idMerchandise: string, body: any, userId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const patchMerchandiseService = async (userId: string, idMerchandise: string, body: any): Promise<IServiceLayerResponseMerchandise> => {
     try {
-        const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
+        const hasPermission = await checkPermissionForMerchandise(userId, idMerchandise);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para retirar esta mercancía del inventario");
 
         // Verificar que inventoryOff sea un array
@@ -210,11 +210,11 @@ export const patchMerchandiseService = async (idMerchandise: string, body: any, 
 
 
 //AUMENTA UNIDADES DEL INVENTARIO DE UNA MERCANCIA DEL USER
-export const patchAddInventoryMerchandiseService = async (idMerchandise: string, body: any, userId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const patchAddInventoryMerchandiseService = async (userId: string, idMerchandise: string, body: any): Promise<IServiceLayerResponseMerchandise> => {
     try {
-        const hasPermission = await checkPermissionForMerchandise(idMerchandise, userId);
+        const hasPermission = await checkPermissionForMerchandise(userId, idMerchandise);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para aumentar unidades del inventario de esta mercancía");
-        const updateMerchandise = await patchAddInventoryMerchandiseData(idMerchandise, body, userId);
+        const updateMerchandise = await patchAddInventoryMerchandiseData(userId, idMerchandise, body);
         if (!updateMerchandise) throw new ServiceError(404, "Mercancia no encontrada");
         return { code: 200, message: "Unidades de la mercancía añadidas al inventario exitosamente", result: updateMerchandise };
     } catch (error) {
