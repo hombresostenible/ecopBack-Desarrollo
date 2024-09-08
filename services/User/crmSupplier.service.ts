@@ -14,9 +14,9 @@ import {
 import { ICrmSuppliers } from '../../types/User/crmSupplier.types';
 
 //SERVICE PARA CREAR UN PROVEEDOR DEL USER
-export const postRegisterCRMSuppliersService = async (body: ICrmSuppliers, userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const postRegisterCRMSuppliersService = async (userId: string, body: ICrmSuppliers): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
-        const dataLayerResponse = await postRegisterCRMSupplierData(body, userId);
+        const dataLayerResponse = await postRegisterCRMSupplierData(userId, body);
         if (!dataLayerResponse) throw new ServiceError(400, "El proveedor ya existe");
         return { code: 201, result: dataLayerResponse };
     } catch (error) {
@@ -30,13 +30,13 @@ export const postRegisterCRMSuppliersService = async (body: ICrmSuppliers, userI
 
 
 //CREAR MUCHOS PROVEEDORES DESDE EL EXCEL
-export const postManyCRMSuppliersService = async (bodyArray: ICrmSuppliers[], userId: string, typeRole: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const postManyCRMSuppliersService = async (userId: string, typeRole: string, bodyArray: ICrmSuppliers[]): Promise<ICrmSuppliersServiceLayerResponse> => {
     const uniqueCRMSupplier: ICrmSuppliers[] = [];
     const duplicatedCRMSupplier: ICrmSuppliers[] = [];
     try {
         for (const crmSupplier of bodyArray) {           
             // Crear el proveedor
-            const createdCRMSupplier = await postManyCRMSuppliersData(crmSupplier, userId, typeRole);
+            const createdCRMSupplier = await postManyCRMSuppliersData(userId, typeRole, crmSupplier);
             if (createdCRMSupplier) {
                 uniqueCRMSupplier.push(createdCRMSupplier);
             } else duplicatedCRMSupplier.push(crmSupplier);
@@ -69,9 +69,9 @@ export const getCRMSuppliersUserService = async (userId: string): Promise<ICrmSu
 
 
 //SERVICE PARA OBTENER TODOS LOS PROVEEDORES POR SEDE DE USER
-export const getCRMSuppliersBranchService = async (idBranch: string, userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const getCRMSuppliersBranchService = async (userId: string, idBranch: string): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
-        const cRMSuppliersFound = await getCRMSuppliersBranchData(idBranch, userId);
+        const cRMSuppliersFound = await getCRMSuppliersBranchData(userId, idBranch);
         if (!cRMSuppliersFound) return { code: 404, message: "Proveedores no encontrados en esta sede" };
         return { code: 200, result: cRMSuppliersFound };
     } catch (error) {
@@ -85,9 +85,9 @@ export const getCRMSuppliersBranchService = async (idBranch: string, userId: str
 
 
 //SERVICE PARA OBTENER UN PROVEEDOR POR ID PERTENECIENTE AL USER
-export const getCRMSupplierByIdService = async (idCrmSupplier: string, userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const getCRMSupplierByIdService = async (userId: string, idCrmSupplier: string): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
-        const cRMSupplierFound = await getCRMSupplierByIdData(idCrmSupplier, userId);
+        const cRMSupplierFound = await getCRMSupplierByIdData(userId, idCrmSupplier);
         if (!cRMSupplierFound) return { code: 404, message: "Proveedor no encontrado" };
         return { code: 200, result: cRMSupplierFound };
     } catch (error) {
@@ -101,9 +101,9 @@ export const getCRMSupplierByIdService = async (idCrmSupplier: string, userId: s
 
 
 //SERVICE PARA ACTUALIZAR UN PROVEEDOR PERTENECIENTE AL USER
-export const putCRMSupplierService = async (idCrmSupplier: string, body: ICrmSuppliers, userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const putCRMSupplierService = async (userId: string, idCrmSupplier: string, body: ICrmSuppliers): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
-        const updateCRMSupplier = await putCRMSupplierData(idCrmSupplier, body, userId);
+        const updateCRMSupplier = await putCRMSupplierData(userId, idCrmSupplier, body);
         if (!updateCRMSupplier) throw new ServiceError(404, "Proveedor no encontrado");
         return { code: 200, message: "Proveedor actualizado exitosamente", result: updateCRMSupplier };
     } catch (error) {

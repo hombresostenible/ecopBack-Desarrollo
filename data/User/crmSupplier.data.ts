@@ -5,7 +5,7 @@ import { ICrmSuppliers } from '../../types/User/crmSupplier.types';
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UN PROVEEDOR DEL USER
-export const postRegisterCRMSupplierData = async (body: ICrmSuppliers, userId: string): Promise<any> => {
+export const postRegisterCRMSupplierData = async (userId: string, body: ICrmSuppliers): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingCRMSupplier = await CrmSupplier.findOne({
@@ -32,7 +32,7 @@ export const postRegisterCRMSupplierData = async (body: ICrmSuppliers, userId: s
 
 
 //CREAR MUCHOS PROVEEDORES DESDE EL EXCEL
-export const postManyCRMSuppliersData = async (body: ICrmSuppliers, userId: string, typeRole: string): Promise<any> => {
+export const postManyCRMSuppliersData = async (userId: string, typeRole: string, body: ICrmSuppliers): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         // Verificar si el proveedor ya existe
@@ -90,7 +90,7 @@ export const getCRMSuppliersData = async (userId: string): Promise<any> => {
 
 
 //DATA PARA OBTENER TODOS LOS PROVEEDORES POR SEDE DE UN USER
-export const getCRMSuppliersBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getCRMSuppliersBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const cRMSuppliersFound = await CrmSupplier.findAll({
             where: { branchId: idBranch, entityUserId: userId }
@@ -104,10 +104,10 @@ export const getCRMSuppliersBranchData = async (idBranch: string, userId: string
 
 
 //DATA PARA OBTENER UN PROVEEDOR POR ID PERTENECIENTE AL USER
-export const getCRMSupplierByIdData = async (idCrmSupplier: string, userId: string): Promise<any> => {
+export const getCRMSupplierByIdData = async (userId: string, idCrmSupplier: string): Promise<any> => {
     try {
         const cRMSupplierFound = await CrmSupplier.findOne({
-            where: { userId: idCrmSupplier, entityUserId: userId }
+            where: { id: idCrmSupplier, entityUserId: userId }
         });
         return cRMSupplierFound;
     } catch (error) {
@@ -118,14 +118,18 @@ export const getCRMSupplierByIdData = async (idCrmSupplier: string, userId: stri
 
 
 //DATA PARA ACTUALIZAR UN PROVEEDORES PERTENECIENTE AL USER
-export const putCRMSupplierData = async (idCrmSupplier: string, body: ICrmSuppliers, userId: string): Promise<ICrmSuppliers | null> => {
+export const putCRMSupplierData = async (userId: string, idCrmSupplier: string, body: ICrmSuppliers): Promise<ICrmSuppliers | null> => {
     try {
         const existingWithSameId = await CrmSupplier.findOne({
-            where: { entityUserId: userId, id: { [Op.not]: idCrmSupplier } },
+            where: {
+                entityUserId: userId,
+                id: { [Op.not]: idCrmSupplier },    // Excluir el cliente que estás actualizando
+                documentId: body.documentId,        // Verificar que el documentId no esté duplicado
+            },
         });
         if (existingWithSameId) throw new ServiceError(403, "No es posible actualizar el proveedor porque ya existe uno con ese mismo número de identidad");
         if (body.entityUserId !== userId) throw new ServiceError(403, "No tienes permiso para actualizar el proveedor");
-        const [rowsUpdated] = await CrmSupplier.update(body, { where: { userId: idCrmSupplier } });
+        const [rowsUpdated] = await CrmSupplier.update(body, { where: { id: idCrmSupplier } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún proveedor para actualizar");
         const updatedCRMClient = await CrmSupplier.findByPk(idCrmSupplier);
         if (!updatedCRMClient) throw new ServiceError(404, "No se encontró ningún proveedor para actualizar");

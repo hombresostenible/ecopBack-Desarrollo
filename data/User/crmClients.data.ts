@@ -111,7 +111,11 @@ export const getCRMClientByIdData = async (userId: string, idCrmClient: string):
 export const putCRMClientData = async (userId: string, idCrmClient: string, body: ICrmClients): Promise<ICrmClients | null> => {
     try {
         const existingWithSameId = await CrmClients.findOne({
-            where: { entityUserId: userId, id: { [Op.not]: idCrmClient } },
+            where: {
+                entityUserId: userId,
+                id: { [Op.not]: idCrmClient },      // Excluir el cliente que estás actualizando
+                documentId: body.documentId,        // Verificar que el documentId no esté duplicado
+            },
         });
         if (existingWithSameId) throw new ServiceError(403, "No es posible actualizar el cliente porque ya existe uno con ese mismo número de identidad");
         const [rowsUpdated] = await CrmClients.update(body, { where: { id: idCrmClient } });

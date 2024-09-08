@@ -160,7 +160,7 @@ router.patch("/update-application-password", authRequired, async (req: Request, 
 
 
 
-//RENVIAR EMAILS DESDE EL CORREO ELECTRONICO DEL USER, NO NECESITA CAPA DE SERVICE O DATA
+//ENVIAR EMAILS DESDE EL CORREO ELECTRONICO DEL USER, NO NECESITA CAPA DE SERVICE O DATA
 router.post('/send-email', async (req: Request, res: Response) => {
     try {
         // Verificar si se recibió el objeto 'files' en la solicitud
