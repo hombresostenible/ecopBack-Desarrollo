@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import {
     postUserPlatformService,
+    postManyUserPlatformService, 
     getUsersPlatformService,
     getUserPlatformByIdService,
     getUserPlatformBranchService,
@@ -8,12 +9,14 @@ import {
     deleteUserPlatformService,
 } from "../../services/User/userPlatform.services";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
-import { checkRole, checkRoleCreateUserPlatform } from '../../middlewares/User/Role.middleware';
+import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
+import { checkRole, checkRoleCreateUserPlatform, checkRoleArrayCreateUserPlatform } from '../../middlewares/User/Role.middleware';
+import { userPlatformSchema, manyUserPlatformsSchema } from "../../validations/User/userPlatform.zod";
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 
 //CREAR UN USUARIO DE PLATAFORMA
-router.post("/", authRequired, checkRoleCreateUserPlatform, async (req: Request, res: Response) => {
+router.post("/", authRequired, checkRoleCreateUserPlatform, validateSchema(userPlatformSchema), async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const body = req.body;
@@ -24,6 +27,21 @@ router.post("/", authRequired, checkRoleCreateUserPlatform, async (req: Request,
         res.status(errorController.code).json(errorController.message);
     }
 }); // POST - http://localhost:3000/api/user-platform con {"branchId":"bc0a2090-669b-4568-9fe1-c70175a0d149","name":"Mario","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"1110111222","logo":null,"userType":"User","typeRole":"Administrador","economicSector":null,"email":"mario_cr07@hotmail.es","password":"password","phone":"3001002020","department":"Tolima","city":"Ibagué","codeDane":"73001","subregionCodeDane":"73","address":"Cra 10 # 3 - 20","isBlocked":true,"isAceptedConditions":true}
+
+
+
+//CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
+router.post("/create-many", authRequired, checkRoleArrayCreateUserPlatform, validateSchema(manyUserPlatformsSchema), async (req: Request, res: Response) => {
+    try {
+        const { userId, typeRole } = req.user;
+        const bodyArray = req.body;
+        const serviceLayerResponse = await postManyUserPlatformService(userId, typeRole, bodyArray);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse);
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // POST - http://localhost:3000/api/user-platform/create-many con [{"branchId":"bc0a2090-669b-4568-9fe1-c70175a0d149","name":"Mario","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"10200300","logo":null,"userType":"User","typeRole":"Administrador","economicSector":null,"email":"cmario.reyesp@gmail.com","password":"password","phone":"3001002020","department":"Tolima","city":"Ibagué","codeDane":"73001","subregionCodeDane":"73","address":"Cra 10 # 3 - 20","isBlocked":true,"isAceptedConditions":true},{"branchId":"bc0a2090-669b-4568-9fe1-c70175a0d149","name":"Mario","lastName":"Reyes","typeDocumentId":"Cedula de Ciudadania","documentId":"1111200300","logo":null,"userType":"User","typeRole":"Administrador","economicSector":null,"email":"carlosmario.reyesp@outlook.com","password":"password","phone":"3001002020","department":"Tolima","city":"Ibagué","codeDane":"73001","subregionCodeDane":"73","address":"Cra 10 # 3 - 20","isBlocked":true,"isAceptedConditions":true}]
 
 
 
@@ -80,7 +98,7 @@ router.put("/", authRequired, async (req: Request, res: Response): Promise<void>
     try {
         const { userId } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await putProfileUserPlatformService(body, userId);
+        const serviceLayerResponse = await putProfileUserPlatformService(userId, body);
         if (!serviceLayerResponse) {
             res.status(401).json({ message: 'Usuario no encontrado' });
             return;
@@ -99,7 +117,7 @@ router.delete('/:idUserPlatform', authRequired, checkRole, async (req: Request, 
     try {
         const { userId } = req.user
         const { idUserPlatform } = req.params;
-        const serviceLayerResponse = await deleteUserPlatformService(idUserPlatform, userId); 
+        const serviceLayerResponse = await deleteUserPlatformService(userId, idUserPlatform); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

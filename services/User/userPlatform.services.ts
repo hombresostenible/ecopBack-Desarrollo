@@ -1,12 +1,14 @@
 import bcrypt from 'bcrypt';
 import {
     postUserPlatformData,
+    postManyUserPlatformData,
     getUsersPlatformData,
     getUserPlatformByIdData,
     getUserPlatformBranchByIdData,
     putProfileUserPlatformData,
     deleteUserPlatformData,
 } from "../../data/User/userPlatform.data";
+import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
 import {
     ServiceError,
     IServiceLayerResponseUserPlatform,
@@ -33,7 +35,35 @@ export const postUserPlatformService = async (body: IUserPlatform, userId: strin
 };
 
 
-//SERVICE PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
+
+//CREA MASIVAMENTE USUARIOS DE PLATAFORMA
+export const postManyUserPlatformService = async (userId: string, typeRole: string, userPlatforms: IUserPlatform[]): Promise<IServiceLayerResponseUserPlatform> => {
+    const uniqueRegisters: IUserPlatform[] = [];
+    const duplicatedRegisters: IUserPlatform[] = [];
+    try {
+        for (const userPlatform of userPlatforms) {
+            // Verificar los permisos del usuario para crear el registro en la sede específica
+            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, userPlatform.branchId);
+            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear usuarios de plataforma en esta sede");
+            // Crear el registro
+            const createdRegister = await postManyUserPlatformData(userId, typeRole, userPlatform);
+            if (createdRegister) {
+                uniqueRegisters.push(createdRegister);
+            } else duplicatedRegisters.push(userPlatform);
+        }
+        // Devolver una respuesta adecuada
+        return { code: 201, result: uniqueRegisters };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
 export const getUsersPlatformService = async (userId: string): Promise<IServiceLayerResponseUserPlatform> => {
     try {
         const dataLayerResponse = await getUsersPlatformData(userId);
@@ -85,9 +115,9 @@ export const getUserPlatformBranchService = async (idBranch: string, userId: str
 
 
 //SERVICE PARA ACTUALIZAR EL PERFIL DE UN USUARIO DE PLATAFORMA
-export const putProfileUserPlatformService = async (body: IUserPlatform, userId: string): Promise<IServiceLayerResponseUserPlatform> => {
+export const putProfileUserPlatformService = async (userId: string, body: IUserPlatform): Promise<IServiceLayerResponseUserPlatform> => {
     try {
-        const userUpdate = await putProfileUserPlatformData(body, userId);
+        const userUpdate = await putProfileUserPlatformData(userId, body);
         if (!userUpdate) throw new ServiceError(404, "Usuario de plataforma no encontrado");
         return { code: 200, message: "Usuario de plataforma actualizado exitosamente", result: userUpdate };
     } catch (error) {
@@ -103,9 +133,9 @@ export const putProfileUserPlatformService = async (body: IUserPlatform, userId:
 
 
 //SERVICE PARA ELIMINAR UN USUARIO DE PLATAFORMA PERTENECIENTE A UN USER
-export const deleteUserPlatformService = async (idUserPlatform: string, userId: string): Promise<IServiceLayerResponseUserPlatform> => {
+export const deleteUserPlatformService = async (userId: string, idUserPlatform: string): Promise<IServiceLayerResponseUserPlatform> => {
     try {
-        const hasPermission = await checkPermissionForUserPlatform(idUserPlatform, userId);
+        const hasPermission = await checkPermissionForUserPlatform(userId, idUserPlatform);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este usuario");
         await deleteUserPlatformData(idUserPlatform);
         return { code: 200, message: "Usuario eliminado exitosamente" };

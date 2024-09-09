@@ -10,7 +10,7 @@ type RegisterUserPlatformSchemaType = ZodObject<{
     department: ZodString;
     city: ZodString;
     codeDane: ZodString;
-    subregionCodeDaneDane: ZodString;
+    subregionCodeDane: ZodString;
     address: ZodString;
     phone: ZodString;
     email: ZodString;
@@ -43,7 +43,7 @@ export const userPlatformSchema: RegisterUserPlatformSchemaType = z.object({
     codeDane: z.string({
         required_error: 'El código Dane de la ciudad del usuario es requerido',
     }),
-    subregionCodeDaneDane: z.string({
+    subregionCodeDane: z.string({
         required_error: 'El código de la subregión Dane es requerido',
     }),
     address: z.string({
@@ -79,11 +79,10 @@ type ManyRegisterUserPlatformSchemaType = ZodArray<
         typeDocumentId: ZodString;
         documentId: ZodString;
         typeRole: ZodString;
-        permissions: ZodArray<ZodString>;
         department: ZodString;
         city: ZodString;
         codeDane: ZodString;
-        subregionCodeDaneDane: ZodString;
+        subregionCodeDane: ZodString;
         address: ZodString;
         phone: ZodString;
         email: ZodString;
@@ -92,7 +91,7 @@ type ManyRegisterUserPlatformSchemaType = ZodArray<
     }>
 >;
 
-export const manyRegisterUserPlatformSchema: ManyRegisterUserPlatformSchemaType = z.array(
+export const manyUserPlatformsSchema: ManyRegisterUserPlatformSchemaType = z.array(
     z.object({
         name: z.string({
             required_error: 'El nombre del usuario es requerido',
@@ -109,9 +108,6 @@ export const manyRegisterUserPlatformSchema: ManyRegisterUserPlatformSchemaType 
         typeRole: z.string({
             required_error: 'El tipo de rol del usuario es requerido',
         }),
-        permissions: z.array(z.string({
-            required_error: 'El o los permisos del usuario son requeridos',
-        })),
         department: z.string({
             required_error: 'El departamento del usuario es requerido',
         }),
@@ -121,7 +117,7 @@ export const manyRegisterUserPlatformSchema: ManyRegisterUserPlatformSchemaType 
         codeDane: z.string({
             required_error: 'El código Dane de la ciudad del usuario es requerida',
         }),
-        subregionCodeDaneDane: z.string({
+        subregionCodeDane: z.string({
             required_error: 'El código de la subregión Dane es requerida',
         }),
         address: z.string({

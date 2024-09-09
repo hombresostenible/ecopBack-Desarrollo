@@ -8,6 +8,7 @@ import UserPlatform from '../../schema/User/userPlatform.schema';
 import { IUserPlatform } from '../../types/User/userPlatform.types';
 import { ServiceError } from '../../types/Responses/responses.types';
 
+//CREAR UN USUARIO DE PLATAFORMA
 export const postUserPlatformData = async (body: IUserPlatform, userId: string): Promise<IUserPlatform | null> => {
     const t = await sequelize.transaction();
     try {
@@ -64,6 +65,63 @@ export const postUserPlatformData = async (body: IUserPlatform, userId: string):
 };
 
 
+
+//CREA MASIVAMENTE USUARIOS DE PLATAFORMA
+export const postManyUserPlatformData = async (userId: string, typeRole: string, body: IUserPlatform): Promise<any> => {
+    const t = await sequelize.transaction();
+    try {
+        const existingRegister = await UserPlatform.findOne({
+            where: { documentId: body.documentId, branchId: body.branchId },
+            transaction: t,
+        });
+        if (existingRegister) {
+            await t.rollback();
+            return null;
+        }
+        // Si el registro no existe, crearlo en la base de datos
+        if (typeRole === 'Superadmin') {
+            const newRegister = await UserPlatform.create({
+                ...body,
+                userId: userId,
+            }, { transaction: t });
+            try {
+                const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${newRegister.id}`;
+                const mailOptions = mailUserPlatformWelcome(body.email, body.name, newRegister.unlockCode, link);
+                await transporterZoho.sendMail(mailOptions);
+                console.log('Correo electrónico de bienvenida enviado con éxito.');
+            } catch (emailError) {
+                console.error('Error al enviar el correo electrónico de bienvenida:', emailError);
+                await t.rollback();
+                throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
+            }
+            await t.commit();
+            return newRegister;
+        }
+        if (typeRole === 'Administrador') {
+            const newRegister = await UserPlatform.create({
+                ...body,
+                userId: userId,
+            }, { transaction: t });
+            try {
+                const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${newRegister.id}`;
+                const mailOptions = mailUserPlatformWelcome(body.email, body.name, newRegister.unlockCode, link);
+                await transporterZoho.sendMail(mailOptions);
+                console.log('Correo electrónico de bienvenida enviado con éxito.');
+            } catch (emailError) {
+                console.error('Error al enviar el correo electrónico de bienvenida:', emailError);
+                await t.rollback();
+                throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
+            }
+            await t.commit();
+            return newRegister;
+        }
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA OBTENER TODOS LOS USUARIOS DE PLATAFORMA DE UN USER
 export const getUsersPlatformData = async (userId: string): Promise<any> => {
     const t = await sequelize.transaction();
@@ -105,20 +163,21 @@ export const getUserPlatformBranchByIdData= async (idBranch: string): Promise<an
 };
 
 
+
 //DATA PARA ACTUALIZAR EL PERFIL DE UN USUARIO DE PLATAFORMA
-export const putProfileUserPlatformData = async (body: IUserPlatform, userId: string): Promise<IUserPlatform | null> => {
+export const putProfileUserPlatformData = async (userId: string, body: IUserPlatform): Promise<IUserPlatform | null> => {
     const t = await sequelize.transaction();    
     try {
         if (!body || !body.id || !Object.keys(body).length) {
             await t.rollback();
             throw new ServiceError(400, "Datos del usuario incompletos o inválidos");
         }
-        const [rowsUpdated] = await UserPlatform.update(body, { where: { userId: body.id }, transaction: t });        
+        const [rowsUpdated] = await UserPlatform.update(body, { where: { id: body.id, userId: userId }, transaction: t });        
         if (rowsUpdated === 0) {
             await t.rollback();
             throw new ServiceError(403, "No se encontró ningún usuario para actualizar");
         }
-        const updatedUser = await UserPlatform.findByPk(userId, { transaction: t });        
+        const updatedUser = await UserPlatform.findByPk(body.id,  { transaction: t });        
         if (!updatedUser) {
             await t.rollback();
             throw new ServiceError(404, "No se encontró ningún usuario para actualizar");
@@ -136,9 +195,9 @@ export const putProfileUserPlatformData = async (body: IUserPlatform, userId: st
 //DATA PARA ELIMINAR UN USUARIO DE PLATAFORMA PERTENECIENTE A UN USER
 export const deleteUserPlatformData = async (idUserPlatform: string): Promise<void> => {
     try {
-        const userPlatformFound = await UserPlatform.findOne({ where: { userId: idUserPlatform } });
+        const userPlatformFound = await UserPlatform.findOne({ where: { id: idUserPlatform } });
         if (!userPlatformFound) throw new Error("Usuario de platafora no encontrado");
-        await UserPlatform.destroy({ where: { userId: idUserPlatform } });
+        await UserPlatform.destroy({ where: { id: idUserPlatform } });
     } catch (error) {
         throw error;
     };

@@ -22,9 +22,9 @@ export const checkPermissionForUserPlatformBranch = async (idBranch: string, use
 
 
 //VALIDA QUE SI EL USARIO DE PLATAFORMA LE PERTENECE A UN UN USER
-export const checkPermissionForUserPlatform = async (idUserPlatform: string, userId: string): Promise<boolean> => {
+export const checkPermissionForUserPlatform = async (userId: string, idUserPlatform: string): Promise<boolean> => {
     try {
-        const userPlatform = await getUserPlatformByIdData(idUserPlatform, userId);
+        const userPlatform = await getUserPlatformByIdData(userId, idUserPlatform);
         if (!userPlatform) return false;
         if (userPlatform.id !== idUserPlatform) return false;
         return true;

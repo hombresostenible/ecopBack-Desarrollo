@@ -25,11 +25,30 @@ export const loginService = async (email: string, password: string): Promise<ILo
         const userFound = await searchUserByEmail(email);   //BUSCA EL CORREO REGISTRADO EN LA BASE DE DATOS
         if (!userFound) return null;
         if (userFound?.isBlocked) return { code: 401, message: "Usuario bloqueado" };
+
         const isMatch = await bcrypt.compare(password, userFound.password);
         if (isMatch === true) {
             userFound.loginAttempts = 0;
             await userFound.save();
-            const token = await createAccessToken({ userId: userFound.id, typeRole: userFound.typeRole });
+
+            // Condicional para identificar si es Usuario o Usuario de Plataforma
+            let token;
+            if ('userId' in userFound && 'branchId' in userFound) {
+                // Usuario de Plataforma
+                token = await createAccessToken({
+                    userId: userFound.id,
+                    typeRole: userFound.typeRole,
+                    employerId: userFound.userId,     // Solo para Usuario de Plataforma
+                    userBranchId: userFound.branchId  // Solo para Usuario de Plataforma
+                });
+            } else {
+                // Usuario titular
+                token = await createAccessToken({
+                    userId: userFound.id,
+                    typeRole: userFound.typeRole
+                });
+            }
+
             return { code: 200, result: { serResult: userFound, token } };
         } else {
             userFound.loginAttempts += 1;
@@ -37,13 +56,10 @@ export const loginService = async (email: string, password: string): Promise<ILo
                 userFound.isBlocked = true;
                 userFound.unlockCode = generateCodes();
                 await userFound.save();
-                // Extraer el nombre del usuario solo si el tipo lo permite
-                let userName: string;
-                if ('name' in userFound) {
-                    userName = userFound.name;
-                } else {
-                    userName = ''; // Valor por defecto en caso de que 'name' no esté definido
-                }
+                
+                // Extraer el nombre solo si está disponible
+                const userName = 'name' in userFound ? userFound.name : '';
+
                 const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${userFound.id}`;
                 const mailOptions = mailAccountUserBlocked(email, userName, userFound.unlockCode, link);
                 transporterZoho.sendMail(mailOptions, (error, info) => {
@@ -53,7 +69,9 @@ export const loginService = async (email: string, password: string): Promise<ILo
                 });
                 return { code: 401, message: "Has bloqueado tu cuenta" };
             }
+
             if (userFound.loginAttempts > 3) return { code: 401, message: "Usuario bloqueado" };
+
             await userFound.save();
             return { code: 401, message: "Correo o contraseña incorrecta" };
         }

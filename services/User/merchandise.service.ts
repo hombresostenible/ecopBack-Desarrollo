@@ -37,8 +37,8 @@ export const postMerchandiseService = async (userId: string, typeRole: string, b
 
 //SERVICE PARA CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
 export const postManyMerchandiseService = async (userId: string, typeRole: string, merchandises: IMerchandise[]): Promise<IServiceLayerResponseMerchandise> => {
-    const uniqueMerchandises: IMerchandise[] = [];
-    const duplicatedMerchandises: IMerchandise[] = [];
+    const uniqueRegisters: IMerchandise[] = [];
+    const duplicatedRegisters: IMerchandise[] = [];
     try {
         for (const merchandise of merchandises) {
             // Verificar los permisos del usuario para crear mercancías en la sede específica
@@ -47,11 +47,11 @@ export const postManyMerchandiseService = async (userId: string, typeRole: strin
             // Crear la mercancía
             const createdMerchandise = await postManyMerchandiseData(userId, typeRole, merchandise);
             if (createdMerchandise) {
-                uniqueMerchandises.push(createdMerchandise);
-            } else duplicatedMerchandises.push(merchandise);
+                uniqueRegisters.push(createdMerchandise);
+            } else duplicatedRegisters.push(merchandise);
         }
         // Devolver una respuesta adecuada
-        return { code: 201, result: uniqueMerchandises };
+        return { code: 201, result: uniqueRegisters };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -163,18 +163,18 @@ export const putMerchandiseService = async (userId: string, idMerchandise: strin
 
 //SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIAS MERCANCIAS
 export const putUpdateManyMerchandiseService = async (merchandises: IMerchandise[], userId: string, typeRole: string): Promise<IServiceLayerResponseMerchandise> => {
-    const uniqueMerchandises: IMerchandise[] = [];
-    const duplicatedMerchandises: IMerchandise[] = [];
+    const uniqueRegisters: IMerchandise[] = [];
+    const duplicatedRegisters: IMerchandise[] = [];
     try {
         for (const merchandise of merchandises) {
             const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(merchandise.branchId, userId, typeRole);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar las mercancías en esta sede");
             const updatedMerchandise = await putUpdateManyMerchandiseData(merchandise, userId,);
             if (updatedMerchandise) {
-                uniqueMerchandises.push(updatedMerchandise);
-            } else duplicatedMerchandises.push(merchandise);
+                uniqueRegisters.push(updatedMerchandise);
+            } else duplicatedRegisters.push(merchandise);
         }
-        return { code: 201, result: uniqueMerchandises };
+        return { code: 201, result: uniqueRegisters };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;

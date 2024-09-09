@@ -165,7 +165,7 @@ UserPlatform.init(
         },
         userId: {
             type: DataTypes.UUID,
-            allowNull: true,
+            allowNull: false,
         },
     },
     {

@@ -27,6 +27,6 @@ export interface IUserPlatform {
     applicationPassword?: string;
     
     //RELACION DE TABLAS
-    branchId?: string;
-    userId?: string;
+    branchId: string;
+    userId: string;
 };

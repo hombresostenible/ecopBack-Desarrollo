@@ -7,8 +7,8 @@ const TOKEN_SECRET = process.env.TOKEN_SECRET || 'default_token_secret';
 interface Payload {
     userId: string;
     typeRole: string;
-    userBranchId?: string;
     employerId?: string;
+    userBranchId?: string;
 }
 
 export function createAccessToken(payload: Payload): Promise<string> {
