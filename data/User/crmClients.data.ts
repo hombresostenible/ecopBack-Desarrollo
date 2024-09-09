@@ -8,11 +8,11 @@ import { ServiceError } from '../../types/Responses/responses.types';
 //DATA PARA CREAR UN CLIENTE DEL USER
 export const postRegisterCRMClientsData = async (userId: string, body: ICrmClients): Promise<any> => {
     try {
-        const existingCRMClient = await CrmClients.findOne({
+        const existingRegister = await CrmClients.findOne({
             where: { documentId: body.documentId },
         });
-        if (existingCRMClient) {
-            if (existingCRMClient.userId === userId) return null;
+        if (existingRegister) {
+            if (existingRegister.userId === userId) return null;
             throw new ServiceError(400, "Ya existe un cliente con el mismo documento de identidad");
         }
         const newCRMClient = new CrmClients({
@@ -33,12 +33,12 @@ export const postManyCRMClientsData = async (userId: string, typeRole: string, b
     const t = await sequelize.transaction();
     try {
         // Verificar si el cliente ya existe
-        const existingCRMClient = await CrmClients.findOne({
+        const existingRegister = await CrmClients.findOne({
             where: { documentId: body.documentId },
             transaction: t,
         });
         // Si el cliente ya existe, devuelve null
-        if (existingCRMClient) {
+        if (existingRegister) {
             await t.rollback();
             return null;
         }
