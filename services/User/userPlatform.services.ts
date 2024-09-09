@@ -43,8 +43,8 @@ export const postManyUserPlatformService = async (userId: string, typeRole: stri
     try {
         for (const userPlatform of userPlatforms) {
             // Verificar los permisos del usuario para crear el registro en la sede específica
-            const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, userPlatform.branchId);
-            if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear usuarios de plataforma en esta sede");
+            // const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, userPlatform.branchId);
+            // if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear usuarios de plataforma en esta sede");
             // Crear el registro
             const createdRegister = await postManyUserPlatformData(userId, typeRole, userPlatform);
             if (createdRegister) {

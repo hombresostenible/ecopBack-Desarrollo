@@ -31,17 +31,17 @@ export const postRegisterCRMClientsService = async (userId: string, body: ICrmCl
 
 //CREAR MUCHOS CLIENTES DESDE EL EXCEL
 export const postManyCRMClientsService = async (userId: string, typeRole: string, bodyArray: ICrmClients[]): Promise<ICrmClientsServiceLayerResponse> => {
-    const uniqueCRMClient: ICrmClients[] = [];
-    const duplicatedCRMClients: ICrmClients[] = [];
+    const uniqueRegisters: ICrmClients[] = [];
+    const duplicatedRegisters: ICrmClients[] = [];
     try {
         for (const crmClient of bodyArray) {
             // Crear el cliente
-            const createdCRMClient = await postManyCRMClientsData(userId, typeRole, crmClient);
-            if (createdCRMClient) {
-                uniqueCRMClient.push(createdCRMClient);
-            } else duplicatedCRMClients.push(crmClient);
+            const createdRegister = await postManyCRMClientsData(userId, typeRole, crmClient);
+            if (createdRegister) {
+                uniqueRegisters.push(createdRegister);
+            } else duplicatedRegisters.push(crmClient);
         }
-        return { code: 201, result: uniqueCRMClient };
+        return { code: 201, result: uniqueRegisters };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
