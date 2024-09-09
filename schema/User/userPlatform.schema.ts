@@ -113,6 +113,7 @@ UserPlatform.init(
         codeDane: {
             type: DataTypes.STRING,
             allowNull: true,
+            defaultValue: '',
         },
         subregionCodeDane: {
             type: DataTypes.STRING,
