@@ -45,7 +45,9 @@ export const checkRoleArrayCreateUserPlatform = (req: Request, res: Response, ne
     const { user } = req;
     if (!user) return res.status(401).json({ error: 'Usuario no autenticado' });
     const { typeRole } = user;
-    if (typeRole === 'Superadmin') return next();
+    if (typeRole === 'Superadmin') {
+        return next()
+    };
     // Verifica si el usuario es 'Administrador'
     if (typeRole === 'Administrador') {
         // Si es 'Administrador', verifica cada objeto en el array

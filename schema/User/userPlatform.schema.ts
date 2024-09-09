@@ -112,11 +112,11 @@ UserPlatform.init(
         },
         codeDane: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         subregionCodeDane: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         address: {
             type: DataTypes.STRING,

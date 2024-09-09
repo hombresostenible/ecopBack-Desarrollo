@@ -81,8 +81,6 @@ type ManyRegisterUserPlatformSchemaType = ZodArray<
         typeRole: ZodString;
         department: ZodString;
         city: ZodString;
-        codeDane: ZodString;
-        subregionCodeDane: ZodString;
         address: ZodString;
         phone: ZodString;
         email: ZodString;
@@ -114,12 +112,6 @@ export const manyUserPlatformsSchema: ManyRegisterUserPlatformSchemaType = z.arr
         city: z.string({
             required_error: 'La ciudad del usuario es requerida',
         }),
-        codeDane: z.string({
-            required_error: 'El código Dane de la ciudad del usuario es requerida',
-        }),
-        subregionCodeDane: z.string({
-            required_error: 'El código de la subregión Dane es requerida',
-        }),
         address: z.string({
             required_error: 'La dirección del usuario es requerida',
         }),    
@@ -137,7 +129,7 @@ export const manyUserPlatformsSchema: ManyRegisterUserPlatformSchemaType = z.arr
             message: 'La contraseña debe de tener más de seis caracteres',
         }),
         isAceptedConditions: z.boolean({
-            required_error: 'Aceptar térm,inos y condiciones para el usuario es requerido',
+            required_error: 'Aceptar términos y condiciones para el usuario es requerido',
         }),
     })
 );
