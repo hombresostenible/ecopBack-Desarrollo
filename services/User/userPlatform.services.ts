@@ -37,11 +37,12 @@ export const postUserPlatformService = async (body: IUserPlatform, userId: strin
 
 
 //CREA MASIVAMENTE USUARIOS DE PLATAFORMA
-export const postManyUserPlatformService = async (userId: string, typeRole: string, userPlatforms: IUserPlatform[]): Promise<IServiceLayerResponseUserPlatform> => {
+export const postManyUserPlatformService = async (userId: string, typeRole: string, bodyArray: IUserPlatform[]): Promise<IServiceLayerResponseUserPlatform> => {
     const uniqueRegisters: IUserPlatform[] = [];
     const duplicatedRegisters: IUserPlatform[] = [];
     try {
-        for (const userPlatform of userPlatforms) {
+        console.log('Service')
+        for (const userPlatform of bodyArray) {
             // Verificar los permisos del usuario para crear el registro en la sede específica
             // const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, userPlatform.branchId);
             // if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear usuarios de plataforma en esta sede");

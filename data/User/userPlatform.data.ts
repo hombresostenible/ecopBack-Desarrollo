@@ -67,26 +67,26 @@ export const postUserPlatformData = async (body: IUserPlatform, userId: string):
 
 
 //CREA MASIVAMENTE USUARIOS DE PLATAFORMA
-export const postManyUserPlatformData = async (userId: string, typeRole: string, body: IUserPlatform): Promise<any> => {
+export const postManyUserPlatformData = async (userId: string, typeRole: string, userPlatform: IUserPlatform): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingRegister = await UserPlatform.findOne({
-            where: { documentId: body.documentId, branchId: body.branchId },
+            where: { userId: userId, documentId: userPlatform.documentId, branchId: userPlatform.branchId },
             transaction: t,
         });
         if (existingRegister) {
             await t.rollback();
-            return null;
+            throw new ServiceError(400, 'El usuario ya está creado');
         }
         // Si el registro no existe, crearlo en la base de datos
         if (typeRole === 'Superadmin') {
             const newRegister = await UserPlatform.create({
-                ...body,
+                ...userPlatform,
                 userId: userId,
             }, { transaction: t });
             try {
                 const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${newRegister.id}`;
-                const mailOptions = mailUserPlatformWelcome(body.email, body.name, newRegister.unlockCode, link);
+                const mailOptions = mailUserPlatformWelcome(userPlatform.email, userPlatform.name, newRegister.unlockCode, link);
                 await transporterZoho.sendMail(mailOptions);
                 console.log('Correo electrónico de bienvenida enviado con éxito.');
             } catch (emailError) {
@@ -99,15 +99,17 @@ export const postManyUserPlatformData = async (userId: string, typeRole: string,
         }
         if (typeRole === 'Administrador') {
             const newRegister = await UserPlatform.create({
-                ...body,
+                ...userPlatform,
                 userId: userId,
             }, { transaction: t });
             try {
+                console.log('ENVIO DE CORREO')
                 const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${newRegister.id}`;
-                const mailOptions = mailUserPlatformWelcome(body.email, body.name, newRegister.unlockCode, link);
+                const mailOptions = mailUserPlatformWelcome(userPlatform.email, userPlatform.name, newRegister.unlockCode, link);
                 await transporterZoho.sendMail(mailOptions);
                 console.log('Correo electrónico de bienvenida enviado con éxito.');
             } catch (emailError) {
+                console.log('emailError: ', emailError)
                 console.error('Error al enviar el correo electrónico de bienvenida:', emailError);
                 await t.rollback();
                 throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
@@ -116,6 +118,7 @@ export const postManyUserPlatformData = async (userId: string, typeRole: string,
             return newRegister;
         }
     } catch (error) {
+        console.log('Error: ', error)
         throw error;
     }
 };
