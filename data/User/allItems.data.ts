@@ -103,14 +103,16 @@ export const getItemBarCodeData = async (userId: string, barCode: string): Promi
                 userId
             FROM services
             WHERE barCode = :barCode AND userId = :userId
+
+            LIMIT 1
         `, {
             replacements: { barCode, userId },
             type: QueryTypes.SELECT
         });
-        return itemFound;
+        return itemFound[0] || null; // Devolver el primer registro encontrado o null si no se encuentra nada
     } catch (error) {
         throw error;
-    };
+    }
 };
 
 

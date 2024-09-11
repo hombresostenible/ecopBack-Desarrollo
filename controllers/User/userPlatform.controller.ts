@@ -33,7 +33,6 @@ router.post("/", authRequired, checkRoleCreateUserPlatform, validateSchema(userP
 //CREAR MUCHAS MERCANCIAS POR SEDE PARA USER DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleArrayCreateUserPlatform, validateSchema(manyUserPlatformsSchema), async (req: Request, res: Response) => {
     try {
-        console.log('Hola')
         const { userId, typeRole } = req.user;
         const bodyArray = req.body;
         const serviceLayerResponse = await postManyUserPlatformService(userId, typeRole, bodyArray);
