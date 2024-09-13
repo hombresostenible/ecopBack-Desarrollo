@@ -8,21 +8,20 @@ import { ServiceError } from '../../types/Responses/responses.types';
 export const postRegisterCRMSupplierData = async (userId: string, body: ICrmSuppliers): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        const existingCRMSupplier = await CrmSupplier.findOne({
+        const existingRegister = await CrmSupplier.findOne({
             where: { documentId: body.documentId },
             transaction: t,
         });
-        if (existingCRMSupplier) {
+        if (existingRegister) {
             await t.rollback();
-            throw new ServiceError(400, "El proveedor ya existe");
+            throw new ServiceError(400, "Ya existe un proveedor con el mismo documento de identidad");
         }
-
-        const newCRMSupplier = await CrmSupplier.create({
+        const newRegister = await CrmSupplier.create({
             ...body,
-            userId: userId,
+            entityUserId: userId,
         }, { transaction: t });
         await t.commit();
-        return newCRMSupplier;
+        return newRegister;
     } catch (error) {
         await t.rollback();
         throw new ServiceError(500, `Error al crear el proveedor: ${error}`);
@@ -36,38 +35,38 @@ export const postManyCRMSuppliersData = async (userId: string, typeRole: string,
     const t = await sequelize.transaction();
     try {
         // Verificar si el proveedor ya existe
-        const existingCRMSupplier = await CrmSupplier.findOne({
+        const existingRegister = await CrmSupplier.findOne({
             where: { documentId: body.documentId },
             transaction: t,
         });
         // Si el proveedor ya existe, devuelve null
-        if (existingCRMSupplier) {
+        if (existingRegister) {
             await t.rollback();
             return null;
         }
         if (typeRole === 'Superadmin') {
-            const newCRMSupplier = await CrmSupplier.create({
+            const newRegister = await CrmSupplier.create({
                 ...body,
                 entityUserId: userId,
             }, { transaction: t });
             await t.commit();
-            return newCRMSupplier;
+            return newRegister;
         }
         if (typeRole === 'Administrador') {
-            const newCRMSupplier = await CrmSupplier.create({
+            const newRegister = await CrmSupplier.create({
                 ...body,
                 entityUserId: userId,
             }, { transaction: t });        
             await t.commit();
-            return newCRMSupplier;            
+            return newRegister;            
         }
         // Si el proveedor no existe, crearlo en la base de datos
-        const newCRMSupplier = await CrmSupplier.create({
+        const newRegister = await CrmSupplier.create({
             ...body,
             entityUserId: userId,
         }, { transaction: t });
         await t.commit();
-        return newCRMSupplier;
+        return newRegister;
     } catch (error) {
         throw error;
     }

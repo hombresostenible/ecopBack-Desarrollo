@@ -7,22 +7,25 @@ import { ServiceError } from '../../types/Responses/responses.types';
 
 //DATA PARA CREAR UN CLIENTE DEL USER
 export const postRegisterCRMClientsData = async (userId: string, body: ICrmClients): Promise<any> => {
+    const t = await sequelize.transaction();
     try {
         const existingRegister = await CrmClients.findOne({
             where: { documentId: body.documentId },
+            transaction: t,
         });
         if (existingRegister) {
-            if (existingRegister.userId === userId) return null;
+            await t.rollback();
             throw new ServiceError(400, "Ya existe un cliente con el mismo documento de identidad");
         }
-        const newCRMClient = new CrmClients({
+        const newRegister = await CrmClients.create({
             ...body,
-            userId: userId,
-        });
-        await newCRMClient.save();
-        return newCRMClient;
+            entityUserId: userId,
+        }, { transaction: t });
+        await t.commit();
+        return newRegister;
     } catch (error) {
-        throw error;
+        await t.rollback();
+        throw new ServiceError(500, `Error al crear el cliente: ${error}`);
     }
 };
 
@@ -43,20 +46,20 @@ export const postManyCRMClientsData = async (userId: string, typeRole: string, b
             return null;
         }
         if (typeRole === 'Superadmin') {
-            const newCRMClient = await CrmClients.create({
+            const newRegister = await CrmClients.create({
                 ...body,
                 entityUserId: userId,
             }, { transaction: t });
             await t.commit();
-            return newCRMClient;
+            return newRegister;
         }
         if (typeRole === 'Administrador') {
-            const newCRMClient = await CrmClients.create({
+            const newRegister = await CrmClients.create({
                 ...body,
                 entityUserId: userId,
             }, { transaction: t });        
             await t.commit();
-            return newCRMClient;            
+            return newRegister;            
         }
     } catch (error) {
         throw error;
@@ -124,7 +127,6 @@ export const putCRMClientData = async (userId: string, idCrmClient: string, body
         if (!updatedCRMClient) throw new ServiceError(404, "No se encontró ningún cliente para actualizar");
         return updatedCRMClient as unknown as ICrmClients;
     } catch (error) {
-        console.log('Error: ', error)
         throw error;
     }
 };

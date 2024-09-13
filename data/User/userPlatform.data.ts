@@ -103,13 +103,11 @@ export const postManyUserPlatformData = async (userId: string, typeRole: string,
                 userId: userId,
             }, { transaction: t });
             try {
-                console.log('ENVIO DE CORREO')
                 const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${newRegister.id}`;
                 const mailOptions = mailUserPlatformWelcome(userPlatform.email, userPlatform.name, newRegister.unlockCode, link);
                 await transporterZoho.sendMail(mailOptions);
                 console.log('Correo electrónico de bienvenida enviado con éxito.');
             } catch (emailError) {
-                console.log('emailError: ', emailError)
                 console.error('Error al enviar el correo electrónico de bienvenida:', emailError);
                 await t.rollback();
                 throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
@@ -118,7 +116,6 @@ export const postManyUserPlatformData = async (userId: string, typeRole: string,
             return newRegister;
         }
     } catch (error) {
-        console.log('Error: ', error)
         throw error;
     }
 };

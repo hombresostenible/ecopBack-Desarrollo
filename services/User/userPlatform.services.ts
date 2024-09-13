@@ -41,7 +41,6 @@ export const postManyUserPlatformService = async (userId: string, typeRole: stri
     const uniqueRegisters: IUserPlatform[] = [];
     const duplicatedRegisters: IUserPlatform[] = [];
     try {
-        console.log('Service')
         for (const userPlatform of bodyArray) {
             // Verificar los permisos del usuario para crear el registro en la sede específica
             const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, userPlatform.branchId);

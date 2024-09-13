@@ -28,7 +28,6 @@ router.get("/bar-code/:barCode", authRequired, async (req: Request, res: Respons
     try {
         const { userId } = req.user;
         const { barCode } = req.params;
-        console.log('barCode: ', barCode)
         const serviceLayerResponse = await getItemBarCodeService(userId, barCode);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {

@@ -46,7 +46,6 @@ export const checkRoleArrayCreateUserPlatform = (req: Request, res: Response, ne
     if (!user) return res.status(401).json({ error: 'Usuario no autenticado' });
     const { typeRole } = user;
     if (typeRole === 'Superadmin') {
-        console.log('ROL DE SUPERADMIN')
         return next()
     };
     // Verifica si el usuario es 'Administrador'
@@ -60,7 +59,6 @@ export const checkRoleArrayCreateUserPlatform = (req: Request, res: Response, ne
             // Verifica si el 'Administrador' está autorizado para crear usuarios en la misma sucursal
             // if (obj.branchId !== userBranchId) return res.status(403).json({ error: 'Acceso denegado. Tu rol no está autorizado para ejecutar esta acción para uno o más registros' });
         }
-        console.log('ROL DE ADMIN')
         return next();
     }
     return res.status(403).json({ error: 'Acceso denegado. Tu rol no está autorizado para ejecutar esta acción' });

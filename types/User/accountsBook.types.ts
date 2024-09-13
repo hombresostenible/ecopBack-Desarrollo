@@ -13,6 +13,7 @@ export interface IAccountsBook {
     registrationDate: Date;
     transactionDate: Date;
     transactionType: 'Ingreso' | 'Gasto';
+    // transactionType: 'Ingreso' | 'Gasto' | 'CXC' | 'CXP';
     creditCash: 'Contado' | 'Credito';
     meanPayment?: 'Efectivo' | 'Tarjeta de Credito/Debito' | 'Transferencia bancaria (PSE)' | 'Daviplata' | 'Nequi' | 'Movii' | 'Tuya Pay' | 'Dale' | 'Nubank' | 'Uala' | 'Lulo Bank' | 'Tpaga' | 'Powwi' | 'BBVA Wallet' | 'Ahorro a la mano' | 'Apple Pay' | 'Rappipay' | 'Claro Pay'     | 'Baloto' | 'Giro' | 'Cheque';
     initialDate?: Date;

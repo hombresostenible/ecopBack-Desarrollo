@@ -34,8 +34,6 @@ import { ServiceError } from "../../types/Responses/responses.types";
 //CREAR UN REGISTRO CONTABLE DEL USER
 export const postAccountsBookData = async (userId: string, body: IAccountsBook): Promise<IAccountsBook> => {
     try {
-        console.log('userId: ', userId)
-        console.log('body: ', body)
         // Establecer transactionApproved basado en meanPayment
         if ((body.transactionType === 'Ingreso' || body.transactionType === 'Gasto') && body.meanPayment === 'Efectivo' && body.creditCash === 'Contado') {
             body.transactionApproved = true;
@@ -97,7 +95,6 @@ export const postAccountsBookData = async (userId: string, body: IAccountsBook):
         //^ Crea el pago a una CXC
         if (body.pay === 'Si' && body.transactionType === 'Ingreso' && body.creditCash === "Contado") await paymentsCXCAccountsReceivable(body, userId);
         
-
         //^ Crea una CXP en AccountsPayable por 'Otros ingresos' (Préstamos)
         if (body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Contado") await otherIncomesCXPAccountsPayable(body, newTransaction.id, userId);
 
@@ -126,7 +123,6 @@ export const postAccountsBookData = async (userId: string, body: IAccountsBook):
         }
         return newTransaction;
     } catch (error) {
-        console.log('Error: ', error)
         throw error;
     }
 };
