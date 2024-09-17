@@ -381,6 +381,7 @@ export const deleteAccountsBookData = async (userId: string, idAccountsBook: str
         await AccountsBook.destroy({ where: { id: idAccountsBook }, transaction });
         await transaction.commit();
     } catch (error) {
+        console.log('Error: ', error)
         await transaction.rollback();
         throw error;
     }
@@ -389,7 +390,7 @@ export const deleteAccountsBookData = async (userId: string, idAccountsBook: str
 // REVERSION DEL AUMENTO O DESCUENTO EN EL INVENTARIO DE ASSETS
 const processAsset = async (transactionFound: any, itemSold: any, transaction: any) => {
     const itemFound = await Assets.findOne({
-        where: { userId: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
     if (!itemFound) throw new ServiceError(400, "No se encontró la mercancía de este registro");
@@ -405,7 +406,7 @@ const processAsset = async (transactionFound: any, itemSold: any, transaction: a
 // REVERSION DEL AUMENTO O DESCUENTO EN EL INVENTARIO DE MERCHANDISES
 const processMerchandise = async (transactionFound: any, itemSold: any, transaction: any) => {
     const itemFound = await Merchandise.findOne({
-        where: { userId: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
+        where: { id: itemSold.id, nameItem: itemSold.nameItem, branchId: transactionFound.branchId },
         transaction
     });
     if (!itemFound) throw new ServiceError(400, "No se encontró la mercancía de este registro");
