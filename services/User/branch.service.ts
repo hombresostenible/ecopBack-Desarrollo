@@ -1,15 +1,15 @@
 import {
     postBranchData,
     postManyBranchesData,
-    getBranchesUserData,
-    getBranchesPaginatedUserData,
+    getBranchesData,
+    getBranchesPaginatedData,
     getBranchByIdData,
     putBranchData,
     deleteBranchData
 } from "../../data/User/branch.data";
 import { checkPermissionForBranch } from '../../helpers/Branch.helper';
 import { IBranch } from "../../types/User/branch.types";
-import { ServiceError, IServiceLayerResponseBranch } from '../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseBranch, IServiceLayerResponseBranchPaginated } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UNA SEDE PARA USER
 export const postBranchService = async (body: IBranch, userId: string): Promise<IServiceLayerResponseBranch> => {
@@ -50,9 +50,9 @@ export const postManyBranchesService = async (branches: IBranch[], userId: strin
 
 
 //SERVICE PARA OBTENER TODAS LAS SEDES DE UN USER
-export const getBranchesUserService = async (userId: string): Promise<IServiceLayerResponseBranch> => {
+export const getBranchesService = async (userId: string): Promise<IServiceLayerResponseBranch> => {
     try {
-        const dataLayerResponse = await getBranchesUserData(userId);
+        const dataLayerResponse = await getBranchesData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -64,11 +64,11 @@ export const getBranchesUserService = async (userId: string): Promise<IServiceLa
 
 
 
-//SERVICE PARA OBTENER TODAS LAS SEDES PAGINADAS DE UN USER
-export const getBranchesPaginatedUserService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseBranch> => {
+//OBTENER TODAS LAS SEDES PAGINADAS DE UN USER
+export const getBranchesPaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseBranchPaginated> => {
     try {
-        const { branches, totalBranches, totalPages, currentPage } = await getBranchesPaginatedUserData(userId, page, limit);
-        return { code: 200, result: branches, totalBranches, totalPages, currentPage };
+        const { registers, totalRegisters, totalPages, currentPage } = await getBranchesPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;

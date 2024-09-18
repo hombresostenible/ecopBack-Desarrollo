@@ -1,7 +1,8 @@
 import {
     postMerchandiseData,
     postManyMerchandiseData,
-    getMerchandiseByUserIdData,
+    getMerchandisesData,
+    getMerchandisesPaginatedData,
     getMerchandiseBranchByIdData,
     getMerchandiseByIdData,
     getMerchandiseOffData,
@@ -15,7 +16,7 @@ import {
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
 import { checkPermissionForBranchMerchandise, checkPermissionForMerchandise } from '../../helpers/Merchandise.helper';
 import { IMerchandise } from "../../types/User/merchandise.types";
-import { ServiceError, IServiceLayerResponseMerchandise } from '../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseMerchandise, IServiceLayerResponseMerchandisePaginated } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UNA MERCANCIA POR SEDE PARA USER
 export const postMerchandiseService = async (userId: string, typeRole: string, body: IMerchandise): Promise<IServiceLayerResponseMerchandise> => {
@@ -63,10 +64,25 @@ export const postManyMerchandiseService = async (userId: string, typeRole: strin
 
 
 //SERVICE PARA OBTENER TODA LA MERCANCIA DEL USER
-export const getMerchandiseUserService = async (userId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const getMerchandisesService = async (userId: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
-        const dataLayerResponse = await getMerchandiseByUserIdData(userId);
+        const dataLayerResponse = await getMerchandisesData(userId);
         return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//OBTENER TODAS LAS MERCANCIAS PAGINADAS DE UN USER
+export const getMerchandisesPaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseMerchandisePaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getMerchandisesPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;

@@ -82,6 +82,34 @@ export const getCRMClientsData = async (userId: string): Promise<any> => {
 
 
 
+//OBTENER TODOS LOS CLIENTES PAGINADOS DE UN USER
+export const getCRMClientsPaginatedData = async (userId: string, page: number, limit: number): Promise<{ registers: ICrmClients[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = { entityUserId: userId };
+        const totalRegistersFound = await CrmClients.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await CrmClients.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+        const formattedRegisters = registersPaginated.map(register => register.toJSON());
+        console.log('formattedRegisters: ', formattedRegisters)
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA OBTENER TODOS LOS CLIENTES POR SEDE DE UN USER
 export const getCRMClientsBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {

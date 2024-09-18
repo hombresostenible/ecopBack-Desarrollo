@@ -87,13 +87,40 @@ export const postManyMerchandiseData = async (userId: string, typeRole: string, 
 
 
 //DATA PARA OBTENER TODA LA MERCANCIA DEL USER
-export const getMerchandiseByUserIdData = async (userId: string): Promise<any> => {
+export const getMerchandisesData = async (userId: string): Promise<any> => {
     try {
         const userProducts = await Merchandise.findAll({
             where: { userId: userId },
             order: [ ['nameItem', 'ASC'] ]
         });        
         return userProducts;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODAS LAS MERCANCIAS PAGINADAS DE UN USER
+export const getMerchandisesPaginatedData = async (userId: string, page: number, limit: number): Promise<{ registers: IMerchandise[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = { userId: userId };
+        const totalRegistersFound = await Merchandise.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await Merchandise.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+        const formattedRegisters = registersPaginated.map(register => register.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     }

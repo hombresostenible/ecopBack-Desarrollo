@@ -85,13 +85,14 @@ export const postManyProductsData = async (userId: string, typeRole: string, bod
 
 
 
-//DATA PARA OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER - CEO PLATATORMA
-export const getProductsData = async (): Promise<any> => {
+//DATA PARA OBTENER TODOS LOS PRODUCTOS DE UN USER
+export const getProductsData = async (userId: string): Promise<any> => {
     try {
-        const products = await Product.findAll({
+        const userProducts = await Product.findAll({
+            where: { userId: userId },
             order: [ ['nameItem', 'ASC'] ]
         });
-        return products;
+        return userProducts;
     } catch (error) {
         throw error;
     }
@@ -99,14 +100,26 @@ export const getProductsData = async (): Promise<any> => {
 
 
 
-//DATA PARA OBTENER TODOS LOS PRODUCTOS DE UN USER
-export const getProductsByUserIdData = async (userId: string): Promise<any> => {
+//OBTENER TODOS LOS PRODUCTOS PAGINADOS DE UN USER
+export const getProductsPaginatedData = async (userId: string, page: number, limit: number): Promise<{ registers: IProduct[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
-        const userProducts = await Product.findAll({
-            where: { userId: userId },
-            order: [ ['nameItem', 'ASC'] ]
+        const offset = (page - 1) * limit;
+        const searchCriteria = { userId: userId };
+        const totalRegistersFound = await Product.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await Product.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']]
         });
-        return userProducts;
+        const formattedRegisters = registersPaginated.map(register => register.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     }

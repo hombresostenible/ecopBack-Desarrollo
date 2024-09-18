@@ -81,13 +81,40 @@ export const postManyServicesData = async (userId: string, typeRole: string, bod
 
 
 //DATA PARA OBTENER TODOS LOS SERVICIOS DEL USER
-export const getServicesByUserIdData = async (userId: string): Promise<any> => {
+export const getServicesData = async (userId: string): Promise<any> => {
     try {
         const userServices = await Service.findAll({
             where: { userId: userId },
             order: [ ['nameItem', 'ASC'] ]
         });        
         return userServices;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS SERVICIOS PAGINADOS DE UN USER
+export const getServicesPaginatedData = async (userId: string, page: number, limit: number): Promise<{ registers: IService[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = { userId: userId };
+        const totalRegistersFound = await Service.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await Service.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+        const formattedRegisters = registersPaginated.map(register => register.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     }
