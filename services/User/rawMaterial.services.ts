@@ -2,6 +2,7 @@ import {
     postRawMaterialData,
     postManyRawMaterialData,
     getRawMaterialsData,
+    getRawMaterialsPaginatedData,
     getRawMaterialByBranchData,
     getRawMaterialByIdData,
     getRawMaterialsOffData,
@@ -15,7 +16,7 @@ import {
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
 import { checkPermissionForBranchRawMaterial, checkPermissionForRawMaterial } from '../../helpers/RawMaterial.helper';
 import { IRawMaterial } from "../../types/User/rawMaterial.types";
-import { ServiceError, IServiceLayerResponseRawMaterial } from '../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseRawMaterial, IServiceLayerResponseRawMaterialPaginated } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR MATERIA PRIMA POR SEDE PARA USER
 export const postRawMaterialService = async (userId: string, typeRole: string, body: IRawMaterial): Promise<IServiceLayerResponseRawMaterial> => {
@@ -41,16 +42,13 @@ export const postManyRawMaterialService = async (userId: string, typeRole: strin
     const duplicatedRawMaterials: IRawMaterial[] = [];
     try {
         for (const rawMaterial of rawMaterials) {
-            // Verificar los permisos del usuario para crear materias primas en la sede específica
             const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, rawMaterial.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear materias primas en esta sede");
-            // Crear la materia prima
             const createdRawMaterial = await postManyRawMaterialData(userId, typeRole, rawMaterial);
             if (createdRawMaterial) {
                 uniqueRawMaterials.push(createdRawMaterial);
             } else duplicatedRawMaterials.push(rawMaterial);
         }
-        // Devolver una respuesta adecuada
         return { code: 201, result: uniqueRawMaterials };
     } catch (error) {
         if (error instanceof Error) {
@@ -67,6 +65,21 @@ export const getRawMaterialsService = async (userId: string): Promise<IServiceLa
     try {
         const dataLayerResponse = await getRawMaterialsData(userId);
         return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//OBTENER TODAS LAS MATERIAS PRIMAS PAGINADAS DE UN USER
+export const getRawMaterialsPaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseRawMaterialPaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getRawMaterialsPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;

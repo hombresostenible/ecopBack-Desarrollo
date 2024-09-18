@@ -88,6 +88,33 @@ export const getCRMSuppliersData = async (userId: string): Promise<any> => {
 
 
 
+//OBTENER TODOS LOS PROVEEDORES PAGINADOS DE UN USER
+export const getCRMSuppliersPaginatedData = async (userId: string, page: number, limit: number): Promise<{ registers: ICrmSuppliers[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = { entityUserId: userId };
+        const totalRegistersFound = await CrmSupplier.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await CrmSupplier.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+        const formattedRegisters = registersPaginated.map(register => register.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA OBTENER TODOS LOS PROVEEDORES POR SEDE DE UN USER
 export const getCRMSuppliersBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {

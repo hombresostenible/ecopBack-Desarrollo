@@ -2,15 +2,13 @@ import {
     postRegisterCRMSupplierData,
     postManyCRMSuppliersData,
     getCRMSuppliersData,
+    getCRMSuppliersPaginatedData,
     getCRMSuppliersBranchData,
     getCRMSupplierByIdData,
     putCRMSupplierData,
     deleteCRMSupplierData,
 } from "../../data/User/crmSupplier.data";
-import {
-    ServiceError,
-    ICrmSuppliersServiceLayerResponse,
-} from '../../types/Responses/responses.types';
+import { ServiceError, ICrmSuppliersServiceLayerResponse, ICrmSuppliersServiceLayerResponsePaginated } from '../../types/Responses/responses.types';
 import { ICrmSuppliers } from '../../types/User/crmSupplier.types';
 
 //SERVICE PARA CREAR UN PROVEEDOR DEL USER
@@ -54,7 +52,7 @@ export const postManyCRMSuppliersService = async (userId: string, typeRole: stri
 
 
 //SERVICE PARA OBTENER TODOS LOS PROVEEDORES DE UN USER
-export const getCRMSuppliersUserService = async (userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
+export const getCRMSuppliersService = async (userId: string): Promise<ICrmSuppliersServiceLayerResponse> => {
     try {
         const dataLayerResponse = await getCRMSuppliersData(userId);
         return { code: 200, result: dataLayerResponse };
@@ -74,6 +72,21 @@ export const getCRMSuppliersBranchService = async (userId: string, idBranch: str
         const cRMSuppliersFound = await getCRMSuppliersBranchData(userId, idBranch);
         if (!cRMSuppliersFound) return { code: 404, message: "Proveedores no encontrados en esta sede" };
         return { code: 200, result: cRMSuppliersFound };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS PROVEEDORES PAGINADOS DE UN USER
+export const getCRMSuppliersPaginatedService = async (userId: string, page: number, limit: number): Promise<ICrmSuppliersServiceLayerResponsePaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getCRMSuppliersPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;

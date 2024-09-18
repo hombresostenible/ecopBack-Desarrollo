@@ -3,6 +3,7 @@ import {
     postAssetService,
     postManyAssetService,
     getAssetsService,
+    getAssetsPaginatedService,
     getAssetsOffService,
     getAssetsOffByBranchService,
     getAssetByIdService,
@@ -63,6 +64,30 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
         res.status(errorController.code).json(errorController.message);
     }
 }); // GET - http://localhost:3000/api/asset
+
+
+
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS PAGINADOS DE UN USER
+router.get("/paginated", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user as { userId: string };
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getAssetsPaginatedService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            result: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code || 500).json({ message: errorController.message });
+    }
+}); // GET - http://localhost:3000/api/asset/paginated?page=1&limit=20
 
 
 
@@ -152,9 +177,7 @@ router.put("/updateMany", authRequired, checkRoleArray, validateSchema(manyAsset
     try {
         const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        // Llamar a la capa de servicio para manejar la creación de múltiples activos
         const serviceLayerResponse = await putUpdateManyAssetService(userId, typeRole, bodyArray);
-        // Enviar una respuesta al cliente
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;

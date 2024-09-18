@@ -97,6 +97,34 @@ export const getRawMaterialsData = async (userId: string): Promise<any> => {
 };
 
 
+
+//OBTENER TODAS LAS MATERIAS PRIMAS PAGINADAS DE UN USER
+export const getRawMaterialsPaginatedData = async (userId: string, page: number, limit: number): Promise<{ registers: IRawMaterial[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = { userId: userId };
+        const totalRegistersFound = await RawMaterial.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await RawMaterial.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+        const formattedRegisters = registersPaginated.map(register => register.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA OBTENER TODAS LAS MATERIAS PRIMAS DE UNA SEDE DE UN USER
 export const getRawMaterialByBranchData = async (idBranch: string): Promise<any> => {
     try {
