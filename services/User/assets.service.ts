@@ -2,6 +2,7 @@ import {
     postAssetData,
     postManyAssetData,
     getAssetsData,
+    getAssetsPaginatedData,
     getAssetBranchData,
     getAssetByIdData,
     getAssetsOffData,
@@ -15,7 +16,7 @@ import {
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
 import { checkPermissionForBranchAssets, checkPermissionForAssets } from '../../helpers/Assets.helper';
 import { IAssets } from "../../types/User/assets.types";
-import { ServiceError, IServiceLayerResponseAssets } from '../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseAssets, IServiceLayerResponseAssetsPaginated } from '../../types/Responses/responses.types';
 
 //CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
 export const postAssetService = async (userId: string, body: IAssets): Promise<IServiceLayerResponseAssets> => {
@@ -73,6 +74,21 @@ export const getAssetsService = async (userId: string): Promise<IServiceLayerRes
             throw new ServiceError(500, customErrorMessage, error);
         } else throw error;
     };
+};
+
+
+
+//OBTENER TODAS LAS SEDES PAGINADAS DE UN USER
+export const getAssetsPaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseAssetsPaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getAssetsPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
 };
 
 

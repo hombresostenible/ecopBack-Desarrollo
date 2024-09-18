@@ -1,7 +1,8 @@
 import {
     postServicesData,
     postManyServicesData,
-    getServicesByUserIdData,
+    getServicesData,
+    getServicesPaginatedData,
     getServiceBranchByIdData,
     getServicesByIdData,
     putServicesData,
@@ -11,7 +12,7 @@ import {
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
 import { checkPermissionForBranchService, checkPermissionForServices } from '../../helpers/Service.helper';
 import { IService } from "../../types/User/services.types";
-import { ServiceError, IServiceLayerResponseService } from '../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseService, IServiceLayerResponseServicePaginated } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UN SERVICIO POR SEDE PARA USER
 export const postServicesService = async (body: IService, userId: string, typeRole: string): Promise<IServiceLayerResponseService> => {
@@ -37,16 +38,13 @@ export const postManyServicesService = async (userId: string, typeRole: string, 
     const duplicatedServices: IService[] = [];
     try {
         for (const service of services) {
-            // Verificar los permisos del usuario para crear servicios en la sede específica
             const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, service.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear servicio en esta sede");
-            // Crear la servicio
             const createdService = await postManyServicesData(userId, typeRole, service);
             if (createdService) {
                 uniqueServices.push(createdService);
             } else duplicatedServices.push(service);
         }
-        // Devolver una respuesta adecuada
         return { code: 201, result: uniqueServices };
     } catch (error) {
         if (error instanceof Error) {
@@ -59,10 +57,25 @@ export const postManyServicesService = async (userId: string, typeRole: string, 
 
 
 //SERVICE PARA OBTENER TODOS LOS SERVICIOS DEL USER
-export const getServicesUserService = async (userId: string): Promise<IServiceLayerResponseService> => {
+export const getServicesService = async (userId: string): Promise<IServiceLayerResponseService> => {
     try {
-        const dataLayerResponse = await getServicesByUserIdData(userId);
+        const dataLayerResponse = await getServicesData(userId);
         return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS SERVICIOS PAGINADOS DE UN USER
+export const getServicesPaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseServicePaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getServicesPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -92,7 +105,7 @@ export const getServicesBranchService = async (idBranch: string, userId: string)
 
 
 //SERVICE PARA OBTENER UN SERVICIO POR ID PERTENECIENTE AL USER
-export const getServicesService = async (idMachinery: string, userId: string): Promise<IServiceLayerResponseService> => {
+export const getServicesByIdService = async (idMachinery: string, userId: string): Promise<IServiceLayerResponseService> => {
     try {
         const hasPermission = await checkPermissionForServices(idMachinery, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a este servicio");

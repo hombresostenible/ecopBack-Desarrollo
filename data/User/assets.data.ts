@@ -78,6 +78,33 @@ export const getAssetsData = async (userId: string): Promise<any> => {
 
 
 
+//OBTENER TODOS LOS EQUIPOS, HERRAMIENTAS O MAQUINAS DE UN USER
+export const getAssetsPaginatedData = async (userId: string, page: number, limit: number): Promise<{ registers: IAssets[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = { userId: userId };
+        const totalRegistersFound = await Assets.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await Assets.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+        const formattedRegisters = registersPaginated.map(register => register.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //OBTENER UN EQUIPO, HERRAMIENTA O MAQUINA POR ID PERTENECIENTE AL USER
 export const getAssetByIdData = async (userId: string, idAssets: string): Promise<any> => {
     try {

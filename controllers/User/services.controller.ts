@@ -2,9 +2,10 @@ import express, { Request, Response } from "express";
 import {
     postServicesService,
     postManyServicesService,
-    getServicesUserService,
-    getServicesBranchService,
     getServicesService,
+    getServicesPaginatedService,
+    getServicesBranchService,
+    getServicesByIdService,
     putServicesService,
     putUpdateManyServiceService,
     deleteServicesService,
@@ -50,7 +51,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manySer
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
       const { userId } = req.user;
-      const serviceLayerResponse = await getServicesUserService(userId);      
+      const serviceLayerResponse = await getServicesService(userId);      
       if (Array.isArray(serviceLayerResponse.result)) {
         res.status(200).json(serviceLayerResponse.result);
       } else {
@@ -64,12 +65,36 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
+//OBTENER TODOS LOS SERVICIOS PAGINADOS DE UN USER
+router.get("/paginated", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user as { userId: string };
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getServicesPaginatedService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            result: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code || 500).json({ message: errorController.message });
+    }
+}); // GET - http://localhost:3000/api/service/paginated?page=1&limit=20
+
+
+
 //CONTROLLER PARA OBTENER UN SERVICIO POR ID PERTENECIENTE AL USER
 router.get("/:idService", authRequired, async (req: Request, res: Response) => {
     try {
         const { idService } = req.params;
         const { userId } = req.user;
-        const serviceLayerResponse = await getServicesService(idService, userId);
+        const serviceLayerResponse = await getServicesByIdService(idService, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;

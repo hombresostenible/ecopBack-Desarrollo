@@ -78,8 +78,15 @@ export interface IServiceLayerResponseBranch {
     result?: IBranch | IBranch[],
     message?: string;
     errorMessage?: unknown,
-    
-    totalBranches?: number,
+};
+
+//INTERFACE DE RESPUESTA GENERICA PARA BRANCH
+export interface IServiceLayerResponseBranchPaginated {
+    code: number,
+    result?: IBranch | IBranch[],
+    message?: string;
+    errorMessage?: unknown,
+    totalRegisters?: number,
     totalPages?: number,
     currentPage?: number,
 };
@@ -92,12 +99,34 @@ export interface IServiceLayerResponseAssets {
     errorMessage?: unknown,
 };
 
+//INTERFACE DE RESPUESTA GENERICA PARA ASSETS
+export interface IServiceLayerResponseAssetsPaginated {
+    code: number,
+    result?: IAssets | IAssets[],
+    message?: string;
+    errorMessage?: unknown,
+    totalRegisters?: number,
+    totalPages?: number,
+    currentPage?: number,
+};
+
 //INTERFACE DE RESPUESTA GENERICA PARA MERCHANDISE
 export interface IServiceLayerResponseMerchandise {
     code: number,
     result?: IMerchandise | IMerchandise[],
     message?: string;
     errorMessage?: unknown,
+};
+
+//INTERFACE DE RESPUESTA GENERICA PARA MERCHANDISE
+export interface IServiceLayerResponseMerchandisePaginated {
+    code: number,
+    result?: IMerchandise | IMerchandise[],
+    message?: string;
+    errorMessage?: unknown,
+    totalRegisters?: number,
+    totalPages?: number,
+    currentPage?: number,
 };
 
 //INTERFACE DE RESPUESTA GENERICA PARA PRODUCT
@@ -108,6 +137,17 @@ export interface IServiceLayerResponseProduct {
     errorMessage?: unknown,
 };
 
+//INTERFACE DE RESPUESTA GENERICA PARA PRODUCT
+export interface IServiceLayerResponseProductPaginated {
+    code: number,
+    result?: IProduct | IProduct[],
+    message?: string;
+    errorMessage?: unknown,
+    totalRegisters?: number,
+    totalPages?: number,
+    currentPage?: number,
+};
+
 //INTERFACE DE RESPUESTA GENERICA PARA RAWMATERIAL
 export interface IServiceLayerResponseRawMaterial {
     code: number,
@@ -116,12 +156,34 @@ export interface IServiceLayerResponseRawMaterial {
     errorMessage?: unknown,
 };
 
+//INTERFACE DE RESPUESTA GENERICA PARA RAWMATERIAL
+export interface IServiceLayerResponseRawMaterialPaginated {
+    code: number,
+    result?: IRawMaterial | IRawMaterial[],
+    message?: string;
+    errorMessage?: unknown,
+    totalRegisters?: number,
+    totalPages?: number,
+    currentPage?: number,
+};
+
 //INTERFACE DE RESPUESTA GENERICA PARA SERVICE
 export interface IServiceLayerResponseService {
     code: number,
     result?: IService | IService[],
     message?: string;
     errorMessage?: unknown,
+};
+
+//INTERFACE DE RESPUESTA GENERICA PARA SERVICE
+export interface IServiceLayerResponseServicePaginated {
+    code: number,
+    result?: IService | IService[],
+    message?: string;
+    errorMessage?: unknown,
+    totalRegisters?: number,
+    totalPages?: number,
+    currentPage?: number,
 };
 
 //INTERFACE DE RESPUESTA GENERICA PARA ACCOUNTSBOOK
@@ -185,12 +247,34 @@ export interface ICrmClientsServiceLayerResponse {
     errorMessage?: unknown;
 };
 
+//INTERFACE DE RESPUESTA GENERICA PARA CRMCLIENTS
+export interface ICrmClientsServiceLayerResponsePaginated {
+    code: number;
+    result?: ICrmClients | ICrmClients[],
+    message?: string;
+    errorMessage?: unknown;
+    totalRegisters?: number,
+    totalPages?: number,
+    currentPage?: number,
+};
+
 //INTERFACE DE RESPUESTA GENERICA PARA CRMSUPPLIERS
 export interface ICrmSuppliersServiceLayerResponse {
     code: number;
     result?: ICrmSuppliers | ICrmSuppliers[],
     message?: string;
     errorMessage?: unknown;
+};
+
+//INTERFACE DE RESPUESTA GENERICA PARA CRMSUPPLIERS
+export interface ICrmSuppliersServiceLayerResponsePaginated {
+    code: number;
+    result?: ICrmSuppliers | ICrmSuppliers[],
+    message?: string;
+    errorMessage?: unknown;
+    totalRegisters?: number,
+    totalPages?: number,
+    currentPage?: number,
 };
 
 //INTERFACE DE RESPUESTA GENERICA PARA SALESFUNNERCUSTOMERACQUISITION

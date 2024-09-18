@@ -2,15 +2,13 @@ import {
     postRegisterCRMClientsData,
     postManyCRMClientsData,
     getCRMClientsData,
+    getCRMClientsPaginatedData,
     getCRMClientsBranchData,
     getCRMClientByIdData,
     putCRMClientData,
     deleteCRMClientData,
 } from "../../data/User/crmClients.data";
-import {
-    ServiceError,
-    ICrmClientsServiceLayerResponse,
-} from '../../types/Responses/responses.types';
+import { ServiceError, ICrmClientsServiceLayerResponse, ICrmClientsServiceLayerResponsePaginated } from '../../types/Responses/responses.types';
 import { ICrmClients } from '../../types/User/crmClients.types';
 
 //SERVICE PARA CREAR UN CLIENTE DEL USER
@@ -53,10 +51,25 @@ export const postManyCRMClientsService = async (userId: string, typeRole: string
 
 
 //SERVICE PARA OBTENER TODOS LOS CLIENTES DE UN USER
-export const getCRMClientsUserService = async (userId: string): Promise<ICrmClientsServiceLayerResponse> => {
+export const getCRMClientsService = async (userId: string): Promise<ICrmClientsServiceLayerResponse> => {
     try {
         const dataLayerResponse = await getCRMClientsData(userId);
         return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS CLIENTES PAGINADOS DE UN USER
+export const getCRMClientsPaginatedService = async (userId: string, page: number, limit: number): Promise<ICrmClientsServiceLayerResponsePaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getCRMClientsPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
