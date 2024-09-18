@@ -1,7 +1,8 @@
 import {
     postBranchData,
-    postManyBranchData,
-    getBranchsByUserIdData,
+    postManyBranchesData,
+    getBranchesUserData,
+    getBranchesPaginatedUserData,
     getBranchByIdData,
     putBranchData,
     deleteBranchData
@@ -27,17 +28,16 @@ export const postBranchService = async (body: IBranch, userId: string): Promise<
 
 
 //SERVICE PARA CREAR MASIVAMENTE SEDES PARA USER DESDE EL EXCEL
-export const postManyBranchService = async (branches: IBranch[], userId: string): Promise<IServiceLayerResponseBranch> => {
+export const postManyBranchesService = async (branches: IBranch[], userId: string): Promise<IServiceLayerResponseBranch> => {
     const uniqueBranches: IBranch[] = [];
     const duplicatedBranches: IBranch[] = [];
     try {
         for (const branch of branches) {
-            const createdBranch = await postManyBranchData(branch, userId);
+            const createdBranch = await postManyBranchesData(branch, userId);
             if (createdBranch) {
                 uniqueBranches.push(createdBranch);
             } else duplicatedBranches.push(branch);
         };
-        // Devolver una respuesta adecuada
         return { code: 201, result: uniqueBranches };
     } catch (error) {
         if (error instanceof Error) {
@@ -50,9 +50,9 @@ export const postManyBranchService = async (branches: IBranch[], userId: string)
 
 
 //SERVICE PARA OBTENER TODAS LAS SEDES DE UN USER
-export const getBranchsUserService = async (userId: string): Promise<IServiceLayerResponseBranch> => {
+export const getBranchesUserService = async (userId: string): Promise<IServiceLayerResponseBranch> => {
     try {
-        const dataLayerResponse = await getBranchsByUserIdData(userId);
+        const dataLayerResponse = await getBranchesUserData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -60,6 +60,21 @@ export const getBranchsUserService = async (userId: string): Promise<IServiceLay
             throw new ServiceError(500, customErrorMessage, error);
         } else throw error;
     };
+};
+
+
+
+//SERVICE PARA OBTENER TODAS LAS SEDES PAGINADAS DE UN USER
+export const getBranchesPaginatedUserService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseBranch> => {
+    try {
+        const { branches, totalBranches, totalPages, currentPage } = await getBranchesPaginatedUserData(userId, page, limit);
+        return { code: 200, result: branches, totalBranches, totalPages, currentPage };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
 };
 
 

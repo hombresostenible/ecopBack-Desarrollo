@@ -26,7 +26,6 @@ export class ServiceError extends Error {
     errorMessage?: unknown;
 };
 
-
 //INTERFACE DE RESPUESTA PARA LOGIN
 export interface ILoginServiceLayerResponse {
     code: number;
@@ -38,8 +37,6 @@ export interface ILoginServiceLayerResponse {
     errorMessage?: string;
 }
 
-
-
 //INTERFACE DE RESPUESTA USER CON TOKEN
 export interface IUserServiceLayerResponse {
     code: number;
@@ -50,6 +47,7 @@ export interface IUserServiceLayerResponse {
     message?: string;
     errorMessage?: unknown;
 };
+
 //INTERFACE DE RESPUESTA GENERICA PARA USER
 export interface IServiceLayerResponseUser {
     code: number;
@@ -57,6 +55,7 @@ export interface IServiceLayerResponseUser {
     message?: string;
     errorMessage?: unknown;
 };
+
 //INTERFACE DE RESPUESTA GENERICA PARA USER APPLICATIONPASSWORD
 export interface IServiceLayerResponseApplicationPassword {
     code: number;
@@ -64,8 +63,6 @@ export interface IServiceLayerResponseApplicationPassword {
     message?: string;
     errorMessage?: unknown;
 };
-
-
 
 //INTERFACE DE RESPUESTA GENERICA PARA USERPLATFORM
 export interface IServiceLayerResponseUserPlatform {
@@ -75,17 +72,17 @@ export interface IServiceLayerResponseUserPlatform {
     errorMessage?: unknown;
 };
 
-
-
 //INTERFACE DE RESPUESTA GENERICA PARA BRANCH
 export interface IServiceLayerResponseBranch {
     code: number,
     result?: IBranch | IBranch[],
     message?: string;
     errorMessage?: unknown,
+    
+    totalBranches?: number,
+    totalPages?: number,
+    currentPage?: number,
 };
-
-
 
 //INTERFACE DE RESPUESTA GENERICA PARA ASSETS
 export interface IServiceLayerResponseAssets {
@@ -94,6 +91,7 @@ export interface IServiceLayerResponseAssets {
     message?: string;
     errorMessage?: unknown,
 };
+
 //INTERFACE DE RESPUESTA GENERICA PARA MERCHANDISE
 export interface IServiceLayerResponseMerchandise {
     code: number,
@@ -101,6 +99,7 @@ export interface IServiceLayerResponseMerchandise {
     message?: string;
     errorMessage?: unknown,
 };
+
 //INTERFACE DE RESPUESTA GENERICA PARA PRODUCT
 export interface IServiceLayerResponseProduct {
     code: number,
@@ -108,6 +107,7 @@ export interface IServiceLayerResponseProduct {
     message?: string;
     errorMessage?: unknown,
 };
+
 //INTERFACE DE RESPUESTA GENERICA PARA RAWMATERIAL
 export interface IServiceLayerResponseRawMaterial {
     code: number,
@@ -115,6 +115,7 @@ export interface IServiceLayerResponseRawMaterial {
     message?: string;
     errorMessage?: unknown,
 };
+
 //INTERFACE DE RESPUESTA GENERICA PARA SERVICE
 export interface IServiceLayerResponseService {
     code: number,
@@ -123,8 +124,6 @@ export interface IServiceLayerResponseService {
     errorMessage?: unknown,
 };
 
-
-
 //INTERFACE DE RESPUESTA GENERICA PARA ACCOUNTSBOOK
 export interface IServiceLayerResponseAccountsBook {
     code: number,
@@ -132,6 +131,7 @@ export interface IServiceLayerResponseAccountsBook {
     message?: string;
     errorMessage?: unknown,
 };
+
 //POR DEFINIR
 export interface IServiceLayerResponseFinancialIndicators {
     code: number,
@@ -139,24 +139,28 @@ export interface IServiceLayerResponseFinancialIndicators {
     message?: string;
     errorMessage?: unknown,
 };
+
 export interface IServiceLayerResponseSustainabilityIndicators {
     code: number,
     result: IAccountsBook | IAccountsBook[];
     message?: string;
     errorMessage?: unknown,
 };
+
 export interface IServiceLayerResponseVerifySustainabilityIndicators {
     code: number;
     result: IAccountsBook | null; 
     message?: string;
     errorMessage?: unknown;
 }
+
 export interface IServiceLayerResponseSustainability {
     code: number,
     result?: ISustainability | ISustainability[],
     message?: string;
     errorMessage?: unknown,
 };
+
 //INTERFACE DE RESPUESTA GENERICA PARA ELECTRONICINVOICING
 export interface IServiceLayerResponseElectronicInvoicing {
     code: number,
@@ -164,6 +168,7 @@ export interface IServiceLayerResponseElectronicInvoicing {
     message?: string;
     errorMessage?: unknown,
 };
+
 //INTERFACE DE RESPUESTA GENERICA PARA INVOICINGPOS
 export interface IServiceLayerResponseInvoicingPOS {
     code: number,
@@ -172,8 +177,6 @@ export interface IServiceLayerResponseInvoicingPOS {
     errorMessage?: unknown,
 };
 
-
-
 //INTERFACE DE RESPUESTA GENERICA PARA CRMCLIENTS
 export interface ICrmClientsServiceLayerResponse {
     code: number;
@@ -181,6 +184,7 @@ export interface ICrmClientsServiceLayerResponse {
     message?: string;
     errorMessage?: unknown;
 };
+
 //INTERFACE DE RESPUESTA GENERICA PARA CRMSUPPLIERS
 export interface ICrmSuppliersServiceLayerResponse {
     code: number;
@@ -189,8 +193,6 @@ export interface ICrmSuppliersServiceLayerResponse {
     errorMessage?: unknown;
 };
 
-
-
 //INTERFACE DE RESPUESTA GENERICA PARA SALESFUNNERCUSTOMERACQUISITION
 export interface IServiceLayerResponseSalesFunnelCustomerAcq {
     code: number,
@@ -198,6 +200,7 @@ export interface IServiceLayerResponseSalesFunnelCustomerAcq {
     message?: string;
     errorMessage?: unknown,
 };
+
 //INTERFACE DE RESPUESTA GENERICA PARA SALESFUNNERCUSTOMERRETENTION
 export interface IServiceLayerResponseSalesFunnelCustomerRet {
     code: number,
@@ -205,6 +208,7 @@ export interface IServiceLayerResponseSalesFunnelCustomerRet {
     message?: string;
     errorMessage?: unknown,
 };
+
 //INTERFACE DE RESPUESTA GENERICA PARA SALESFUNNERCUSTOMERDIGITAL
 export interface IServiceLayerResponseSalesFunnelCustomerDigital {
     code: number,
@@ -212,8 +216,6 @@ export interface IServiceLayerResponseSalesFunnelCustomerDigital {
     message?: string;
     errorMessage?: unknown,
 };
-
-
 
 //INTERFACE DE RESPUESTA GENERICA PARA RETORNAR PRODUCTOS POR CODIGO DE BARRAS O POR NOMBRE
 export interface IServiceLayerResponseItemByBarCodeOrName {
@@ -226,8 +228,6 @@ export interface IServiceLayerResponseItemByBarCodeOrName {
     errorMessage?: unknown,
 };
 
-
-
 //INTERFACE DE RESPUESTA GENERICA PARA RETORNAR PRODUCTOS POR CODIGO DE BARRAS O POR NOMBRE
 export interface IServiceLayerResponseAllItems {
     code: number,
@@ -238,8 +238,6 @@ export interface IServiceLayerResponseAllItems {
     message?: string;
     errorMessage?: unknown,
 };
-
-
 
 // INTERFACE DE RESPUESTA PARA CONTACTANOS
 export interface IServiceLayerResponseContactUs {

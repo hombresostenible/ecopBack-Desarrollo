@@ -30,7 +30,7 @@ export const postBranchData = async (body: IBranch, userId: string): Promise<IBr
 
 
 //DATA PARA CREAR MASIVAMENTE SEDES PARA USER DESDE EL EXCEL
-export const postManyBranchData = async (body: IBranch, userId: string): Promise<any> => {
+export const postManyBranchesData = async (body: IBranch, userId: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingBranch = await Branch.findOne({
@@ -41,7 +41,6 @@ export const postManyBranchData = async (body: IBranch, userId: string): Promise
             await t.rollback();
             return null;
         }
-        // Si la sede no existe, crearla en la base de datos
         const newBranch = await Branch.create({
             ...body,
             userId: userId,
@@ -58,22 +57,59 @@ export const postManyBranchData = async (body: IBranch, userId: string): Promise
 
 
 //DATA PARA OBTENER TODAS LAS SEDES DE UN USER
-export const getBranchsByUserIdData = async (userId: string): Promise<any> => {
+export const getBranchesUserData = async (userId: string): Promise<any> => {
     try {
-        const userBranchs = await Branch.findAll({
+        const userBranches = await Branch.findAll({
             where: { userId: userId },
-            // include: [
-            //     {
-            //         model: User,
-            //         as: 'user', // Asociación con el alias definido en el modelo Branch
-            //     },
-            // ],
         });
-        return userBranchs;
+        return userBranches;
     } catch (error) {
         throw error;
     }
 };
+
+
+
+//DATA PARA OBTENER TODAS LAS SEDES PAGINADAS DE UN USER
+export const getBranchesPaginatedUserData = async (
+    userId: string,
+    page: number,
+    limit: number
+): Promise<{ branches: IBranch[], totalBranches: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        
+        // Construir consulta base
+        const searchCriteria = { userId: userId };
+        
+        // Obtener el total de ramas para los criterios de búsqueda
+        const totalBranchesFound = await Branch.count({ where: searchCriteria });
+        
+        // Obtener el total de páginas basado en el total de ramas y el límite
+        const totalPages = Math.ceil(totalBranchesFound / limit);
+        
+        // Obtener las ramas paginadas
+        const branchesPaginated = await Branch.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']] // Ordenar por una columna, puedes cambiar según tus necesidades
+        });
+
+        // Mapear los resultados a un formato adecuado
+        const formattedBranches = branchesPaginated.map(branch => branch.toJSON());
+        
+        return {
+            branches: formattedBranches,
+            totalBranches: totalBranchesFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
 
 
 

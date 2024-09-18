@@ -41,10 +41,10 @@ class Server {
 
     private middlewares() {
         // Middleware para verificar las cookies antes de CORS
-        this.app.use((req: Request, res: Response, next: NextFunction) => {
-            console.log('Cookies recibidas:', req.headers.cookie);
-            next();
-        });
+        // this.app.use((req: Request, res: Response, next: NextFunction) => {
+        //     console.log('Cookies recibidas:', req.headers.cookie);
+        //     next();
+        // });
 
         // Se define así para permitir más de un dominio autorizado para enviar y recibir las respuestas del servidor
         this.app.use(cors({
