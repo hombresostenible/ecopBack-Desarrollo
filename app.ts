@@ -27,7 +27,7 @@ class Server {
             await db.authenticate();
             console.log('Base de datos conectada');
             await db.sync();
-            // await db.sync({ force: true }); // En producción, puedes usar await db.sync(); en lugar de { force: true },Esto elimina y recrea las tablas en cada reinicio
+            // await db.sync({ force: true }); // En producción, puedes usar `await db.sync();` en lugar de `{ force: true }`,Esto elimina y recrea las tablas en cada reinicio
             console.log('Modelos sincronizados con la base de datos');
         } catch (error) {
             console.error('Error al conectar la base de datos:', error);
@@ -48,7 +48,7 @@ class Server {
 
         // Se define así para permitir más de un dominio autorizado para enviar y recibir las respuestas del servidor
         this.app.use(cors({
-            origin: process.env.CORS_ALLOWED_ORIGIN,                // Especifica el origen permitido
+            origin: process.env.CORS_ALLOWED_ORIGIN || 'https://ecopcion.com',                // Especifica el origen permitido
             credentials: true,                                      // Habilita el intercambio de cookies entre el frontend y el backend
             allowedHeaders: ['Content-Type', 'Authorization'],      // Especifica los encabezados permitidos
         }));
