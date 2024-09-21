@@ -48,7 +48,7 @@ class Server {
 
         // Se define así para permitir más de un dominio autorizado para enviar y recibir las respuestas del servidor
         this.app.use(cors({
-            origin: process.env.CORS_ALLOWED_ORIGIN || 'https://ecopcion.com',                // Especifica el origen permitido
+            origin: process.env.CORS_ALLOWED_ORIGIN,                // Especifica el origen permitido
             credentials: true,                                      // Habilita el intercambio de cookies entre el frontend y el backend
             allowedHeaders: ['Content-Type', 'Authorization'],      // Especifica los encabezados permitidos
         }));
