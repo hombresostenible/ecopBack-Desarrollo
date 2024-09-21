@@ -70,6 +70,9 @@ router.get("/paginated", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user as { userId: string };
         const { page = 1, limit = 20 } = req.query;
+        console.log('userId: ', userId)
+        console.log('page: ', page)
+        console.log('limit: ', limit)
         const serviceLayerResponse = await getServicesPaginatedService(
             userId,
             parseInt(page as string),
@@ -165,7 +168,5 @@ router.delete('/:idService', authRequired, checkRole, async (req: Request, res: 
         res.status(errorController.code).json(errorController.message);
     }
 }); // DELETE - http://localhost:3000/api/service/:idService
-
-
 
 export default router;
