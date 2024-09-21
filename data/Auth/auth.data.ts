@@ -7,13 +7,9 @@ export const searchUserByEmail = async (email: string) => {
     try {
         let userFound;
         userFound = await User.findOne({ where: { email } });
-        if (userFound) {
-            return userFound;
-        }
+        if (userFound) return userFound;
         userFound = await UserPlatform.findOne({ where: { email } });
-        if (userFound) {
-            return userFound;
-        }
+        if (userFound) return userFound;
         return null;
     } catch (error) {
         throw error;
