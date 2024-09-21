@@ -2,12 +2,13 @@ import express, { Request, Response } from "express";
 import {
     postServicesService,
     postManyServicesService,
-    getServicesUserService,
-    getServicesBranchService,
     getServicesService,
-    putServicesService,
-    putUpdateManyServiceService,
-    deleteServicesService,
+    getServicesPaginatedService,
+    getServicesBranchService,
+    getServiceByIdService,
+    putServiceService,
+    putUpdateManyServicesService,
+    deleteServiceService,
 } from "../../services/User/services.service";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
@@ -50,7 +51,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manySer
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
       const { userId } = req.user;
-      const serviceLayerResponse = await getServicesUserService(userId);      
+      const serviceLayerResponse = await getServicesService(userId);      
       if (Array.isArray(serviceLayerResponse.result)) {
         res.status(200).json(serviceLayerResponse.result);
       } else {
@@ -64,12 +65,36 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
+//OBTENER TODOS LOS SERVICIOS PAGINADOS DE UN USER
+router.get("/paginated", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user as { userId: string };
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getServicesPaginatedService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code || 500).json({ message: errorController.message });
+    }
+}); // GET - http://localhost:3000/api/service/paginated?page=1&limit=20
+
+
+
 //CONTROLLER PARA OBTENER UN SERVICIO POR ID PERTENECIENTE AL USER
 router.get("/:idService", authRequired, async (req: Request, res: Response) => {
     try {
         const { idService } = req.params;
         const { userId } = req.user;
-        const serviceLayerResponse = await getServicesService(idService, userId);
+        const serviceLayerResponse = await getServiceByIdService(idService, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -104,7 +129,7 @@ router.put("/:idService", authRequired, checkRole, async (req: Request, res: Res
         const { userId } = req.user;
         const { idService } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await putServicesService(userId, idService, body);
+        const serviceLayerResponse = await putServiceService(userId, idService, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -119,7 +144,7 @@ router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res
     try {
         const bodyArray = req.body;
         const { userId, typeRole } = req.user;
-        const serviceLayerResponse = await putUpdateManyServiceService(bodyArray, userId, typeRole);
+        const serviceLayerResponse = await putUpdateManyServicesService(bodyArray, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -133,7 +158,7 @@ router.delete('/:idService', authRequired, checkRole, async (req: Request, res: 
     try {
         const { userId } = req.user;
         const { idService } = req.params;
-        const serviceLayerResponse = await deleteServicesService(userId, idService); 
+        const serviceLayerResponse = await deleteServiceService(userId, idService); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

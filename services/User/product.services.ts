@@ -3,13 +3,13 @@ import {
     postProductsData,
     postManyProductsData,
     getProductsData,
-    getProductsByUserIdData,
-    getProductsBranchByIdData,
+    getProductsPaginatedData,
+    getProductsBranchData,
     getProductByIdData,
     getProductOffData,
     getProductsOffByBranchData,
     putProductData,
-    putUpdateManyProductData,
+    putUpdateManyProductsData,
     patchProductData,
     patchAddInventoryProductData,
     deleteProductData,
@@ -17,7 +17,7 @@ import {
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
 import { checkPermissionForBranchProduct, checkPermissionForProduct } from '../../helpers/Product.helper';
 import { IProduct } from "../../types/User/products.types";
-import { ServiceError, IServiceLayerResponseProduct } from '../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseProduct, IServiceLayerResponseProductPaginated } from '../../types/Responses/responses.types';
 
 //CREAR UN PRODUCTO POR SEDE PARA USER
 export const postProductService = async (userId: string, typeRole: string, body: IProduct): Promise<IServiceLayerResponseProduct> => {
@@ -37,43 +37,8 @@ export const postProductService = async (userId: string, typeRole: string, body:
 
 
 
-// // Función para autoincrementar el inventario
-// async function autoIncrementInventory(product: IProduct) {
-//     // Lógica para incrementar el inventario
-//     product.inventory += product.automaticInventoryIncrease || 0;
-  
-//     // Guarda los cambios en la base de datos
-//     await postProductsData(product, product.userId || '');
-//   }
-  
-//   // Función para iniciar la tarea cron según la periodicidad especificada
-//   export function startCronJob(product: IProduct) {
-//     const periodicity = product.periodicityAutomaticIncrease;
-  
-//     // Configura la tarea cron según la periodicidad
-//     switch (periodicity) {
-//       case 'Diario':
-//         cron.schedule('0 0 * * *', () => {
-//           autoIncrementInventory(product);
-//         });
-//         break;
-//       case 'Semanal':
-//         // Configura para ejecutarse todos los lunes a las 0:00
-//         cron.schedule('0 0 * * 1', () => {
-//           autoIncrementInventory(product);
-//         });
-//         break;
-//       // Añade casos para las otras periodicidades según sea necesario
-//       // ...
-//       default:
-//         console.error('Periodicidad no válida');
-//     }
-//   }
-
-
-
 //CREAR MUCHOS PRODUCTOS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyProductService = async (userId: string, typeRole: string, products: IProduct[]): Promise<IServiceLayerResponseProduct> => {
+export const postManyProductsService = async (userId: string, typeRole: string, products: IProduct[]): Promise<IServiceLayerResponseProduct> => {
     const uniqueProducts: IProduct[] = [];
     const duplicatedProducts: IProduct[] = [];
     try {
@@ -99,10 +64,10 @@ export const postManyProductService = async (userId: string, typeRole: string, p
 
 
 
-//OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER - CEO PLATATORMA
-export const getProductsService = async (): Promise<IServiceLayerResponseProduct> => {
+//OBTENER TODOS LOS PRODUCTOS DE UN USER
+export const getProductsService = async (userId: string): Promise<IServiceLayerResponseProduct> => {
     try {
-        const dataLayerResponse = await getProductsData();
+        const dataLayerResponse = await getProductsData(userId);
         return { code: 200, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
@@ -114,11 +79,11 @@ export const getProductsService = async (): Promise<IServiceLayerResponseProduct
 
 
 
-//OBTENER TODOS LOS PRODUCTOS DE UN USER
-export const getProductsUserService = async (userId: string): Promise<IServiceLayerResponseProduct> => {
+//OBTENER TODOS LOS PRODUCTOS PAGINADOS DE UN USER
+export const getProductsPaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseProductPaginated> => {
     try {
-        const dataLayerResponse = await getProductsByUserIdData(userId);
-        return { code: 200, result: dataLayerResponse };
+        const { registers, totalRegisters, totalPages, currentPage } = await getProductsPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -130,11 +95,11 @@ export const getProductsUserService = async (userId: string): Promise<IServiceLa
 
 
 //OBTENER TODOS LOS PRODUCTOS DE UNA SEDE DE USER
-export const getProductBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseProduct> => {
+export const getProductsBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseProduct> => {
     try {
         const hasPermission = await checkPermissionForBranchProduct(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los productos de esta sede");
-        const productsFound = await getProductsBranchByIdData(idBranch);
+        const productsFound = await getProductsBranchData(idBranch);
         if (!productsFound) return { code: 404, message: "Productos no encontrados en esta sede" };
         return { code: 200, result: productsFound };
     } catch (error) {
@@ -222,7 +187,7 @@ export const putUpdateManyProductService = async (userId: string, typeRole: stri
         for (const product of products) {
             const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, product.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar los productos en esta sede");
-            const updatedProduct = await putUpdateManyProductData(userId, product);
+            const updatedProduct = await putUpdateManyProductsData(userId, product);
             if (updatedProduct) {
                 uniqueProducts.push(updatedProduct);
             } else duplicatedProducts.push(product);

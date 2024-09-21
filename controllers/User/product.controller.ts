@@ -1,9 +1,10 @@
 import express, { Request, Response } from "express";
 import {
     postProductService,
-    postManyProductService,
-    getProductsUserService,
-    getProductBranchService,
+    postManyProductsService,
+    getProductsService,
+    getProductsPaginatedService,
+    getProductsBranchService,
     getProductByIdService,
     getProductOffService,
     getProductsOffByBranchService,
@@ -40,7 +41,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyPro
     try {
         const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await postManyProductService(userId, typeRole, bodyArray);
+        const serviceLayerResponse = await postManyProductsService(userId, typeRole, bodyArray);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -54,7 +55,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyPro
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const serviceLayerResponse = await getProductsUserService(userId);      
+        const serviceLayerResponse = await getProductsService(userId);      
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -65,6 +66,30 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
         res.status(errorController.code).json(errorController.message);
     }
 }); // GET - http://localhost:3000/api/product
+
+
+
+//OBTENER TODOS LOS PRODUCTOS PAGINADOS DE UN USER
+router.get("/paginated", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user as { userId: string };
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getProductsPaginatedService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code || 500).json({ message: errorController.message });
+    }
+}); // GET - http://localhost:3000/api/product/paginated?page=1&limit=20
 
 
 
@@ -121,7 +146,7 @@ router.get("/products-branch/:idBranch", authRequired, async (req: Request, res:
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getProductBranchService(userId, idBranch);
+        const serviceLayerResponse = await getProductsBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            

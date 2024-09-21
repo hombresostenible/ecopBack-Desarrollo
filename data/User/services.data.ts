@@ -95,6 +95,33 @@ export const getServicesByUserIdData = async (userId: string): Promise<any> => {
 
 
 
+//OBTENER TODOS LOS SERVICIOS PAGINADOS DE UN USER
+export const getServicesPaginatedData = async (userId: string, page: number, limit: number): Promise<{ registers: IService[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = { userId: userId };
+        const totalRegistersFound = await Service.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await Service.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+        const formattedRegisters = registersPaginated.map(register => register.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA OBTENER TODOS LOS SERVICIOS POR SEDE PARA USER
 export const getServiceBranchByIdData = async (idBranch: string): Promise<any> => {
     try {
@@ -113,7 +140,7 @@ export const getServiceBranchByIdData = async (idBranch: string): Promise<any> =
 
 
 //DATA PARA OBTENER UN SERVICIO POR ID PERTENECIENTE AL USER
-export const getServicesByIdData = async (idService: string): Promise<any> => {
+export const getServiceByIdData = async (idService: string): Promise<any> => {
     try {
         const servicesFound = await Service.findOne({ where: { userId: idService } });
         return servicesFound;
@@ -125,7 +152,7 @@ export const getServicesByIdData = async (idService: string): Promise<any> => {
 
 
 //DATA PARA ACTUALIZAR UN SERVICIO DEL USER
-export const putServicesData = async (userId: string, idService: string, body: IService): Promise<IService | null> => {
+export const putServiceData = async (userId: string, idService: string, body: IService): Promise<IService | null> => {
     //ACTUALIZAR LAS CANTIDADES DE PRODUTOS, MATERIAS PRIMAS, ETC
     try {
         // Verificar si ya existe otro registro con el mismo nombre (ignorar el que se está actualizando)
@@ -176,7 +203,7 @@ export const putUpdateManyServiceData = async (body: IService, userId: string): 
 
 
 //DATA PARA ELIMINAR UN SERVICIO DEL USER
-export const deleteServicesData = async (userId: string, idService: string): Promise<void> => {
+export const deleteServiceData = async (userId: string, idService: string): Promise<void> => {
     // ELIMINAR LOS EQUIPOS, PRODUCTOS, MATERIAS PRIMAS
     try {
         const productFound = await Service.findOne({ where: { id: idService } });

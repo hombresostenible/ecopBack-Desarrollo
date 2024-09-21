@@ -9,7 +9,7 @@ import {
 } from "../../data/User/branch.data";
 import { checkPermissionForBranch } from '../../helpers/Branch.helper';
 import { IBranch } from "../../types/User/branch.types";
-import { ServiceError, IServiceLayerResponseBranch } from '../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseBranch, IServiceLayerResponseBranchPaginated } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UNA SEDE PARA USER
 export const postBranchService = async (body: IBranch, userId: string): Promise<IServiceLayerResponseBranch> => {
@@ -50,7 +50,7 @@ export const postManyBranchesService = async (branches: IBranch[], userId: strin
 
 
 //SERVICE PARA OBTENER TODAS LAS SEDES DE UN USER
-export const getBranchesUserService = async (userId: string): Promise<IServiceLayerResponseBranch> => {
+export const getBranchesService = async (userId: string): Promise<IServiceLayerResponseBranch> => {
     try {
         const dataLayerResponse = await getBranchesUserData(userId);
         return { code: 200, result: dataLayerResponse };
@@ -65,10 +65,10 @@ export const getBranchesUserService = async (userId: string): Promise<IServiceLa
 
 
 //SERVICE PARA OBTENER TODAS LAS SEDES PAGINADAS DE UN USER
-export const getBranchesPaginatedUserService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseBranch> => {
+export const getBranchesPaginatedUserService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseBranchPaginated> => {
     try {
-        const { branches, totalBranches, totalPages, currentPage } = await getBranchesPaginatedUserData(userId, page, limit);
-        return { code: 200, result: branches, totalBranches, totalPages, currentPage };
+        const { registers, totalRegisters, totalPages, currentPage } = await getBranchesPaginatedUserData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -80,7 +80,7 @@ export const getBranchesPaginatedUserService = async (userId: string, page: numb
 
 
 //SERVICE PARA OBTENER UNA SEDE POR ID PERTENECIENTE AL USER
-export const getBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseBranch> => {
+export const getBranchByIdService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseBranch> => {
     try {
         const hasPermission = await checkPermissionForBranch(idBranch, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a esta sede");

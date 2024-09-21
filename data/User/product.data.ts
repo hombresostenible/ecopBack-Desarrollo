@@ -85,22 +85,8 @@ export const postManyProductsData = async (userId: string, typeRole: string, bod
 
 
 
-//DATA PARA OBTENER TODOS LOS PRODUCTOS DE TODOS LOS USER - CEO PLATATORMA
-export const getProductsData = async (): Promise<any> => {
-    try {
-        const products = await Product.findAll({
-            order: [ ['nameItem', 'ASC'] ]
-        });
-        return products;
-    } catch (error) {
-        throw error;
-    }
-};
-
-
-
 //DATA PARA OBTENER TODOS LOS PRODUCTOS DE UN USER
-export const getProductsByUserIdData = async (userId: string): Promise<any> => {
+export const getProductsData = async (userId: string): Promise<any> => {
     try {
         const userProducts = await Product.findAll({
             where: { userId: userId },
@@ -114,8 +100,35 @@ export const getProductsByUserIdData = async (userId: string): Promise<any> => {
 
 
 
+//OBTENER TODOS LOS PRODUCTOS PAGINADOS DE UN USER
+export const getProductsPaginatedData = async (userId: string, page: number, limit: number): Promise<{ registers: IProduct[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = { userId: userId };
+        const totalRegistersFound = await Product.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await Product.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+        const formattedRegisters = registersPaginated.map(register => register.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA OBTENER TODOS LOS PRODUCTOS DE UNA SEDE DE UN USER
-export const getProductsBranchByIdData = async (idBranch: string): Promise<any> => {
+export const getProductsBranchData = async (idBranch: string): Promise<any> => {
     try {
         const productsFound = await Product.findAll({
             where: { branchId: idBranch },
@@ -203,7 +216,7 @@ export const putProductData = async (userId: string, idProduct: string, body: IP
 
 
 //DATA PARA ACTUALIZAR DE FORMA MASIVA VARIOS PRODUCTOS
-export const putUpdateManyProductData = async (userId: string, body: IProduct): Promise<any> => {
+export const putUpdateManyProductsData = async (userId: string, body: IProduct): Promise<any> => {
     const t = await sequelize.transaction();
 
     try {

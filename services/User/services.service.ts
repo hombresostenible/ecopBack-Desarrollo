@@ -2,16 +2,17 @@ import {
     postServicesData,
     postManyServicesData,
     getServicesByUserIdData,
+    getServicesPaginatedData,
     getServiceBranchByIdData,
-    getServicesByIdData,
-    putServicesData,
+    getServiceByIdData,
+    putServiceData,
     putUpdateManyServiceData,
-    deleteServicesData,
+    deleteServiceData,
 } from "../../data/User/services.data";
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
 import { checkPermissionForBranchService, checkPermissionForServices } from '../../helpers/Service.helper';
 import { IService } from "../../types/User/services.types";
-import { ServiceError, IServiceLayerResponseService } from '../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseService, IServiceLayerResponseServicePaginated } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UN SERVICIO POR SEDE PARA USER
 export const postServicesService = async (body: IService, userId: string, typeRole: string): Promise<IServiceLayerResponseService> => {
@@ -59,10 +60,25 @@ export const postManyServicesService = async (userId: string, typeRole: string, 
 
 
 //SERVICE PARA OBTENER TODOS LOS SERVICIOS DEL USER
-export const getServicesUserService = async (userId: string): Promise<IServiceLayerResponseService> => {
+export const getServicesService = async (userId: string): Promise<IServiceLayerResponseService> => {
     try {
         const dataLayerResponse = await getServicesByUserIdData(userId);
         return { code: 200, result: dataLayerResponse };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS SERVICIOS PAGINADOS DE UN USER
+export const getServicesPaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseServicePaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getServicesPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -92,12 +108,12 @@ export const getServicesBranchService = async (idBranch: string, userId: string)
 
 
 //SERVICE PARA OBTENER UN SERVICIO POR ID PERTENECIENTE AL USER
-export const getServicesService = async (idMachinery: string, userId: string): Promise<IServiceLayerResponseService> => {
+export const getServiceByIdService = async (idMachinery: string, userId: string): Promise<IServiceLayerResponseService> => {
     try {
         const hasPermission = await checkPermissionForServices(idMachinery, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a este servicio");
        
-        const servicesFound = await getServicesByIdData(idMachinery);
+        const servicesFound = await getServiceByIdData(idMachinery);
         if (!servicesFound) return { code: 404, message: "Servicio no encontrado" };
         return { code: 200, result: servicesFound };
     } catch (error) {
@@ -111,11 +127,11 @@ export const getServicesService = async (idMachinery: string, userId: string): P
 
 
 //SERVICE PARA ACTUALIZAR UN SERVICIO DEL USER
-export const putServicesService = async (userId: string, idService: string, body: IService): Promise<IServiceLayerResponseService> => {
+export const putServiceService = async (userId: string, idService: string, body: IService): Promise<IServiceLayerResponseService> => {
     try {
         // const hasPermission = await checkPermissionForServices(userId, idService);
         // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este servicio");
-        const updateServices = await putServicesData(userId, idService, body);
+        const updateServices = await putServiceData(userId, idService, body);
         if (!updateServices) throw new ServiceError(404, "Servicio no encontrado");
         return { code: 200, message: "Servicio actualizado exitosamente", result: updateServices };
     } catch (error) {
@@ -129,7 +145,7 @@ export const putServicesService = async (userId: string, idService: string, body
 
 
 //SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIO SERVICIOS
-export const putUpdateManyServiceService = async (services: IService[], userId: string, typeRole: string): Promise<IServiceLayerResponseService> => {
+export const putUpdateManyServicesService = async (services: IService[], userId: string, typeRole: string): Promise<IServiceLayerResponseService> => {
     const uniqueServices: IService[] = [];
     const duplicatedServices: IService[] = [];
     try {
@@ -154,11 +170,11 @@ export const putUpdateManyServiceService = async (services: IService[], userId: 
 
 
 //SERVICE PARA ELIMINAR UN SERVICIO DEL USER
-export const deleteServicesService = async (userId: string, idService: string): Promise<IServiceLayerResponseService> => {
+export const deleteServiceService = async (userId: string, idService: string): Promise<IServiceLayerResponseService> => {
     try {
         // const hasPermission = await checkPermissionForServices(userId, idService);
         // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este service");
-        await deleteServicesData(userId, idService);
+        await deleteServiceData(userId, idService);
         return { code: 200, message: "Servicio eliminado exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

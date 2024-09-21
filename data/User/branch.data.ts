@@ -75,33 +75,22 @@ export const getBranchesPaginatedUserData = async (
     userId: string,
     page: number,
     limit: number
-): Promise<{ branches: IBranch[], totalBranches: number, totalPages: number, currentPage: number }> => {
+): Promise<{ registers: IBranch[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
         const offset = (page - 1) * limit;
-        
-        // Construir consulta base
         const searchCriteria = { userId: userId };
-        
-        // Obtener el total de ramas para los criterios de búsqueda
-        const totalBranchesFound = await Branch.count({ where: searchCriteria });
-        
-        // Obtener el total de páginas basado en el total de ramas y el límite
-        const totalPages = Math.ceil(totalBranchesFound / limit);
-        
-        // Obtener las ramas paginadas
-        const branchesPaginated = await Branch.findAll({
+        const totalRegistersFound = await Branch.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await Branch.findAll({
             where: searchCriteria,
             offset: offset,
             limit: limit,
             order: [['createdAt', 'DESC']] // Ordenar por una columna, puedes cambiar según tus necesidades
         });
-
-        // Mapear los resultados a un formato adecuado
-        const formattedBranches = branchesPaginated.map(branch => branch.toJSON());
-        
+        const formattedRegisters = registersPaginated.map(branch => branch.toJSON());
         return {
-            branches: formattedBranches,
-            totalBranches: totalBranchesFound,
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
             totalPages: totalPages,
             currentPage: page,
         };

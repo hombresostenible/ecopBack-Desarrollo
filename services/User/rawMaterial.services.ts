@@ -1,13 +1,14 @@
 import {
     postRawMaterialData,
-    postManyRawMaterialData,
+    postManyRawMaterialsData,
     getRawMaterialsData,
-    getRawMaterialByBranchData,
+    getRawMaterialsPaginatedData,
+    getRawMaterialsByBranchData,
     getRawMaterialByIdData,
     getRawMaterialsOffData,
     getRawMaterialsOffByBranchData,
     putRawMaterialData,
-    putUpdateManyRawMaterialData,
+    putUpdateManyRawMaterialsData,
     patchRawMaterialData,
     patchAddInventoryRawMaterialData,
     deleteRawMaterialData
@@ -15,7 +16,7 @@ import {
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
 import { checkPermissionForBranchRawMaterial, checkPermissionForRawMaterial } from '../../helpers/RawMaterial.helper';
 import { IRawMaterial } from "../../types/User/rawMaterial.types";
-import { ServiceError, IServiceLayerResponseRawMaterial } from '../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseRawMaterial, IServiceLayerResponseRawMaterialPaginated } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR MATERIA PRIMA POR SEDE PARA USER
 export const postRawMaterialService = async (userId: string, typeRole: string, body: IRawMaterial): Promise<IServiceLayerResponseRawMaterial> => {
@@ -36,7 +37,7 @@ export const postRawMaterialService = async (userId: string, typeRole: string, b
 
 
 //DATA PARA CREAR MUCHAS MATERIAS PRIMAS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyRawMaterialService = async (userId: string, typeRole: string, rawMaterials: IRawMaterial[]): Promise<IServiceLayerResponseRawMaterial> => {
+export const postManyRawMaterialsService = async (userId: string, typeRole: string, rawMaterials: IRawMaterial[]): Promise<IServiceLayerResponseRawMaterial> => {
     const uniqueRawMaterials: IRawMaterial[] = [];
     const duplicatedRawMaterials: IRawMaterial[] = [];
     try {
@@ -45,7 +46,7 @@ export const postManyRawMaterialService = async (userId: string, typeRole: strin
             const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, rawMaterial.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para crear materias primas en esta sede");
             // Crear la materia prima
-            const createdRawMaterial = await postManyRawMaterialData(userId, typeRole, rawMaterial);
+            const createdRawMaterial = await postManyRawMaterialsData(userId, typeRole, rawMaterial);
             if (createdRawMaterial) {
                 uniqueRawMaterials.push(createdRawMaterial);
             } else duplicatedRawMaterials.push(rawMaterial);
@@ -78,11 +79,11 @@ export const getRawMaterialsService = async (userId: string): Promise<IServiceLa
 
 
 //SERVICE PARA OBTENER TODAS LAS MATERIAS PRIMAS DE UNA SEDE DE USER
-export const getRawMaterialBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const getRawMaterialsBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseRawMaterial> => {
     try {
         const hasPermission = await checkPermissionForBranchRawMaterial(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener las materias primas de esta sede");
-        const rawMaterialsFound = await getRawMaterialByBranchData(idBranch);
+        const rawMaterialsFound = await getRawMaterialsByBranchData(idBranch);
         if (!rawMaterialsFound) return { code: 404, message: "Materias primas no encontradas en esta sede" };
         return { code: 200, result: rawMaterialsFound };
     } catch (error) {
@@ -96,13 +97,28 @@ export const getRawMaterialBranchService = async (userId: string, idBranch: stri
 
 
 //SERVICE PARA OBTENER UNA MATERIA PRIMA POR ID PERTENECIENTE AL USER
-export const getRawMaterialService = async (userId: string, idRawMaterial: string): Promise<IServiceLayerResponseRawMaterial> => {
+export const getRawMaterialByIdService = async (userId: string, idRawMaterial: string): Promise<IServiceLayerResponseRawMaterial> => {
     try {
         const hasPermission = await checkPermissionForRawMaterial(userId, idRawMaterial);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a esta materia prima");
         const rawMaterialFound = await getRawMaterialByIdData(idRawMaterial);
         if (!rawMaterialFound) return { code: 404, message: "Materia prima no encontrada" };
         return { code: 200, result: rawMaterialFound };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
+//OBTENER TODAS LAS MATERIAS PRIMAS PAGINADAS DE UN USER
+export const getRawMaterialsPaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseRawMaterialPaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getRawMaterialsPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -162,14 +178,14 @@ export const putRawMaterialService = async (userId: string, idRawMaterial: strin
 
 
 //SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIAS MATERIAS PRIMAS
-export const putUpdateManyRawMaterialService = async (userId: string, typeRole: string, rawMaterials: IRawMaterial[]): Promise<IServiceLayerResponseRawMaterial> => {
+export const putUpdateManyRawMaterialsService = async (userId: string, typeRole: string, rawMaterials: IRawMaterial[]): Promise<IServiceLayerResponseRawMaterial> => {
     const uniqueRawMaterials: IRawMaterial[] = [];
     const duplicatedRawMaterials: IRawMaterial[] = [];
     try {
         for (const rawMaterial of rawMaterials) {
             const isBranchAssociatedWithUser: any = await isBranchAssociatedWithUserRole(userId, typeRole, rawMaterial.branchId);
             if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualziar las materias primas en esta sede");
-            const updatedRawMaterial = await putUpdateManyRawMaterialData(userId, rawMaterial);
+            const updatedRawMaterial = await putUpdateManyRawMaterialsData(userId, rawMaterial);
             if (updatedRawMaterial) {
                 uniqueRawMaterials.push(updatedRawMaterial);
             } else duplicatedRawMaterials.push(rawMaterial);

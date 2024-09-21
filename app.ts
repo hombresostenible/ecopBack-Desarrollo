@@ -11,6 +11,7 @@ import { routerApi } from './controllers/routes';
 class Server {
     private app: Application;
     private port: string;
+    static listen: any;
 
     constructor() {
         this.app = express();

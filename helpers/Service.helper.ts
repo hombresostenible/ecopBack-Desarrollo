@@ -1,6 +1,6 @@
 import {
     getServiceBranchByIdData,
-    getServicesByIdData,
+    getServiceByIdData,
 } from "../data/User/services.data";
 import { ServiceError } from '../types/Responses/responses.types';
 
@@ -24,7 +24,7 @@ export const checkPermissionForBranchService = async (idBranch: string, userId: 
 //CHEQUEA SI EL SERVICE PERTENECE A LA SEDE DE USER
 export const checkPermissionForServices = async (idService: string, userId: string): Promise<boolean> => {
     try {
-        const services = await getServicesByIdData(idService);
+        const services = await getServiceByIdData(idService);
         if (!services) return false;
         if (services.userId !== userId) return false;
         return true;

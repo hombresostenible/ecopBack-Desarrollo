@@ -49,7 +49,7 @@ export const postRawMaterialData = async (userId: string, typeRole: string, body
 
 
 //DATA PARA CREAR MUCHAS MATERIAS POR SEDE PARA USER DESDE EL EXCEL
-export const postManyRawMaterialData = async (userId: string, typeRole: string, body: IRawMaterial): Promise<any> => {
+export const postManyRawMaterialsData = async (userId: string, typeRole: string, body: IRawMaterial): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingRegister = await RawMaterial.findOne({
@@ -97,8 +97,36 @@ export const getRawMaterialsData = async (userId: string): Promise<any> => {
 };
 
 
+
+//OBTENER TODAS LAS MATERIAS PRIMAS PAGINADAS DE UN USER
+export const getRawMaterialsPaginatedData = async (userId: string, page: number, limit: number): Promise<{ registers: IRawMaterial[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = { userId: userId };
+        const totalRegistersFound = await RawMaterial.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await RawMaterial.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+        const formattedRegisters = registersPaginated.map(register => register.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //DATA PARA OBTENER TODAS LAS MATERIAS PRIMAS DE UNA SEDE DE UN USER
-export const getRawMaterialByBranchData = async (idBranch: string): Promise<any> => {
+export const getRawMaterialsByBranchData = async (idBranch: string): Promise<any> => {
     try {
         const customerAcquisitionFound = await RawMaterial.findAll({
             where: { branchId: idBranch },
@@ -187,7 +215,7 @@ export const putRawMaterialData = async (userId: string, idRawMaterial: string, 
 
 
 //DATA PARA ACTUALIZAR DE FORMA MASIVA VARIAS MATERIAS PRIMAS
-export const putUpdateManyRawMaterialData = async (userId: string, body: IRawMaterial): Promise<any> => {
+export const putUpdateManyRawMaterialsData = async (userId: string, body: IRawMaterial): Promise<any> => {
     const t = await sequelize.transaction();
     try {
         const existingBranchWithSameName = await RawMaterial.findOne({

@@ -2,9 +2,9 @@ import express, { Request, Response } from "express";
 import {
     postBranchService,
     postManyBranchesService,
-    getBranchesUserService,
+    getBranchesService,
     getBranchesPaginatedUserService,
-    getBranchService,
+    getBranchByIdService,
     putBranchService,
     deleteBranchService
 } from "../../services/User/branch.service";
@@ -49,7 +49,7 @@ router.post("/create-many", authRequired, checkRoleAdmin, validateSchema(manyBra
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const serviceLayerResponse = await getBranchesUserService(userId);      
+        const serviceLayerResponse = await getBranchesService(userId);      
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -72,13 +72,9 @@ router.get("/paginated", authRequired, async (req: Request, res: Response) => {
             parseInt(page as string),
             parseInt(limit as string),
         );
-        console.log('result: ',serviceLayerResponse.result)
-        console.log('totalBranches: ',serviceLayerResponse.totalBranches)
-        console.log('totalPages: ',serviceLayerResponse.totalPages)
-        console.log('currentPage: ',serviceLayerResponse.currentPage)
         res.status(serviceLayerResponse.code).json({ 
-            result: serviceLayerResponse.result,
-            totalBranches: serviceLayerResponse.totalBranches, 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
             totalPages: serviceLayerResponse.totalPages, 
             currentPage: serviceLayerResponse.currentPage,
         });
@@ -95,7 +91,7 @@ router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getBranchService(idBranch, userId);
+        const serviceLayerResponse = await getBranchByIdService(idBranch, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;

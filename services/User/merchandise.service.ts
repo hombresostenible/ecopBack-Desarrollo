@@ -2,6 +2,7 @@ import {
     postMerchandiseData,
     postManyMerchandiseData,
     getMerchandiseByUserIdData,
+    getMerchandisesPaginatedData,
     getMerchandiseBranchByIdData,
     getMerchandiseByIdData,
     getMerchandiseOffData,
@@ -15,7 +16,7 @@ import {
 import { isBranchAssociatedWithUserRole } from '../../helpers/Branch.helper';
 import { checkPermissionForBranchMerchandise, checkPermissionForMerchandise } from '../../helpers/Merchandise.helper';
 import { IMerchandise } from "../../types/User/merchandise.types";
-import { ServiceError, IServiceLayerResponseMerchandise } from '../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseMerchandise, IServiceLayerResponseMerchandisePaginated } from '../../types/Responses/responses.types';
 
 //SERVICE PARA CREAR UNA MERCANCIA POR SEDE PARA USER
 export const postMerchandiseService = async (userId: string, typeRole: string, body: IMerchandise): Promise<IServiceLayerResponseMerchandise> => {
@@ -63,7 +64,7 @@ export const postManyMerchandiseService = async (userId: string, typeRole: strin
 
 
 //SERVICE PARA OBTENER TODA LA MERCANCIA DEL USER
-export const getMerchandiseUserService = async (userId: string): Promise<IServiceLayerResponseMerchandise> => {
+export const getMerchandisesService = async (userId: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
         const dataLayerResponse = await getMerchandiseByUserIdData(userId);
         return { code: 200, result: dataLayerResponse };
@@ -77,8 +78,23 @@ export const getMerchandiseUserService = async (userId: string): Promise<IServic
 
 
 
+//OBTENER TODAS LAS MERCANCIAS PAGINADAS DE UN USER
+export const getMerchandisesPaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseMerchandisePaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getMerchandisesPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
+};
+
+
+
 //SERVICE PARA OBTENER TODA LA MERCANCIA DE UNA SEDE PARA USER
-export const getMerchandiseBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseMerchandise> => {
+export const getMerchandisesBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
         const hasPermission = await checkPermissionForBranchMerchandise(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener toda la mercancía de la sede");
@@ -96,7 +112,7 @@ export const getMerchandiseBranchService = async (userId: string, idBranch: stri
 
 
 //SERVICE PARA OBTENER UNA MERCANCIA POR ID PERTENECIENTE AL USER
-export const getMerchandiseService = async (userId: string, idMerchandise: string): Promise<IServiceLayerResponseMerchandise> => {
+export const getMerchandiseByIdService = async (userId: string, idMerchandise: string): Promise<IServiceLayerResponseMerchandise> => {
     try {
         const hasPermission = await checkPermissionForMerchandise(userId, idMerchandise);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a esta mercancía");
@@ -162,7 +178,7 @@ export const putMerchandiseService = async (userId: string, idMerchandise: strin
 
 
 //SERVICE PARA ACTUALIZAR DE FORMA MASIVA VARIAS MERCANCIAS
-export const putUpdateManyMerchandiseService = async (merchandises: IMerchandise[], userId: string, typeRole: string): Promise<IServiceLayerResponseMerchandise> => {
+export const putUpdateManyMerchandisesService = async (merchandises: IMerchandise[], userId: string, typeRole: string): Promise<IServiceLayerResponseMerchandise> => {
     const uniqueRegisters: IMerchandise[] = [];
     const duplicatedRegisters: IMerchandise[] = [];
     try {

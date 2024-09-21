@@ -1,5 +1,5 @@
 import {
-    getProductsBranchByIdData,
+    getProductsBranchData,
     getProductByIdData,
 } from "../data/User/product.data";
 import { ServiceError } from '../types/Responses/responses.types';
@@ -7,7 +7,7 @@ import { ServiceError } from '../types/Responses/responses.types';
 //CHEQUEA SI LOS PRODUCTS PERTENECEN A LA SEDE DE USER
 export const checkPermissionForBranchProduct = async (userId: string, idBranch: string): Promise<boolean> => {
     try {
-        const products = await getProductsBranchByIdData(idBranch);
+        const products = await getProductsBranchData(idBranch);
         if (!products) return false;
         for (const product of products) if (product.userId !== userId) return false;
         return true;

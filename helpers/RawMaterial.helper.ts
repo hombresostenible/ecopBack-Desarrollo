@@ -1,5 +1,5 @@
 import {
-    getRawMaterialByBranchData,
+    getRawMaterialsByBranchData,
     getRawMaterialByIdData,
 } from "../data/User/rawMaterial.data";
 import { ServiceError } from '../types/Responses/responses.types';
@@ -7,7 +7,7 @@ import { ServiceError } from '../types/Responses/responses.types';
 //CHEQUEA SI LAS RAWMATERIAL PERTENECEN A LA SEDE DE USER
 export const checkPermissionForBranchRawMaterial = async (userId: string, idBranch: string): Promise<boolean> => {
     try {
-        const products = await getRawMaterialByBranchData(idBranch);
+        const products = await getRawMaterialsByBranchData(idBranch);
         if (!products) return false;
         for (const product of products) if (product.userId !== userId) return false;
         return true;

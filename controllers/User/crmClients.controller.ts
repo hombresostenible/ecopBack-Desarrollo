@@ -1,12 +1,13 @@
 import express, { Request, Response } from "express";
 import {
-    postRegisterCRMClientsService,
-    postManyCRMClientsService,
-    getCRMClientsUserService,
-    getCRMClientsBranchService,
-    getCRMClientByIdService,
-    putCRMClientService,
-    deleteCRMClientService,
+    postRegisterCrmClientsService,
+    postManyCrmClientsService,
+    getCrmClientsService,
+    getCrmClientsPaginatedService,
+    getCrmClientsBranchService,
+    getCrmClientByIdService,
+    putCrmClientService,
+    deleteCrmClientService,
 } from "../../services/User/crmClients.service";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
@@ -20,7 +21,7 @@ router.post("/", authRequired, validateSchema(crmClientsSchema), async (req: Req
     try {
         const { userId } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await postRegisterCRMClientsService(userId, body);
+        const serviceLayerResponse = await postRegisterCrmClientsService(userId, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {        
         const errorController = error as ServiceError;
@@ -35,7 +36,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRM
     try {
         const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await postManyCRMClientsService(userId, typeRole, bodyArray);
+        const serviceLayerResponse = await postManyCrmClientsService(userId, typeRole, bodyArray);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -49,7 +50,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRM
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const serviceLayerResponse = await getCRMClientsUserService(userId);
+        const serviceLayerResponse = await getCrmClientsService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -63,12 +64,36 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
+//OBTENER TODOS LOS CLIENTES PAGINADOS DE UN USER
+router.get("/paginated", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user as { userId: string };
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getCrmClientsPaginatedService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code || 500).json({ message: errorController.message });
+    }
+}); // GET - http://localhost:3000/api/crm-client/paginated?page=1&limit=20
+
+
+
 //CONTROLLER PARA OBTENER UN CLIENTE POR ID PERTENECIENTE AL USER
 router.get("/:idCrmClient", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const { idCrmClient } = req.params;
-        const serviceLayerResponse = await getCRMClientByIdService(userId, idCrmClient);
+        const serviceLayerResponse = await getCrmClientByIdService(userId, idCrmClient);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -83,7 +108,7 @@ router.get("/crm-clients-branch/:idBranch", authRequired, async (req: Request, r
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getCRMClientsBranchService(userId, idBranch);
+        const serviceLayerResponse = await getCrmClientsBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -103,7 +128,7 @@ router.put("/:idCrmClient", authRequired, validateSchema(crmClientsSchema), asyn
         const { userId } = req.user;
         const { idCrmClient } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await putCRMClientService(userId, idCrmClient, body);
+        const serviceLayerResponse = await putCrmClientService(userId, idCrmClient, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -118,7 +143,7 @@ router.delete('/:idCrmClient', authRequired, checkRole, async (req: Request, res
     try {
         const { userId } = req.user;
         const { idCrmClient } = req.params;
-        const serviceLayerResponse = await deleteCRMClientService(userId, idCrmClient); 
+        const serviceLayerResponse = await deleteCrmClientService(userId, idCrmClient); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;

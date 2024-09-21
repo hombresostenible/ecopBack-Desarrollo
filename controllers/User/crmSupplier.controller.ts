@@ -1,12 +1,13 @@
 import express, { Request, Response } from "express";
 import {
-    postRegisterCRMSuppliersService,
-    postManyCRMSuppliersService,
-    getCRMSuppliersUserService,
-    getCRMSuppliersBranchService,
-    getCRMSupplierByIdService,
-    putCRMSupplierService,
-    deleteCRMSupplierService,
+    postRegisterCrmSupplierService,
+    postManyCrmSuppliersService,
+    getCrmSuppliersService,
+    getCrmSuppliersPaginatedService,
+    getCrmSuppliersBranchService,
+    getCrmSupplierByIdService,
+    putCrmSupplierService,
+    deleteCrmSupplierService,
 } from "../../services/User/crmSupplier.service";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
@@ -20,7 +21,7 @@ router.post("/", authRequired, validateSchema(crmSupplierSchema), async (req: Re
     try {
         const { userId } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await postRegisterCRMSuppliersService(userId, body);
+        const serviceLayerResponse = await postRegisterCrmSupplierService(userId, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -35,7 +36,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRM
     try {
         const { userId, typeRole } = req.user;
         const bodyArray = req.body;
-        const serviceLayerResponse = await postManyCRMSuppliersService(userId, typeRole, bodyArray);
+        const serviceLayerResponse = await postManyCrmSuppliersService(userId, typeRole, bodyArray);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -49,7 +50,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyCRM
 router.get("/", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const serviceLayerResponse = await getCRMSuppliersUserService(userId);
+        const serviceLayerResponse = await getCrmSuppliersService(userId);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -63,12 +64,36 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 
 
 
+//OBTENER TODOS LOS PROVEEDORES PAGINADOS DE UN USER
+router.get("/paginated", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user as { userId: string };
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getCrmSuppliersPaginatedService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code || 500).json({ message: errorController.message });
+    }
+}); // GET - http://localhost:3000/api/crm-supplier/paginated?page=1&limit=20
+
+
+
 //CONTROLLER PARA OBTENER UN PROVEEDOR POR ID PERTENECIENTE AL USER
 router.get("/:idCrmSupplier", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const { idCrmSupplier } = req.params;
-        const serviceLayerResponse = await getCRMSupplierByIdService(userId, idCrmSupplier);
+        const serviceLayerResponse = await getCrmSupplierByIdService(userId, idCrmSupplier);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -83,7 +108,7 @@ router.get("/crm-supplier-branch/:idBranch", authRequired, async (req: Request, 
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getCRMSuppliersBranchService(userId, idBranch);
+        const serviceLayerResponse = await getCrmSuppliersBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -103,7 +128,7 @@ router.put("/:idCrmSupplier", authRequired, validateSchema(crmSupplierSchema), a
         const { userId } = req.user;
         const { idCrmSupplier } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await putCRMSupplierService(userId, idCrmSupplier, body);
+        const serviceLayerResponse = await putCrmSupplierService(userId, idCrmSupplier, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -118,7 +143,7 @@ router.delete('/:idCrmSupplier', authRequired, checkRole, async (req: Request, r
     try {
         const { userId } = req.user;
         const { idCrmSupplier } = req.params;
-        const serviceLayerResponse = await deleteCRMSupplierService(userId, idCrmSupplier); 
+        const serviceLayerResponse = await deleteCrmSupplierService(userId, idCrmSupplier); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;
