@@ -25,7 +25,7 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "none",
-                maxAge: 1000 * 60 * 60 * 24, // 1 day
+                maxAge: 1000 * 60 * 60 * 24 // 1 día
             });
             res.json({ serResult, token });
         } else res.status(user.code).json({ message: user.message });
