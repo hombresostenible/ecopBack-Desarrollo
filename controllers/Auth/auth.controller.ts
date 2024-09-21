@@ -23,10 +23,10 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
             const { serResult, token } = user.result;
             // res.cookie("token", token)
             res.cookie("token", token, {
-                httpOnly: false,
+                httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "none",
-                // maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+                maxAge: 1000 * 60 * 60 * 24 * 1,
             });
             res.json({ serResult, token });
         } else res.status(user.code).json({ message: user.message });
