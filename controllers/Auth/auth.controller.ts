@@ -21,14 +21,11 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
         }
         if (user.result) {
             const { serResult, token } = user.result;
-            // res.cookie("token", token)
-            console.log('Protocolo: ', req.protocol)
             res.cookie("token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "none",
-                domain: process.env.CORS_ALLOWED_ORIGIN,
-                maxAge: 1000 * 60 * 60 * 24,
+                maxAge: 1000 * 60 * 60 * 24, // 1 day
             });
             res.json({ serResult, token });
         } else res.status(user.code).json({ message: user.message });
