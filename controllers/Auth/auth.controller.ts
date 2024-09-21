@@ -21,13 +21,15 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
         }
         if (user.result) {
             const { serResult, token } = user.result;
-            const isHttps = req.protocol === 'https';
-            res.cookie('token', token, {
+            // res.cookie("token", token)
+            console.log('Protocolo: ', req.protocol)
+            res.cookie("token", token, {
                 httpOnly: true,
-                secure: isHttps,
-                sameSite: 'none',
-                domain: isHttps ? process.env.CORS_ALLOWED_ORIGIN : 'localhost',
-              });
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "none",
+                domain: process.env.CORS_ALLOWED_ORIGIN,
+                maxAge: 1000 * 60 * 60 * 24,
+            });
             res.json({ serResult, token });
         } else res.status(user.code).json({ message: user.message });
     } catch (error) {
