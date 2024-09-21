@@ -24,11 +24,10 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
             console.log('Protocolo: ', req.protocol)
             console.log('CORS_ALLOWED_ORIGIN: ', process.env.CORS_ALLOWED_ORIGIN)
             res.cookie("token", token, {
-                httpOnly: true,
+                httpOnly: false,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "none",
-                domain: process.env.CORS_ALLOWED_ORIGIN,
-                maxAge: 1000 * 60 * 60 * 24,
+                // maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
             });
             res.json({ serResult, token });
         } else res.status(user.code).json({ message: user.message });

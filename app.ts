@@ -38,6 +38,17 @@ class Server {
     }
 
     private middlewares() {
+        this.app.set('trust proxy', true);
+        this.app.use((req: Request, res: Response, next: NextFunction) => {
+            req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+            next();
+        });
+
+        const allowedOrigins = [
+            process.env.CORS_ALLOWED_ORIGIN,
+            process.env.CORS_ALLOWED_ORIGIN2
+        ];
+
         // Middleware para verificar las cookies antes de CORS
         this.app.use((req: Request, res: Response, next: NextFunction) => {
             console.log('Cookies recibidas:', req.headers.cookie);
@@ -50,18 +61,25 @@ class Server {
             next();
         });
 
-        // Configuración de CORS
         this.app.use(cors({
-            origin: process.env.CORS_ALLOWED_ORIGIN,
-            credentials: true,
-            allowedHeaders: ['Content-Type', 'Authorization'],
+            origin: (origin, callback) => {
+                if (origin && allowedOrigins.includes(origin)) {
+                    // Si el origen está en la lista permitida
+                    callback(null, true);
+                } else {
+                    // Si el origen no está en la lista, bloquear la solicitud
+                    callback(new Error('Not allowed by CORS'));
+                }
+            },
+            credentials: true, // Habilita el uso de cookies y headers de autenticación
+            allowedHeaders: ['Content-Type', 'Authorization'], // Define qué headers se permiten
         }));
 
         this.app.use(express.json());
         this.app.use(morgan('dev'));
         this.app.use(cookieParser());
-        this.app.use(bodyParser.json({ limit: '50mb' }));
-        this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+        this.app.use(bodyParser.json({ limit: "50mb" }));
+        this.app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
         this.app.use(fileUpload());
 
         // Middleware para procesar solicitudes XML
