@@ -56,22 +56,18 @@ export const loginService = async (email: string, password: string): Promise<ILo
                 userFound.isBlocked = true;
                 userFound.unlockCode = generateCodes();
                 await userFound.save();
-                
-                // Extraer el nombre solo si está disponible
                 const userName = 'name' in userFound ? userFound.name : '';
-
                 const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${userFound.id}`;
                 const mailOptions = mailAccountUserBlocked(email, userName, userFound.unlockCode, link);
-                transporterZoho.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        throw new ServiceError(500, "No se pudo enviar el correo de confirmación");
-                    } else console.log(`Correo electrónico enviado: ${info.response}`);
-                });
+                try {
+                    await transporterZoho.sendMail(mailOptions);
+                    console.log(`Correo electrónico enviado a ${email}`);
+                } catch (error) {
+                    throw new ServiceError(500, "No se pudo enviar el correo de confirmación", error);
+                }
                 return { code: 401, message: "Has bloqueado tu cuenta" };
             }
-
             if (userFound.loginAttempts > 3) return { code: 401, message: "Usuario bloqueado" };
-
             await userFound.save();
             return { code: 401, message: "Correo o contraseña incorrecta" };
         }

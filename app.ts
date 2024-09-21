@@ -40,28 +40,23 @@ class Server {
     };
 
     private middlewares() {
-        // Middleware para verificar las cookies antes de CORS
-        this.app.use((req: Request, res: Response, next: NextFunction) => {
-            console.log('Cookies recibidas:', req.headers.cookie);
-            next();
-        });
-
-        // Se define así para permitir más de un dominio autorizado para enviar y recibir las respuestas del servidor
         this.app.use(cors({
             origin: process.env.CORS_ALLOWED_ORIGIN,                // Especifica el origen permitido
             credentials: true,                                      // Habilita el intercambio de cookies entre el frontend y el backend
             allowedHeaders: ['Content-Type', 'Authorization'],      // Especifica los encabezados permitidos
         }));
 
+        // Middleware para verificar las cookies antes de CORS
+        this.app.use((req: Request, res: Response, next: NextFunction) => {
+            console.log('Cookies recibidas:', req.headers.cookie);
+            next();
+        });
+
         this.app.use(express.json());
         this.app.use(morgan('dev'));
         this.app.use(cookieParser());
-
-        // Configurar bodyParser para aumentar el límite de carga
         this.app.use(bodyParser.json({ limit: '50mb' }));
         this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-
-        // Configurar express-fileupload
         this.app.use(fileUpload());
 
         // Middleware para procesar solicitudes XML
