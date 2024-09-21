@@ -21,6 +21,9 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
         }
         if (user.result) {
             const { serResult, token } = user.result;
+            console.log('Protocolo: ', req.protocol);
+            console.log('NODE_ENV: ', process.env.NODE_ENV);
+            console.log('CORS_ALLOWED_ORIGIN: ', process.env.CORS_ALLOWED_ORIGIN);
             res.cookie("token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
