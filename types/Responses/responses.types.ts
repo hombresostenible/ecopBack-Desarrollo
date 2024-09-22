@@ -194,6 +194,17 @@ export interface IServiceLayerResponseAccountsBook {
     errorMessage?: unknown,
 };
 
+//INTERFACE DE RESPUESTA GENERICA PARA ACCOUNTSBOOK
+export interface IServiceLayerResponseAccountsBookPaginated {
+    code: number,
+    result?: IAccountsBook | IAccountsBook[],
+    message?: string;
+    errorMessage?: unknown,
+    totalRegisters?: number,
+    totalPages?: number,
+    currentPage?: number,
+};
+
 //POR DEFINIR
 export interface IServiceLayerResponseFinancialIndicators {
     code: number,

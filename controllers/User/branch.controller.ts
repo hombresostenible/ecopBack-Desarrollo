@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import {
-    postBranchService,
+    postBranchesService,
     postManyBranchesService,
     getBranchesService,
-    getBranchesPaginatedUserService,
+    getBranchesPaginatedService,
     getBranchByIdService,
     putBranchService,
     deleteBranchService
@@ -20,7 +20,7 @@ router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), 
     try {
         const { userId } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await postBranchService(body, userId);
+        const serviceLayerResponse = await postBranchesService(body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -62,12 +62,13 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 }); // GET - http://localhost:3000/api/branch
 
 
+
 //CONTROLLER PARA OBTENER TODAS LAS SEDES DE UN USER
 router.get("/paginated", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user as { userId: string };
         const { page = 1, limit = 20 } = req.query;
-        const serviceLayerResponse = await getBranchesPaginatedUserService(
+        const serviceLayerResponse = await getBranchesPaginatedService(
             userId,
             parseInt(page as string),
             parseInt(limit as string),

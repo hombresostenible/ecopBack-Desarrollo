@@ -146,6 +146,33 @@ export const getAccountsBooksData = async (userId: string): Promise<any> => {
 
 
 
+//SERVICE PARA OBTENER TODAS LAS SEDES PAGINADAS DE UN USER
+export const getAccountsBooksPaginatedData = async ( userId: string, page: number, limit: number ): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = { userId: userId };
+        const totalRegistersFound = await AccountsBook.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsBook.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['createdAt', 'DESC']] // Ordenar por una columna, puedes cambiar según tus necesidades
+        });
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
 //OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS, TANTO DE INGRESOS COMO DE GASTOS DEL USER
 export const getAccountsBooksApprovedData = async (userId: string): Promise<any> => {
     try {

@@ -1,6 +1,7 @@
 import {  
     postAccountsBookData,
     getAccountsBooksData,
+    getAccountsBooksPaginatedData,
     getAccountsBooksApprovedData,
     getAccountsBooksApprovedByBranchData,
     getIncomesApprovedData,
@@ -15,7 +16,7 @@ import {
     deleteAccountsBookData,
 } from "../../data/User/accountsBook.data";
 import { IAccountsBook } from "../../types/User/accountsBook.types";
-import { IServiceLayerResponseAccountsBook } from '../../types/Responses/responses.types';
+import { IServiceLayerResponseAccountsBook, IServiceLayerResponseAccountsBookPaginated } from '../../types/Responses/responses.types';
 import { ServiceError } from '../../types/Responses/responses.types';
 
 //CREAR UN REGISTRO CONTABLE DEL USER
@@ -45,6 +46,21 @@ export const getAccountsBooksService = async (userId: string): Promise<IServiceL
             throw new ServiceError(500, customErrorMessage, error);
         } else throw error;
     };
+};
+
+
+
+//SERVICE PARA OBTENER TODAS LAS SEDES PAGINADAS DE UN USER
+export const getAccountsBooksPaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsBooksPaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else throw error;
+    }
 };
 
 

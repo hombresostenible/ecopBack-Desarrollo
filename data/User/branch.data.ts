@@ -6,7 +6,7 @@ import { IBranch } from "../../types/User/branch.types";
 import { ServiceError } from "../../types/Responses/responses.types";
 
 //DATA PARA CREAR UNA SEDE PARA USER
-export const postBranchData = async (body: IBranch, userId: string): Promise<IBranch> => {
+export const postBranchesData = async (body: IBranch, userId: string): Promise<IBranch> => {
     try {
         const existingBranchWithSameNameAndCode = await Branch.findOne({
             where: { userId: userId, nameBranch: body.nameBranch },
@@ -57,7 +57,7 @@ export const postManyBranchesData = async (body: IBranch, userId: string): Promi
 
 
 //DATA PARA OBTENER TODAS LAS SEDES DE UN USER
-export const getBranchesUserData = async (userId: string): Promise<any> => {
+export const getBranchesData = async (userId: string): Promise<any> => {
     try {
         const userBranches = await Branch.findAll({
             where: { userId: userId },
@@ -71,11 +71,7 @@ export const getBranchesUserData = async (userId: string): Promise<any> => {
 
 
 //DATA PARA OBTENER TODAS LAS SEDES PAGINADAS DE UN USER
-export const getBranchesPaginatedUserData = async (
-    userId: string,
-    page: number,
-    limit: number
-): Promise<{ registers: IBranch[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+export const getBranchesPaginatedData = async ( userId: string, page: number, limit: number ): Promise<{ registers: IBranch[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
         const offset = (page - 1) * limit;
         const searchCriteria = { userId: userId };
@@ -98,7 +94,6 @@ export const getBranchesPaginatedUserData = async (
         throw error;
     }
 };
-
 
 
 

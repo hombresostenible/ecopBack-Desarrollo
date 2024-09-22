@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import {
     postAccountsBookService,
     getAccountsBooksService,
+    getAccountsBooksPaginatedService,
     getAccountsBooksApprovedService,
     getAccountsBooksApprovedByBranchService,
     getIncomesApprovedService,
@@ -51,7 +52,31 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook
+}); // GET - http://localhost:3000/api/accounts-book
+
+
+
+//OBTENER TODOS LOS REGISTROS CONTABLES PAGINADOS DEL USER
+router.get("/paginated", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user as { userId: string };
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getAccountsBooksPaginatedService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code || 500).json({ message: errorController.message });
+    }
+}); // GET - http://localhost:3000/api/accounts-book/paginated?page=1&limit=20
 
 
 
@@ -69,7 +94,7 @@ router.get("/approved", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook/approved
+}); // GET - http://localhost:3000/api/accounts-book/approved
 
 
 
@@ -88,7 +113,7 @@ router.get("/approved/:idBranch", authRequired, async (req: Request, res: Respon
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook/approved/:idBranch
+}); // GET - http://localhost:3000/api/accounts-book/approved/:idBranch
 
 
 
@@ -106,7 +131,7 @@ router.get("/incomes", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook/incomes
+}); // GET - http://localhost:3000/api/accounts-book/incomes
 
 
 
@@ -123,7 +148,7 @@ router.get("/incomes-branch/:idBranch", authRequired, async (req: Request, res: 
         const rawMaterialError = error as ServiceError;
         res.status(rawMaterialError.code).json(rawMaterialError.message);
     }
-}); //GET - http://localhost:3000/api/accountsBook/incomes-branch/:idBranch
+}); //GET - http://localhost:3000/api/accounts-book/incomes-branch/:idBranch
 
 
 
@@ -141,7 +166,7 @@ router.get("/incomes-not-approved", authRequired, async (req: Request, res: Resp
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook/incomes-not-approved
+}); // GET - http://localhost:3000/api/accounts-book/incomes-not-approved
 
 
 
@@ -160,7 +185,7 @@ router.get("/incomes-not-approved/:idBranch", authRequired, async (req: Request,
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook/incomes-not-approved/:idBranch
+}); // GET - http://localhost:3000/api/accounts-book/incomes-not-approved/:idBranch
 
 
 
@@ -178,7 +203,7 @@ router.get("/expenses", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook/expenses
+}); // GET - http://localhost:3000/api/accounts-book/expenses
 
 
 
@@ -193,7 +218,7 @@ router.get("/:idAccountsBook", authRequired, async (req: Request, res: Response)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook/idAccountsBook
+}); // GET - http://localhost:3000/api/accounts-book/idAccountsBook
 
 
 
@@ -208,7 +233,7 @@ router.get("/accounts-book-branch/:idBranch", authRequired, async (req: Request,
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accountsBook/userAccountsBookBranch/:idBranch
+}); // GET - http://localhost:3000/api/accounts-book/userAccountsBookBranch/:idBranch
 
 
 
@@ -224,7 +249,7 @@ router.put("/:idAccountsBook", authRequired, checkRole, validateSchema(accountsB
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //PUT - http://localhost:3000/api/accountsBook/:idAccountsBook con { "transactionDate": "2023-09-19T12:00:00.000Z", "transactionType": "Ingreso", "item": "Nombre del producto/servicio/materiaPrima", "sellingPrice": "15000", "quantity": "2", "totalValue": "30000" }
+}); //PUT - http://localhost:3000/api/accounts-book/:idAccountsBook con { "transactionDate": "2023-09-19T12:00:00.000Z", "transactionType": "Ingreso", "item": "Nombre del producto/servicio/materiaPrima", "sellingPrice": "15000", "quantity": "2", "totalValue": "30000" }
 
 
 
@@ -239,7 +264,7 @@ router.patch("/incomes-not-approved/:idAccountsBook", authRequired, checkRole, a
         const assetError = error as ServiceError;
         res.status(assetError.code).json(assetError.message);
     }
-}); //PATCH - http://localhost:3000/api/accountsBook/incomes-not-approved/:idAccountsBook
+}); //PATCH - http://localhost:3000/api/accounts-book/incomes-not-approved/:idAccountsBook
 
 
 
@@ -254,7 +279,7 @@ router.delete('/:idAccountsBook', authRequired, checkRole, async (req: Request, 
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // DELETE - http://localhost:3000/api/accountsBook/:idAccountsBook
+}); // DELETE - http://localhost:3000/api/accounts-book/:idAccountsBook
 
 
 
