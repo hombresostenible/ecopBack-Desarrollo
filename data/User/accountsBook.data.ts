@@ -381,7 +381,6 @@ export const deleteAccountsBookData = async (userId: string, idAccountsBook: str
         await AccountsBook.destroy({ where: { id: idAccountsBook }, transaction });
         await transaction.commit();
     } catch (error) {
-        console.log('Error: ', error)
         await transaction.rollback();
         throw error;
     }

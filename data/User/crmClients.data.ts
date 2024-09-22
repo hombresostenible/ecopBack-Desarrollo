@@ -96,7 +96,6 @@ export const getCRMClientsPaginatedData = async (userId: string, page: number, l
             order: [['createdAt', 'DESC']]
         });
         const formattedRegisters = registersPaginated.map(register => register.toJSON());
-        console.log('formattedRegisters: ', formattedRegisters)
         return {
             registers: formattedRegisters,
             totalRegisters: totalRegistersFound,
