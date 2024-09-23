@@ -69,9 +69,7 @@ export const loginService = async (email: string, password: string): Promise<ILo
                 });
                 return { code: 401, message: "Has bloqueado tu cuenta" };
             }
-
             if (userFound.loginAttempts > 3) return { code: 401, message: "Usuario bloqueado" };
-
             await userFound.save();
             return { code: 401, message: "Correo o contraseña incorrecta" };
         }
