@@ -34,7 +34,6 @@ import { ServiceError } from "../../types/Responses/responses.types";
 //CREAR UN REGISTRO CONTABLE DEL USER
 export const postAccountsBookData = async (userId: string, body: IAccountsBook): Promise<IAccountsBook> => {
     try {
-        console.log('body: ', body)
         // Establecer transactionApproved basado en meanPayment
         if ((body.transactionType === 'Ingreso' || body.transactionType === 'Gasto') && body.meanPayment === 'Efectivo' && body.creditCash === 'Contado') {
             body.transactionApproved = true;
@@ -124,35 +123,20 @@ export const postAccountsBookData = async (userId: string, body: IAccountsBook):
         }
         return newTransaction;
     } catch (error) {
-        console.log('Error: ', error)
         throw error;
     }
 };
 
 
 
-//OBTENER TODOS LOS REGISTROS CONTABLES DEL USER
-export const getAccountsBooksData = async (userId: string): Promise<any> => {
-    try {
-        const allAccountsBook = await AccountsBook.findAll({
-            where: {
-                userId: userId,
-                transactionApproved: true,
-            },
-        });
-        return allAccountsBook;
-    } catch (error) {
-        throw error;
-    };
-};
-
-
-
-//SERVICE PARA OBTENER TODAS LAS SEDES PAGINADAS DE UN USER
-export const getAccountsBooksPaginatedData = async ( userId: string, page: number, limit: number ): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+//OBTENER TODOS LOS REGISTROS CONTABLES PAGINADOS APROBADOS Y NO APROBADOS DEL USER
+export const getAccountsBooksPaginatedData = async (userId: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
         const offset = (page - 1) * limit;
-        const searchCriteria = { userId: userId };
+        const searchCriteria = {
+            userId: userId,
+            transactionApproved: true,
+        };
         const totalRegistersFound = await AccountsBook.count({ where: searchCriteria });
         const totalPages = Math.ceil(totalRegistersFound / limit);
         const registersPaginated = await AccountsBook.findAll({
@@ -175,13 +159,30 @@ export const getAccountsBooksPaginatedData = async ( userId: string, page: numbe
 
 
 
-//OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS, TANTO DE INGRESOS COMO DE GASTOS DEL USER
-export const getAccountsBooksApprovedData = async (userId: string): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS CONTABLES PAGINADOS APROBADOS Y NO APROBADOS POR SEDE DEL USER
+export const getAccountsBookByBranchData = async (idBranch: string, userId: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
-        const allAccountsBook = await AccountsBook.findAll({
-            where: { userId: userId },
+        const offset = (page - 1) * limit;
+        const searchCriteria = {
+            userId: userId,
+            branchId: idBranch,
+            transactionApproved: true,
+        };
+        const totalRegistersFound = await AccountsBook.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsBook.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['transactionDate', 'DESC']] // Ordenar por una columna, puedes cambiar según tus necesidades
         });
-        return allAccountsBook;
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     };
@@ -189,19 +190,62 @@ export const getAccountsBooksApprovedData = async (userId: string): Promise<any>
 
 
 
-//OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS POR SEDE, TANTO DE INGRESOS COMO DE GASTOS DEL USER
-export const getAccountsBooksApprovedByBranchData = async (idBranch: string): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS DE INGRESOS PAGINADOS APROBADOS DEL USER
+export const getIncomesApprovedData = async (userId: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
-        const allAccountsBook = await AccountsBook.findAll({
-            where: {
-                branchId: idBranch,
-                transactionApproved: true 
-            },
-            order: [
-                ['transactionDate', 'DESC'] // Aquí se especifica el campo y el orden
-            ]
+        const offset = (page - 1) * limit;
+        const searchCriteria = {
+            userId: userId, 
+            transactionType: 'Ingreso', 
+            transactionApproved: true,
+        };
+        const totalRegistersFound = await AccountsBook.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsBook.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['transactionDate', 'DESC']] // Ordenar por una columna, puedes cambiar según tus necesidades
         });
-        return allAccountsBook;
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
+    } catch (error) {
+        throw error;
+    };
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE INGRESOS PAGINADOS APROBADOS POR SEDE DEL USER
+export const getIncomesApprovedByBranchData = async (idBranch: string, userId: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = {
+            userId: userId,
+            branchId: idBranch,
+            transactionType: 'Ingreso', 
+            transactionApproved: true,
+        };
+        const totalRegistersFound = await AccountsBook.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsBook.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['transactionDate', 'DESC']] // Ordenar por una columna, puedes cambiar según tus necesidades
+        });
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     }
@@ -209,20 +253,30 @@ export const getAccountsBooksApprovedByBranchData = async (idBranch: string): Pr
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS DEL USER
-export const getIncomesApprovedData = async (userId: string): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS DE GASTOS PAGINADOS DEL USER
+export const getAccountsBooksExpesesData = async (userId: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
-        const allAccountsBook = await AccountsBook.findAll({
-            where: { 
-                userId: userId, 
-                transactionType: 'Ingreso', 
-                transactionApproved: true,
-            },
-            order: [
-                ['transactionDate', 'DESC'] // Aquí se especifica el campo y el orden
-            ]
+        const offset = (page - 1) * limit;
+        const searchCriteria = {
+            userId: userId, 
+            transactionType: 'Gasto', 
+            transactionApproved: true,
+        };
+        const totalRegistersFound = await AccountsBook.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsBook.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['transactionDate', 'DESC']]
         });
-        return allAccountsBook;
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     };
@@ -230,20 +284,31 @@ export const getIncomesApprovedData = async (userId: string): Promise<any> => {
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
-export const getIncomesApprovedByBranchData = async (idBranch: string): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS DE GASTOS PAGINADOS APROBADOS POR SEDE DEL USER
+export const getAccountsBooksExpesesByBranchData = async (idBranch: string, userId: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
-        const AccountsBooksIncomesFound = await AccountsBook.findAll({
-            where: {
-                branchId: idBranch,
-                transactionType: 'Ingreso', 
-                transactionApproved: true 
-            },
-            order: [
-                ['transactionDate', 'DESC'] // Aquí se especifica el campo y el orden
-            ]
+        const offset = (page - 1) * limit;
+        const searchCriteria = {
+            userId: userId,
+            branchId: idBranch,
+            transactionType: 'Gasto', 
+            transactionApproved: true,
+        };
+        const totalRegistersFound = await AccountsBook.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsBook.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['transactionDate', 'DESC']]
         });
-        return AccountsBooksIncomesFound;
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     }
@@ -251,38 +316,60 @@ export const getIncomesApprovedByBranchData = async (idBranch: string): Promise<
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
-export const getIncomesNotApprovedData = async (userId: string): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS DE TRANSACCIONES NO APROBADAS PAGINADAS DEL USER
+export const getUnapprovedRecordsData = async (userId: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
-        const allAccountsBook = await AccountsBook.findAll({
-            where: {
-                userId: userId,
-                transactionType: 'Ingreso',
-                transactionApproved: false
-            },
-            order: [
-                ['transactionDate', 'DESC'] // Aquí se especifica el campo y el orden
-            ]
-        });        
-        return allAccountsBook;
+        const offset = (page - 1) * limit;
+        const searchCriteria = {
+            userId: userId,
+            transactionApproved: false,
+        };
+        const totalRegistersFound = await AccountsBook.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsBook.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['transactionDate', 'DESC']]
+        });
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     };
 };
 
-export const getIncomesNotApprovedByBranchData = async (idBranch: string): Promise<any> => {
+
+
+//OBTENER TODOS LOS REGISTROS DE TRANSACCIONES NO APROBADAS PAGINADAS POR SEDE DEL USER
+export const getUnapprovedRecordsByBranchData = async (userId: string, idBranch: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
-        const AccountsBooksIncomesFound = await AccountsBook.findAll({
-            where: {
-                branchId: idBranch,
-                transactionType: 'Ingreso', 
-                transactionApproved: false 
-            },
-            order: [
-                ['transactionDate', 'DESC'] // Aquí se especifica el campo y el orden
-            ]
+        const offset = (page - 1) * limit;
+        const searchCriteria = {
+            userId: userId,
+            branchId: idBranch,
+            transactionApproved: false,
+        };
+        const totalRegistersFound = await AccountsBook.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsBook.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['transactionDate', 'DESC']]
         });
-        return AccountsBooksIncomesFound;
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     }
@@ -290,24 +377,10 @@ export const getIncomesNotApprovedByBranchData = async (idBranch: string): Promi
 
 
 
-//OBTENER TODOS LOS REGISTROS DE GASTOS DEL USER
-export const getAccountsBooksExpesesData = async (userId: string): Promise<any> => {
+//OBTENER UN REGISTRO CONTABLE POR ID DEL USER
+export const getAccountsBookByIdData = async (idAccountsBook: string, userId:string): Promise<any> => {
     try {
-        const allAccountsBook = await AccountsBook.findAll({
-            where: { userId: userId, transactionType: 'Gasto' },
-        });
-        return allAccountsBook;
-    } catch (error) {
-        throw error;
-    };
-};
-
-
-
-//Chequea si el registro del libro diario pertenece al User
-export const getAccountsBookByIdData = async (idAccountsBook: string): Promise<any> => {
-    try {
-        const transactionFound = await AccountsBook.findOne({ where: { userId: idAccountsBook } });
+        const transactionFound = await AccountsBook.findOne({ where: { id: idAccountsBook, userId: userId } });
         return transactionFound;
     } catch (error) {
         throw error;
@@ -316,35 +389,7 @@ export const getAccountsBookByIdData = async (idAccountsBook: string): Promise<a
 
 
 
-//Chequea si la sede pertenece a User
-export const getAccountsBookByBranchData = async (idAccountsBook: string): Promise<any> => {
-    try {
-        const accountsBookFound = await AccountsBook.findOne({
-            where: { userId: idAccountsBook }
-        });
-        return accountsBookFound;
-    } catch (error) {
-        throw error;
-    };
-};
-
-
-
-//ACTUALIZA UN REGISTRO EN EL LIBRO DIARIO PERTENECIENTE AL USER
-export const putAccountsBookData = async (idAccountsBook: string, body: IAccountsBook): Promise<IAccountsBook | null> => {
-    try {
-        const [rowsUpdated] = await AccountsBook.update(body, { where: { userId: idAccountsBook } });
-        if (rowsUpdated === 0) return null;
-        const updatedTransaction = await AccountsBook.findByPk(idAccountsBook);
-        if (!updatedTransaction) return null;
-        return updatedTransaction;
-    } catch (error) {
-        throw error;
-    };
-};
-
-
-
+//APROBAR UN REGISTRO DE INGRESO DEL USER
 export const patchIncomesNotApprovedData = async (idAssets: string, userId: string): Promise<IAccountsBook | null> => {
     try {
         let whereClause: Record<string, any> = { userId: idAssets };
@@ -367,7 +412,23 @@ export const patchIncomesNotApprovedData = async (idAssets: string, userId: stri
 };
 
 
-//ELIMINA UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER
+
+//ACTUALIZAR UN REGISTRO CONTABLE DEL USER
+export const putAccountsBookData = async (idAccountsBook: string, body: IAccountsBook): Promise<IAccountsBook | null> => {
+    try {
+        const [rowsUpdated] = await AccountsBook.update(body, { where: { userId: idAccountsBook } });
+        if (rowsUpdated === 0) return null;
+        const updatedTransaction = await AccountsBook.findByPk(idAccountsBook);
+        if (!updatedTransaction) return null;
+        return updatedTransaction;
+    } catch (error) {
+        throw error;
+    };
+};
+
+
+
+//ELIMINAR UN REGISTRO CONTABLE DEL USER
 export const deleteAccountsBookData = async (userId: string, idAccountsBook: string): Promise<void> => {
     const transaction = await sequelize.transaction();
     try {
@@ -404,9 +465,7 @@ export const deleteAccountsBookData = async (userId: string, idAccountsBook: str
                 }
             }
         }
-        // Eliminación de registros relacionados
         await deleteRelatedRecords(idAccountsBook, transaction);
-        // Eliminación del registro del libro diario
         await AccountsBook.destroy({ where: { id: idAccountsBook }, transaction });
         await transaction.commit();
     } catch (error) {
