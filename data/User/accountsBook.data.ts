@@ -390,9 +390,9 @@ export const getAccountsBookByIdData = async (idAccountsBook: string, userId:str
 
 
 //APROBAR UN REGISTRO DE INGRESO DEL USER
-export const patchIncomesNotApprovedData = async (idAssets: string, userId: string): Promise<IAccountsBook | null> => {
+export const patchApproveRecordData = async (userId: string, idAccountsBook: string): Promise<IAccountsBook | null> => {
     try {
-        let whereClause: Record<string, any> = { userId: idAssets };
+        let whereClause: Record<string, any> = { userId: userId, id: idAccountsBook };
         whereClause.userId = userId;
         const existingIncomesNotApproved = await AccountsBook.findOne({
             where: whereClause,
@@ -403,7 +403,7 @@ export const patchIncomesNotApprovedData = async (idAssets: string, userId: stri
             where: whereClause,
         });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún registro para aprobar para actualizar");
-        const updatedRawMaterial = await AccountsBook.findByPk(idAssets);
+        const updatedRawMaterial = await AccountsBook.findByPk(idAccountsBook);
         if (!updatedRawMaterial) throw new ServiceError(404, "No se encontró ningún registro para aprobar para actualizar");
         return updatedRawMaterial;
     } catch (error) {

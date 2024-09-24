@@ -9,7 +9,7 @@ import {
     getAccountsBookByIdData,
     getUnapprovedRecordsData,
     getUnapprovedRecordsByBranchData,
-    patchIncomesNotApprovedData,
+    patchApproveRecordData,
     putAccountsBookData,
     deleteAccountsBookData,
 } from "../../data/User/accountsBook.data";
@@ -170,9 +170,9 @@ export const getAccountsBookByIdService = async (idAccountsBook: string, userId:
 
 
 //APROBAR UN REGISTRO DE INGRESO DEL USER
-export const patchIncomesNotApprovedService = async (idAssets: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const patchApproveRecordService = async (userId: string, idAccountsBook: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        const updateAsset = await patchIncomesNotApprovedData(idAssets, userId);
+        const updateAsset = await patchApproveRecordData(userId, idAccountsBook);
         if (!updateAsset) throw new ServiceError(404, "Registro pendiente de aprobar no encontrado");
         return { code: 200, message: "Registro aprobado exitosamente", result: updateAsset };
     } catch (error) {
