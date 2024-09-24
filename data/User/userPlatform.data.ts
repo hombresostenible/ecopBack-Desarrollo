@@ -40,7 +40,6 @@ export const postUserPlatformData = async (body: IUserPlatform, userId: string):
                 address: body.address,
                 isBlocked: true,
                 unlockCode: generateCodes(),
-                isAceptedConditions: body.isAceptedConditions,
                 branchId: body.branchId,
                 userId: userId,
             });

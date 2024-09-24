@@ -15,7 +15,6 @@ type RegisterUserPlatformSchemaType = ZodObject<{
     phone: ZodString;
     email: ZodString;
     password: ZodString;
-    isAceptedConditions: ZodBoolean;
 }>;
 
 export const userPlatformSchema: RegisterUserPlatformSchemaType = z.object({
@@ -62,9 +61,6 @@ export const userPlatformSchema: RegisterUserPlatformSchemaType = z.object({
     }).min(6, {
         message: 'La contraseña debe de tener más de seis caracteres',
     }),
-    isAceptedConditions: z.boolean({
-        required_error: 'Aceptar términos y condiciones para el usuario es requerido',
-    }),
 });
 
 
@@ -85,7 +81,6 @@ type ManyRegisterUserPlatformSchemaType = ZodArray<
         phone: ZodString;
         email: ZodString;
         password: ZodString;
-        isAceptedConditions: ZodBoolean;
     }>
 >;
 
@@ -127,9 +122,6 @@ export const manyUserPlatformsSchema: ManyRegisterUserPlatformSchemaType = z.arr
             required_error: 'La contraseña del usuario es requerida',
         }).min(6, {
             message: 'La contraseña debe de tener más de seis caracteres',
-        }),
-        isAceptedConditions: z.boolean({
-            required_error: 'Aceptar términos y condiciones para el usuario es requerido',
         }),
     })
 );
