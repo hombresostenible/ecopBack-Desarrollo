@@ -2,18 +2,16 @@ import express, { Request, Response } from "express";
 import {
     postAccountsBookService,
     getAccountsBooksService,
-    getAccountsBooksPaginatedService,
-    getAccountsBooksApprovedService,
-    getAccountsBooksApprovedByBranchService,
+    getAccountsBookByBranchService,
     getIncomesApprovedService,
     getIncomesApprovedByBranchService,
-    getIncomesNotApprovedByBranchService,
-    getIncomesNotApprovedService,
     getAccountsBooksExpesesService,
+    getAccountsBooksExpesesByBranchService,
+    getUnapprovedRecordsService,
+    getUnapprovedRecordsByBranchService,
     getAccountsBookByIdService,
-    getAccountsBookByBranchService,
-    putAccountsBookService,
     patchIncomesNotApprovedService,
+    putAccountsBookService,
     deleteAccountsBookService,
 } from '../../services/User/accountsBook.service';
 import { authRequired } from '../../middlewares/Token/Token.middleware';
@@ -38,30 +36,12 @@ router.post("/", authRequired, validateSchema(accountsBookSchemaZod), async (req
 
 
 
-//OBTENER TODOS LOS REGISTROS CONTABLES DEL USER
-router.get("/", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.user;
-        const serviceLayerResponse = await getAccountsBooksService(userId);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else {
-            res.status(500).json({ message: "No se pudieron obtener registros de AccountsBook" });
-        }
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/accounts-book
-
-
-
-//OBTENER TODOS LOS REGISTROS CONTABLES PAGINADOS DEL USER
+//OBTENER TODOS LOS REGISTROS CONTABLES PAGINADOS APROBADOS Y NO APROBADOS DEL USER
 router.get("/paginated", authRequired, async (req: Request, res: Response) => {
     try {
-        const { userId } = req.user as { userId: string };
+        const { userId } = req.user;
         const { page = 1, limit = 20 } = req.query;
-        const serviceLayerResponse = await getAccountsBooksPaginatedService(
+        const serviceLayerResponse = await getAccountsBooksService(
             userId,
             parseInt(page as string),
             parseInt(limit as string),
@@ -80,130 +60,179 @@ router.get("/paginated", authRequired, async (req: Request, res: Response) => {
 
 
 
-//OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS, TANTO DE INGRESOS COMO DE GASTOS DEL USER
-router.get("/approved", authRequired, async (req: Request, res: Response) => {
+//OBTENER TODOS LOS REGISTROS CONTABLES PAGINADOS APROBADOS Y NO APROBADOS POR SEDE DEL USER
+router.get("/paginated-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const serviceLayerResponse = await getAccountsBooksApprovedService(userId);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else {
-            res.status(500).json({ message: "No se pudieron obtener registros de AccountsBook" });
-        }
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/accounts-book/approved
-
-
-
-//OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS POR SEDE, TANTO DE INGRESOS COMO DE GASTOS DEL USER
-router.get("/approved/:idBranch", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.user;
+        const { page = 1, limit = 20 } = req.query;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getAccountsBooksApprovedByBranchService(idBranch, userId);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else {
-            res.status(500).json({ message: "No se pudieron obtener registros de AccountsBook" });
-        }
+        const serviceLayerResponse = await getAccountsBookByBranchService(
+            idBranch,
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accounts-book/approved/:idBranch
+}); // GET - http://localhost:3000/api/accounts-book/paginated-branch/:idBranch?page=1&limit=20
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS DEL USER
+//OBTENER TODOS LOS REGISTROS DE INGRESOS PAGINADOS APROBADOS DEL USER
 router.get("/incomes", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const serviceLayerResponse = await getIncomesApprovedService(userId);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else {
-            res.status(500).json({ message: "No se pudieron obtener registros de ingresos aprobados del usuario" });
-        }
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getIncomesApprovedService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accounts-book/incomes
+}); // GET - http://localhost:3000/api/accounts-book/incomes?page=1&limit=20
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
+//OBTENER TODOS LOS REGISTROS DE INGRESOS PAGINADOS APROBADOS POR SEDE DEL USER
 router.get("/incomes-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
+        const { page = 1, limit = 20 } = req.query;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getIncomesApprovedByBranchService(idBranch, userId);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else res.status(500).json({ message: "Error al obtener los registros de ingresos aprobados del usuario por sede" });
+        const serviceLayerResponse = await getIncomesApprovedByBranchService(
+            idBranch,
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
     } catch (error) {
         const rawMaterialError = error as ServiceError;
         res.status(rawMaterialError.code).json(rawMaterialError.message);
     }
-}); //GET - http://localhost:3000/api/accounts-book/incomes-branch/:idBranch
+}); //GET - http://localhost:3000/api/accounts-book/incomes-branch/:idBranch?page=1&limit=20
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
-router.get("/incomes-not-approved", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.user;
-        const serviceLayerResponse = await getIncomesNotApprovedService(userId);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else {            
-            res.status(500).json({ message: "No se pudieron obtener los ingresos pendientes de aprobar" });
-        }
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/accounts-book/incomes-not-approved
-
-
-
-//OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
-router.get("/incomes-not-approved/:idBranch", authRequired, async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.user;
-        const { idBranch } = req.params;
-        const serviceLayerResponse = await getIncomesNotApprovedByBranchService(idBranch, userId);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else {            
-            res.status(500).json({ message: "No se pudieron obtener los ingresos pendientes de aprobar por sede" });
-        }
-    } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
-    }
-}); // GET - http://localhost:3000/api/accounts-book/incomes-not-approved/:idBranch
-
-
-
-//OBTENER TODOS LOS REGISTROS DE GASTOS DEL USER
+//OBTENER TODOS LOS REGISTROS DE GASTOS PAGINADOS DEL USER
 router.get("/expenses", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const serviceLayerResponse = await getAccountsBooksExpesesService(userId);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else {            
-            res.status(500).json({ message: "No se pudieron obtener registros de AccountsBook" });
-        }
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getAccountsBooksExpesesService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accounts-book/expenses
+}); // GET - http://localhost:3000/api/accounts-book/expenses?page=1&limit=20
+
+
+
+//OBTENER TODOS LOS REGISTROS DE GASTOS PAGINADOS APROBADOS POR SEDE DEL USER
+router.get("/expenses-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user;
+        const { page = 1, limit = 20 } = req.query;
+        const { idBranch } = req.params;
+        const serviceLayerResponse = await getAccountsBooksExpesesByBranchService(
+            idBranch,
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
+    } catch (error) {
+        const rawMaterialError = error as ServiceError;
+        res.status(rawMaterialError.code).json(rawMaterialError.message);
+    }
+}); //GET - http://localhost:3000/api/accounts-book/expenses-branch/:idBranch?page=1&limit=20
+
+
+
+//OBTENER TODOS LOS REGISTROS DE TRANSACCIONES NO APROBADAS PAGINADAS DEL USER
+router.get("/unapproved-records", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user;
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getUnapprovedRecordsService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/accounts-book/unapproved-records?page=1&limit=20
+
+
+
+//OBTENER TODOS LOS REGISTROS DE TRANSACCIONES NO APROBADAS PAGINADAS POR SEDE DEL USER
+router.get("/unapproved-records/:idBranch", authRequired, async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.user;
+        const { idBranch } = req.params;
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getUnapprovedRecordsByBranchService(
+            userId,
+            idBranch,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
+    } catch (error) {
+        const errorController = error as ServiceError;
+        res.status(errorController.code).json(errorController.message);
+    }
+}); // GET - http://localhost:3000/api/accounts-book/unapproved-records/:idBranch
 
 
 
@@ -218,22 +247,22 @@ router.get("/:idAccountsBook", authRequired, async (req: Request, res: Response)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/accounts-book/idAccountsBook
+}); // GET - http://localhost:3000/api/accounts-book/:idAccountsBook
 
 
 
-//OBTENER TODOS LOS REGISTROS CONTABLES POR SEDE DEL USER
-router.get("/accounts-book-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
+//APROBAR UN REGISTRO DE INGRESO DEL USER
+router.patch("/approve-record/:idAccountsBook", authRequired, checkRole, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const { idBranch } = req.params;
-        const serviceLayerResponse = await getAccountsBookByBranchService(idBranch, userId);
-        res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
+        const { idAccountsBook } = req.params;
+        const serviceLayerResponse = await patchIncomesNotApprovedService(idAccountsBook, userId);
+        res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
-        const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
+        const assetError = error as ServiceError;
+        res.status(assetError.code).json(assetError.message);
     }
-}); // GET - http://localhost:3000/api/accounts-book/userAccountsBookBranch/:idBranch
+}); //PATCH - http://localhost:3000/api/accounts-book/incomes-approve-record/:idAccountsBook
 
 
 
@@ -253,21 +282,6 @@ router.put("/:idAccountsBook", authRequired, checkRole, validateSchema(accountsB
 
 
 
-//APROBAR UN REGISTRO DE INGRESO DEL USER
-router.patch("/incomes-not-approved/:idAccountsBook", authRequired, checkRole, async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.user;
-        const { idAccountsBook } = req.params;
-        const serviceLayerResponse = await patchIncomesNotApprovedService(idAccountsBook, userId);
-        res.status(serviceLayerResponse.code).json(serviceLayerResponse);
-    } catch (error) {
-        const assetError = error as ServiceError;
-        res.status(assetError.code).json(assetError.message);
-    }
-}); //PATCH - http://localhost:3000/api/accounts-book/incomes-not-approved/:idAccountsBook
-
-
-
 //ELIMINAR UN REGISTRO CONTABLE DEL USER
 router.delete('/:idAccountsBook', authRequired, checkRole, async (req: Request, res: Response) => {
     try {
@@ -280,7 +294,5 @@ router.delete('/:idAccountsBook', authRequired, checkRole, async (req: Request, 
         res.status(errorController.code).json(errorController.message);
     }
 }); // DELETE - http://localhost:3000/api/accounts-book/:idAccountsBook
-
-
 
 export default router;

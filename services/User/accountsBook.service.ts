@@ -1,18 +1,16 @@
 import {  
     postAccountsBookData,
-    getAccountsBooksData,
     getAccountsBooksPaginatedData,
-    getAccountsBooksApprovedData,
-    getAccountsBooksApprovedByBranchData,
+    getAccountsBookByBranchData,
     getIncomesApprovedData,
     getIncomesApprovedByBranchData,
-    getIncomesNotApprovedByBranchData,
-    getIncomesNotApprovedData,
     getAccountsBooksExpesesData,
+    getAccountsBooksExpesesByBranchData,
     getAccountsBookByIdData,
-    getAccountsBookByBranchData,
-    putAccountsBookData,
+    getUnapprovedRecordsData,
+    getUnapprovedRecordsByBranchData,
     patchIncomesNotApprovedData,
+    putAccountsBookData,
     deleteAccountsBookData,
 } from "../../data/User/accountsBook.data";
 import { IAccountsBook } from "../../types/User/accountsBook.types";
@@ -35,23 +33,8 @@ export const postAccountsBookService = async (userId: string, body: IAccountsBoo
 
 
 
-//OBTENER TODOS LOS REGISTROS CONTABLES DEL USER
-export const getAccountsBooksService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
-    try {
-        const dataLayerResponse = await getAccountsBooksData(userId);
-        return { code: 200, result: dataLayerResponse };
-    } catch (error) {
-        if (error instanceof Error) {
-            const customErrorMessage = error.message;
-            throw new ServiceError(500, customErrorMessage, error);
-        } else throw error;
-    };
-};
-
-
-
-//SERVICE PARA OBTENER TODAS LAS SEDES PAGINADAS DE UN USER
-export const getAccountsBooksPaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
+//OBTENER TODOS LOS REGISTROS CONTABLES PAGINADOS APROBADOS Y NO APROBADOS DEL USER
+export const getAccountsBooksService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
     try {
         const { registers, totalRegisters, totalPages, currentPage } = await getAccountsBooksPaginatedData(userId, page, limit);
         return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
@@ -65,11 +48,11 @@ export const getAccountsBooksPaginatedService = async (userId: string, page: num
 
 
 
-//OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS, TANTO DE INGRESOS COMO DE GASTOS DEL USER
-export const getAccountsBooksApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+//OBTENER TODOS LOS REGISTROS CONTABLES PAGINADOS APROBADOS Y NO APROBADOS POR SEDE DEL USER
+export const getAccountsBookByBranchService = async (idBranch: string, userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
     try {
-        const dataLayerResponse = await getAccountsBooksApprovedData(userId);
-        return { code: 200, result: dataLayerResponse };
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsBookByBranchData(idBranch, userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -80,12 +63,11 @@ export const getAccountsBooksApprovedService = async (userId: string): Promise<I
 
 
 
-//OBTENER TODOS LOS REGISTROS CONTABLES APROBADOS POR SEDE, TANTO DE INGRESOS COMO DE GASTOS DEL USER
-export const getAccountsBooksApprovedByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+//OBTENER TODOS LOS REGISTROS DE INGRESOS PAGINADOS APROBADOS DEL USER
+export const getIncomesApprovedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
     try {
-        const dataLayerResponse = await getAccountsBooksApprovedByBranchData(idBranch);
-        if (!dataLayerResponse) return { code: 404, message: "Registros aprobados no encontrados en esta sede" };
-        return { code: 200, result: dataLayerResponse };
+        const { registers, totalRegisters, totalPages, currentPage } = await getIncomesApprovedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -96,11 +78,11 @@ export const getAccountsBooksApprovedByBranchService = async (idBranch: string, 
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS DEL USER
-export const getIncomesApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+//OBTENER TODOS LOS REGISTROS DE INGRESOS PAGINADOS APROBADOS POR SEDE DEL USER
+export const getIncomesApprovedByBranchService = async (idBranch: string, userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
     try {
-        const dataLayerResponse = await getIncomesApprovedData(userId);
-        return { code: 200, result: dataLayerResponse };
+        const { registers, totalRegisters, totalPages, currentPage } = await getIncomesApprovedByBranchData(idBranch, userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -111,12 +93,11 @@ export const getIncomesApprovedService = async (userId: string): Promise<IServic
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS APROBADOS POR SEDE DEL USER
-export const getIncomesApprovedByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+//OBTENER TODOS LOS REGISTROS DE GASTOS PAGINADOS DEL USER
+export const getAccountsBooksExpesesService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
     try {
-        const dataLayerResponse = await getIncomesApprovedByBranchData(idBranch);
-        if (!dataLayerResponse) return { code: 404, message: "Registros de ingresos aprobados no encontrados en esta sede" };
-        return { code: 200, result: dataLayerResponse };
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsBooksExpesesData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -127,11 +108,11 @@ export const getIncomesApprovedByBranchService = async (idBranch: string, userId
 
 
 
-//OBTENER TODOS LOS REGISTROS DE INGRESOS NO APROBADOS DEL USER
-export const getIncomesNotApprovedService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+//OBTENER TODOS LOS REGISTROS DE GASTOS PAGINADOS APROBADOS POR SEDE DEL USER
+export const getAccountsBooksExpesesByBranchService = async (idBranch: string, userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
     try {
-        const dataLayerResponse = await getIncomesNotApprovedData(userId);
-        return { code: 200, result: dataLayerResponse };
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsBooksExpesesByBranchData(idBranch, userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -142,13 +123,11 @@ export const getIncomesNotApprovedService = async (userId: string): Promise<ISer
 
 
 
-export const getIncomesNotApprovedByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+//OBTENER TODOS LOS REGISTROS DE TRANSACCIONES NO APROBADAS PAGINADAS DEL USER
+export const getUnapprovedRecordsService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
     try {
-        // const hasPermission = await checkPermissionForBranchAccountsBook(idBranch, userId);
-        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los ingresos pendientes de aprobar de esta sede");
-        const assetsFound = await getIncomesNotApprovedByBranchData(idBranch);
-        if (!assetsFound) return { code: 404, message: "No se pudieron obtener los ingresos pendientes de aprobar" };
-        return { code: 200, result: assetsFound };
+        const { registers, totalRegisters, totalPages, currentPage } = await getUnapprovedRecordsData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -159,11 +138,11 @@ export const getIncomesNotApprovedByBranchService = async (idBranch: string, use
 
 
 
-//OBTENER TODOS LOS REGISTROS DE GASTOS DEL USER
-export const getAccountsBooksExpesesService = async (userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+//OBTENER TODOS LOS REGISTROS DE TRANSACCIONES NO APROBADAS PAGINADAS POR SEDE DEL USER
+export const getUnapprovedRecordsByBranchService = async (userId: string, idBranch: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
     try {
-        const dataLayerResponse = await getAccountsBooksExpesesData(userId);
-        return { code: 200, result: dataLayerResponse };
+        const { registers, totalRegisters, totalPages, currentPage } = await getUnapprovedRecordsByBranchData(userId, idBranch, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -174,10 +153,10 @@ export const getAccountsBooksExpesesService = async (userId: string): Promise<IS
 
 
 
-//CONTROLLER PARA OBTENER UN REGISTRO DEL LIBRO DIARIO POR ID PERTENECIENTE AL USER
-export const getAccountsBookByIdService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+//OBTENER UN REGISTRO CONTABLE POR ID DEL USER
+export const getAccountsBookByIdService = async (idAccountsBook: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        const transactionsFound = await getAccountsBookByIdData(idBranch);
+        const transactionsFound = await getAccountsBookByIdData(idAccountsBook, userId);
         if (!transactionsFound) return { code: 404, message: 'Libro diario no encontrado' };
         return { code: 200, result: transactionsFound };
     } catch (error) {
@@ -190,31 +169,25 @@ export const getAccountsBookByIdService = async (idBranch: string, userId: strin
 
 
 
-//CONTROLLER PARA OBTENER UN REGISTRO DEL LIBRO DIARIO POR ID PERTENECIENTE AL USER
-export const getAccountsBookByBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+//APROBAR UN REGISTRO DE INGRESO DEL USER
+export const patchIncomesNotApprovedService = async (idAssets: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        // const hasPermission = await checkPermissionForAccountsBook(idBranch, userId);
-        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a este libro diario");
-        const transactionsFound = await getAccountsBookByBranchData(idBranch);
-        if (!transactionsFound) return { code: 404, message: 'Libro diario no encontrado' };
-        return { code: 200, result: transactionsFound };
+        const updateAsset = await patchIncomesNotApprovedData(idAssets, userId);
+        if (!updateAsset) throw new ServiceError(404, "Registro pendiente de aprobar no encontrado");
+        return { code: 200, message: "Registro aprobado exitosamente", result: updateAsset };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
             throw new ServiceError(500, customErrorMessage, error);
         } else throw error;
-    };
+    }
 };
 
 
 
-//SERVICE PARA ACTUALIZAR UN REGISTRO EN EL LIBRO DIARIO PERTENECIENTE AL USER
+//ACTUALIZAR UN REGISTRO CONTABLE DEL USER
 export const putAccountsBookService = async (idAccountsBook: string, body: IAccountsBook, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        // const hasPermission = await checkPermissionForAccountsBookBranch(idAccountsBook, userId);
-        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar registro");
-        // const isBranchAssociatedWithUser: any = await isRegisterTransactionAssociatedWithUser(userId, body.branchId);
-        // if (!isBranchAssociatedWithUser) throw new ServiceError(403, "El usuario no tiene permiso para actualizar el libro diario de esta sede");
         const existingTransaction = await putAccountsBookData(idAccountsBook, body);
         if (!existingTransaction) throw new ServiceError(404, 'Libro de cuentas no encontrado');
         else await putAccountsBookData(idAccountsBook, body);
@@ -229,25 +202,7 @@ export const putAccountsBookService = async (idAccountsBook: string, body: IAcco
 
 
 
-//APROBAR UN REGISTRO DE INGRESO DEL USER
-export const patchIncomesNotApprovedService = async (idAssets: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
-    try {
-        // const hasPermission = await checkPermissionForAssets(idAssets, userId);
-        // if (!hasPermission) throw new ServiceError(403, "No tienes permiso para aumentar unidades del inventario de este equipo, máquina o herramienta");
-        const updateAsset = await patchIncomesNotApprovedData(idAssets, userId);
-        if (!updateAsset) throw new ServiceError(404, "Registro pendiente de aprobar no encontrado");
-        return { code: 200, message: "Registro aprobado exitosamente", result: updateAsset };
-    } catch (error) {
-        if (error instanceof Error) {
-            const customErrorMessage = error.message;
-            throw new ServiceError(500, customErrorMessage, error);
-        } else throw error;
-    }
-};
-
-
-
-//SERVICE PARA ELIMINAR UN REGISTRO DEL LIBRO DIARIO PERTENECIENTE AL USER
+//ELIMINAR UN REGISTRO CONTABLE DEL USER
 export const deleteAccountsBookService = async (userId: string, idAccountsBook: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
         await deleteAccountsBookData(userId, idAccountsBook);

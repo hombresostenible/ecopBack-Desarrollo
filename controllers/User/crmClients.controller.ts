@@ -67,7 +67,7 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
 //OBTENER TODOS LOS CLIENTES PAGINADOS DE UN USER
 router.get("/paginated", authRequired, async (req: Request, res: Response) => {
     try {
-        const { userId } = req.user as { userId: string };
+        const { userId } = req.user;
         const { page = 1, limit = 20 } = req.query;
         const serviceLayerResponse = await getCrmClientsPaginatedService(
             userId,
