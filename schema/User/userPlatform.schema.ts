@@ -20,7 +20,6 @@ class UserPlatform extends Model {
     public codeDane!: string;
     public subregionCodeDane!: string;
     public address!: string;
-    public isAceptedConditions!: boolean;
 
     //USER MANAGEMENT
     public passwordResetCode!: string;
@@ -122,10 +121,6 @@ UserPlatform.init(
         address: {
             type: DataTypes.STRING,
             allowNull: false,
-        },
-        isAceptedConditions: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
         },
 
         //USER MANAGEMENT

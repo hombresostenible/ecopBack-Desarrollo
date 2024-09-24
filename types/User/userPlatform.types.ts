@@ -15,7 +15,6 @@ export interface IUserPlatform {
     phone: string;
     email: string;
     password: string;
-    isAceptedConditions: boolean;
     
     //USER MANAGEMENT
     passwordResetCode?: string;

@@ -5,7 +5,7 @@ import { ServiceError } from '../../../types/Responses/responses.types';
 
 export const incomeFromCashSaleProduct = async (item: IItemsAccountsBook, branchId: string, transactionType: string): Promise<any> => {
     const productFound = await Product.findOne({
-        where: { userId: item.id, nameItem: item.nameItem, branchId: branchId },
+        where: { id: item.id, nameItem: item.nameItem, branchId: branchId },
     });
     if (!productFound) throw new ServiceError(400, "El producto no existe en esta sede");
     
