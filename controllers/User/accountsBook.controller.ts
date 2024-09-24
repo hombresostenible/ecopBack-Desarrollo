@@ -10,7 +10,7 @@ import {
     getUnapprovedRecordsService,
     getUnapprovedRecordsByBranchService,
     getAccountsBookByIdService,
-    patchIncomesNotApprovedService,
+    patchApproveRecordService,
     putAccountsBookService,
     deleteAccountsBookService,
 } from '../../services/User/accountsBook.service';
@@ -256,13 +256,13 @@ router.patch("/approve-record/:idAccountsBook", authRequired, checkRole, async (
     try {
         const { userId } = req.user;
         const { idAccountsBook } = req.params;
-        const serviceLayerResponse = await patchIncomesNotApprovedService(idAccountsBook, userId);
+        const serviceLayerResponse = await patchApproveRecordService(userId, idAccountsBook);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const assetError = error as ServiceError;
         res.status(assetError.code).json(assetError.message);
     }
-}); //PATCH - http://localhost:3000/api/accounts-book/incomes-approve-record/:idAccountsBook
+}); //PATCH - http://localhost:3000/api/accounts-book/approve-record/:idAccountsBook
 
 
 
