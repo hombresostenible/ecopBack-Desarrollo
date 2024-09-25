@@ -212,6 +212,15 @@ export interface IServiceLayerResponseFinancialIndicators {
     message?: string;
     errorMessage?: unknown,
 };
+export interface IServiceLayerResponseFinancialIndicatorsPaginated {
+    code: number,
+    result?: IAccountsBook | IAccountsBook[],
+    message?: string;
+    totalRegisters?: number,
+    totalPages?: number,
+    currentPage?: number,
+    errorMessage?: unknown,
+};
 
 export interface IServiceLayerResponseSustainabilityIndicators {
     code: number,

@@ -26,6 +26,7 @@ router.post("/", authRequired, validateSchema(accountsBookSchemaZod), async (req
     try {
         const { userId } = req.user;
         const body = req.body;
+        console.log('body: ', body)
         const serviceLayerResponse = await postAccountsBookService(userId, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {

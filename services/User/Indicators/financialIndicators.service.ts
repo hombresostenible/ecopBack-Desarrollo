@@ -44,7 +44,7 @@ import {
     getRawMaterialsInventoryData,
     getRawMaterialsInventoryByBranchData,
 } from '../../../data/User/Indicators/financialIndicators.data';
-import { ServiceError, IServiceLayerResponseFinancialIndicators } from '../../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseFinancialIndicators, IServiceLayerResponseFinancialIndicatorsPaginated } from '../../../types/Responses/responses.types';
 import { IProduct } from '../../../types/User/products.types';
 import { IRawMaterial } from '../../../types/User/rawMaterial.types';
 import { IAccountsBook } from '../../../types/User/accountsBook.types';
@@ -102,7 +102,7 @@ export const getSalesPerPeriodBranchService = async (idBranch: string, userId: s
 };
 
 //Chequea si las sedes pertenecen a User, por eso usamos el "for", para iterar cada sede
-const checkPermissionForBranch = async (idBranch: string, userId: string): Promise<boolean> => {
+const checkPermissionForBranch = async (userId: string, idBranch: string): Promise<boolean> => {
     try {
         const transactions = await getPermissionSalesBranchData(idBranch);
         if (!transactions) return false;        
@@ -219,11 +219,10 @@ export const getAllTransactionsBranchService = async (idBranch: string, userId: 
 
 
 //SERVICE PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DEL USUARIO
-export const getAccountsReceivableService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getAccountsReceivableService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseFinancialIndicatorsPaginated> => {
     try {
-        const transactionsFound = await getAccountsReceivableData(userId);
-        if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de cuentas por cobrar en del usuario");
-        return { code: 200, result: transactionsFound };
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsReceivableData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -237,13 +236,12 @@ export const getAccountsReceivableService = async (userId: string): Promise<ISer
 
 
 //SERVICE PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DE UNA SEDE DEL USUARIO
-export const getAccountsReceivableBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getAccountsReceivableBranchService = async (userId: string, idBranch: string, page: number, limit: number): Promise<IServiceLayerResponseFinancialIndicatorsPaginated> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para ver las transacciones de esta sede");
-        const transactionsFound = await getAccountsReceivableBranchData(idBranch, userId);
-        if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de cuentas por cobrar de esta sede");        
-        return { code: 200, result: transactionsFound };
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsReceivableBranchData(userId, idBranch, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -257,11 +255,15 @@ export const getAccountsReceivableBranchService = async (idBranch: string, userI
 
 
 //SERVICE PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DEL USUARIO
-export const getAccountsPayableService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getAccountsPayableService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseFinancialIndicatorsPaginated> => {
     try {
-        const transactionsFound = await getAccountsPayableData(userId);
-        if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de cuentas por pagar del usuario");
-        return { code: 200, result: transactionsFound };
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsPayableData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
+
+
+        // const transactionsFound = await getAccountsPayableData(userId);
+        // if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de cuentas por pagar del usuario");
+        // return { code: 200, result: transactionsFound };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;

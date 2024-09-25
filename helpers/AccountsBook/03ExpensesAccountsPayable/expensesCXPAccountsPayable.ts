@@ -6,6 +6,7 @@ import { ServiceError } from '../../../types/Responses/responses.types';
 // SE CREA LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA USER
 export const expensesCXPAccountsPayable = async (body: IAccountsBook, newTransactionId: string, userId: string): Promise<any> => {
     if (body.creditDescription) {
+        console.log('BODY: ', body)
         //Buscamos la CXP
         const accountPayableFound = await AccountsPayable.findOne({ where: { creditDescription: body.creditDescription, transactionCounterpartId: body.transactionCounterpartId, userId: userId, stateAccount: 'Activo' } });
         if (accountPayableFound) throw new ServiceError(400, `Ya hay una Cuenta por Pagar con este mismo nombre, cambia el nombre`);
