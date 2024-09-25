@@ -64,11 +64,11 @@ router.get("/paginated", authRequired, async (req: Request, res: Response) => {
 router.get("/paginated-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const { page = 1, limit = 20 } = req.query;
         const { idBranch } = req.params;
+        const { page = 1, limit = 20 } = req.query;
         const serviceLayerResponse = await getAccountsBookByBranchService(
-            idBranch,
             userId,
+            idBranch,
             parseInt(page as string),
             parseInt(limit as string),
         );
@@ -114,11 +114,13 @@ router.get("/incomes", authRequired, async (req: Request, res: Response) => {
 router.get("/incomes-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const { page = 1, limit = 20 } = req.query;
         const { idBranch } = req.params;
+        const { page = 1, limit = 20 } = req.query;
+        console.log('userId: ', userId)
+        console.log('idBranch: ', idBranch)
         const serviceLayerResponse = await getIncomesApprovedByBranchService(
-            idBranch,
             userId,
+            idBranch,
             parseInt(page as string),
             parseInt(limit as string),
         );
@@ -164,11 +166,11 @@ router.get("/expenses", authRequired, async (req: Request, res: Response) => {
 router.get("/expenses-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const { page = 1, limit = 20 } = req.query;
         const { idBranch } = req.params;
+        const { page = 1, limit = 20 } = req.query;
         const serviceLayerResponse = await getAccountsBooksExpesesByBranchService(
-            idBranch,
             userId,
+            idBranch,
             parseInt(page as string),
             parseInt(limit as string),
         );

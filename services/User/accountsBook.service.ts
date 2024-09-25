@@ -49,9 +49,9 @@ export const getAccountsBooksService = async (userId: string, page: number, limi
 
 
 //OBTENER TODOS LOS REGISTROS CONTABLES PAGINADOS APROBADOS Y NO APROBADOS POR SEDE DEL USER
-export const getAccountsBookByBranchService = async (idBranch: string, userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
+export const getAccountsBookByBranchService = async (userId: string, idBranch: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
     try {
-        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsBookByBranchData(idBranch, userId, page, limit);
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsBookByBranchData(userId, idBranch, page, limit);
         return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
@@ -79,9 +79,9 @@ export const getIncomesApprovedService = async (userId: string, page: number, li
 
 
 //OBTENER TODOS LOS REGISTROS DE INGRESOS PAGINADOS APROBADOS POR SEDE DEL USER
-export const getIncomesApprovedByBranchService = async (idBranch: string, userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
+export const getIncomesApprovedByBranchService = async (userId: string, idBranch: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
     try {
-        const { registers, totalRegisters, totalPages, currentPage } = await getIncomesApprovedByBranchData(idBranch, userId, page, limit);
+        const { registers, totalRegisters, totalPages, currentPage } = await getIncomesApprovedByBranchData(userId, idBranch, page, limit);
         return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
@@ -109,9 +109,9 @@ export const getAccountsBooksExpesesService = async (userId: string, page: numbe
 
 
 //OBTENER TODOS LOS REGISTROS DE GASTOS PAGINADOS APROBADOS POR SEDE DEL USER
-export const getAccountsBooksExpesesByBranchService = async (idBranch: string, userId: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
+export const getAccountsBooksExpesesByBranchService = async (userId: string, idBranch: string, page: number, limit: number): Promise<IServiceLayerResponseAccountsBookPaginated> => {
     try {
-        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsBooksExpesesByBranchData(idBranch, userId, page, limit);
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsBooksExpesesByBranchData(userId, idBranch, page, limit);
         return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {

@@ -160,7 +160,7 @@ export const getAccountsBooksPaginatedData = async (userId: string, page: number
 
 
 //OBTENER TODOS LOS REGISTROS CONTABLES PAGINADOS APROBADOS Y NO APROBADOS POR SEDE DEL USER
-export const getAccountsBookByBranchData = async (idBranch: string, userId: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+export const getAccountsBookByBranchData = async (userId: string, idBranch: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
         const offset = (page - 1) * limit;
         const searchCriteria = {
@@ -222,7 +222,7 @@ export const getIncomesApprovedData = async (userId: string, page: number, limit
 
 
 //OBTENER TODOS LOS REGISTROS DE INGRESOS PAGINADOS APROBADOS POR SEDE DEL USER
-export const getIncomesApprovedByBranchData = async (idBranch: string, userId: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+export const getIncomesApprovedByBranchData = async (userId: string, idBranch: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
         const offset = (page - 1) * limit;
         const searchCriteria = {
@@ -285,7 +285,7 @@ export const getAccountsBooksExpesesData = async (userId: string, page: number, 
 
 
 //OBTENER TODOS LOS REGISTROS DE GASTOS PAGINADOS APROBADOS POR SEDE DEL USER
-export const getAccountsBooksExpesesByBranchData = async (idBranch: string, userId: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
+export const getAccountsBooksExpesesByBranchData = async (userId: string, idBranch: string, page: number, limit: number): Promise<{ registers: IAccountsBook[], totalRegisters: number, totalPages: number, currentPage: number }> => {
     try {
         const offset = (page - 1) * limit;
         const searchCriteria = {
