@@ -6,7 +6,6 @@ export const incomeFromCashSaleMerchandises = async (item: IItemsAccountsBook, b
     const merchandiseFound = await Merchandise.findOne({
         where: { id: item.id, nameItem: item.nameItem, branchId: branchId },
     });
-    console.log('merchandiseFound: ', merchandiseFound)
     if (!merchandiseFound) throw new ServiceError(400, "La mercancía no existe en esta sede");
     
     if (transactionType === 'Ingreso') {
