@@ -34,6 +34,7 @@ import { ServiceError } from "../../types/Responses/responses.types";
 //CREAR UN REGISTRO CONTABLE DEL USER
 export const postAccountsBookData = async (userId: string, body: IAccountsBook): Promise<IAccountsBook> => {
     try {
+        console.log('body: ', body)
         // Establecer transactionApproved basado en meanPayment
         if ((body.transactionType === 'Ingreso' || body.transactionType === 'Gasto') && body.meanPayment === 'Efectivo' && body.creditCash === 'Contado') {
             body.transactionApproved = true;
@@ -123,6 +124,7 @@ export const postAccountsBookData = async (userId: string, body: IAccountsBook):
         }
         return newTransaction;
     } catch (error) {
+        console.log('Error: ', error)
         throw error;
     }
 };

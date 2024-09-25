@@ -110,13 +110,28 @@ export const getAllTransactionsBranchData = async (idBranch: string, userId: str
 
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DEL USUARIO
-export const getAccountsReceivableData = async (userId: string): Promise<any> => {
+export const getAccountsReceivableData = async (userId: string, page: number, limit: number): Promise<any> => {
     try {
-        const transactions = await AccountsReceivable.findAll({ 
-            where: { userId: userId, stateAccount: 'Activo'},
-            order: [['transactionDate', 'DESC']],
+        const offset = (page - 1) * limit;
+        const searchCriteria = {
+            userId: userId,
+            stateAccount: 'Activo',
+        };
+        const totalRegistersFound = await AccountsReceivable.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsReceivable.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['transactionDate', 'DESC']]
         });
-        return transactions;
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     }
@@ -125,13 +140,30 @@ export const getAccountsReceivableData = async (userId: string): Promise<any> =>
 
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DE UNA SEDE DEL USUARIO
-export const getAccountsReceivableBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getAccountsReceivableBranchData = async (userId: string, idBranch: string, page: number, limit: number): Promise<any> => {
     try {
-        const transactions = await AccountsReceivable.findAll({ 
-            where: { branchId: idBranch, userId: userId, stateAccount: 'Activo' },
-            order: [['transactionDate', 'DESC']],
+        const offset = (page - 1) * limit;
+        const searchCriteria = {
+            userId: userId,
+            branchId: idBranch,
+            stateAccount: 'Activo',
+        };
+        const totalRegistersFound = await AccountsReceivable.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsReceivable.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['transactionDate', 'DESC']]
         });
-        return transactions;
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        console.log('formattedRegisters: ', formattedRegisters)
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     }
@@ -140,13 +172,28 @@ export const getAccountsReceivableBranchData = async (idBranch: string, userId: 
 
 
 //DATA PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DEL USUARIO
-export const getAccountsPayableData = async (userId: string): Promise<any> => {
+export const getAccountsPayableData = async (userId: string, page: number, limit: number): Promise<any> => {
     try {
-        const transactions = await AccountsPayable.findAll({ 
-            where: { userId: userId, stateAccount: 'Activo' },
-            order: [['transactionDate', 'DESC']],
+        const offset = (page - 1) * limit;
+        const searchCriteria = {
+            userId: userId,
+            stateAccount: 'Activo',
+        };
+        const totalRegistersFound = await AccountsPayable.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsPayable.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['transactionDate', 'DESC']]
         });
-        return transactions;
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     }

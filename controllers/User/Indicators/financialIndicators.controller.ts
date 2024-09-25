@@ -105,6 +105,8 @@ router.get("/expenses-per-period", authRequired,async (req: Request, res: Respon
     }
 }); //GET - http://localhost:3000/api/financial-indicator/expenses-per-period
 
+
+
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE GASTOS DE UNA SEDE DEL USUARIO
 router.get("/expenses-per-period/:idBranch", authRequired,async (req: Request, res: Response) => {
     try {
@@ -163,34 +165,49 @@ router.get("/all-transactions-per-period/:idBranch", authRequired,async (req: Re
 router.get("/accounts-receivable", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const serviceLayerResponse = await getAccountsReceivableService(userId);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else {            
-            res.status(500).json({ message: "No se pudieron obtener registros de cuentas por cobrar del usuario" });
-        }
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getAccountsReceivableService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financial-indicator/accounts-receivable
+}); //GET - http://localhost:3000/api/financial-indicator/accounts-receivable?page=1&limit=20
+
+
 
 //CONTROLLER PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DE UNA SEDE DEL USUARIO
 router.get("/accounts-receivable/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getAccountsReceivableBranchService(idBranch, userId);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else {            
-            res.status(500).json({ message: "No se pudieron obtener registros de cuentas por cobrar de esta sede" });
-        }
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getAccountsReceivableBranchService(
+            userId,
+            idBranch,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //GET - http://localhost:3000/api/financial-indicator/accounts-receivable/:idBranch
+}); //GET - http://localhost:3000/api/financial-indicator/accounts-receivable/:idBranch?page=1&limit=20
 
 
 
@@ -198,12 +215,18 @@ router.get("/accounts-receivable/:idBranch", authRequired, async (req: Request, 
 router.get("/accounts-payable", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
-        const serviceLayerResponse = await getAccountsPayableService(userId);
-        if (Array.isArray(serviceLayerResponse.result)) {
-            res.status(200).json(serviceLayerResponse.result);
-        } else {            
-            res.status(500).json({ message: "No se pudieron obtener registros de cuentas por pagar del usuario" });
-        }
+        const { page = 1, limit = 20 } = req.query;
+        const serviceLayerResponse = await getAccountsPayableService(
+            userId,
+            parseInt(page as string),
+            parseInt(limit as string),
+        );
+        res.status(serviceLayerResponse.code).json({ 
+            registers: serviceLayerResponse.result,
+            totalRegisters: serviceLayerResponse.totalRegisters, 
+            totalPages: serviceLayerResponse.totalPages, 
+            currentPage: serviceLayerResponse.currentPage,
+        });
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
