@@ -7,12 +7,12 @@ import Merchandise from '../../../schema/User/merchandise.schema';
 import AccountsReceivable from '../../../schema/User/accountsReceivable.schema';
 import AccountsPayable from '../../../schema/User/accountsPayable.schema';
 
-//DATA PARA OBTENER TODOS LOS REGISTROS DE IngresoS DEL USUARIO
+//OBTENER TODOS LOS REGISTROS DE VENTAS DEL PERIODO DEL USUARIO
 export const getSalesPerPeriodData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { transactionType: 'Ingreso', userId: userId },
-            order: [['transactionDate', 'DESC']], // Ordenar por fecha de forma descendente
+            order: [['transactionDate', 'DESC']],
         });
         return transactions;
     } catch (error) {
@@ -20,11 +20,13 @@ export const getSalesPerPeriodData = async (userId: string): Promise<any> => {
     }
 };
 
-//DATA PARA OBTENER TODOS LOS REGISTROS DE IngresoS DE UNA SEDE DEL USUARIO
-export const getSalesPerPeriodBranchData = async (idBranch: string, userId: string): Promise<any> => {
+
+
+//OBTENER TODOS LOS REGISTROS DE VENTAS DEL PERIODO DE UNA SEDE DEL USUARIO
+export const getSalesPerPeriodBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
-            where: { transactionType: 'Ingreso', branchId: idBranch, userId: userId },
+            where: { transactionType: 'Ingreso', userId: userId, branchId: idBranch },
             order: [['transactionDate', 'DESC']],
         });
         return transactions;
@@ -49,7 +51,7 @@ export const getPermissionSalesBranchData = async (idBranch: string): Promise<an
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTROS DE GASTOS DE UNA SEDE DEL USUARIO
+//OBTENER TODOS LOS REGISTROS DE GASTOS DEL PERIODO DEL USUARIO
 export const getExpensesPerPeriodData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
@@ -64,11 +66,11 @@ export const getExpensesPerPeriodData = async (userId: string): Promise<any> => 
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTROS DE GASTOS DE UNA SEDE DEL USUARIO
-export const getExpensesBranchData = async (idBranch: string, userId: string): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS DE GASTOS DEL PERIODO DE UNA SEDE DEL USUARIO
+export const getExpensesBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
-            where: { transactionType: 'Gasto', branchId: idBranch, userId: userId },
+            where: { transactionType: 'Gasto', userId: userId, branchId: idBranch },
             order: [['transactionDate', 'DESC']],
         });
         return transactions;
@@ -79,7 +81,7 @@ export const getExpensesBranchData = async (idBranch: string, userId: string): P
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTROS DE GASTOS E INGRESOS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO
+//OBTENER TODOS LOS REGISTROS DE GASTOS Y VENTAS DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO DEL PERIODO
 export const getAllTransactionsData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
@@ -94,11 +96,11 @@ export const getAllTransactionsData = async (userId: string): Promise<any> => {
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTROS DE GASTOS E INGRESOS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO
-export const getAllTransactionsBranchData = async (idBranch: string, userId: string): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS DE GASTOS Y VENTAS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO DEL PERIODO
+export const getAllTransactionsBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch},
             order: [['transactionDate', 'DESC']],
         });
         return transactions;
@@ -109,8 +111,23 @@ export const getAllTransactionsBranchData = async (idBranch: string, userId: str
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DEL USUARIO
-export const getAccountsReceivableData = async (userId: string, page: number, limit: number): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DEL USUARIO
+export const getAccountsReceivableData = async (userId: string): Promise<any> => {
+    try {
+        const transactions = await AccountsReceivable.findAll({ 
+            where: { userId: userId, stateAccount: 'Activo'},
+            order: [['transactionDate', 'DESC']],
+        });
+        return transactions;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR PAGINADOS DEL USUARIO
+export const getAccountsReceivablePaginatedData = async (userId: string, page: number, limit: number): Promise<any> => {
     try {
         const offset = (page - 1) * limit;
         const searchCriteria = {
@@ -139,8 +156,23 @@ export const getAccountsReceivableData = async (userId: string, page: number, li
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DE UNA SEDE DEL USUARIO
-export const getAccountsReceivableBranchData = async (userId: string, idBranch: string, page: number, limit: number): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DE UNA SEDE DEL USUARIO
+export const getAccountsReceivableBranchData = async (userId: string, idBranch: string): Promise<any> => {
+    try {
+        const transactions = await AccountsReceivable.findAll({ 
+            where: { userId: userId, branchId: idBranch, stateAccount: 'Activo' },
+            order: [['transactionDate', 'DESC']],
+        });
+        return transactions;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR PAGINADOS DE UNA SEDE DEL USUARIO
+export const getAccountsReceivableBranchPaginatedDate = async (userId: string, idBranch: string, page: number, limit: number): Promise<any> => {
     try {
         const offset = (page - 1) * limit;
         const searchCriteria = {
@@ -157,7 +189,6 @@ export const getAccountsReceivableBranchData = async (userId: string, idBranch: 
             order: [['transactionDate', 'DESC']]
         });
         const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
-        console.log('formattedRegisters: ', formattedRegisters)
         return {
             registers: formattedRegisters,
             totalRegisters: totalRegistersFound,
@@ -171,8 +202,23 @@ export const getAccountsReceivableBranchData = async (userId: string, idBranch: 
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DEL USUARIO
-export const getAccountsPayableData = async (userId: string, page: number, limit: number): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DEL USUARIO
+export const getAccountsPayableData = async (userId: string): Promise<any> => {
+    try {
+        const transactions = await AccountsPayable.findAll({ 
+            where: { userId: userId, stateAccount: 'Activo' },
+            order: [['transactionDate', 'DESC']],
+        });
+        return transactions;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR PAGINADOS DEL USUARIO
+export const getAccountsPayablePaginatedData = async (userId: string, page: number, limit: number): Promise<any> => {
     try {
         const offset = (page - 1) * limit;
         const searchCriteria = {
@@ -201,14 +247,45 @@ export const getAccountsPayableData = async (userId: string, page: number, limit
 
 
 
-//DATA PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DE UNA SEDE DEL USUARIO
-export const getAccountsPayableBranchData = async (idBranch: string, userId: string): Promise<any> => {
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DE UNA SEDE DEL USUARIO
+export const getAccountsPayableBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const transactions = await AccountsPayable.findAll({ 
-            where: { branchId: idBranch, userId: userId, stateAccount: 'Activo' },
+            where: { userId: userId, branchId: idBranch, stateAccount: 'Activo' },
             order: [['transactionDate', 'DESC']],
         });
         return transactions;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR PAGINADOS DE UNA SEDE DEL USUARIO
+export const getAccountsPayableBranchPaginatedData = async (userId: string, idBranch: string, page: number, limit: number): Promise<any> => {
+    try {
+        const offset = (page - 1) * limit;
+        const searchCriteria = {
+            userId: userId,
+            branchId: idBranch,
+            stateAccount: 'Activo',
+        };
+        const totalRegistersFound = await AccountsPayable.count({ where: searchCriteria });
+        const totalPages = Math.ceil(totalRegistersFound / limit);
+        const registersPaginated = await AccountsPayable.findAll({
+            where: searchCriteria,
+            offset: offset,
+            limit: limit,
+            order: [['transactionDate', 'DESC']]
+        });
+        const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        return {
+            registers: formattedRegisters,
+            totalRegisters: totalRegistersFound,
+            totalPages: totalPages,
+            currentPage: page,
+        };
     } catch (error) {
         throw error;
     }
@@ -231,10 +308,10 @@ export const getBestClientValueData = async (userId: string): Promise<any> => {
 
 
 //DATA PARA OBTENER LISTA DE MEJORES CLIENTES POR VALOR DE UNA SEDE DEL USUARIO
-export const getBestClientValueBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getBestClientValueBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch },
         });
         return transactions;
     } catch (error) {
@@ -259,10 +336,10 @@ export const getBestClientQuantityData = async (userId: string): Promise<any> =>
 
 
 //DATA PARA OBTENER LISTA DE CLIENTE FRECUENTE POR SEDE DEL USUARIO
-export const getBestClientQuantityBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getBestClientQuantityBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch },
         });
         return transactions;
     } catch (error) {
@@ -284,11 +361,13 @@ export const getAssetsInventoryData = async (userId: string): Promise<any> => {
     }
 };
 
+
+
 //DATA PARA OBTENER EL INVENTARIO DE MAQUINAS POR SEDE DEL USUARIO
-export const getAssetsInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getAssetsInventoryByBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const transactions = await Assets.findAll({ 
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch },
         });
         return transactions;
     } catch (error) {
@@ -310,11 +389,13 @@ export const getMerchandisesInventoryData = async (userId: string): Promise<any>
     }
 };
 
+
+
 //DATA PARA OBTENER EL INVENTARIO DE MERCANCIA POR SEDE DEL USUARIO
-export const getMerchandisesInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getMerchandisesInventoryByBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const transactions = await Merchandise.findAll({ 
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch },
         });
         return transactions;
     } catch (error) {
@@ -336,11 +417,13 @@ export const getProductsInventoryData = async (userId: string): Promise<any> => 
     }
 };
 
+
+
 //DATA PARA OBTENER EL INVENTARIO DE PRODUCTOS POR SEDE DEL USUARIO
-export const getProductsInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getProductsInventoryByBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const transactions = await Product.findAll({ 
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch },
         });
         return transactions;
     } catch (error) {
@@ -362,11 +445,13 @@ export const getRawMaterialsInventoryData = async (userId: string): Promise<any>
     }
 };
 
+
+
 //DATA PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS POR SEDE DEL USUARIO
-export const getRawMaterialsInventoryByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getRawMaterialsInventoryByBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const transactions = await RawMaterial.findAll({ 
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch },
         });
         return transactions;
     } catch (error) {

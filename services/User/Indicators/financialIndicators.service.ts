@@ -14,11 +14,15 @@ import {
 
     //CUENTAS POR COBRAR
     getAccountsReceivableData,
+    getAccountsReceivablePaginatedData,
     getAccountsReceivableBranchData,
+    getAccountsReceivableBranchPaginatedDate,
 
     //CUENTAS POR PAGAR
     getAccountsPayableData,
+    getAccountsPayablePaginatedData,
     getAccountsPayableBranchData,
+    getAccountsPayableBranchPaginatedData,
 
     //MEJOR CLIENTE POR VALOR
     getBestClientValueData,
@@ -51,7 +55,7 @@ import { IAccountsBook } from '../../../types/User/accountsBook.types';
 import { IAssets } from '../../../types/User/assets.types';
 import { IMerchandise } from '../../../types/User/merchandise.types';
 
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE VENTAS DEL USUARIO
+//OBTENER TODOS LOS REGISTROS DE VENTAS DEL PERIODO DEL USUARIO
 export const getSalesPerPeriodService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
         const transactionsFound = await getSalesPerPeriodData(userId);
@@ -76,12 +80,12 @@ export const getSalesPerPeriodService = async (userId: string): Promise<IService
 
 
 
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE VENTAS DE UNA SEDE DEL USUARIO
-export const getSalesPerPeriodBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+//OBTENER TODOS LOS REGISTROS DE VENTAS DEL PERIODO DE UNA SEDE DEL USUARIO
+export const getSalesPerPeriodBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para ver las transacciones de esta sede");
-        const transactionsFound = await getSalesPerPeriodBranchData(idBranch, userId);
+        const transactionsFound = await getSalesPerPeriodBranchData(userId, idBranch);
         if (!transactionsFound) throw new ServiceError(403, "No hay ventas del usuario en esta sede");
         const salesResult = transactionsFound.map((sales: IAccountsBook) => ({
             id: sales.id,
@@ -100,6 +104,8 @@ export const getSalesPerPeriodBranchService = async (idBranch: string, userId: s
         }
     }
 };
+
+
 
 //Chequea si las sedes pertenecen a User, por eso usamos el "for", para iterar cada sede
 const checkPermissionForBranch = async (userId: string, idBranch: string): Promise<boolean> => {
@@ -122,7 +128,7 @@ const checkPermissionForBranch = async (userId: string, idBranch: string): Promi
 
 
 
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE GASTOS DEL USUARIO
+//OBTENER TODOS LOS REGISTROS DE GASTOS DEL PERIODO DEL USUARIO
 export const getExpensesPerPeriodService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
         const transactionsFound = await getExpensesPerPeriodData(userId);
@@ -150,12 +156,12 @@ export const getExpensesPerPeriodService = async (userId: string): Promise<IServ
 
 
 
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE GASTOS DE UNA SEDE DEL USUARIO
-export const getExpensesPerPeriodBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+//OBTENER TODOS LOS REGISTROS DE GASTOS DEL PERIODO DE UNA SEDE DEL USUARIO
+export const getExpensesPerPeriodBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para ver las transacciones de esta sede");
-        const transactionsFound = await getExpensesBranchData(idBranch, userId);
+        const transactionsFound = await getExpensesBranchData(userId, idBranch);
         if (!transactionsFound) throw new ServiceError(403, "No hay gastos del usuario en esta sede");
         const salesResult = transactionsFound.map((expenses: IAccountsBook) => ({
             id: expenses.id,
@@ -180,7 +186,7 @@ export const getExpensesPerPeriodBranchService = async (idBranch: string, userId
 
 
 
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE GASTOS Y VENTAS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO
+//OBTENER TODOS LOS REGISTROS DE GASTOS Y VENTAS DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO DEL PERIODO
 export const getAllTransactionsService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
         const transactionsFound = await getAllTransactionsData(userId);
@@ -198,12 +204,12 @@ export const getAllTransactionsService = async (userId: string): Promise<IServic
 
 
 
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE GASTOS Y VENTAS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO
-export const getAllTransactionsBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+//OBTENER TODOS LOS REGISTROS DE GASTOS Y VENTAS DE UNA SEDE DEL USUARIO PARA CALCULAR LA UTILIDAD, TICKET PROMEDIO DEL PERIODO
+export const getAllTransactionsBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para ver las transacciones de esta sede");
-        const transactionsFound = await getAllTransactionsBranchData(idBranch, userId);
+        const transactionsFound = await getAllTransactionsBranchData(userId, idBranch);
         if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de AccountsBook para esta sede");
         return { code: 200, result: transactionsFound };
     } catch (error) {
@@ -218,10 +224,28 @@ export const getAllTransactionsBranchService = async (idBranch: string, userId: 
 
 
 
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DEL USUARIO
-export const getAccountsReceivableService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseFinancialIndicatorsPaginated> => {
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DEL USUARIO
+export const getAccountsReceivableService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
-        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsReceivableData(userId, page, limit);
+        const transactionsFound = await getAccountsReceivableData(userId);
+        if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de cuentas por cobrar en del usuario");
+        return { code: 200, result: transactionsFound };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else {
+            throw error;
+        }
+    }
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR PAGINADOS DEL USUARIO
+export const getAccountsReceivablePaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseFinancialIndicatorsPaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsReceivablePaginatedData(userId, page, limit);
         return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
@@ -235,13 +259,14 @@ export const getAccountsReceivableService = async (userId: string, page: number,
 
 
 
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DE UNA SEDE DEL USUARIO
-export const getAccountsReceivableBranchService = async (userId: string, idBranch: string, page: number, limit: number): Promise<IServiceLayerResponseFinancialIndicatorsPaginated> => {
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DE UNA SEDE DEL USUARIO
+export const getAccountsReceivableBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
         const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para ver las transacciones de esta sede");
-        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsReceivableBranchData(userId, idBranch, page, limit);
-        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
+        const transactionsFound = await getAccountsReceivableBranchData(userId, idBranch);
+        if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de cuentas por cobrar de esta sede");        
+        return { code: 200, result: transactionsFound };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -254,36 +279,87 @@ export const getAccountsReceivableBranchService = async (userId: string, idBranc
 
 
 
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DEL USUARIO
-export const getAccountsPayableService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseFinancialIndicatorsPaginated> => {
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR PAGINADOS DE UNA SEDE DEL USUARIO
+export const getAccountsReceivableBranchPaginatedService = async (userId: string, idBranch: string, page: number, limit: number): Promise<IServiceLayerResponseFinancialIndicatorsPaginated> => {
     try {
-        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsPayableData(userId, page, limit);
-        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
-
-
-        // const transactionsFound = await getAccountsPayableData(userId);
-        // if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de cuentas por pagar del usuario");
-        // return { code: 200, result: transactionsFound };
-    } catch (error) {
-        if (error instanceof Error) {
-            const customErrorMessage = error.message;
-            throw new ServiceError(500, customErrorMessage, error);
-        } else {
-            throw error;
-        }
-    }
-};
-
-
-
-//SERVICE PARA OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DE UNA SEDE DEL USUARIO
-export const getAccountsPayableBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
-    try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para ver las transacciones de esta sede");
-        const transactionsFound = await getAccountsPayableBranchData(idBranch, userId);
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsReceivableBranchPaginatedDate(userId, idBranch, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else {
+            throw error;
+        }
+    }
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DEL USUARIO
+export const getAccountsPayableService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+    try {
+        const transactionsFound = await getAccountsPayableData(userId);
+        if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de cuentas por pagar del usuario");
+        return { code: 200, result: transactionsFound };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else {
+            throw error;
+        }
+    }
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR PAGINADOS DEL USUARIO
+export const getAccountsPayablePaginatedService = async (userId: string, page: number, limit: number): Promise<IServiceLayerResponseFinancialIndicatorsPaginated> => {
+    try {
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsPayablePaginatedData(userId, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else {
+            throw error;
+        }
+    }
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DE UNA SEDE DEL USUARIO
+export const getAccountsPayableBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+    try {
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para ver las transacciones de esta sede");
+        const transactionsFound = await getAccountsPayableBranchData(userId, idBranch);
         if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de cuentas por pagar de esta sede");
         return { code: 200, result: transactionsFound };
+    } catch (error) {
+        if (error instanceof Error) {
+            const customErrorMessage = error.message;
+            throw new ServiceError(500, customErrorMessage, error);
+        } else {
+            throw error;
+        }
+    }
+};
+
+
+
+//OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR PAGINADOS DE UNA SEDE DEL USUARIO
+export const getAccountsPayableBranchPaginatedService = async (userId: string, idBranch: string, page: number, limit: number): Promise<IServiceLayerResponseFinancialIndicatorsPaginated> => {
+    try {
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
+        if (!hasPermission) throw new ServiceError(403, "No tienes permiso para ver las transacciones de esta sede");
+        const { registers, totalRegisters, totalPages, currentPage } = await getAccountsPayableBranchPaginatedData(userId, idBranch, page, limit);
+        return { code: 200, result: registers, totalRegisters, totalPages, currentPage };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
@@ -324,11 +400,11 @@ export const getBestClientValueService = async (userId: string): Promise<IServic
 
 
 //CONTROLLER PARA OBTENER LISTA DE MEJORES CLIENTES POR VALOR DE UNA SEDE DEL USUARIO
-export const getBestClientValueBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getBestClientValueBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los mejores clientes por valor de esta sede");
-        const transactions = await getBestClientValueBranchData(idBranch, userId);
+        const transactions = await getBestClientValueBranchData(userId, idBranch);
         const salesTransactions = transactions.filter((transaction: { transactionType: string; }) => transaction.transactionType === 'Ingreso');
         const clientCountArray = salesTransactions.map((transaction: any) => ({
             id: transaction.id,
@@ -377,11 +453,11 @@ export const getBestClientQuantityService = async (userId: string): Promise<ISer
 
 
 //SERVICE PARA OBTENER LISTA DE CLIENTE FRECUENTE POR SEDE DEL USUARIO
-export const getBestClientQuantityBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getBestClientQuantityBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No hay lista para cliente frecuente por sede del usuario");
-        const transactions = await getBestClientQuantityBranchData(idBranch, userId);
+        const transactions = await getBestClientQuantityBranchData(userId, idBranch);
         if (!transactions || transactions.length === 0) throw new ServiceError(404, "No hay lista para cliente frecuente de esta sede del usuario");
         const salesTransactions = transactions.filter((transaction: { transactionType: string; }) => transaction.transactionType === 'Ingreso');
         const clientCountArray = salesTransactions.map((transaction: any) => ({
@@ -423,9 +499,9 @@ export const getAverageTicketTicketService = async (userId: string): Promise<ISe
 
 
 //SERVICE PARA OBTENER TODOS LOS REGISTROS DE VENTAS DEL USUARIO PARA CALCULAR EL TICKET PROMEDIO POR SEDE
-export const getAverageTicketTicketBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getAverageTicketTicketBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
-        const transactionsFound = await getSalesPerPeriodBranchData(idBranch, userId);
+        const transactionsFound = await getSalesPerPeriodBranchData(userId, idBranch);
         if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de AccountsBook para AverageTicket por sede del usuario");
         const transactionsResult = transactionsFound.map((transaction: IAccountsBook) => ({
             id: transaction.id,
@@ -470,12 +546,14 @@ export const getAssetsInventoryService = async (userId: string): Promise<IServic
     }
 };
 
+
+
 //SERVICE PARA OBTENER EL INVENTARIO DE MAQUINAS POR SEDE DEL USUARIO
-export const getaAssetsInventoryBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getaAssetsInventoryBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener las máquinas por sede del usuario");
-        const rawMaterialsFound = await getAssetsInventoryByBranchData(idBranch, userId);
+        const rawMaterialsFound = await getAssetsInventoryByBranchData(userId, idBranch);
         if (!rawMaterialsFound) throw new ServiceError(403, "No hay maquinas en esta sede para calcular el inventario del usuario");
         const inventoryResult = rawMaterialsFound.map((asset: IAssets) => ({
             id: asset.id,
@@ -524,12 +602,14 @@ export const getMerchandisesInventoryService = async (userId: string): Promise<I
     }
 };
 
+
+
 //SERVICE PARA OBTENER EL INVENTARIO DE MERCANCIA POR SEDE DEL USUARIO
-export const getaMerchandisesInventoryBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getaMerchandisesInventoryBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener las mercancías por sede del usuario");
-        const merchandisesFound = await getMerchandisesInventoryByBranchData(idBranch, userId);
+        const merchandisesFound = await getMerchandisesInventoryByBranchData(userId, idBranch);
         if (!merchandisesFound) throw new ServiceError(403, "No hay mercancías en esta sede para calcular el inventario del usuario");
         const inventoryResult = merchandisesFound.map((merchandise: IMerchandise) => ({
             id: merchandise.id,
@@ -579,12 +659,14 @@ export const getProductsInventoryService = async (userId: string): Promise<IServ
     }
 };
 
+
+
 //SERVICE PARA OBTENER EL INVENTARIO DE PRODUCTOS POR SEDE DEL USUARIO
-export const getProductsInventoryBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getProductsInventoryBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los productos por sede del usuario");
-        const productsFound = await getProductsInventoryByBranchData(idBranch, userId);
+        const productsFound = await getProductsInventoryByBranchData(userId, idBranch);
         if (!productsFound) throw new ServiceError(403, "No hay productos en esta sede para calcular el inventario del usuario");
         const inventoryResult = productsFound.map((product: IProduct) => ({
             id: product.id,
@@ -638,12 +720,14 @@ export const getRawMaterialsInventoryService = async (userId: string): Promise<I
     }
 };
 
+
+
 //SERVICE PARA OBTENER EL INVENTARIO DE MATERIAS PRIMAS POR SEDE DEL USUARIO
-export const getRawMaterialsInventoryBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getRawMaterialsInventoryBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseFinancialIndicators> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener las materias primas por sede del usuario");
-        const rawMaterialsFound = await getRawMaterialsInventoryByBranchData(idBranch, userId);
+        const rawMaterialsFound = await getRawMaterialsInventoryByBranchData(userId, idBranch);
         if (!rawMaterialsFound) throw new ServiceError(403, "No hay materias primas en esta sede para calcular el inventario del usuario");
         const inventoryResult = rawMaterialsFound.map((rawMaterial: IRawMaterial) => ({
             id: rawMaterial.id,
