@@ -1,23 +1,34 @@
 import {  
-    postElectronicInvoicingData,
+    // postElectronicInvoicingData,
     getElectronicInvoicingData,
     getElectronicInvoicingByIdData,
 } from "../../data/User/electronicInvoicing.data";
+import axios from 'axios';
 import { IElectronicInvoicing } from "../../types/User/electronicInvoicing.types";
 import { ServiceError, IServiceLayerResponseElectronicInvoicing } from '../../types/Responses/responses.types';
 
 //CONTROLLER PARA CREAR LA FACTURA ELECTRÓNICA
-export const postElectronicInvoicingService = async (body: IElectronicInvoicing, userId: string): Promise<IServiceLayerResponseElectronicInvoicing> => {
+export const postElectronicInvoicingService = async (body: IElectronicInvoicing): Promise<any> => {
     try {
-        const dataLayerResponse = await postElectronicInvoicingData(body, userId);
+        const simbaEndpoint = process.env.SIMBA_ENDPOINT;
+        if (!simbaEndpoint) {
+            throw new ServiceError(500, "El endpoint de Simba no está definido");
+        }
+
+        const dataLayerResponse = await axios.post(simbaEndpoint, body, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
         if (!dataLayerResponse) throw new ServiceError(400, "No se puede registrar en el libro diario");
-        return { code: 201, result: dataLayerResponse };
+        // return { code: 201, result: dataLayerResponse };
     } catch (error) {
         if (error instanceof Error) {
             const customErrorMessage = error.message;
             throw new ServiceError(500, customErrorMessage, error);
         } else throw error;
-    };
+    }
 };
 
 
