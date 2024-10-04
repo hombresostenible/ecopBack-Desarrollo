@@ -11,9 +11,8 @@ const router = express.Router();
 //CONTROLLER PARA CREAR LA FACTURA ELECTRÓNICA
 router.post("/", authRequired, async (req: Request, res: Response) => {
     try {
-        const { userId } = req.user;
         const body = req.body;
-        const serviceLayerResponse = await postElectronicInvoicingService(body, userId);
+        const serviceLayerResponse = await postElectronicInvoicingService(body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;

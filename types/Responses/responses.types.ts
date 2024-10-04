@@ -246,6 +246,7 @@ export interface IServiceLayerResponseSustainability {
 //INTERFACE DE RESPUESTA GENERICA PARA ELECTRONICINVOICING
 export interface IServiceLayerResponseElectronicInvoicing {
     code: number,
+    // result?: IElectronicInvoicing,
     result?: IElectronicInvoicing | IElectronicInvoicing[],
     message?: string;
     errorMessage?: unknown,

@@ -1,3 +1,13 @@
+/*
+
+NIT: 901714110-5
+EMPRESA: ECOPCION SAS BIC
+TOKEN: 89E33A03-23F7-4B45-A3A1-FE7B6D773B1A
+http://fe2.simba.co:8080/TX_TransmisionDocElectronicoSOAP_A02?wsdl
+*/
+
+
+
 // PARAMETROS
 export interface IParametros {
     VersionDocElectronico: string;                          //"4.0" - No se modifica

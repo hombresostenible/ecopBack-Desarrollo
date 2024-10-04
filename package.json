@@ -28,6 +28,7 @@
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/nodemailer": "^6.4.13",
+    "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.4.0",
