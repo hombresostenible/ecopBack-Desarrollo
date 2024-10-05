@@ -164,14 +164,15 @@ export const putResetPasswordUserIsBlockedService = async (idUser: string, body:
     try {
         const user = await findUserBlockedData(idUser);
         if (!user) throw new ServiceError(404, "Usuario no encontrado");
-
         if (body?.unlockCode === user.unlockCode) {
             user.loginAttempts = 0;
             user.isBlocked = false;
+            user.passwordResetCode = '';
+            user.unlockCode = '';
             const password = await bcrypt.hash(body.resetPassword, 10);
             const [rowsUpdated] = await User.update(
                 { password, loginAttempts: 0, isBlocked: false },
-                { where: { userId: idUser } }
+                { where: { id: idUser } }
             );
             if (rowsUpdated === 0) throw new ServiceError(500, "No se logró desbloquear tu cuenta ni actualizar la contraseña");
             const mailOptions = mailResetPasswordUserBlocked(user.email, user.name);
