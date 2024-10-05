@@ -89,6 +89,7 @@ export const putResetPasswordService = async (idUser: string, passwordResetCode:
         const minutesDifference = timeDifference / (1000 * 60);
         if (passwordResetCode === user.passwordResetCode && minutesDifference <= 30) {
             user.loginAttempts = 0;
+            user.passwordResetCode = '';
             const password = await bcrypt.hash(body.password, 10);
             const [rowsUpdated] = await User.update({ password, loginAttempts: 0 }, { where: { id: user.id } });
             if (rowsUpdated === 0) throw new ServiceError(500, "No se pudo actualizar la contraseña");
