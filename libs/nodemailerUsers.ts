@@ -74,28 +74,22 @@ export async function sendEmailFiles (emailProvider: string, from: string, appli
 
     try {
         if (emailProvider === 'aol') {
-            const info: SentMessageInfo = await transporterAOL.sendMail(mailOptions);            
-            console.log('Correo electrónico desde proveedor AOL enviado exitosamente:', info.response);
+            const info: SentMessageInfo = await transporterAOL.sendMail(mailOptions);
         }
         if (emailProvider === 'gmail') {
-            const info: SentMessageInfo = await transporterGmail.sendMail(mailOptions);            
-            console.log('Correo electrónico desde proveedor Gmail enviado exitosamente', info.response);
+            const info: SentMessageInfo = await transporterGmail.sendMail(mailOptions);
         }
         if (emailProvider === 'hotmail' || emailProvider === 'outlook') {
-            const info: SentMessageInfo = await transporterOffice.sendMail(mailOptions);            
-            console.log('Correo electrónico desde proveedor Hotmail o Outlook enviado exitosamente', info.response);
+            const info: SentMessageInfo = await transporterOffice.sendMail(mailOptions);
         }
         if (emailProvider === 'yahoo') {
             const info: SentMessageInfo = await transporterYahoo.sendMail(mailOptions);
-            console.log('Correo electrónico desde proveedor Yahoo enviado exitosamente', info.response);
         }
         if (emailProvider === 'zoho') {
             const info: SentMessageInfo = await transporterZoho.sendMail(mailOptions);
-            console.log('Correo electrónico desde proveedor Zoho enviado exitosamente', info.response);
         }
         return true;
     } catch (error) {
-        console.error('Error al enviar el correo electrónico:', error);
         return false;
     }
 };

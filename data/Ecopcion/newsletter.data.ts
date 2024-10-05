@@ -18,12 +18,7 @@ export const postNewsletterData = async (body: INewsletter): Promise<any> => {
         // Si el registro ya existía y se actualizó, puedes realizar alguna acción aquí si lo deseas
         const mailOptions = mailSubscribeNewsletter(body.email); // Ajusta tus opciones de correo electrónico según tus necesidades
         transporterZoho.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error('Error al enviar el correo de confirmación:', error);
-                throw new ServiceError(500, "No se pudo enviar el correo de confirmación");
-            } else {
-                console.log(`Correo electrónico enviado: ${info.response}`);
-            }
+            if (error) throw new ServiceError(500, "No se pudo enviar el correo de confirmación");
         });
         return newsletter;
     } catch (error) {

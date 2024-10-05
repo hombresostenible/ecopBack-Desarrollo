@@ -41,9 +41,7 @@ export const postAppointmentData = async (body: IAppointment): Promise<any> => {
                     const mailOptions = mailDetailAppointmentUser(body.email, body.nameClient, date, body.hour, newAppointment.appointmentId);
                     try {
                         await transporterZoho.sendMail(mailOptions);
-                        console.log(`Correo electrónico enviado con éxito.`);
                     } catch (emailError) {
-                        console.error('Error al enviar el correo electrónico:', emailError);
                         await t.rollback();
                         throw new ServiceError(500, 'Error al enviar el correo electrónico');
                     }
@@ -120,9 +118,7 @@ export const putAppointmentData = async (appointmentId: string, body: IAppointme
                 const mailOptions = mailUpdateAppointmentUser(body.email, body.nameClient, body.date, body.hour);
                 try {
                     await transporterZoho.sendMail(mailOptions);
-                    console.log(`Correo electrónico enviado con éxito.`);
                 } catch (emailError) {
-                    console.error('Error al enviar el correo electrónico:', emailError);
                     await t.rollback();
                     throw new ServiceError(500, 'Error al enviar el correo electrónico');
                 }
@@ -135,9 +131,7 @@ export const putAppointmentData = async (appointmentId: string, body: IAppointme
                 const mailOptions = mailCancelAppointmentUser(body.email, body.nameClient, body.date, body.hour);
                 try {
                     await transporterZoho.sendMail(mailOptions);
-                    console.log(`Correo electrónico enviado con éxito.`);
                 } catch (emailError) {
-                    console.error('Error al enviar el correo electrónico:', emailError);
                     await t.rollback();
                     throw new ServiceError(500, 'Error al enviar el correo electrónico');
                 }

@@ -62,9 +62,7 @@ export const getSearchEmailUserPasswordChangeService = async (email: string): Pr
             const link = `${process.env.CORS_ALLOWED_ORIGIN}/reset-password/complete/${dataLayerResponse.id}/${token}`;
             const mailOptions = mailResetUserPassword(email, dataLayerResponse.name, link);
             transporterZoho.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    throw new ServiceError(500, "No se pudo enviar el correo de solicitud de cambio de contraseña");
-                } else console.log(`Correo electrónico enviado: ${info.response}`);
+                if (error) throw new ServiceError(500, "No se pudo enviar el correo de solicitud de cambio de contraseña");
             });
         }
         return { code: 200, result: dataLayerResponse };
@@ -82,8 +80,8 @@ export const getSearchEmailUserPasswordChangeService = async (email: string): Pr
 export const putResetPasswordService = async (idUser: string, passwordResetCode: string, body: IResetPassword ): Promise<IServiceLayerResponseUser> => {
     try {
         const user = await putResetPasswordData(idUser);
-        if (user?.isBlocked) return { code: 401, message: "Tu cuenta se encuentra bloqueada, por favor realiza el proceso de desbloqueo" };
         if (!user) throw new ServiceError(404, "Usuario no encontrado");
+        if (user?.isBlocked) return { code: 401, message: "Tu cuenta se encuentra bloqueada, por favor realiza el proceso de desbloqueo" };
         const currentDate = new Date();
         const codeDate = new Date(user.passwordResetCodeDate);
         // Calcula la diferencia en milisegundos
@@ -92,13 +90,11 @@ export const putResetPasswordService = async (idUser: string, passwordResetCode:
         if (passwordResetCode === user.passwordResetCode && minutesDifference <= 30) {
             user.loginAttempts = 0;
             const password = await bcrypt.hash(body.password, 10);
-            const [rowsUpdated] = await User.update({ password, loginAttempts: 0 }, { where: { userId: user.id } });
+            const [rowsUpdated] = await User.update({ password, loginAttempts: 0 }, { where: { id: user.id } });
             if (rowsUpdated === 0) throw new ServiceError(500, "No se pudo actualizar la contraseña");
             const mailOptions = mailConfirmResetUserPassword(user.email, user.name);
             transporterZoho.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    throw new ServiceError(500, "No se pudo enviar el correo de confirmación");
-                } else console.log(`Correo electrónico enviado: ${info.response}`);
+                if (error) throw new ServiceError(500, "No se pudo enviar el correo de confirmación");
             });
             return { code: 200, message: "Contraseña actualizada exitosamente", result: user };
         }
@@ -179,9 +175,7 @@ export const putResetPasswordUserIsBlockedService = async (idUser: string, body:
             if (rowsUpdated === 0) throw new ServiceError(500, "No se logró desbloquear tu cuenta ni actualizar la contraseña");
             const mailOptions = mailResetPasswordUserBlocked(user.email, user.name);
             transporterZoho.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    throw new ServiceError(500, "No se pudo enviar el correo de confirmación");
-                } else console.log(`Correo electrónico enviado: ${info.response}`);
+                if (error) throw new ServiceError(500, "No se pudo enviar el correo de confirmación");
             });
             return { code: 200, message: "Usuario desbloqueado y contraseña actualizada exitosamente", result: user };
         } else throw new ServiceError(401, "Código de desbloqueo incorrecto");

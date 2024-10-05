@@ -26,7 +26,6 @@ router.post("/", authRequired, validateSchema(accountsBookSchemaZod), async (req
     try {
         const { userId } = req.user;
         const body = req.body;
-        console.log('body: ', body)
         const serviceLayerResponse = await postAccountsBookService(userId, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
@@ -117,8 +116,6 @@ router.get("/incomes-branch/:idBranch", authRequired, async (req: Request, res: 
         const { userId } = req.user;
         const { idBranch } = req.params;
         const { page = 1, limit = 20 } = req.query;
-        console.log('userId: ', userId)
-        console.log('idBranch: ', idBranch)
         const serviceLayerResponse = await getIncomesApprovedByBranchService(
             userId,
             idBranch,
