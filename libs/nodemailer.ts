@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer';
 import { IContactUs } from "../types/Ecopcion/contactUs.types";
 import dotenv from 'dotenv';
-
 dotenv.config();
 
 const EMAIL = process.env.EMAIL;
@@ -551,7 +550,6 @@ export const mailResetPasswordUserBlocked = (email: string, name: string) => {
                         <p style="margin: 20px 40px; font-size: 16px;">¡Hola ${name},</p>
                         <p style="margin: 20px 40px; font-size: 16px;">Se ha desbloqueado tu cuenta y tu contraseña se ha recuperado.</p>
                         <br/>
-                        <p style="margin: 20px 40px; font-size: 16px;">Si no fuiste tú quien solicitó el cambio, tenemos algunos consejos para ayudarte a mantener segura tu cuenta. Para más información, consulta nuestro <a href='http://localhost:5173/resetPassword' ><b>sitio de Ayuda</b></a></p>
                         <p style="margin: 20px 40px; font-size: 16px;">Saludos.</p>
                         <p style="margin: 20px 40px; font-size: 16px;">El equipo de Ecopción</p>
                     </div>

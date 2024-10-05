@@ -18,7 +18,6 @@ import {
 } from '../../types/Responses/responses.types';
 import {
     transporterZoho,
-
     //USER
     mailResetPasswordUserBlocked,
     mailResetUserPassword,
@@ -60,7 +59,7 @@ export const getSearchEmailUserPasswordChangeService = async (email: string): Pr
         const dateNow = new Date();
         const dataLayerResponse = await getSearchEmailUserPasswordChangeData(email, token, dateNow);
         if (dataLayerResponse) {
-            const link = `http://localhost:5173/reset-password/complete/${dataLayerResponse.id}/${token}`;
+            const link = `${process.env.CORS_ALLOWED_ORIGIN}/reset-password/complete/${dataLayerResponse.id}/${token}`;
             const mailOptions = mailResetUserPassword(email, dataLayerResponse.name, link);
             transporterZoho.sendMail(mailOptions, (error, info) => {
                 if (error) {
