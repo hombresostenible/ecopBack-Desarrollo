@@ -63,9 +63,7 @@ export const loginService = async (email: string, password: string): Promise<ILo
                 const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${userFound.id}`;
                 const mailOptions = mailAccountUserBlocked(email, userName, userFound.unlockCode, link);
                 transporterZoho.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        throw new ServiceError(500, "No se pudo enviar el correo de confirmación");
-                    } else console.log(`Correo electrónico enviado: ${info.response}`);
+                    if (error) throw new ServiceError(500, "No se pudo enviar el correo de confirmación");
                 });
                 return { code: 401, message: "Has bloqueado tu cuenta" };
             }

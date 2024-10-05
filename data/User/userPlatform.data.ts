@@ -49,10 +49,8 @@ export const postUserPlatformData = async (body: IUserPlatform, userId: string):
                 const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${newUser.id}`;
                 const mailOptions = mailUserPlatformWelcome(body.email, body.name, newUser.unlockCode, link);
                 await transporterZoho.sendMail(mailOptions);
-                console.log('Correo electrónico de bienvenida enviado con éxito.');
                 return newUser;
             } catch (emailError) {
-                console.error('Error al enviar el correo electrónico de bienvenida:', emailError);
                 await t.rollback();
                 throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
             }
@@ -87,9 +85,7 @@ export const postManyUserPlatformData = async (userId: string, typeRole: string,
                 const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${newRegister.id}`;
                 const mailOptions = mailUserPlatformWelcome(userPlatform.email, userPlatform.name, newRegister.unlockCode, link);
                 await transporterZoho.sendMail(mailOptions);
-                console.log('Correo electrónico de bienvenida enviado con éxito.');
             } catch (emailError) {
-                console.error('Error al enviar el correo electrónico de bienvenida:', emailError);
                 await t.rollback();
                 throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
             }
@@ -105,9 +101,7 @@ export const postManyUserPlatformData = async (userId: string, typeRole: string,
                 const link = `${process.env.CORS_ALLOWED_ORIGIN}/unblocking-account/complete/${newRegister.id}`;
                 const mailOptions = mailUserPlatformWelcome(userPlatform.email, userPlatform.name, newRegister.unlockCode, link);
                 await transporterZoho.sendMail(mailOptions);
-                console.log('Correo electrónico de bienvenida enviado con éxito.');
             } catch (emailError) {
-                console.error('Error al enviar el correo electrónico de bienvenida:', emailError);
                 await t.rollback();
                 throw new ServiceError(500, 'Error al enviar el correo electrónico de bienvenida');
             }

@@ -63,7 +63,6 @@ export const postRegisterUserData = async (body: IUser): Promise<User | null> =>
             const mailOptions = mailUserWelcome(body.email, nameToUse || '');
             await newUser.save({ transaction: t });
             await transporterZoho.sendMail(mailOptions);
-            console.log('Correo electrónico de bienvenida enviado con éxito.');
             await t.commit();
             return newUser;
         } catch (emailError) {
@@ -95,12 +94,10 @@ export const getSearchEmailUserPasswordChangeData = async (email: string, token:
 
 
 //CAMBIO DE CONTRASEÑA USER O USUARIO DE PLATAFORMA
-export const putResetPasswordData = async (userId: string): Promise<User | null> => {
+export const putResetPasswordData = async (idUser: string): Promise<User | null> => {
     try {
-        const userFound = await User.findOne({ where: { id: userId } });
-        if (!userFound) {
-            throw new Error("usuario no encontrado")
-        } else if (userFound.isBlocked === true) throw new Error("Tu cuenta se encuentra bloqueada, por favor realiza el proceso de desbloqueo");
+        const userFound = await User.findOne({ where: { id: idUser } });
+        if (!userFound) throw new Error("usuario no encontrado");
         return userFound;
     } catch (error) {
         throw error;
@@ -126,7 +123,6 @@ export const putProfileUserData = async (userId: string, body: IUser): Promise<I
         const mailOptions = mailUpdateUserProfile(updatedUser.email, updatedUser.name);
         try {
             await transporterZoho.sendMail(mailOptions);
-            console.log('Correo electrónico de actualización de perfil enviado con éxito.');
             await t.commit();
             return updatedUser;
         } catch (emailError) {
