@@ -48,7 +48,7 @@ import {
     getRawMaterialsInventoryData,
     getRawMaterialsInventoryByBranchData,
 } from '../../../data/User/Indicators/financialIndicators.data';
-import { ServiceError, IServiceLayerResponseFinancialIndicators, IServiceLayerResponseFinancialIndicatorsPaginated } from '../../../types/Responses/responses.types';
+import { ServiceError, IServiceLayerResponseFinancialIndicators, IServiceLayerResponseFinancialIndicatorsPaginated, IServiceLayerResponseFinancialIndicatorsAccountsPayable, IServiceLayerResponseFinancialIndicatorsAccountsReceivable } from '../../../types/Responses/responses.types';
 import { IProduct } from '../../../types/User/products.types';
 import { IRawMaterial } from '../../../types/User/rawMaterial.types';
 import { IAccountsBook } from '../../../types/User/accountsBook.types';
@@ -225,7 +225,7 @@ export const getAllTransactionsBranchService = async (userId: string, idBranch: 
 
 
 //OBTENER TODOS LOS REGISTROS DE CUENTAS POR COBRAR DEL USUARIO
-export const getAccountsReceivableService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getAccountsReceivableService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicatorsAccountsReceivable> => {
     try {
         const transactionsFound = await getAccountsReceivableData(userId);
         if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de cuentas por cobrar en del usuario");
@@ -299,7 +299,7 @@ export const getAccountsReceivableBranchPaginatedService = async (userId: string
 
 
 //OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR DEL USUARIO
-export const getAccountsPayableService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicators> => {
+export const getAccountsPayableService = async (userId: string): Promise<IServiceLayerResponseFinancialIndicatorsAccountsPayable> => {
     try {
         const transactionsFound = await getAccountsPayableData(userId);
         if (!transactionsFound) throw new ServiceError(403, "No se pudieron obtener registros de cuentas por pagar del usuario");

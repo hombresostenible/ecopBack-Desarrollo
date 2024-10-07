@@ -220,6 +220,7 @@ export const getAccountsPayableData = async (userId: string): Promise<any> => {
 //OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR PAGINADOS DEL USUARIO
 export const getAccountsPayablePaginatedData = async (userId: string, page: number, limit: number): Promise<any> => {
     try {
+        console.log('userId: ', userId)
         const offset = (page - 1) * limit;
         const searchCriteria = {
             userId: userId,
@@ -234,6 +235,7 @@ export const getAccountsPayablePaginatedData = async (userId: string, page: numb
             order: [['transactionDate', 'DESC']]
         });
         const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
+        console.log('formattedRegisters: ', formattedRegisters)
         return {
             registers: formattedRegisters,
             totalRegisters: totalRegistersFound,
