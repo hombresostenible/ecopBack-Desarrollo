@@ -14,6 +14,8 @@ import { ICrmClients } from '../User/crmClients.types';
 import { ICrmSuppliers } from '../User/crmSupplier.types';
 import { ISalesFunnelCustomerAcq, ISalesFunnelCustomerRet, ISalesFunnelSalesDigital } from "../User/salesFunnel.types";
 import { IContactUs } from "../User/contactUs.types";
+import { IAccountsPayable } from '../User/accountsPayable.types';
+import { IAccountsReceivable } from '../User/accountsReceivable.types';
 
 //INTERFACE DE ERRORES
 export class ServiceError extends Error {
@@ -209,6 +211,20 @@ export interface IServiceLayerResponseAccountsBookPaginated {
 export interface IServiceLayerResponseFinancialIndicators {
     code: number,
     result?: IAccountsBook | IAccountsBook[],
+    message?: string;
+    errorMessage?: unknown,
+};
+//POR DEFINIR
+export interface IServiceLayerResponseFinancialIndicatorsAccountsPayable {
+    code: number,
+    result?: IAccountsPayable | IAccountsPayable[],
+    message?: string;
+    errorMessage?: unknown,
+};
+//POR DEFINIR
+export interface IServiceLayerResponseFinancialIndicatorsAccountsReceivable {
+    code: number,
+    result?: IAccountsReceivable | IAccountsReceivable[],
     message?: string;
     errorMessage?: unknown,
 };
