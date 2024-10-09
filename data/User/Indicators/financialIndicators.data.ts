@@ -12,7 +12,7 @@ export const getSalesPerPeriodData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { transactionType: 'Ingreso', userId: userId },
-            order: [['transactionDate', 'DESC']],
+            order: [['transactionDate', 'ASC']],
         });
         return transactions;
     } catch (error) {
@@ -27,7 +27,7 @@ export const getSalesPerPeriodBranchData = async (userId: string, idBranch: stri
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { transactionType: 'Ingreso', userId: userId, branchId: idBranch },
-            order: [['transactionDate', 'DESC']],
+            order: [['transactionDate', 'ASC']],
         });
         return transactions;
     } catch (error) {
@@ -56,7 +56,7 @@ export const getExpensesPerPeriodData = async (userId: string): Promise<any> => 
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { transactionType: 'Gasto', userId: userId },
-            order: [['transactionDate', 'DESC']],
+            order: [['transactionDate', 'ASC']],
         });
         return transactions;
     } catch (error) {
@@ -71,7 +71,7 @@ export const getExpensesBranchData = async (userId: string, idBranch: string): P
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { transactionType: 'Gasto', userId: userId, branchId: idBranch },
-            order: [['transactionDate', 'DESC']],
+            order: [['transactionDate', 'ASC']],
         });
         return transactions;
     } catch (error) {
@@ -86,7 +86,7 @@ export const getAllTransactionsData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { userId: userId },
-            order: [['transactionDate', 'DESC']],
+            order: [['transactionDate', 'ASC']],
         });
         return transactions;
     } catch (error) {
@@ -101,7 +101,7 @@ export const getAllTransactionsBranchData = async (userId: string, idBranch: str
     try {
         const transactions = await AccountsBook.findAll({ 
             where: { userId: userId, branchId: idBranch},
-            order: [['transactionDate', 'DESC']],
+            order: [['transactionDate', 'ASC']],
         });
         return transactions;
     } catch (error) {
@@ -116,7 +116,7 @@ export const getAccountsReceivableData = async (userId: string): Promise<any> =>
     try {
         const transactions = await AccountsReceivable.findAll({ 
             where: { userId: userId, stateAccount: 'Activo'},
-            order: [['transactionDate', 'DESC']],
+            order: [['transactionDate', 'ASC']],
         });
         return transactions;
     } catch (error) {
@@ -140,7 +140,7 @@ export const getAccountsReceivablePaginatedData = async (userId: string, page: n
             where: searchCriteria,
             offset: offset,
             limit: limit,
-            order: [['transactionDate', 'DESC']]
+            order: [['transactionDate', 'ASC']]
         });
         const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
         return {
@@ -161,7 +161,7 @@ export const getAccountsReceivableBranchData = async (userId: string, idBranch: 
     try {
         const transactions = await AccountsReceivable.findAll({ 
             where: { userId: userId, branchId: idBranch, stateAccount: 'Activo' },
-            order: [['transactionDate', 'DESC']],
+            order: [['transactionDate', 'ASC']],
         });
         return transactions;
     } catch (error) {
@@ -186,7 +186,7 @@ export const getAccountsReceivableBranchPaginatedDate = async (userId: string, i
             where: searchCriteria,
             offset: offset,
             limit: limit,
-            order: [['transactionDate', 'DESC']]
+            order: [['transactionDate', 'ASC']]
         });
         const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
         return {
@@ -207,7 +207,7 @@ export const getAccountsPayableData = async (userId: string): Promise<any> => {
     try {
         const transactions = await AccountsPayable.findAll({ 
             where: { userId: userId, stateAccount: 'Activo' },
-            order: [['transactionDate', 'DESC']],
+            order: [['transactionDate', 'ASC']],
         });
         return transactions;
     } catch (error) {
@@ -220,7 +220,6 @@ export const getAccountsPayableData = async (userId: string): Promise<any> => {
 //OBTENER TODOS LOS REGISTROS DE CUENTAS POR PAGAR PAGINADOS DEL USUARIO
 export const getAccountsPayablePaginatedData = async (userId: string, page: number, limit: number): Promise<any> => {
     try {
-        console.log('userId: ', userId)
         const offset = (page - 1) * limit;
         const searchCriteria = {
             userId: userId,
@@ -232,10 +231,9 @@ export const getAccountsPayablePaginatedData = async (userId: string, page: numb
             where: searchCriteria,
             offset: offset,
             limit: limit,
-            order: [['transactionDate', 'DESC']]
+            order: [['transactionDate', 'DESASCC']]
         });
         const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
-        console.log('formattedRegisters: ', formattedRegisters)
         return {
             registers: formattedRegisters,
             totalRegisters: totalRegistersFound,
@@ -254,7 +252,7 @@ export const getAccountsPayableBranchData = async (userId: string, idBranch: str
     try {
         const transactions = await AccountsPayable.findAll({ 
             where: { userId: userId, branchId: idBranch, stateAccount: 'Activo' },
-            order: [['transactionDate', 'DESC']],
+            order: [['transactionDate', 'ASC']],
         });
         return transactions;
     } catch (error) {
@@ -279,7 +277,7 @@ export const getAccountsPayableBranchPaginatedData = async (userId: string, idBr
             where: searchCriteria,
             offset: offset,
             limit: limit,
-            order: [['transactionDate', 'DESC']]
+            order: [['transactionDate', 'ASC']]
         });
         const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
         return {

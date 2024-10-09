@@ -14,6 +14,7 @@ import {
     IElectronicInvoicing,
 } from '../../types/User/electronicInvoicing.types';
 
+//Solo con ingresos
 class ElectronicInvoicing extends Model<IElectronicInvoicing> {
     public id!: string;
     public Parametros!: IParametros;
