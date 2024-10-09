@@ -112,11 +112,9 @@ export const postAccountsBookData = async (userId: string, body: IAccountsBook):
                 registrationDate: body.registrationDate,
                 transactionDate: body.transactionDate,
                 otherExpenses: body.otherExpenses,
-                // periodPayService: body.periodPayService,
                 totalValue: body.totalValue,
                 accountsBookId: newTransaction.id,
                 userId: userId
-                // ... otras propiedades que se necesiten
             };
             const newSustainabilityTransaction = new Sustainability(sustainabilityData);
             await newSustainabilityTransaction.save();
@@ -143,7 +141,7 @@ export const getAccountsBooksPaginatedData = async (userId: string, page: number
             where: searchCriteria,
             offset: offset,
             limit: limit,
-            order: [['createdAt', 'DESC']] // Ordenar por una columna, puedes cambiar según tus necesidades
+            order: [['createdAt', 'DESC']]
         });
         const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
         return {
@@ -174,7 +172,7 @@ export const getAccountsBookByBranchData = async (userId: string, idBranch: stri
             where: searchCriteria,
             offset: offset,
             limit: limit,
-            order: [['transactionDate', 'DESC']] // Ordenar por una columna, puedes cambiar según tus necesidades
+            order: [['transactionDate', 'DESC']]
         });
         const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
         return {
@@ -205,7 +203,7 @@ export const getIncomesApprovedData = async (userId: string, page: number, limit
             where: searchCriteria,
             offset: offset,
             limit: limit,
-            order: [['transactionDate', 'DESC']] // Ordenar por una columna, puedes cambiar según tus necesidades
+            order: [['transactionDate', 'DESC']]
         });
         const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
         return {
@@ -237,7 +235,7 @@ export const getIncomesApprovedByBranchData = async (userId: string, idBranch: s
             where: searchCriteria,
             offset: offset,
             limit: limit,
-            order: [['transactionDate', 'DESC']] // Ordenar por una columna, puedes cambiar según tus necesidades
+            order: [['transactionDate', 'DESC']]
         });
         const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
         return {
