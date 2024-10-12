@@ -2,10 +2,10 @@
   "name": "api",
   "version": "1.0.0",
   "description": "npm init -y en la carpeta api --> Crea el archivo package.json\r Crear el archivo index.ts dentro de \"src\"           --> Inicio del proyecto\r console.log('Server on PORT 3000');                 --> Console.log para probar\r npm install typescript --save-dev                   --> Crea el compilador de TypeScript\r npx tsc --init                                      --> Crea el archivo tsconfig.json\r Configurar el archivo tsconfig.json                 --> Se configura el archivo tsconfig.json\r Crear la carpeta \"src\"                              --> Inicio del proyecto\r Cerramos todas las terminales                       --> Cerramos todas las terminales de VS Code\r npx tsc                                             --> Compila y genera la carpeta \"dist\" con los archivos que compilan TypeScript a JavaScript\r node dist index.js                                  --> Probamos el funcionamiento de la carpeta \"dist\" ejecutando ese comando en la terminal para visualizar el console.log('Carlos');\r npm i tslint --save-dev                             --> Añadimos reglas adicionales a TypeScript según los estándares de desarrollo\r ./node_modules/.bin/tslint --init                   --> Ejecutamos este comando en la terminal para crear e inicilializar el archivo tslint.json\r Configuramos el archivo tslint.json --> Se configura para que no arroje errores la consola",
-  "main": "dist/index.js",
+  "main": "dist/index.js", 
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon dist/index.js",
+    "dev": "nodemon --exec ts-node index.ts", 
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -23,7 +23,8 @@
     "@types/xml2js": "^0.4.14",
     "nodemon": "^3.0.1",
     "tslint": "^6.1.3",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.0",

@@ -10,7 +10,7 @@ import {
     patchApplicationPasswordService,
 } from "../../services/User/user.services";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
-import { validateSchema } from '../../middlewares/Schema/Schema.middleware.js';
+import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
 import { registerUserSchema } from '../../validations/User/user.zod';
 import { sendEmailFiles } from "../../libs/nodemailerUsers";
 import { ServiceError } from '../../types/Responses/responses.types';

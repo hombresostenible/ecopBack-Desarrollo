@@ -78,3 +78,7 @@ npm i --save-dev @types/morgan                      --> Se instala la declaraci√
 npm i --save-dev @types/cors                        --> Se instala la declaraci√≥n de tipos para cors para que quede escrito en TypeScript
 npm i --save sequelize
 npm install mysql2 --save
+
+
+UNA VEZ MODIFICADA LA BASE DE DATOS, DEBE MIGRAR LAS TABLAS
+npx sequelize-cli db:migrate
