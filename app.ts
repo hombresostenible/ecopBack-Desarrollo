@@ -1,4 +1,4 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -7,20 +7,26 @@ import morgan from 'morgan';
 import xml2js from 'xml2js';
 import db from './db';
 import { routerApi } from './controllers/routes';
+import websocketControllers  from './controllers/POS/websocket.controller';
+import expressWs from 'express-ws';
 
 class Server {
-    private app: Application;
+    private app: expressWs.Application; 
     private port: string;
-    static listen: any;
 
     constructor() {
-        this.app = express();
+        const expressApp = express();
         this.port = process.env.PORT || '8000';
 
-        this.dbConnection();
+        // Inicializamos express-ws y asignamos la aplicación extendida
+        const wsInstance = expressWs(expressApp);
+        this.app = wsInstance.app;
+
         this.middlewares();
         this.routes();
-    };
+        this.dbConnection();
+    }
+
 
     private async dbConnection() {
         try {
@@ -36,6 +42,7 @@ class Server {
     };
 
     private routes() {
+        websocketControllers(this.app);
         routerApi(this.app);
     };
 

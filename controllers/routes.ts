@@ -20,6 +20,8 @@ import financialIndicatorsControllers from "./User/Indicators/financialIndicator
 import sustainabilityIndicatorsControllers from "./User/Indicators/sustainabilityIndicators.controller";
 import marketingIndicatorsControllers from "./User/Indicators/marketingIndicators.controller";
 import quationsController from "./User/quotations.controller"
+import receiveDeviceController  from './POS/device.controller';
+
 
 function routerApi(app: any) {
     app.use("/api/auth", authControllers);
@@ -44,6 +46,10 @@ function routerApi(app: any) {
     app.use("/api/sustainability-indicator", sustainabilityIndicatorsControllers);
     app.use("/api/marketing-indicator", marketingIndicatorsControllers);
     app.use("/api/quotation", quationsController);
+
+    app.use("/api/device", receiveDeviceController);
+  
+ 
 };
 
 export { routerApi };
