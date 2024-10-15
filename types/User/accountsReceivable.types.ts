@@ -6,6 +6,7 @@ export interface IAccountsReceivable {
     stateAccount?: 'Activo' | 'Pagado';    
     creditWithInterest?: 'Si' | 'No';
     creditInterestRate?: string;
+    numberAccountsReceivable?: string;
     initialValue?: number;
     initialNumberOfPayments?: number;
     paymentValue?: number;

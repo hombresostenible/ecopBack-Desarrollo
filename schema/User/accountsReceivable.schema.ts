@@ -17,6 +17,7 @@ class AccountsReceivable extends Model {
     public stateAccount!: 'Activo' | 'Pagado';
     public creditWithInterest!: 'Si' | 'No';
     public creditInterestRate!: string;
+    public numberAccountsReceivable!: string;
     public initialValue!: number;
     public initialNumberOfPayments!: number;
     public paymentValue!: number;
@@ -72,6 +73,10 @@ AccountsReceivable.init(
             },
         },
         creditInterestRate: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        numberAccountsReceivable: {
             type: DataTypes.STRING,
             allowNull: true,
         },

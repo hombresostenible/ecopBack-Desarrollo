@@ -34,17 +34,19 @@ import { ServiceError } from "../../types/Responses/responses.types";
 //CREAR UN REGISTRO CONTABLE DEL USER
 export const postAccountsBookData = async (userId: string, body: IAccountsBook): Promise<IAccountsBook> => {
     try {
+        console.log('body: ', body)
+        console.log('userId: ', userId)
         // Establecer transactionApproved basado en meanPayment
         if ((body.transactionType === 'Ingreso' || body.transactionType === 'Gasto') && body.meanPayment === 'Efectivo' && body.creditCash === 'Contado') {
             body.transactionApproved = true;
         } else body.transactionApproved = false;
 
         // Guardar la transacción en AccountsBook
-        const newTransaction = new AccountsBook({
+        const newAccountsBook = new AccountsBook({
             ...body,
             userId: userId,
         });
-        await newTransaction.save();
+        await newAccountsBook.save();
         //^ Actualizar inventario según los artículos vendidos
         if (body.itemsSold) {
             for (const item of body.itemsSold) {
@@ -90,16 +92,16 @@ export const postAccountsBookData = async (userId: string, body: IAccountsBook):
         }
 
         //^ Crea una CXC en AccountsReceivable por ventas a crédito
-        if (body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Credito") await incomeCXCAccountsReceivable(body, newTransaction.id, userId);
+        if (body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Credito") await incomeCXCAccountsReceivable(body, newAccountsBook.id, userId);
 
         //^ Crea el pago a una CXC
         if (body.pay === 'Si' && body.transactionType === 'Ingreso' && body.creditCash === "Contado") await paymentsCXCAccountsReceivable(body, userId);
         
         //^ Crea una CXP en AccountsPayable por 'Otros ingresos' (Préstamos)
-        if (body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Contado") await otherIncomesCXPAccountsPayable(body, newTransaction.id, userId);
+        if (body.pay === 'No' && body.transactionType === 'Ingreso' && body.creditCash === "Contado") await otherIncomesCXPAccountsPayable(body, newAccountsBook.id, userId);
 
         //^ Crea una CXP por compras de artículos o pago de otro tipo de gasto (pagos a servicios) a crédito
-        if (body.pay === 'No' && body.transactionType === 'Gasto' && body.creditCash === "Credito") await expensesCXPAccountsPayable(body, newTransaction.id, userId);
+        if (body.pay === 'No' && body.transactionType === 'Gasto' && body.creditCash === "Credito") await expensesCXPAccountsPayable(body, newAccountsBook.id, userId);
         
         //^ Crea el pago a la CXP
         if (body.pay === 'Si' && body.transactionType === 'Gasto' && body.creditCash === "Contado") await paymentsCXPAccountsPayable(body, userId);
@@ -113,14 +115,15 @@ export const postAccountsBookData = async (userId: string, body: IAccountsBook):
                 transactionDate: body.transactionDate,
                 otherExpenses: body.otherExpenses,
                 totalValue: body.totalValue,
-                accountsBookId: newTransaction.id,
+                accountsBookId: newAccountsBook.id,
                 userId: userId
             };
             const newSustainabilityTransaction = new Sustainability(sustainabilityData);
             await newSustainabilityTransaction.save();
         }
-        return newTransaction;
+        return newAccountsBook;
     } catch (error) {
+        console.log('Error: ', error)
         throw error;
     }
 };
@@ -432,6 +435,7 @@ export const deleteAccountsBookData = async (userId: string, idAccountsBook: str
     try {
         // ENCONTRAMOS LA TRANSACCION
         const transactionFound = await AccountsBook.findOne({ where: { userId: userId, id: idAccountsBook }, transaction });
+        console.log('transactionFound: ', transactionFound)
         if (!transactionFound) throw new Error('Registro del libro diario no encontrado');       
         // PROCEDEMOS A REVERTIR LOS REGISTROS DE ASSETS, MERCHANDISES, PRODUCTS, RAWMATERIALS Y SERVICES, PARA REAJUSTAR INVENTARIOS
         const items = transactionFound.transactionType === 'Gasto' ? transactionFound.itemsBuy : transactionFound.itemsSold;
@@ -439,22 +443,27 @@ export const deleteAccountsBookData = async (userId: string, idAccountsBook: str
             for (const item of items) {
                 switch (item.type) {
                     case 'Asset': {
+                        console.log('Asset')
                         await processAsset(transactionFound, item, transaction);
                         break;
                     }
                     case 'Merchandise': {
+                        console.log('Merchandise')
                         await processMerchandise(transactionFound, item, transaction);
                         break;
                     }
                     case 'Product': {
+                        console.log('Product')
                         await processProduct(transactionFound, item, transaction);
                         break;
                     }
                     case 'RawMaterial': {
+                        console.log('RawMaterial')
                         await processRawMaterial(transactionFound, item, transaction);
                         break;
                     }
                     case 'Service': {
+                        console.log('Service')
                         await processService(transactionFound, item, transaction);
                         break;
                     }
@@ -463,6 +472,7 @@ export const deleteAccountsBookData = async (userId: string, idAccountsBook: str
                 }
             }
         }
+        //HAY QUE RELACIONAR LA ELIMINACION DE LAS CXC Y CXP
         await deleteRelatedRecords(idAccountsBook, transaction);
         await AccountsBook.destroy({ where: { id: idAccountsBook }, transaction });
         await transaction.commit();

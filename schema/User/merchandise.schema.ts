@@ -40,6 +40,8 @@ class Merchandise extends Model {
     public withholdingTax!: 'No aplica' | 0.1 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 6 | 7 | 8 | 10 | 11 | 15 | 20 | 33 | 35;
     public withholdingIVA!: 'No aplica' | 15 | 100;
     public withholdingICA!: 'No aplica' | 2 | 3.4 | 4.14 | 5 | 6.9 | 8 | 9.66 | 11.04 | 13.8;
+    public sugarDrinksTax!: number;
+    public ultraprocessedGroceriesTax!: number;  
 
     //RELACION CON OTRAS TABLAS
     public branchId!: string;
@@ -254,6 +256,14 @@ Merchandise.init(
               isIn: [[ 'No aplica', 2, 3.4, 4.14, 5, 6.9, 8, 9.66, 11.04, 13.8 ]],
             },
             defaultValue: 'No aplica',
+        },
+        sugarDrinksTax: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        ultraprocessedGroceriesTax: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
         },
 
         //RELACION CON OTRAS TABLAS
