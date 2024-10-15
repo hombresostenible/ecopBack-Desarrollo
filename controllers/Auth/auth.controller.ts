@@ -15,12 +15,19 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
     try {
         const { email, password } = req.body;
         const user = await loginService(email, password);
+        
         if (!user) {
             res.status(400).json({ message: "Usuario no encontrado" });
             return;
         }
         if (user.result) {
             const { serResult, token } = user.result;
+ 
+
+           (req.session as any).userId = serResult.id;
+           (req.session as any).token = token;
+
+
             res.cookie("token", token, {
                 httpOnly: false,
                 secure: process.env.NODE_ENV === "production",

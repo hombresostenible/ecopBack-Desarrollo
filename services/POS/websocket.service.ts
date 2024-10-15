@@ -1,4 +1,5 @@
-import { WebSocket } from 'ws';
+
+import WebSocket from 'ws';
 
 interface Client extends WebSocket {
     identifier?: string;
@@ -27,14 +28,12 @@ export function handleClientDisconnection(ws: Client) {
 
 export function sendDataToClients(identifier: string, data: any) {
     const clients = clientsById.get(identifier);
-  
+    
     if (clients) {
         clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(JSON.stringify({ event: 'deviceData', data }));
             }
         });
-    } else {
-        //console.log(`No hay clientes conectados para ID ${identifier}`);
     }
 }

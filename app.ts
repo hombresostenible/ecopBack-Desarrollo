@@ -9,6 +9,8 @@ import db from './db';
 import { routerApi } from './controllers/routes';
 import websocketControllers  from './controllers/POS/websocket.controller';
 import expressWs from 'express-ws';
+import session from 'express-session';
+import './helpers/POS/serialListener';
 
 class Server {
     private app: expressWs.Application; 
@@ -52,6 +54,18 @@ class Server {
             console.log('Cookies recibidas:', req.headers.cookie);
             next();
         });
+
+          // Configurar el middleware de sesión
+        this.app.use(session({
+            secret: `${process.env.TOKEN_SECRET}`,  
+            resave: false, 
+            saveUninitialized: false,  
+            cookie: {
+                secure: process.env.NODE_ENV === 'production',  // Solo habilita cookies seguras en producción
+                httpOnly: true,  // Hace que la cookie sea inaccesible a JavaScript en el cliente
+                maxAge: 1000 * 60 * 60 * 24, // 1 dia
+            }
+              }));
 
         // Se define así para permitir más de un dominio autorizado para enviar y recibir las respuestas del servidor
         this.app.use(cors({
