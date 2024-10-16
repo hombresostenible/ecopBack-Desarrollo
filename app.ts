@@ -27,7 +27,7 @@ class Server {
             await db.authenticate();
             console.log('Base de datos conectada');
             await db.sync();
-            // await db.sync({ force: true }); // En producción, puedes usar `await db.sync();` en lugar de `{ force: true }`,Esto elimina y recrea las tablas en cada reinicio
+            // await db.sync({ force: true });
             console.log('Modelos sincronizados con la base de datos');
         } catch (error) {
             console.error('Error al conectar la base de datos:', error);
@@ -40,15 +40,26 @@ class Server {
     };
 
     private middlewares() {
-        // Middleware para verificar las cookies antes de CORS
+        this.app.set('trust proxy', true);
         this.app.use((req: Request, res: Response, next: NextFunction) => {
-            console.log('Cookies recibidas:', req.headers.cookie);
+            req.headers['x-forwarded-for'] || req.connection.remoteAddress;
             next();
         });
 
-        // Se define así para permitir más de un dominio autorizado para enviar y recibir las respuestas del servidor
+        const allowedOrigins = [
+            process.env.CORS_ALLOWED_ORIGIN,
+            process.env.CORS_ALLOWED_ORIGIN2
+        ];
+
         this.app.use(cors({
-            origin: process.env.CORS_ALLOWED_ORIGIN,
+            origin: (origin, callback) => {
+                console.log('Solicitud desde el origen:', origin);
+                if (origin && allowedOrigins.includes(origin)) {
+                    callback(null, true);
+                } else {
+                    callback(new Error('Not allowed by CORS'));
+                }
+            },
             credentials: true,
             allowedHeaders: ['Content-Type', 'Authorization'],
         }));
@@ -56,12 +67,8 @@ class Server {
         this.app.use(express.json());
         this.app.use(morgan('dev'));
         this.app.use(cookieParser());
-
-        // Configurar bodyParser para aumentar el límite de carga
-        this.app.use(bodyParser.json({ limit: '50mb' }));
-        this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-
-        // Configurar express-fileupload
+        this.app.use(bodyParser.json({ limit: "50mb" }));
+        this.app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
         this.app.use(fileUpload());
 
         // Middleware para procesar solicitudes XML
@@ -85,7 +92,7 @@ class Server {
                 next();
             }
         });
-    };
+    }
 
     public listen() {
         this.app.listen(this.port, () => {
@@ -95,7 +102,7 @@ class Server {
             process.exit(1);
         });
     };
-};
+}
 
 export default Server;
 
