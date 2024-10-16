@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import morgan from 'morgan';
+import http from "http";
 import xml2js from 'xml2js';
 import db from './db';
 import { routerApi } from './controllers/routes';
@@ -11,11 +12,13 @@ import { routerApi } from './controllers/routes';
 class Server {
     private app: Application;
     private port: string;
+    private server: http.Server;
     static listen: any;
 
     constructor() {
         this.app = express();
         this.port = process.env.PORT || '8000';
+        this.server = http.createServer(this.app);
 
         this.dbConnection();
         this.middlewares();
@@ -40,12 +43,12 @@ class Server {
     };
 
     private middlewares() {
-        this.app.set('trust proxy', true);
         this.app.use((req: Request, res: Response, next: NextFunction) => {
             req.headers['x-forwarded-for'] || req.connection.remoteAddress;
             next();
         });
-
+        
+        this.app.set('trust proxy', true);
         const allowedOrigins = [
             process.env.CORS_ALLOWED_ORIGIN,
             process.env.CORS_ALLOWED_ORIGIN2
@@ -95,13 +98,13 @@ class Server {
     }
 
     public listen() {
-        this.app.listen(this.port, () => {
-            console.log('SERVER ON PORT ' + this.port);
-        }).on('error', (error: NodeJS.ErrnoException) => {
-            console.error('Error al iniciar el servidor:', error);
+        this.server.listen(this.port, () => {
+            console.log(`Servidor escuchando en el puerto ${this.port}`);
+        }).on("Error", (error: NodeJS.ErrnoException) => {
+            console.error("Error al iniciar el servidor: ", error);
             process.exit(1);
         });
-    };
+    }
 }
 
 export default Server;
