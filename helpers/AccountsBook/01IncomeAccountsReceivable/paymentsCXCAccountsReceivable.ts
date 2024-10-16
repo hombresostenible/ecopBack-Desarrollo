@@ -6,6 +6,7 @@ export const paymentsCXCAccountsReceivable = async (body: IAccountsBook, userId:
     if (body.creditDescription) {
         //Busca la CXC
         const accountReceivableFound = await AccountsReceivable.findOne({ where: { creditDescription: body.creditDescription, transactionCounterpartId: body.transactionCounterpartId, userId: userId, stateAccount: 'Activo' } });
+        console.log('accountReceivableFound: ', accountReceivableFound)
         //Si encuentra la CXC, debo de aplicar el pago
         if (accountReceivableFound) {
             //Primero intentamos aplicar el pago total, sino, aplicamos un abono
