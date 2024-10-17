@@ -4,10 +4,14 @@ import Branch from '../../schema/User/branch.schema';
 import User from '../../schema/User/user.schema';
 import { IBranch } from "../../types/User/branch.types";
 import { ServiceError } from "../../types/Responses/responses.types";
+import { CapitalizeNameItems } from './../../helpers/CapitalizeNameItems/CapitalizeNameItems';
 
 //DATA PARA CREAR UNA SEDE PARA USER
 export const postBranchesData = async (body: IBranch, userId: string): Promise<IBranch> => {
     try {
+        body.nameBranch = CapitalizeNameItems(body.nameBranch);
+        body.nameManagerBranch = CapitalizeNameItems(body.nameManagerBranch);
+        body.lastNameManagerBranch = CapitalizeNameItems(body.lastNameManagerBranch);
         const existingBranchWithSameNameAndCode = await Branch.findOne({
             where: { userId: userId, nameBranch: body.nameBranch },
         });
@@ -33,6 +37,9 @@ export const postBranchesData = async (body: IBranch, userId: string): Promise<I
 export const postManyBranchesData = async (body: IBranch, userId: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        body.nameBranch = CapitalizeNameItems(body.nameBranch);
+        body.nameManagerBranch = CapitalizeNameItems(body.nameManagerBranch);
+        body.lastNameManagerBranch = CapitalizeNameItems(body.lastNameManagerBranch);
         const existingBranch = await Branch.findOne({
             where: { nameBranch: body.nameBranch },
             transaction: t,
@@ -45,7 +52,6 @@ export const postManyBranchesData = async (body: IBranch, userId: string): Promi
             ...body,
             userId: userId,
         }, { transaction: t });
-
         await t.commit();
         return newBranch;
     } catch (error) {

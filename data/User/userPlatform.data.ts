@@ -7,11 +7,17 @@ import { generateCodes } from '../../helpers/GenerateCodes.helper';
 import UserPlatform from '../../schema/User/userPlatform.schema';
 import { IUserPlatform } from '../../types/User/userPlatform.types';
 import { ServiceError } from '../../types/Responses/responses.types';
+import { CapitalizeNameItems } from './../../helpers/CapitalizeNameItems/CapitalizeNameItems';
 
 //CREAR UN USUARIO DE PLATAFORMA
 export const postUserPlatformData = async (body: IUserPlatform, userId: string): Promise<IUserPlatform | null> => {
     const t = await sequelize.transaction();
     try {
+        body.name = CapitalizeNameItems(body.name);
+        body.lastName = CapitalizeNameItems(body.lastName);
+        body.email = CapitalizeNameItems(body.email);
+        body.city = CapitalizeNameItems(body.city);
+        if (body.email) body.email = CapitalizeNameItems(body.email);
         const existingUser = await UserPlatform.findOne({
             where: {
                 branchId: body.branchId, documentId: body.documentId, userId: userId
@@ -67,6 +73,10 @@ export const postUserPlatformData = async (body: IUserPlatform, userId: string):
 export const postManyUserPlatformData = async (userId: string, typeRole: string, userPlatform: IUserPlatform): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        userPlatform.name = CapitalizeNameItems(userPlatform.name);
+        userPlatform.lastName = CapitalizeNameItems(userPlatform.lastName);
+        userPlatform.email = CapitalizeNameItems(userPlatform.email);
+        userPlatform.city = CapitalizeNameItems(userPlatform.city);
         const existingRegister = await UserPlatform.findOne({
             where: { userId: userId, documentId: userPlatform.documentId, branchId: userPlatform.branchId },
             transaction: t,
@@ -75,7 +85,6 @@ export const postManyUserPlatformData = async (userId: string, typeRole: string,
             await t.rollback();
             throw new ServiceError(400, 'El usuario ya está creado');
         }
-        // Si el registro no existe, crearlo en la base de datos
         if (typeRole === 'Superadmin') {
             const newRegister = await UserPlatform.create({
                 ...userPlatform,

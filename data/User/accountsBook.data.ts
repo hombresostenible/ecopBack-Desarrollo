@@ -435,7 +435,6 @@ export const deleteAccountsBookData = async (userId: string, idAccountsBook: str
     try {
         // ENCONTRAMOS LA TRANSACCION
         const transactionFound = await AccountsBook.findOne({ where: { userId: userId, id: idAccountsBook }, transaction });
-        console.log('transactionFound: ', transactionFound)
         if (!transactionFound) throw new Error('Registro del libro diario no encontrado');       
         // PROCEDEMOS A REVERTIR LOS REGISTROS DE ASSETS, MERCHANDISES, PRODUCTS, RAWMATERIALS Y SERVICES, PARA REAJUSTAR INVENTARIOS
         const items = transactionFound.transactionType === 'Gasto' ? transactionFound.itemsBuy : transactionFound.itemsSold;

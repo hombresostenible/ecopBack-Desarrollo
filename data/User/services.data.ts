@@ -3,11 +3,13 @@ import sequelize from '../../db';
 import Service from '../../schema/User/service.schema';
 import { IService } from "../../types/User/services.types";
 import { ServiceError } from '../../types/Responses/responses.types';
+import { CapitalizeNameItems } from './../../helpers/CapitalizeNameItems/CapitalizeNameItems';
 
 //DATA PARA CREAR UN SERVICIO POR SEDE PARA USER
 export const postServicesData = async (body: IService, userId: string, typeRole: string): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        body.nameItem = CapitalizeNameItems(body.nameItem);
         const existingRegister = await Service.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
@@ -48,6 +50,7 @@ export const postServicesData = async (body: IService, userId: string, typeRole:
 export const postManyServicesData = async (userId: string, typeRole: string, body: IService): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        body.nameItem = CapitalizeNameItems(body.nameItem);
         const existingRegister = await Service.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,

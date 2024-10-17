@@ -10,11 +10,18 @@ import { extractPublicIdFromUrlCloudinaryProfiles } from '../../helpers/Cloudina
 import cloudinary from '../../helpers/Cloudinary/cloudinary.helper';
 import { IUser } from '../../types/User/users.types';
 import { ServiceError } from '../../types/Responses/responses.types';
+import { CapitalizeNameItems } from './../../helpers/CapitalizeNameItems/CapitalizeNameItems';
 
 //REGISTRO DE UN USUARIO
 export const postRegisterUserData = async (body: IUser): Promise<User | null> => {
     const t = await sequelize.transaction();
     try {
+        if (body.name) body.name = CapitalizeNameItems(body.name);
+        if (body.lastName) body.lastName = CapitalizeNameItems(body.lastName);
+        if (body.corporateName) body.corporateName = CapitalizeNameItems(body.corporateName);
+        if (body.commercialName) body.commercialName = CapitalizeNameItems(body.commercialName);
+        if (body.email) body.email = CapitalizeNameItems(body.email);
+        body.city = CapitalizeNameItems(body.city);
         const existingUser = await User.findOne({
             where: {
                 [Op.or]: [
@@ -28,10 +35,10 @@ export const postRegisterUserData = async (body: IUser): Promise<User | null> =>
             if (existingUser.email === body.email && existingUser.documentId === body.documentId) {
                 throw new ServiceError(400, 'El correo y el documento de identificación ya están registrados');
             } else if (existingUser.email === body.email) {
-                await t.rollback(); // Revertir la transacción antes de lanzar el error
+                await t.rollback();
                 throw new ServiceError(400, 'El correo ya está registrado');
             } else if (existingUser.documentId === body.documentId) {
-                await t.rollback(); // Revertir la transacción antes de lanzar el error
+                await t.rollback();
                 throw new ServiceError(400, 'El documento de identificación ya está registrado');
             }
             return null;
@@ -159,26 +166,24 @@ export const patchLogoUserData = async (idUser: string, body: Partial<IUser>): P
 //ELIMINAR LA IMAGEN DE PERFIL DEL USER
 export const patchDeleteLogoUserData = async (userId: string) => {
     try {
-        // Buscar el usuario por su ID
         const updateClient = await User.findByPk(userId);
         if (!updateClient) throw new Error("No se encontró el usuario para actualizar su logo");
-        const logoUrl = updateClient.logo;          // Guardar la URL del logo antes de actualizar
-        updateClient.logo = '';                     // Actualizar la propiedad logo a una cadena vacía y guardar los cambios
+        const logoUrl = updateClient.logo;
+        updateClient.logo = '';
         await updateClient.save();
-        cloudinary.config({                         // Configurar Cloudinary (debería estar configurado en un lugar central)
+        cloudinary.config({
             cloud_name: process.env.CLOUDINARY_NAME,
             api_key: process.env.CLOUDINARY_API_KEY,
             api_secret: process.env.CLOUDINARY_API_SECRET
         });
-        if (logoUrl) {                              // Eliminar la imagen de Cloudinary si la URL del logo existía
+        if (logoUrl) {
             const publicId = extractPublicIdFromUrlCloudinaryProfiles(logoUrl);
             await cloudinary.uploader.destroy(publicId);
         }
-        const existingUser = await User.findOne({   // Volver a buscar el usuario actualizado (opcional, dependiendo de cómo se quiera manejar el flujo)
+        const existingUser = await User.findOne({
             where: { id: userId }
         });
         if (!existingUser) throw new ServiceError(404, "No se encontró el usuario");
-        // Retornar el usuario actualizado
         return existingUser;
     } catch (error) {
         throw error;
