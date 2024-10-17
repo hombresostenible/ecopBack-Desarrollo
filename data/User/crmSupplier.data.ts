@@ -3,11 +3,15 @@ import sequelize from '../../db';
 import CrmSupplier from '../../schema/User/crmSupplier.schema';
 import { ICrmSuppliers } from '../../types/User/crmSupplier.types';
 import { ServiceError } from '../../types/Responses/responses.types';
+import { CapitalizeNameItems } from './../../helpers/CapitalizeNameItems/CapitalizeNameItems';
 
 //DATA PARA CREAR UN PROVEEDOR DEL USER
 export const postRegisterCRMSupplierData = async (userId: string, body: ICrmSuppliers): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        if (body.name) body.name = CapitalizeNameItems(body.name);
+        if (body.lastName) body.lastName = CapitalizeNameItems(body.lastName);
+        if (body.corporateName) body.corporateName = CapitalizeNameItems(body.corporateName);
         const existingRegister = await CrmSupplier.findOne({
             where: { documentId: body.documentId },
             transaction: t,
@@ -34,12 +38,13 @@ export const postRegisterCRMSupplierData = async (userId: string, body: ICrmSupp
 export const postManyCRMSuppliersData = async (userId: string, typeRole: string, body: ICrmSuppliers): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        // Verificar si el proveedor ya existe
+        if (body.name) body.name = CapitalizeNameItems(body.name);
+        if (body.lastName) body.lastName = CapitalizeNameItems(body.lastName);
+        if (body.corporateName) body.corporateName = CapitalizeNameItems(body.corporateName);
         const existingRegister = await CrmSupplier.findOne({
             where: { documentId: body.documentId },
             transaction: t,
         });
-        // Si el proveedor ya existe, devuelve null
         if (existingRegister) {
             await t.rollback();
             return null;
@@ -60,7 +65,6 @@ export const postManyCRMSuppliersData = async (userId: string, typeRole: string,
             await t.commit();
             return newRegister;            
         }
-        // Si el proveedor no existe, crearlo en la base de datos
         const newRegister = await CrmSupplier.create({
             ...body,
             entityUserId: userId,

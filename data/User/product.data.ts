@@ -3,11 +3,14 @@ import sequelize from '../../db';
 import Product from '../../schema/User/product.schema';
 import { IProduct } from "../../types/User/products.types";
 import { ServiceError } from '../../types/Responses/responses.types';
+import { CapitalizeNameItems } from './../../helpers/CapitalizeNameItems/CapitalizeNameItems';
 
 //DATA PARA CREAR UN PRODUCTO POR SEDE PARA USER
 export const postProductsData = async (userId: string, typeRole: string, body: IProduct): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        body.nameItem = CapitalizeNameItems(body.nameItem);
+        if (body.brandItem) body.brandItem = CapitalizeNameItems(body.brandItem);
         const existingRegister = await Product.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
@@ -52,11 +55,12 @@ export const postProductsData = async (userId: string, typeRole: string, body: I
 export const postManyProductsData = async (userId: string, typeRole: string, body: IProduct): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        body.nameItem = CapitalizeNameItems(body.nameItem);
+        if (body.brandItem) body.brandItem = CapitalizeNameItems(body.brandItem);
         const existingRegister = await Product.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-        // Si el producto ya existe, devuelve null
         if (existingRegister) {
             await t.rollback();
             return null;

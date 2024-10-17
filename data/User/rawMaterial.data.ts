@@ -3,11 +3,14 @@ import sequelize from '../../db';
 import RawMaterial from '../../schema/User/rawMaterial.schema';
 import { IRawMaterial } from "../../types/User/rawMaterial.types";
 import { ServiceError } from '../../types/Responses/responses.types';
+import { CapitalizeNameItems } from './../../helpers/CapitalizeNameItems/CapitalizeNameItems';
 
 //DATA PARA CREAR MATERIA PRIMA POR SEDE PARA USER
 export const postRawMaterialData = async (userId: string, typeRole: string, body: IRawMaterial): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        body.nameItem = CapitalizeNameItems(body.nameItem);
+        if (body.brandItem) body.brandItem = CapitalizeNameItems(body.brandItem);
         const existingRegister = await RawMaterial.findOne({
             where: { userId: userId, nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
@@ -52,6 +55,8 @@ export const postRawMaterialData = async (userId: string, typeRole: string, body
 export const postManyRawMaterialsData = async (userId: string, typeRole: string, body: IRawMaterial): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        body.nameItem = CapitalizeNameItems(body.nameItem);
+        if (body.brandItem) body.brandItem = CapitalizeNameItems(body.brandItem);
         const existingRegister = await RawMaterial.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,

@@ -3,10 +3,13 @@ import sequelize from '../../db';
 import Assets from '../../schema/User/assets.schema';
 import { IAssets } from "../../types/User/assets.types";
 import { ServiceError } from '../../types/Responses/responses.types';
+import { CapitalizeNameItems } from './../../helpers/CapitalizeNameItems/CapitalizeNameItems';
 
 //CREAR UN EQUIPO, HERRAMIENTA O MAQUINA EN LA SEDE DE UN USER
 export const postAssetData = async (userId: string, body: IAssets): Promise<any> => {
     try {
+        body.nameItem = CapitalizeNameItems(body.nameItem);
+        if (body.brandItem) body.brandItem = CapitalizeNameItems(body.brandItem);
         const existingRegister = await Assets.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
         });
@@ -31,6 +34,8 @@ export const postAssetData = async (userId: string, body: IAssets): Promise<any>
 export const postManyAssetData = async (userId: string, typeRole: string, body: IAssets): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        body.nameItem = CapitalizeNameItems(body.nameItem);
+        if (body.brandItem) body.brandItem = CapitalizeNameItems(body.brandItem);
         const existingRegister = await Assets.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,

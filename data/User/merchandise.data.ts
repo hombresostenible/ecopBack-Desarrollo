@@ -3,11 +3,14 @@ import sequelize from '../../db';
 import Merchandise from '../../schema/User/merchandise.schema';
 import { IMerchandise } from "../../types/User/merchandise.types";
 import { ServiceError } from '../../types/Responses/responses.types';
+import { CapitalizeNameItems } from './../../helpers/CapitalizeNameItems/CapitalizeNameItems';
 
 //DATA PARA CREAR UNA MERCANCIA POR SEDE PARA USER
 export const postMerchandiseData = async (userId: string, typeRole: string, body: IMerchandise): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        body.nameItem = CapitalizeNameItems(body.nameItem);
+        if (body.brandItem) body.brandItem = CapitalizeNameItems(body.brandItem);
         const existingRegister = await Merchandise.findOne({
             where: { userId: userId, nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
@@ -20,8 +23,7 @@ export const postMerchandiseData = async (userId: string, typeRole: string, body
             await t.rollback();
             throw new ServiceError(400, "La mercancía ya existe en esta sede");
         }
-        //Inventario por pimera vez
-        const currentDate = new Date().toISOString(); // Obtén la fecha actual en formato ISO
+        const currentDate = new Date().toISOString();
         const initialInventory = body.inventory || 0;
         if (typeRole === 'Superadmin') {
             const newRegister = await Merchandise.create({
@@ -52,17 +54,16 @@ export const postMerchandiseData = async (userId: string, typeRole: string, body
 export const postManyMerchandiseData = async (userId: string, typeRole: string, body: IMerchandise): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        // Verificar si ls mercancía ya existe en la sede proporcionada
+        body.nameItem = CapitalizeNameItems(body.nameItem);
+        if (body.brandItem) body.brandItem = CapitalizeNameItems(body.brandItem);
         const existingRegister = await Merchandise.findOne({
             where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
-        // Si la mercancía ya existe, devuelve null
         if (existingRegister) {
             await t.rollback();
             return null;
         }
-        // Si el registro no existe, crearlo en la base de datos
         if (typeRole === 'Superadmin') {
             const newRegister = await Merchandise.create({
                 ...body,

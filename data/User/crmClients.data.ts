@@ -3,12 +3,15 @@ import sequelize from '../../db';
 import CrmClients from '../../schema/User/crmClients.schema';
 import { ICrmClients } from '../../types/User/crmClients.types';
 import { ServiceError } from '../../types/Responses/responses.types';
-
+import { CapitalizeNameItems } from './../../helpers/CapitalizeNameItems/CapitalizeNameItems';
 
 //DATA PARA CREAR UN CLIENTE DEL USER
 export const postRegisterCRMClientsData = async (userId: string, body: ICrmClients): Promise<any> => {
     const t = await sequelize.transaction();
     try {
+        if (body.name) body.name = CapitalizeNameItems(body.name);
+        if (body.lastName) body.lastName = CapitalizeNameItems(body.lastName);
+        if (body.corporateName) body.corporateName = CapitalizeNameItems(body.corporateName);
         const existingRegister = await CrmClients.findOne({
             where: { documentId: body.documentId },
             transaction: t,
@@ -35,12 +38,13 @@ export const postRegisterCRMClientsData = async (userId: string, body: ICrmClien
 export const postManyCRMClientsData = async (userId: string, typeRole: string, body: ICrmClients): Promise<any> => {
     const t = await sequelize.transaction();
     try {
-        // Verificar si el cliente ya existe
+        if (body.name) body.name = CapitalizeNameItems(body.name);
+        if (body.lastName) body.lastName = CapitalizeNameItems(body.lastName);
+        if (body.corporateName) body.corporateName = CapitalizeNameItems(body.corporateName);
         const existingRegister = await CrmClients.findOne({
             where: { documentId: body.documentId },
             transaction: t,
         });
-        // Si el cliente ya existe, devuelve null
         if (existingRegister) {
             await t.rollback();
             return null;
