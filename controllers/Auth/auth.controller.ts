@@ -22,13 +22,13 @@ router.post("/login", validateSchema(loginSchema), async (req: Request, res: Res
         }
         if (user.result) {
             const { serResult, token } = user.result;
-            res.cookie("token", token);
-            // res.cookie("token", token, {
-            //     httpOnly: true,                                     // Solo accesible desde el servidor, más seguro
-            //     secure: process.env.NODE_ENV === "production",      // Solo si estás en producción
-            //     sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // Evita CSRF en producción
-            //     maxAge: 1000 * 60 * 60 * 24 * 7,                    // Opcional: Caducidad de 1 semana
-            // });
+            // res.cookie("token", token);
+            res.cookie("token", token, {
+                httpOnly: true,                                     // Solo accesible desde el servidor, más seguro
+                secure: process.env.NODE_ENV === "production",      // Solo si estás en producción
+                sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // Evita CSRF en producción
+                maxAge: 1000 * 60 * 60 * 24 * 7,                    // Opcional: Caducidad de 1 semana
+            });
             res.json({ serResult, token });
         } else res.status(user.code).json({ message: user.message });
     } catch (error) {
