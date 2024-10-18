@@ -52,7 +52,6 @@ class Server {
         const allowedOrigins = [
             process.env.CORS_ALLOWED_ORIGIN,
             process.env.CORS_ALLOWED_ORIGIN2,
-            process.env.CORS_ALLOWED_ORIGIN3,
         ];
 
         this.app.use(cors({
