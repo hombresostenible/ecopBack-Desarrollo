@@ -13,7 +13,7 @@ import {
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
 import { checkRole, checkRoleArray } from '../../middlewares/User/Role.middleware';
-import { serviceSchemaZod, manyServiceSchemaZod } from '../../validations/User/services.zod';
+import { serviceSchemaZod, manyServiceSchemaZod } from '../../validations/UserPanel/services.zod';
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 

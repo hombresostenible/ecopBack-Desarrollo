@@ -11,7 +11,7 @@ import {
 } from "../../services/User/user.services";
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware.js';
-import { registerUserSchema } from '../../validations/User/user.zod';
+import { registerUserSchema } from '../../validations/UserPanel/user.zod';
 import { sendEmailFiles } from "../../libs/nodemailerUsers";
 import { ServiceError } from '../../types/Responses/responses.types';
 const router = express.Router();

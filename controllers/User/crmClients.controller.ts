@@ -12,7 +12,7 @@ import {
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
 import { checkRole, checkRoleArray  } from '../../middlewares/User/Role.middleware';
-import { crmClientsSchema, manyCRMClientsSchemaType  } from '../../validations/User/crmClients.zod';
+import { crmClientsSchema, manyCRMClientsSchemaType  } from '../../validations/UserPanel/crmClients.zod';
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 

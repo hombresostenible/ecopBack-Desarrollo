@@ -11,7 +11,7 @@ import {
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
 import { checkRoleAdmin } from '../../middlewares/User/Role.middleware';
-import { branchSchemaZod, manyBranchsSchemaType } from '../../validations/User/branch.zod';
+import { branchSchemaZod, manyBranchsSchemaType } from '../../validations/UserPanel/branch.zod';
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 

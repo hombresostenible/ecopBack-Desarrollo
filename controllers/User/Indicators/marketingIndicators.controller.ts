@@ -25,7 +25,7 @@ import {
     deleteSalesFunnelCustomerDigitalService
 } from "../../../services/User/Indicators/marketingIndicators.service";
 import { validateSchema } from '../../../middlewares/Schema/Schema.middleware';
-import { salesFunnelCustomerAcqSchemaZod, salesFunnelCustomerRetSchemaZod, salesFunnelCustomerDigitalSchemaZod } from '../../../validations/User/salesFunnel.zod';
+import { salesFunnelCustomerAcqSchemaZod, salesFunnelCustomerRetSchemaZod, salesFunnelCustomerDigitalSchemaZod } from '../../../validations/UserPanel/salesFunnel.zod';
 import { authRequired } from '../../../middlewares/Token/Token.middleware';
 import { ServiceError } from '../../../types/Responses/responses.types';
 const router = express.Router();

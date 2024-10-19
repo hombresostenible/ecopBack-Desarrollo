@@ -17,7 +17,7 @@ import {
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
 import { checkRole, checkRoleArray } from '../../middlewares/User/Role.middleware';
-import { rawMaterialSchema, manyRawMaterialSchema } from '../../validations/User/rawMaterial.zod';
+import { rawMaterialSchema, manyRawMaterialSchema } from '../../validations/UserPanel/rawMaterial.zod';
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 
