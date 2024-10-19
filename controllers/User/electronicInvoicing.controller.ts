@@ -18,7 +18,7 @@ router.post("/", authRequired, async (req: Request, res: Response) => {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); //POST - http://localhost:3000/api/electronicInvoicing con 
+}); //POST - http://localhost:3000/api/electronic-invoicing con 
 
 
 

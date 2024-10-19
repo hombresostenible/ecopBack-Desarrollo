@@ -232,7 +232,7 @@ export const getAccountsPayablePaginatedData = async (userId: string, page: numb
             where: searchCriteria,
             offset: offset,
             limit: limit,
-            order: [['transactionDate', 'DESASCC']]
+            order: [['transactionDate', 'ASC']]
         });
         const formattedRegisters = registersPaginated.map(accountsBook => accountsBook.toJSON());
         return {

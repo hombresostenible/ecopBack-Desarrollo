@@ -11,7 +11,7 @@ import {
 import { authRequired } from '../../middlewares/Token/Token.middleware';
 import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
 import { checkRole, checkRoleCreateUserPlatform, checkRoleArrayCreateUserPlatform } from '../../middlewares/User/Role.middleware';
-import { userPlatformSchema, manyUserPlatformsSchema } from "../../validations/User/userPlatform.zod";
+import { userPlatformSchema, manyUserPlatformsSchema } from "../../validations/UserPanel/userPlatform.zod";
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 
