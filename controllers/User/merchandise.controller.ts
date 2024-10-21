@@ -29,7 +29,6 @@ router.post("/", authRequired, checkRole, validateSchema(merchandiseSchemaZod), 
         const serviceLayerResponse = await postMerchandiseService(userId, typeRole, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
-        console.log('Error: ', error)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }

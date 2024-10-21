@@ -51,7 +51,6 @@ export const getAllItemsByBranchData = async (userId: string, idBranch: string):
         });
         return allItems;
     } catch (error) {
-        console.log('Error: ', error)
         throw error;
     }
 };

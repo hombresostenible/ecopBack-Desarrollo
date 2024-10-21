@@ -209,7 +209,6 @@ export const getAccountsPayableData = async (userId: string): Promise<any> => {
             where: { userId: userId, stateAccount: 'Activo' },
             order: [['transactionDate', 'ASC']],
         });
-        console.log('transactions: ', transactions)
         return transactions;
     } catch (error) {
         throw error;

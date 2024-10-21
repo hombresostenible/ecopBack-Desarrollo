@@ -116,7 +116,6 @@ export const getRawMaterialsPaginatedData = async (userId: string, page: number,
             limit: limit,
             order: [['createdAt', 'DESC']]
         });
-        console.log('registersPaginated: ', registersPaginated)
         const formattedRegisters = registersPaginated.map(register => register.toJSON());
         return {
             registers: formattedRegisters,

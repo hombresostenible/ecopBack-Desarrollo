@@ -13,12 +13,9 @@ router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        console.log('userId: ', userId)
-        console.log('idBranch: ', idBranch)
         const serviceLayerResponse = await getAllItemsByBranchService(userId, idBranch);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
-        console.log('Error: ', error)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }

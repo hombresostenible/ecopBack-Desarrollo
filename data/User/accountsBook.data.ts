@@ -34,13 +34,10 @@ import { ServiceError } from "../../types/Responses/responses.types";
 //CREAR UN REGISTRO CONTABLE DEL USER
 export const postAccountsBookData = async (userId: string, body: IAccountsBook): Promise<IAccountsBook> => {
     try {
-        console.log('body: ', body)
-        console.log('userId: ', userId)
         // Establecer transactionApproved basado en meanPayment
         if ((body.transactionType === 'Ingreso' || body.transactionType === 'Gasto') && body.meanPayment === 'Efectivo' && body.creditCash === 'Contado') {
             body.transactionApproved = true;
         } else body.transactionApproved = false;
-
         // Guardar la transacción en AccountsBook
         const newAccountsBook = new AccountsBook({
             ...body,
@@ -123,7 +120,6 @@ export const postAccountsBookData = async (userId: string, body: IAccountsBook):
         }
         return newAccountsBook;
     } catch (error) {
-        console.log('Error: ', error)
         throw error;
     }
 };
@@ -442,27 +438,22 @@ export const deleteAccountsBookData = async (userId: string, idAccountsBook: str
             for (const item of items) {
                 switch (item.type) {
                     case 'Asset': {
-                        console.log('Asset')
                         await processAsset(transactionFound, item, transaction);
                         break;
                     }
                     case 'Merchandise': {
-                        console.log('Merchandise')
                         await processMerchandise(transactionFound, item, transaction);
                         break;
                     }
                     case 'Product': {
-                        console.log('Product')
                         await processProduct(transactionFound, item, transaction);
                         break;
                     }
                     case 'RawMaterial': {
-                        console.log('RawMaterial')
                         await processRawMaterial(transactionFound, item, transaction);
                         break;
                     }
                     case 'Service': {
-                        console.log('Service')
                         await processService(transactionFound, item, transaction);
                         break;
                     }

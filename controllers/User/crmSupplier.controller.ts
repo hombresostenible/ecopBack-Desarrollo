@@ -24,6 +24,7 @@ router.post("/", authRequired, validateSchema(crmSupplierSchema), async (req: Re
         const serviceLayerResponse = await postRegisterCrmSupplierService(userId, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
+        console.log('Error: ', error)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
