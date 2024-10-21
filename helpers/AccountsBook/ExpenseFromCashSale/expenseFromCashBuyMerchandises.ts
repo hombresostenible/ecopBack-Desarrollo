@@ -11,6 +11,13 @@ export const expenseFromCashBuyMerchandises = async (item: IItemsAccountsBook, b
         if (item.quantity !== undefined) {
             try {
                 merchandiseFound.inventory += item.quantity;
+                // ACTUAIZAR LA REFERENCIA DEL INVENTARIO PARA NOTIFICACIONES
+                /*
+                    lastInventoryUpload?: {     // VALOR DEL INVENTARIO DEREFERENCIA PARA ENVIAR LA NOTIFICACION
+                        inventory: number;
+                        date?: Date;
+                    }[];
+                */
                 const currentDate = new Date().toISOString();
                 const quantity = item.quantity;
                 merchandiseFound.setDataValue('inventoryChanges', merchandiseFound.inventoryChanges.concat({ date: currentDate, quantity: quantity, type: 'Ingreso' }));

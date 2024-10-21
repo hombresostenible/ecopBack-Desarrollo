@@ -11,6 +11,13 @@ export const expenseFromCashBuyRawMaterials = async (item: IItemsAccountsBook, b
         if (item.quantity !== undefined) {
             try {
                 rawMaterialFound.inventory += item.quantity;
+                // ACTUAIZAR LA REFERENCIA DEL INVENTARIO PARA NOTIFICACIONES
+                /*
+                    lastInventoryUpload?: {     // VALOR DEL INVENTARIO DEREFERENCIA PARA ENVIAR LA NOTIFICACION
+                        inventory: number;
+                        date?: Date;
+                    }[];
+                */
                 const currentDate = new Date().toISOString();
                 const quantity = item.quantity;
                 rawMaterialFound.setDataValue('inventoryChanges', rawMaterialFound.inventoryChanges.concat({ date: currentDate, quantity: quantity, type: 'Ingreso' }));

@@ -20,22 +20,7 @@ export interface IUser {
     phone: string;
     email: string;
     password: string;
-
-    /*
-        memberShip: si es de pago o gratuito // la pasa a gratuita
-        memberShip: fecha inicial 30/09/2024: 08:00
-        memberShip: final
-        plans: 'Basico' | 'Medium' | 'Premium' (5, 10, 20)
-        Tiempo: '30 días' | '60 meses
-        pagos: [
-            {01/10/2024, valor},
-            {fecha, valor}
-        ]
-        CRON 01/10/2024 + 30 días
-    */
-
     //Responsable de IVA
-
     //USER MANAGEMENT
     passwordResetCode?: string;
     passwordResetCodeDate?: Date;
@@ -50,3 +35,15 @@ export interface IUser {
     //RELACION CON OTRAS TABLAS
     projectFunder?: string;
 };
+    /*
+        memberShip: si es de pago o gratuito // la pasa a gratuita
+        memberShip: fecha inicial 30/09/2024: 08:00
+        memberShip: final
+        plans: 'Basico' | 'Medium' | 'Premium' (5, 10, 20)
+        Tiempo: '30 días' | '60 meses
+        pagos: [
+            {01/10/2024, valor},
+            {fecha, valor}
+        ]
+        CRON 01/10/2024 + 30 días
+    */

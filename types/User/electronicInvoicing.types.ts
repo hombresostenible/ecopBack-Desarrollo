@@ -3,7 +3,7 @@
 NIT: 901714110-5
 EMPRESA: ECOPCION SAS BIC
 TOKEN: 89E33A03-23F7-4B45-A3A1-FE7B6D773B1A
-http://fe2.simba.co:8080/TX_TransmisionDocElectronicoSOAP_A02?wsdl
+https://fe2.simba.co/API_NOMINA/api/FacturaElectronica/EnviarFacturaElectronica
 */
 
 
@@ -40,87 +40,87 @@ export interface IParametros {
 // EXTENCIONES
 export interface IExtensiones {
     ContenidoExtension: {
-        FabricanteSoftware: {                               //^ES OBLIGATOTIO SOLO PARA POS
-            InformacionDelFabricanteDelSoftware: [
+        FabricanteSoftware?: {                               //^ES OBLIGATOTIO SOLO PARA POS
+            InformacionDelFabricanteDelSoftware?: [
                 {
-                    Name: string;                           //"NombreApellidos"     --Este string no se cambia
-                    Value: string;                          //"FELIPE HERNANDEZ"    --Este si se cambia, es libre
+                    Name?: string;                           //"NombreApellidos"     --Este string no se cambia
+                    Value?: string;                          //"FELIPE HERNANDEZ"    --Este si se cambia, es libre
                 },
                 {
-                    Name: string;                           //"RazonSocial"         --Este string no se cambia
-                    Value: string;                          //"Ecopcion SAS Bic"    --Este si se cambia, es libre
+                    Name?: string;                           //"RazonSocial"         --Este string no se cambia
+                    Value?: string;                          //"Ecopcion SAS Bic"    --Este si se cambia, es libre
                 },
                 {
-                    Name: string;                           //"NombreSoftware"      --Este string no se cambia
-                    Value: string;                          //"EcopcionApp"         --Este si se cambia, es libre
+                    Name?: string;                           //"NombreSoftware"      --Este string no se cambia
+                    Value?: string;                          //"EcopcionApp"         --Este si se cambia, es libre
                 }
             ]
         };
-        BeneficiosComprador: {
-            InformacionBeneficiosComprador: [               //^ES OPCIONAL SI EL CLIENTE DE NUESTRO CLIENTE TIENE BENEFICIOS COMO ACUMULACION DE PUNTOS
+        BeneficiosComprador?: {
+            InformacionBeneficiosComprador?: [               //^ES OPCIONAL SI EL CLIENTE DE NUESTRO CLIENTE TIENE BENEFICIOS COMO ACUMULACION DE PUNTOS
                 {
-                    Name: string;                           //"Codigo"
-                    Value: string;                          //"Codigo del comprador" Es código libre
+                    Name?: string;                           //"Codigo"
+                    Value?: string;                          //"Codigo del comprador" Es código libre
                 },
                 {
-                    Name: string;                           //"NombreApellidos"
-                    Value: string;                          //"Carlos Mario Reyes"
+                    Name?: string;                           //"NombreApellidos"
+                    Value?: string;                          //"Carlos Mario Reyes"
                 },
                 {
-                    Name: string;                           //"Puntos"
-                    Value: string;                          //"1000" CANTIDAD DE PUNTOS
+                    Name?: string;                           //"Puntos"
+                    Value?: string;                          //"1000" CANTIDAD DE PUNTOS
                 }
             ]
         };
-        PuntoVenta: {
-            InformacionCajaVenta: [                         //^ES OPCIONAL, EL CLIENTE DEBE DE OTORGAR ESTO SI QUIERE QUE EN LA FACTURA POS SE MUESTRE
+        PuntoVenta?: {
+            InformacionCajaVenta?: [                         //^ES OPCIONAL, EL CLIENTE DEBE DE OTORGAR ESTO SI QUIERE QUE EN LA FACTURA POS SE MUESTRE
                 {   //PlacaCaja
-                    Name: string;                           //"PlacaCaja"
-                    Value: string;                          //"Corresponde a la Placa de inventario de la Caja"
+                    Name?: string;                           //"PlacaCaja"
+                    Value?: string;                          //"Corresponde a la Placa de inventario de la Caja"
                 },
                 {   //UbicaciónCaja
-                    Name: string;                           //"UbicaciónCaja"
-                    Value: string;                          //"Corresponde a la Ubicación de la caja"
+                    Name?: string;                           //"UbicaciónCaja"
+                    Value?: string;                          //"Corresponde a la Ubicación de la caja"
                 },
                 {   //Cajero
-                    Name: string;                           //"Cajero"
-                    Value: string;                          //"Corresponde a los Nombres y apellidos del cajero o vendedor"
+                    Name?: string;                           //"Cajero"
+                    Value?: string;                          //"Corresponde a los Nombres y apellidos del cajero o vendedor"
                 },
                 {   //TipoCaja
-                    Name: string;                           //"TipoCaja"
-                    Value: string;                          //"Corresponse al Tipo de Caja"
+                    Name?: string;                           //"TipoCaja"
+                    Value?: string;                          //"Corresponse al Tipo de Caja"
                 },
                 {   //CódigoVenta
-                    Name: string;                           //"CódigoVenta"
-                    Value: string;                          //"Corresponde al Código de la Venta"
+                    Name?: string;                           //"CódigoVenta"
+                    Value?: string;                          //"Corresponde al Código de la Venta"  --> Nosotros la podemos generar
                 },
                 {   //SubTotal
-                    Name: string;                           //"SubTotal"
-                    Value: string;                          //"1000"
+                    Name?: string;                           //"SubTotal"
+                    Value?: string;                          //"1000"
                 },
             ];
         };
-        CustomTagGeneral: {                                 //^SI APLICA PARA FACTURACION ELECTRONICA SIEMPRE Y CUANDO SE EMITA LA FACTURA EN MONEDA EXTRANGERA, SI ES COP NO
-            TotalesCop:{                                    //PARA ANEXO DEL PROCESO TECNICO 1.9
-                FctConvCop: string;
-                MonedaCop: string;
-                SubTotalCop: string;
-                DescuentoDetalleCop: string;
-                RecargoDetalleCop: string;
-                TotalBrutoFacturaCop: string;
-                TotIvaCop: string;
-                TotIncCop: string;
-                TotBolCop: string;
-                ImpOtroCop: string;
-                MntImpCop: string;
-                TotalNetoFacturaCop: string;
-                MntDctoCop: string;
-                MntRcgoCop: string;
-                VlrPagarCop: string;
-                ReteFueCop: string;
-                ReteIvaCop: string;
-                ReteIcaCop: string;
-                TotAnticiposCop: string;
+        CustomTagGeneral?: {                                 //^SI APLICA PARA FACTURACION ELECTRONICA SIEMPRE Y CUANDO SE EMITA LA FACTURA EN MONEDA EXTRANGERA, SI ES COP NO
+            TotalesCop?:{                                    //PARA ANEXO DEL PROCESO TECNICO 1.9
+                FctConvCop?: string;
+                MonedaCop?: string;
+                SubTotalCop?: string;
+                DescuentoDetalleCop?: string;
+                RecargoDetalleCop?: string;
+                TotalBrutoFacturaCop?: string;
+                TotIvaCop?: string;
+                TotIncCop?: string;
+                TotBolCop?: string;
+                ImpOtroCop?: string;
+                MntImpCop?: string;
+                TotalNetoFacturaCop?: string;
+                MntDctoCop?: string;
+                MntRcgoCop?: string;
+                VlrPagarCop?: string;
+                ReteFueCop?: string;
+                ReteIvaCop?: string;
+                ReteIcaCop?: string;
+                TotAnticiposCop?: string;
             }[];
         };
     };
@@ -455,7 +455,7 @@ export interface ILineas {                                  //^SON CADA UNO DE L
             Id: {                                           //
                 SmaIdCodigo: string;                        //VALORES DE ACUERDO CON UNA TABLA
             SmaIdNombre: string;                            //VALORES DE ACUERDO CON UNA TABLA
-                Value: string;                              //"ES EL CODIGO DEL PRODUCTO, POR EJEMPLO, EL CODIGO DE BARRAS, EL CODIGO SAP CON EL QUE EL CLIENTE CREO ESE PRODUCTO"
+                Value: string;                              //ES EL CODIGO DEL PRODUCTO, POR EJEMPLO, EL CODIGO DE BARRAS, EL CODIGO SAP CON EL QUE EL CLIENTE CREO ESE PRODUCTO"
             };
         };
         PropiedadesAdicionalesItem: {

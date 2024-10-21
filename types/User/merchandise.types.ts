@@ -24,6 +24,10 @@ export interface IMerchandise {
     discountPercentage?: number;
     expirationDate?: Date;
     inventoryChanges?: { date: string; quantity: number, type: 'Ingreso' | 'Salida' }[];
+    lastInventoryUpload?: {     // VALOR DEL INVENTARIO DEREFERENCIA PARA ENVIAR LA NOTIFICACION
+        inventory: number;
+        date?: Date;
+    }[];
     salesCount?: number;
     inventoryOff?: IInventoryOffItem[];
     reasonManualDiscountingInventory?: 'Donado' | 'Desechado' | 'Caducado' | 'Perdido' | 'Hurtado';

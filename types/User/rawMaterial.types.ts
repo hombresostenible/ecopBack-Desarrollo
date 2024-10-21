@@ -25,6 +25,10 @@ export interface IRawMaterial {
     salesCount?: number;
     expirationDate?: Date;
     inventoryChanges?: { date: string; quantity: number, type: 'Ingreso' | 'Salida' }[];
+    lastInventoryUpload?: {     // VALOR DEL INVENTARIO DEREFERENCIA PARA ENVIAR LA NOTIFICACION
+        inventory: number;
+        date?: Date;
+    }[];
     inventoryOff?: IInventoryOffItem[];
     reasonManualDiscountingInventory?: 'Donado' | 'Desechado' | 'Caducado' | 'Perdido' | 'Hurtado';    
     quantityManualDiscountingInventory?: number;
