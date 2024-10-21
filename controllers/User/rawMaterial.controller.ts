@@ -32,7 +32,7 @@ router.post("/", authRequired, checkRole, validateSchema(rawMaterialSchema), asy
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // POST - http://localhost:3000/api/rawMaterial con { "branchId": "28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0", "nameItem": "Sal marina", "barCode": null, "inventory": 500, "unitMeasure": "Kilogramo", "inventoryIncrease": "Si", "periodicityAutomaticIncrease": "Diario", "automaticInventoryIncrease": 100, "purchasePriceBeforeTax": 1900, "IVA": 0, "packaged": "Si", "primaryPackageType": "Papel", "expirationDate": "2024-06-01T14:50:46.288Z", "returnablePackaging": "No", "quantityPerPackage": 50, "individualPackaging": "Si", "secondaryPackageType": "Papel", "inventoryChanges": null, "sellingPrice": null, "reasonManualDiscountingInventory": null, "quantityManualDiscountingInventory": null }
+}); // POST - http://localhost:3000/api/raw-material con { "branchId": "28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0", "nameItem": "Sal marina", "barCode": null, "inventory": 500, "unitMeasure": "Kilogramo", "inventoryIncrease": "Si", "periodicityAutomaticIncrease": "Diario", "automaticInventoryIncrease": 100, "purchasePriceBeforeTax": 1900, "IVA": 0, "packaged": "Si", "primaryPackageType": "Papel", "expirationDate": "2024-06-01T14:50:46.288Z", "returnablePackaging": "No", "quantityPerPackage": 50, "individualPackaging": "Si", "secondaryPackageType": "Papel", "inventoryChanges": null, "sellingPrice": null, "reasonManualDiscountingInventory": null, "quantityManualDiscountingInventory": null }
 
 
 
@@ -47,7 +47,7 @@ router.post("/create-many", authRequired, checkRoleArray, validateSchema(manyRaw
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-});// POST - http://localhost:3000/api/rawMaterial/create-many con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina998uyuyu*9","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina 28yuyu88","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null}]
+});// POST - http://localhost:3000/api/raw-material/create-many con [{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina998uyuyu*9","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null},{"branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina 28yuyu88","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null}]
 
 
 
@@ -65,7 +65,7 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
         const productError = error as ServiceError;
         res.status(productError.code).json(productError.message);
     }
-}); // GET - http://localhost:3000/api/rawMaterial
+}); // GET - http://localhost:3000/api/raw-material
 
 
 
@@ -105,7 +105,7 @@ router.get("/rawMaterials-off", authRequired, async (req: Request, res: Response
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/rawMaterial/rawMaterials-off
+}); // GET - http://localhost:3000/api/raw-material/rawMaterials-off
 
 
 
@@ -122,7 +122,7 @@ router.get("/rawMaterials-off/:idBranch", authRequired, async (req: Request, res
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/rawMaterial/rawMaterials-off/:idBranch
+}); // GET - http://localhost:3000/api/raw-material/rawMaterials-off/:idBranch
 
 
 
@@ -137,7 +137,7 @@ router.get("/:idRawMaterial", authRequired, async (req: Request, res: Response) 
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/rawMaterial/:idRawMaterial
+}); // GET - http://localhost:3000/api/raw-material/:idRawMaterial
 
 
 
@@ -156,7 +156,7 @@ router.get("/rawMaterials-branch/:idBranch", authRequired, async (req: Request, 
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/rawMaterial/rawMaterials-branch/:idBranch
+}); // GET - http://localhost:3000/api/raw-material/rawMaterials-branch/:idBranch
 
 
 
@@ -172,7 +172,7 @@ router.put("/:idRawMaterial", authRequired, checkRole, async (req: Request, res:
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/rawMaterial/:idRawMaterial
+}); // PUT - http://localhost:3000/api/raw-material/:idRawMaterial
 
 
 
@@ -187,7 +187,7 @@ router.put("/updateMany", authRequired, checkRoleArray, async (req: Request, res
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // PUT - http://localhost:3000/api/rawMaterial/updateMany con [{"id":"9fba429f-0abd-459a-9755-22273a841a5f","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina 2 ACTUALIZADA","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null},{"id":"b49c0c99-4258-4872-a77a-0c7214698c7b","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina ACTUALIZADA","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null}]
+}); // PUT - http://localhost:3000/api/raw-material/updateMany con [{"id":"9fba429f-0abd-459a-9755-22273a841a5f","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina 2 ACTUALIZADA","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null},{"id":"b49c0c99-4258-4872-a77a-0c7214698c7b","branchId":"28fe38ac-aaf7-4cd5-8514-f0d7b03cfcd0","nameItem":"Sal marina ACTUALIZADA","barCode":null,"inventory":500,"unitMeasure":"Kilogramo","inventoryIncrease":"Si","periodicityAutomaticIncrease":"Diario","automaticInventoryIncrease":100,"purchasePriceBeforeTax":1900,"IVA":0,"packaged":"Si","primaryPackageType":"Papel","expirationDate":"2024-06-01T14:50:46.288Z","returnablePackaging":"No","quantityPerPackage":50,"individualPackaging":"Si","secondaryPackageType":"Papel","sellingPrice":null,"reasonManualDiscountingInventory":null,"quantityManualDiscountingInventory":null}]
 
 
 
@@ -203,7 +203,7 @@ router.patch("/:idRawMaterial", authRequired, checkRole, async (req: Request, re
         const assetError = error as ServiceError;
         res.status(assetError.code).json(assetError.message);
     }
-}); // PATCH - http://localhost:3000/api/rawMaterial/:idRawMaterial con { "branchId": "d0b3ff70-ac49-4c2c-bba3-5d67686607d3", "reasonManualDiscountingInventory": "Donado", "quantityManualDiscountingInventory": 20 }
+}); // PATCH - http://localhost:3000/api/raw-material/:idRawMaterial con { "branchId": "d0b3ff70-ac49-4c2c-bba3-5d67686607d3", "reasonManualDiscountingInventory": "Donado", "quantityManualDiscountingInventory": 20 }
 
 
 
@@ -219,7 +219,7 @@ router.patch("/add-inventory/:idRawMaterial", authRequired, checkRole, async (re
         const assetError = error as ServiceError;
         res.status(assetError.code).json(assetError.message);
     }
-}); // PATCH - http://localhost:3000/api/rawMaterial/add-inventory/:idRawMaterial con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "inventory": 10 }
+}); // PATCH - http://localhost:3000/api/raw-material/add-inventory/:idRawMaterial con { "branchId": "82fc85e2-2672-4968-b07d-b7da442618f8", "inventory": 10 }
 
 
 
@@ -234,6 +234,6 @@ router.delete('/:idRawMaterial', authRequired, checkRole, async (req: Request, r
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // DELETE - http://localhost:3000/api/rawMaterial/:idRawMaterial
+}); // DELETE - http://localhost:3000/api/raw-material/:idRawMaterial
 
 export default router;

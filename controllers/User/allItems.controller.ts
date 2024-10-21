@@ -13,6 +13,8 @@ router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
+        console.log('userId: ', userId)
+        console.log('idBranch: ', idBranch)
         const serviceLayerResponse = await getAllItemsByBranchService(userId, idBranch);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
@@ -53,7 +55,5 @@ router.get("/name-item/query?", authRequired, async (req: Request, res: Response
         res.status(errorController.code).json(errorController.message);
     }
 }); // GET - http://localhost:3000/api/all-items/name-item/query?nameItem=Cabello de ángel
-
-
 
 export default router;
