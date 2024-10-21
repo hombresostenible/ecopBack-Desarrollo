@@ -25,7 +25,6 @@ router.post("/", authRequired, checkRole, validateSchema(serviceSchemaZod), asyn
         const serviceLayerResponse = await postServicesService(body, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
-        console.log('Error: ', error)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
