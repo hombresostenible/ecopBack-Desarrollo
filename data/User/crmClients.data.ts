@@ -13,7 +13,7 @@ export const postRegisterCRMClientsData = async (userId: string, body: ICrmClien
         if (body.lastName) body.lastName = CapitalizeNameItems(body.lastName);
         if (body.corporateName) body.corporateName = CapitalizeNameItems(body.corporateName);
         const existingRegister = await CrmClients.findOne({
-            where: { documentId: body.documentId },
+            where: { documentId: body.documentId, entityUserId: userId },
             transaction: t,
         });
         if (existingRegister) {
@@ -42,7 +42,7 @@ export const postManyCRMClientsData = async (userId: string, typeRole: string, b
         if (body.lastName) body.lastName = CapitalizeNameItems(body.lastName);
         if (body.corporateName) body.corporateName = CapitalizeNameItems(body.corporateName);
         const existingRegister = await CrmClients.findOne({
-            where: { documentId: body.documentId },
+            where: { documentId: body.documentId, entityUserId: userId },
             transaction: t,
         });
         if (existingRegister) {
