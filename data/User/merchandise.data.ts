@@ -12,16 +12,12 @@ export const postMerchandiseData = async (userId: string, typeRole: string, body
         body.nameItem = CapitalizeNameItems(body.nameItem);
         if (body.brandItem) body.brandItem = CapitalizeNameItems(body.brandItem);
         const existingRegister = await Merchandise.findOne({
-            where: { userId: userId, nameItem: body.nameItem, branchId: body.branchId },
+            where: { nameItem: body.nameItem, branchId: body.branchId },
             transaction: t,
         });
         if (existingRegister) {
-            if (existingRegister.getDataValue('userId') === userId) {
-                await t.rollback();
-                return null;
-            }
             await t.rollback();
-            throw new ServiceError(400, "La mercancía ya existe en esta sede");
+            return null;
         }
         const currentDate = new Date().toISOString();
         const initialInventory = body.inventory || 0;
@@ -64,10 +60,13 @@ export const postManyMerchandiseData = async (userId: string, typeRole: string, 
             await t.rollback();
             return null;
         }
+        const currentDate = new Date().toISOString();
+        const initialInventory = body.inventory || 0;
         if (typeRole === 'Superadmin') {
             const newRegister = await Merchandise.create({
                 ...body,
                 userId: userId,
+                inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
             return newRegister;
@@ -76,6 +75,7 @@ export const postManyMerchandiseData = async (userId: string, typeRole: string, 
             const newRegister = await Merchandise.create({
                 ...body,
                 userId: userId,
+                inventoryChanges: [{ date: currentDate, quantity: initialInventory, type: 'Ingreso' }],
             }, { transaction: t });
             await t.commit();
             return newRegister;
@@ -90,11 +90,11 @@ export const postManyMerchandiseData = async (userId: string, typeRole: string, 
 //DATA PARA OBTENER TODA LA MERCANCIA DEL USER
 export const getMerchandiseByUserIdData = async (userId: string): Promise<any> => {
     try {
-        const userProducts = await Merchandise.findAll({
+        const userMerchandises = await Merchandise.findAll({
             where: { userId: userId },
             order: [ ['nameItem', 'ASC'] ]
         });        
-        return userProducts;
+        return userMerchandises;
     } catch (error) {
         throw error;
     }
