@@ -29,6 +29,7 @@ router.post("/", authRequired, checkRole, validateSchema(rawMaterialSchema), asy
         const serviceLayerResponse = await postRawMaterialService(userId, typeRole, body);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
+        console.log('Error: ', error)
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
