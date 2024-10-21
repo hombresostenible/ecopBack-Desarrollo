@@ -120,13 +120,13 @@ export const getWaterConsumptionBranchData = async (idBranch: string, userId: st
 
 
 //DATA PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER
-export const putSustainabilityData = async (idSustainability: string, body: ISustainability, userId: string): Promise<ISustainability | null> => {
+export const putSustainabilityData = async (body: ISustainability, userId: string, idSustainability: string): Promise<ISustainability | null> => {
     try {
         const existingSustainability = await Sustainability.findOne({
             where: { userId: userId, id: idSustainability },
         });
         if (!existingSustainability) throw new ServiceError(403, "No se encontró el registro");
-        const [rowsUpdated] = await Sustainability.update(body, { where: { userId: idSustainability } });
+        const [rowsUpdated] = await Sustainability.update(body, { where: { id: idSustainability } });
         if (rowsUpdated === 0) throw new ServiceError(403, "No se encontró ningún registro para actualizar");
         const updatedProduct = await Sustainability.findByPk(idSustainability);
         if (!updatedProduct) throw new ServiceError(404, "No se encontró ningún registro para actualizar");
@@ -139,13 +139,13 @@ export const putSustainabilityData = async (idSustainability: string, body: ISus
 
 
 //DATA PARA ELIMINAR UN REGISTRO DE SOSTENIBILIDAD PERTENECIENTE AL USER
-export const deleteSustainabilityData = async (idSustainability: string, userId: string): Promise<void> => {
+export const deleteSustainabilityData = async (userId: string, idSustainability: string): Promise<void> => {
     try {
         const sustainabilityFound = await Sustainability.findOne({
-            where: { id: idSustainability, userId: userId }
+            where: { userId: userId, id: idSustainability }
         });
         if (!sustainabilityFound) throw new Error("Registro no encontrado");
-        await Sustainability.destroy({ where: { userId: idSustainability } });
+        await Sustainability.destroy({ where: { id: idSustainability } });
     } catch (error) {
         throw error;
     }

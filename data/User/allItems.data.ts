@@ -7,26 +7,26 @@ import RawMaterial from '../../schema/User/rawMaterial.schema';
 import Service from '../../schema/User/service.schema';
 
 //BUSCA TODOS LOS ARTICULOS DEL USUARIO EN TODAS LAS TABLAS
-export const getAllItemsByBranchData = async (idBranch: string, userId: string): Promise<any> => {
+export const getAllItemsByBranchData = async (userId: string, idBranch: string): Promise<any> => {
     try {
         const assets = await Assets.findAll({
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch },
         });
         
         const merchandises = await Merchandise.findAll({
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch },
         });
         
         const products = await Product.findAll({
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch },
         });
 
         const rawMaterials = await RawMaterial.findAll({
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch },
         });
         
         const services = await Service.findAll({
-            where: { branchId: idBranch, userId: userId },
+            where: { userId: userId, branchId: idBranch },
         });
 
         const allItems = [
@@ -118,7 +118,7 @@ export const getItemBarCodeData = async (userId: string, barCode: string): Promi
 
 
 //BUSCAR UN ITEM DE ASSETS, MERCHANDISE, PRODUCT O RAWMATERIAL POR NOMBRE
-export const getNameItemData = async (nameItem: string, userId: string): Promise<any> => {
+export const getNameItemData = async (userId: string, nameItem: string): Promise<any> => {
     try {
         const itemFound = await sequelize.query(`
             SELECT 

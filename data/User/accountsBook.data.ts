@@ -379,7 +379,7 @@ export const getUnapprovedRecordsByBranchData = async (userId: string, idBranch:
 
 
 //OBTENER UN REGISTRO CONTABLE POR ID DEL USER
-export const getAccountsBookByIdData = async (idAccountsBook: string, userId:string): Promise<any> => {
+export const getAccountsBookByIdData = async (userId:string, idAccountsBook: string): Promise<any> => {
     try {
         const transactionFound = await AccountsBook.findOne({ where: { id: idAccountsBook, userId: userId } });
         return transactionFound;
@@ -415,9 +415,9 @@ export const patchApproveRecordData = async (userId: string, idAccountsBook: str
 
 
 //ACTUALIZAR UN REGISTRO CONTABLE DEL USER
-export const putAccountsBookData = async (idAccountsBook: string, body: IAccountsBook): Promise<IAccountsBook | null> => {
+export const putAccountsBookData = async (body: IAccountsBook, idAccountsBook: string): Promise<IAccountsBook | null> => {
     try {
-        const [rowsUpdated] = await AccountsBook.update(body, { where: { userId: idAccountsBook } });
+        const [rowsUpdated] = await AccountsBook.update(body, { where: { id: idAccountsBook } });
         if (rowsUpdated === 0) return null;
         const updatedTransaction = await AccountsBook.findByPk(idAccountsBook);
         if (!updatedTransaction) return null;

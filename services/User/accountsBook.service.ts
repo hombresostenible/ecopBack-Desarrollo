@@ -154,9 +154,9 @@ export const getUnapprovedRecordsByBranchService = async (userId: string, idBran
 
 
 //OBTENER UN REGISTRO CONTABLE POR ID DEL USER
-export const getAccountsBookByIdService = async (idAccountsBook: string, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const getAccountsBookByIdService = async (userId: string, idAccountsBook: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        const transactionsFound = await getAccountsBookByIdData(idAccountsBook, userId);
+        const transactionsFound = await getAccountsBookByIdData(userId, idAccountsBook);
         if (!transactionsFound) return { code: 404, message: 'Libro diario no encontrado' };
         return { code: 200, result: transactionsFound };
     } catch (error) {
@@ -186,11 +186,11 @@ export const patchApproveRecordService = async (userId: string, idAccountsBook: 
 
 
 //ACTUALIZAR UN REGISTRO CONTABLE DEL USER
-export const putAccountsBookService = async (idAccountsBook: string, body: IAccountsBook, userId: string): Promise<IServiceLayerResponseAccountsBook> => {
+export const putAccountsBookService = async (body: IAccountsBook, userId: string, idAccountsBook: string): Promise<IServiceLayerResponseAccountsBook> => {
     try {
-        const existingTransaction = await putAccountsBookData(idAccountsBook, body);
+        const existingTransaction = await putAccountsBookData(body, idAccountsBook);
         if (!existingTransaction) throw new ServiceError(404, 'Libro de cuentas no encontrado');
-        else await putAccountsBookData(idAccountsBook, body);
+        else await putAccountsBookData(body, idAccountsBook);
         return { code: 200, message: 'Libro de cuentas actualizado exitosamente' };
     } catch (error) {
         if (error instanceof Error) {

@@ -90,9 +90,9 @@ export const getServicesPaginatedService = async (userId: string, page: number, 
 
 
 //SERVICE PARA OBTENER TODOS LOS SERVICIOS POR SEDE PARA USER
-export const getServicesBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseService> => {
+export const getServicesBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseService> => {
     try {
-        const hasPermission = await checkPermissionForBranchService(idBranch, userId);
+        const hasPermission = await checkPermissionForBranchService(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para obtener los servicios de esta sede");
         const servicesFound = await getServiceBranchByIdData(idBranch);
         if (!servicesFound) return { code: 404, message: "No tienes permiso para obtener los servicios de esta sede" };
@@ -108,9 +108,9 @@ export const getServicesBranchService = async (idBranch: string, userId: string)
 
 
 //SERVICE PARA OBTENER UN SERVICIO POR ID PERTENECIENTE AL USER
-export const getServiceByIdService = async (idMachinery: string, userId: string): Promise<IServiceLayerResponseService> => {
+export const getServiceByIdService = async (userId: string, idMachinery: string): Promise<IServiceLayerResponseService> => {
     try {
-        const hasPermission = await checkPermissionForServices(idMachinery, userId);
+        const hasPermission = await checkPermissionForServices(userId, idMachinery);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a este servicio");
        
         const servicesFound = await getServiceByIdData(idMachinery);

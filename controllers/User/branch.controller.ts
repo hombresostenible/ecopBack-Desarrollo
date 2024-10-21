@@ -33,8 +33,8 @@ router.post("/", authRequired, checkRoleAdmin, validateSchema(branchSchemaZod), 
 //CONTROLLER PARA CREAR MASIVAMENTE SEDES PARA USER DESDE EL EXCEL
 router.post("/create-many", authRequired, checkRoleAdmin, validateSchema(manyBranchsSchemaType), async (req: Request, res: Response) => {
     try {
-        const { userId } = req.user;
         const bodyArray = req.body;
+        const { userId } = req.user;
         const serviceLayerResponse = await postManyBranchesService(bodyArray, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
@@ -92,7 +92,7 @@ router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getBranchByIdService(idBranch, userId);
+        const serviceLayerResponse = await getBranchByIdService(userId, idBranch);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;

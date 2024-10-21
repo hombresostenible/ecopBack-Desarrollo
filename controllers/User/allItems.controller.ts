@@ -13,13 +13,13 @@ router.get("/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getAllItemsByBranchService(idBranch, userId);
+        const serviceLayerResponse = await getAllItemsByBranchService(userId, idBranch);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
-}); // GET - http://localhost:3000/api/all-items
+}); // GET - http://localhost:3000/api/all-items/:idBranch
 
 
 
@@ -46,7 +46,7 @@ router.get("/name-item/query?", authRequired, async (req: Request, res: Response
         if (!nameItem) {
             return res.status(400).json({ error: 'El parámetro nameItem es requerido.' });
         }
-        const serviceLayerResponse = await getNameItemService(nameItem, userId);
+        const serviceLayerResponse = await getNameItemService(userId, nameItem);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;

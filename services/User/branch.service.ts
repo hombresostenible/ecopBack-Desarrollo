@@ -80,9 +80,9 @@ export const getBranchesPaginatedService = async (userId: string, page: number, 
 
 
 //SERVICE PARA OBTENER UNA SEDE POR ID PERTENECIENTE AL USER
-export const getBranchByIdService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseBranch> => {
+export const getBranchByIdService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseBranch> => {
     try {
-        const hasPermission = await checkPermissionForBranch(idBranch, userId);
+        const hasPermission = await checkPermissionForBranch(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a esta sede");
         const transactionFound = await getBranchByIdData(idBranch);
         if (!transactionFound) return { code: 404, message: 'Sede no encontrada' };

@@ -53,7 +53,7 @@ router.get("/userSustainabilityBranch/:idBranch", authRequired, async (req: Requ
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getSustainabilityBranchService(idBranch, userId);
+        const serviceLayerResponse = await getSustainabilityBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -90,7 +90,7 @@ router.get("/verifyEnergyConsumption/:idSustainability", authRequired, async (re
     try {
         const { userId } = req.user;
         const { idSustainability } = req.params;
-        const serviceLayerResponse = await getSustainabilityByIdService(idSustainability, userId);
+        const serviceLayerResponse = await getSustainabilityByIdService(userId, idSustainability);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -105,7 +105,7 @@ router.get("/energyConsumptionBranch/:idBranch", authRequired,async (req: Reques
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getEnergyConsumptionBranchService(idBranch, userId);
+        const serviceLayerResponse = await getEnergyConsumptionBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -142,7 +142,7 @@ router.get("/waterConsumptionBranch/:idBranch", authRequired,async (req: Request
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getWaterConsumptionBranchService(idBranch, userId);
+        const serviceLayerResponse = await getWaterConsumptionBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            
@@ -159,10 +159,10 @@ router.get("/waterConsumptionBranch/:idBranch", authRequired,async (req: Request
 //CONTROLLER PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER
 router.put("/userSustainability/:idSustainability", authRequired, async (req: Request, res: Response) => {
     try {
+        const body = req.body;
         const { userId } = req.user;
         const { idSustainability } = req.params;
-        const body = req.body;
-        const serviceLayerResponse = await putSustainabilityService(idSustainability, body, userId);
+        const serviceLayerResponse = await putSustainabilityService(body, userId, idSustainability);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -177,15 +177,12 @@ router.delete('/userSustainability/:idSustainability', authRequired, async (req:
     try {
         const { userId } = req.user;
         const { idSustainability } = req.params;
-        const serviceLayerResponse = await deleteSustainabilityService(idSustainability, userId); 
+        const serviceLayerResponse = await deleteSustainabilityService(userId, idSustainability); 
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;
         res.status(errorController.code).json(errorController.message);
     }
 }); // DELETE - http://localhost:3000/api/sustainabilityIndicators/userSustainability/:idSustainability
-
-
-
 
 export default router;

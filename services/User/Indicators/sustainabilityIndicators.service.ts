@@ -159,9 +159,9 @@ export const getWaterConsumptionBranchService = async (idBranch: string, userId:
 
 
 //SERVICE PARA ACTUALIZAR UN REGISTRO DE SOSTENIBILIDAD DEL USER
-export const putSustainabilityService = async (idSustainability: string, body: ISustainability, userId: string): Promise<IServiceLayerResponseSustainability> => {
+export const putSustainabilityService = async (body: ISustainability, userId: string, idSustainability: string): Promise<IServiceLayerResponseSustainability> => {
     try {
-        const updateSustainability = await putSustainabilityData(idSustainability, body, userId);
+        const updateSustainability = await putSustainabilityData(body, userId, idSustainability);
         if (!updateSustainability) throw new ServiceError(404, "Registro de sostenibilidad no encontrado");
         return { code: 200, message: "Registro de sostenibilidad actualizado exitosamente", result: updateSustainability };
     } catch (error) {
@@ -177,9 +177,9 @@ export const putSustainabilityService = async (idSustainability: string, body: I
 
 
 //SERVICE PARA ELIMINAR UN REGISTRO DE SOSTENIBILIDAD PERTENECIENTE AL USER
-export const deleteSustainabilityService = async (idSustainability: string, userId: string): Promise<IServiceLayerResponseSustainability> => {
+export const deleteSustainabilityService = async (userId: string, idSustainability: string): Promise<IServiceLayerResponseSustainability> => {
     try {
-        await deleteSustainabilityData(idSustainability, userId);
+        await deleteSustainabilityData(userId, idSustainability);
         return { code: 200, message: "Registro de sostenibilidad eliminado exitosamente" };
     } catch (error) {
         if (error instanceof Error) {

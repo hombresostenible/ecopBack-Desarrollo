@@ -49,9 +49,9 @@ export const getElectronicInvoicingService = async (): Promise<IServiceLayerResp
 
 
 //CONTROLLER PARA OBTENER UNA FACTURA ELECTRONICA POR ID
-export const getElectronicInvoicingByIdService = async (idElectronicInvoicing: string, userId: string): Promise<IServiceLayerResponseElectronicInvoicing> => {
+export const getElectronicInvoicingByIdService = async (userId: string, idElectronicInvoicing: string): Promise<IServiceLayerResponseElectronicInvoicing> => {
     try {
-        const electronicInvoicingFound = await getElectronicInvoicingByIdData(idElectronicInvoicing, userId);
+        const electronicInvoicingFound = await getElectronicInvoicingByIdData(userId, idElectronicInvoicing);
         if (!electronicInvoicingFound) return { code: 404, message: "Factura electrónica no encontrada" };
         return { code: 200, result: electronicInvoicingFound };
     } catch (error) {

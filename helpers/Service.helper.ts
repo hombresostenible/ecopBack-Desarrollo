@@ -5,7 +5,7 @@ import {
 import { ServiceError } from '../types/Responses/responses.types';
 
 //CHEQUEA SI LOS SERVICES PERTENECEN A LA SEDE DE USER
-export const checkPermissionForBranchService = async (idBranch: string, userId: string): Promise<boolean> => {
+export const checkPermissionForBranchService = async (userId: string, idBranch: string): Promise<boolean> => {
     try {
         const services = await getServiceBranchByIdData(idBranch);
         if (!services) return false;
@@ -22,7 +22,7 @@ export const checkPermissionForBranchService = async (idBranch: string, userId: 
 
 
 //CHEQUEA SI EL SERVICE PERTENECE A LA SEDE DE USER
-export const checkPermissionForServices = async (idService: string, userId: string): Promise<boolean> => {
+export const checkPermissionForServices = async (userId: string, idService: string): Promise<boolean> => {
     try {
         const services = await getServiceByIdData(idService);
         if (!services) return false;

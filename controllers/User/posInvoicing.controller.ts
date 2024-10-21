@@ -42,7 +42,7 @@ router.get("/:idElectronicInvoicing", authRequired, async (req: Request, res: Re
     try {
         const { userId } = req.user;
         const { idElectronicInvoicing } = req.params;
-        const serviceLayerResponse = await getElectronicInvoicingByIdService(idElectronicInvoicing, userId);
+        const serviceLayerResponse = await getElectronicInvoicingByIdService(userId, idElectronicInvoicing);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;

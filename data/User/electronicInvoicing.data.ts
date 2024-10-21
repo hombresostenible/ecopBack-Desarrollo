@@ -30,9 +30,9 @@ export const getElectronicInvoicingData = async (): Promise<any> => {
 
 
 //CONTROLLER PARA OBTENER UNA FACTURA ELECTRONICA POR ID
-export const getElectronicInvoicingByIdData = async (idElectronicInvoicing: string, userId: string): Promise<any> => {
+export const getElectronicInvoicingByIdData = async (userId: string, idElectronicInvoicing: string): Promise<any> => {
     try {
-        const electronicInvoicingFound = await ElectronicInvoicing.findOne({ where: { id: idElectronicInvoicing, userId: userId } });
+        const electronicInvoicingFound = await ElectronicInvoicing.findOne({ where: { userId: userId, id: idElectronicInvoicing } });
         return electronicInvoicingFound;
     } catch (error) {
         throw error;

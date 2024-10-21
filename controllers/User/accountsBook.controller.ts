@@ -241,7 +241,7 @@ router.get("/:idAccountsBook", authRequired, async (req: Request, res: Response)
     try {
         const { userId } = req.user;
         const { idAccountsBook } = req.params;
-        const serviceLayerResponse = await getAccountsBookByIdService(idAccountsBook, userId);
+        const serviceLayerResponse = await getAccountsBookByIdService(userId, idAccountsBook);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;
@@ -272,7 +272,7 @@ router.put("/:idAccountsBook", authRequired, checkRole, validateSchema(accountsB
         const { userId } = req.user;
         const { idAccountsBook } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await putAccountsBookService(idAccountsBook, body, userId);
+        const serviceLayerResponse = await putAccountsBookService(body, userId, idAccountsBook);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;

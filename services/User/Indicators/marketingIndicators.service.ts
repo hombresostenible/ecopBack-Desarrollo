@@ -68,9 +68,9 @@ export const getSalesFunnelCustomerAcqUserService = async (userId: string): Prom
 
 
 //SERVICE PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERACQUISITION DE UN USER
-export const getCustomerAcqBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
+export const getCustomerAcqBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
     try {
-        const hasPermission = await checkPermissionForBranchCustomerAcq(idBranch, userId);
+        const hasPermission = await checkPermissionForBranchCustomerAcq(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a los CUSTOMERACQUISITION de esta sede");
         const customerAcquisitionFound = await getCustomerAcqBranchByIdData(idBranch);
         if (!customerAcquisitionFound) return { code: 404, message: "CUSTOMERACQUISITION no encontrado en esta sede" };
@@ -86,7 +86,7 @@ export const getCustomerAcqBranchService = async (idBranch: string, userId: stri
 };
 
 //Chequea si las sedes pertenecen a User, por eso usamos el "for", para iterar cada sede y obtener los CustomerAcquisition de cada una
-const checkPermissionForBranchCustomerAcq = async (idBranch: string, userId: string): Promise<boolean> => {
+const checkPermissionForBranchCustomerAcq = async (userId: string, idBranch: string): Promise<boolean> => {
     try {
         const customerAcquisitions = await getCustomerAcqBranchByIdData(idBranch);
         if (!customerAcquisitions) return false;
@@ -107,9 +107,9 @@ const checkPermissionForBranchCustomerAcq = async (idBranch: string, userId: str
 
 
 //SERVICE PARA OBTENER UN CUSTOMERACQUISITION POR ID PERTENECIENTE AL USER
-export const getCustomerAcqService = async (idCustomerAcquisition: string, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
+export const getCustomerAcqService = async (userId: string, idCustomerAcquisition: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
     try {
-        const hasPermission = await checkPermissionForCustomerAcq(idCustomerAcquisition, userId);
+        const hasPermission = await checkPermissionForCustomerAcq(userId, idCustomerAcquisition);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a este CUSTOMERACQUISITION");
         const customerAcqFound = await getCustomerAcqByIdData(idCustomerAcquisition);
         if (!customerAcqFound) return { code: 404, message: "CUSTOMERACQUISITION no encontrado" };
@@ -127,9 +127,9 @@ export const getCustomerAcqService = async (idCustomerAcquisition: string, userI
 
 
 //SERVICE PARA ACTUALIZAR UN CUSTOMERACQUISITION PERTENECIENTE AL USER
-export const putSalesFunnelCustomerAcqService = async (idCustomerAcquisition: string, body: ISalesFunnelCustomerAcq, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
+export const putSalesFunnelCustomerAcqService = async (body: ISalesFunnelCustomerAcq, userId: string, idCustomerAcquisition: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
     try {
-        const hasPermission = await checkPermissionForCustomerAcq(idCustomerAcquisition, userId);
+        const hasPermission = await checkPermissionForCustomerAcq(userId, idCustomerAcquisition);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este CUSTOMERACQUISITION");
         const updateSalesFunnelCustomerAcq = await putSalesFunnelCustomerAcqData(idCustomerAcquisition, body);
         if (!updateSalesFunnelCustomerAcq) throw new ServiceError(404, 'CUSTOMERACQUISITION no encontrado');
@@ -145,7 +145,7 @@ export const putSalesFunnelCustomerAcqService = async (idCustomerAcquisition: st
 };
 
 //Chequea si el CUSTOMERACQUISITION pertenece al User
-const checkPermissionForCustomerAcq = async (idCustomerAcquisition: string, userId: string): Promise<boolean> => {
+const checkPermissionForCustomerAcq = async (userId: string, idCustomerAcquisition: string): Promise<boolean> => {
     try {
         const customerAcq = await getCustomerAcqByIdData(idCustomerAcquisition);
         if (!customerAcq) return false;
@@ -164,9 +164,9 @@ const checkPermissionForCustomerAcq = async (idCustomerAcquisition: string, user
 
 
 //SERVICE PARA ELIMINAR UN REGISTRO DEL CUSTOMERACQUISITION PERTENECIENTE AL USER
-export const deleteSalesFunnelCustomerAcqService = async (idCustomerAcquisition: string, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
+export const deleteSalesFunnelCustomerAcqService = async (userId: string, idCustomerAcquisition: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
     try {
-        const hasPermission = await checkPermissionForCustomerAcq(idCustomerAcquisition, userId);
+        const hasPermission = await checkPermissionForCustomerAcq(userId, idCustomerAcquisition);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este registro del CUSTOMERACQUISITION");
         await deleteSalesFunnelCustomerAcqData(idCustomerAcquisition);
         return { code: 200, message: 'Registro del CUSTOMERACQUISITION eliminado exitosamente' };
@@ -228,9 +228,9 @@ export const getSalesFunnelCustomerRetUserService = async (userId: string): Prom
 
 
 //SERVICE PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERRETENTION DE UN USER
-export const getCustomerRetBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
+export const getCustomerRetBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseSalesFunnelCustomerAcq> => {
     try {
-        const hasPermission = await checkPermissionForBranchCustomerRet(idBranch, userId);
+        const hasPermission = await checkPermissionForBranchCustomerRet(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a los CUSTOMERRETENTION de esta sede");
         const customerRetentiontionFound = await getCustomerRetBranchByIdData(idBranch);
         if (!customerRetentiontionFound) return { code: 404, message: "CUSTOMERRETENTION no encontrado en esta sede" };
@@ -246,7 +246,7 @@ export const getCustomerRetBranchService = async (idBranch: string, userId: stri
 };
 
 //Chequea si las sedes pertenecen a User, por eso usamos el "for", para iterar cada sede y obtener los CUSTOMERRETENTION de cada una
-const checkPermissionForBranchCustomerRet = async (idBranch: string, userId: string): Promise<boolean> => {
+const checkPermissionForBranchCustomerRet = async (userId: string, idBranch: string): Promise<boolean> => {
     try {
         const customerRetentions = await getCustomerRetBranchByIdData(idBranch);
         if (!customerRetentions) return false;
@@ -267,9 +267,9 @@ const checkPermissionForBranchCustomerRet = async (idBranch: string, userId: str
 
 
 //SERVICE PARA OBTENER UN CUSTOMERRETENTION POR ID PERTENECIENTE AL USER
-export const getCustomerRetService = async (idCustomerRetention: string, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerRet> => {
+export const getCustomerRetService = async (userId: string, idCustomerRetention: string): Promise<IServiceLayerResponseSalesFunnelCustomerRet> => {
     try {
-        const hasPermission = await checkPermissionForCustomerRet(idCustomerRetention, userId);
+        const hasPermission = await checkPermissionForCustomerRet(userId, idCustomerRetention);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a este CUSTOMERRETENTION");
         const customerRetFound = await getCustomerRetByIdData(idCustomerRetention);
         if (!customerRetFound) return { code: 404, message: "CUSTOMERRETENTION no encontrado" };
@@ -287,9 +287,9 @@ export const getCustomerRetService = async (idCustomerRetention: string, userId:
 
 
 //SERVICE PARA ACTUALIZAR UN CUSTOMERRETENTION PERTENECIENTE AL USER
-export const putSalesFunnelCustomerRetService = async (idCustomerRetention: string, body: ISalesFunnelCustomerRet, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerRet> => {
+export const putSalesFunnelCustomerRetService = async (body: ISalesFunnelCustomerRet, userId: string, idCustomerRetention: string): Promise<IServiceLayerResponseSalesFunnelCustomerRet> => {
     try {
-        const hasPermission = await checkPermissionForCustomerRet(idCustomerRetention, userId);
+        const hasPermission = await checkPermissionForCustomerRet(userId, idCustomerRetention);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este CUSTOMERRETENTION");
         const updateSalesFunnelCustomerRet = await putSalesFunnelCustomerRetData(idCustomerRetention, body);
         if (!updateSalesFunnelCustomerRet) throw new ServiceError(404, 'CUSTOMERRETENTION no encontrado');
@@ -309,7 +309,7 @@ export const putSalesFunnelCustomerRetService = async (idCustomerRetention: stri
 
 
 //Chequea si el CUSTOMERRETENTION pertenece al User
-const checkPermissionForCustomerRet = async (idCustomerAcquisition: string, userId: string): Promise<boolean> => {
+const checkPermissionForCustomerRet = async (userId: string, idCustomerAcquisition: string): Promise<boolean> => {
     try {
         const rawMaterial = await getCustomerRetByIdData(idCustomerAcquisition);
         if (!rawMaterial) return false;
@@ -328,9 +328,9 @@ const checkPermissionForCustomerRet = async (idCustomerAcquisition: string, user
 
 
 //SERVICIO PARA ELIMINAR UN REGISTRO DEL CUSTOMERRETENTION PERTENECIENTE AL USER
-export const deleteSalesFunnelCustomerRetService = async (idCustomerRetention: string, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerRet> => {
+export const deleteSalesFunnelCustomerRetService = async (userId: string, idCustomerRetention: string): Promise<IServiceLayerResponseSalesFunnelCustomerRet> => {
     try {
-        const hasPermission = await checkPermissionForCustomerRet(idCustomerRetention, userId);
+        const hasPermission = await checkPermissionForCustomerRet(userId, idCustomerRetention);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este registro del CUSTOMERRETENTION");
         await deleteSalesFunnelCustomerRetData(idCustomerRetention);
         return { code: 200, message: 'Registro del CUSTOMERRETENTION eliminado exitosamente' };
@@ -392,9 +392,9 @@ export const getSalesFunnelCustomerDigitalUserService = async (userId: string): 
 
 
 //SERVICE PARA OBTENER TODOS LOS REGISTOS DE UNA SEDE DEL CUSTOMERDIGITAL DE UN USER
-export const getCustomerDigitalBranchService = async (idBranch: string, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
+export const getCustomerDigitalBranchService = async (userId: string, idBranch: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
     try {
-        const hasPermission = await checkPermissionForBranchCustomerDigital(idBranch, userId);
+        const hasPermission = await checkPermissionForBranchCustomerDigital(userId, idBranch);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a los CUSTOMERDIGITAL de esta sede");
         const customerDigitalFound = await getCustomerDigitalBranchByIdData(idBranch);
         if (!customerDigitalFound) return { code: 404, message: "CUSTOMERDIGITAL no encontrado en esta sede" };
@@ -410,7 +410,7 @@ export const getCustomerDigitalBranchService = async (idBranch: string, userId: 
 };
 
 //Chequea si las sedes pertenecen a User, por eso usamos el "for", para iterar cada sede y obtener los CUSTOMERDIGITAL de cada una
-const checkPermissionForBranchCustomerDigital = async (idBranch: string, userId: string): Promise<boolean> => {
+const checkPermissionForBranchCustomerDigital = async (userId: string, idBranch: string): Promise<boolean> => {
     try {
         const customerDigitals = await getCustomerDigitalBranchByIdData(idBranch);
         if (!customerDigitals) return false;
@@ -431,9 +431,9 @@ const checkPermissionForBranchCustomerDigital = async (idBranch: string, userId:
 
 
 //SERVICE PARA OBTENER UN CUSTOMERDIGITAL POR ID PERTENECIENTE AL USER
-export const getCustomerDigitalService = async (idCustomerDigital: string, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
+export const getCustomerDigitalService = async (userId: string, idCustomerDigital: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
     try {
-        const hasPermission = await checkPermissionForCustomerDigital(idCustomerDigital, userId);
+        const hasPermission = await checkPermissionForCustomerDigital(userId, idCustomerDigital);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para acceder a este CUSTOMERDIGITAL");
         const customerDigitalFound = await getCustomerDigitalByIdData(idCustomerDigital);
         if (!customerDigitalFound) return { code: 404, message: "CUSTOMERDIGITAL no encontrado" };
@@ -451,9 +451,9 @@ export const getCustomerDigitalService = async (idCustomerDigital: string, userI
 
 
 //SERVICE PARA ACTUALIZAR UN CUSTOMERDIGITAL PERTENECIENTE AL USER
-export const putSalesFunnelCustomerDigitalService = async (idCustomerDigital: string, body: ISalesFunnelSalesDigital, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
+export const putSalesFunnelCustomerDigitalService = async (body: ISalesFunnelSalesDigital, userId: string, idCustomerDigital: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
     try {
-        const hasPermission = await checkPermissionForCustomerDigital(idCustomerDigital, userId);
+        const hasPermission = await checkPermissionForCustomerDigital(userId, idCustomerDigital);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para actualizar este CUSTOMERDIGITAL");
         const updateSalesFunnelCustomerDigital = await putSalesFunnelSalesDigitalData(idCustomerDigital, body);
         if (!updateSalesFunnelCustomerDigital) throw new ServiceError(404, 'CUSTOMERDIGITAL no encontrado');
@@ -471,7 +471,7 @@ export const putSalesFunnelCustomerDigitalService = async (idCustomerDigital: st
 
 
 //Chequea si el CUSTOMERDIGITAL pertenece al User
-const checkPermissionForCustomerDigital = async (idCustomerDigital: string, userId: string): Promise<boolean> => {
+const checkPermissionForCustomerDigital = async (userId: string, idCustomerDigital: string): Promise<boolean> => {
     try {
         const customerDigital = await getCustomerDigitalByIdData(idCustomerDigital);
         if (!customerDigital) return false;
@@ -490,7 +490,7 @@ const checkPermissionForCustomerDigital = async (idCustomerDigital: string, user
 
 
 //SERVICE PARA ELIMINAR UN REGISTRO DEL CUSTOMERDIGITAL PERTENECIENTE AL USER
-export const deleteSalesFunnelCustomerDigitalService = async (idCustomerDigital: string, userId: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
+export const deleteSalesFunnelCustomerDigitalService = async (userId: string, idCustomerDigital: string): Promise<IServiceLayerResponseSalesFunnelCustomerDigital> => {
     try {
         const hasPermission = await checkPermissionForCustomerDigital(idCustomerDigital, userId);
         if (!hasPermission) throw new ServiceError(403, "No tienes permiso para eliminar este registro del CUSTOMERDIGITAL");

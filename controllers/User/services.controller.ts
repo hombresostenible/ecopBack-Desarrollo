@@ -92,9 +92,9 @@ router.get("/paginated", authRequired, async (req: Request, res: Response) => {
 //CONTROLLER PARA OBTENER UN SERVICIO POR ID PERTENECIENTE AL USER
 router.get("/:idService", authRequired, async (req: Request, res: Response) => {
     try {
-        const { idService } = req.params;
         const { userId } = req.user;
-        const serviceLayerResponse = await getServiceByIdService(idService, userId);
+        const { idService } = req.params;
+        const serviceLayerResponse = await getServiceByIdService(userId, idService);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -107,9 +107,9 @@ router.get("/:idService", authRequired, async (req: Request, res: Response) => {
 //CONTROLLER PARA OBTENER TODOS LOS SERVICIOS POR SEDE PARA USER
 router.get("/services-branch/:idBranch", authRequired, async (req: Request, res: Response) => {
     try {
-        const { idBranch } = req.params;
         const { userId } = req.user;
-        const serviceLayerResponse = await getServicesBranchService(idBranch, userId);
+        const { idBranch } = req.params;
+        const serviceLayerResponse = await getServicesBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {            

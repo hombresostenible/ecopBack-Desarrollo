@@ -18,8 +18,8 @@ const router = express.Router();
 //CREAR UN USUARIO DE PLATAFORMA
 router.post("/", authRequired, checkRoleCreateUserPlatform, validateSchema(userPlatformSchema), async (req: Request, res: Response) => {
     try {
-        const { userId } = req.user;
         const body = req.body;
+        const { userId } = req.user;
         const serviceLayerResponse = await postUserPlatformService(body, userId);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {

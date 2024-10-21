@@ -34,8 +34,8 @@ const router = express.Router();
 //CONTROLLER PARA CREAR UN CUSTOMERACQUISITION EN LA SEDE DE USER
 router.post("/customerAcquisition", authRequired, validateSchema(salesFunnelCustomerAcqSchemaZod), async (req: Request, res: Response) => {
     try {
-        const { userId, typeRole } = req.user;
         const body = req.body;
+        const { userId, typeRole } = req.user;
         const serviceLayerResponse = await postSalesFunnelCustomerAcqService(body, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
@@ -69,7 +69,7 @@ router.get("/customerAcquisitionBranch/:idBranch", authRequired, async (req: Req
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getCustomerAcqBranchService(idBranch, userId);
+        const serviceLayerResponse = await getCustomerAcqBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -88,7 +88,7 @@ router.get("/customerAcquisition/:idCustomerAcquisition", authRequired, async (r
     try {
         const { userId } = req.user;
         const { idCustomerAcquisition } = req.params;
-        const serviceLayerResponse = await getCustomerAcqService(idCustomerAcquisition, userId);
+        const serviceLayerResponse = await getCustomerAcqService(userId, idCustomerAcquisition);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;
@@ -101,10 +101,10 @@ router.get("/customerAcquisition/:idCustomerAcquisition", authRequired, async (r
 //CONTROLLER PARA ACTUALIZAR UN CUSTOMERACQUISITION PERTENECIENTE AL USER
 router.put("/customerAcquisition/:idCustomerAcquisition", authRequired, validateSchema(salesFunnelCustomerAcqSchemaZod), async (req: Request, res: Response) => {
     try {
+        const body = req.body;
         const { userId } = req.user;
         const { idCustomerAcquisition } = req.params;
-        const body = req.body;
-        const serviceLayerResponse = await putSalesFunnelCustomerAcqService(idCustomerAcquisition, body, userId);
+        const serviceLayerResponse = await putSalesFunnelCustomerAcqService(body, userId, idCustomerAcquisition);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -119,7 +119,7 @@ router.delete('/customerAcquisition/:idCustomerAcquisition', authRequired, async
     try {
         const { userId } = req.user;
         const { idCustomerAcquisition } = req.params;
-        const serviceLayerResponse = await deleteSalesFunnelCustomerAcqService(idCustomerAcquisition, userId);  
+        const serviceLayerResponse = await deleteSalesFunnelCustomerAcqService(userId, idCustomerAcquisition);  
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -211,7 +211,7 @@ router.put("/customerRetention/:idCustomerRetention", authRequired, validateSche
         const { userId } = req.user;
         const { idCustomerRetention } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await putSalesFunnelCustomerRetService(idCustomerRetention, body, userId);
+        const serviceLayerResponse = await putSalesFunnelCustomerRetService(body, userId, idCustomerRetention);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -227,7 +227,7 @@ router.delete('/customerRetention/:idCustomerRetention', authRequired, async (re
     try {
         const { userId } = req.user;
         const { idCustomerRetention } = req.params;
-        const serviceLayerResponse = await deleteSalesFunnelCustomerRetService(idCustomerRetention, userId);  
+        const serviceLayerResponse = await deleteSalesFunnelCustomerRetService(userId, idCustomerRetention);  
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -248,8 +248,8 @@ router.delete('/customerRetention/:idCustomerRetention', authRequired, async (re
 //CONTROLLER PARA CREAR UN CUSTOMERDIGITAL EN LA SEDE DE USER
 router.post("/customerDigital", authRequired, validateSchema(salesFunnelCustomerDigitalSchemaZod), async (req: Request, res: Response) => {
     try {
-        const { userId, typeRole } = req.user;
         const body = req.body;
+        const { userId, typeRole } = req.user;
         const serviceLayerResponse = await postSalesFunnelCustomerDigitalService(body, userId, typeRole);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
     } catch (error) {
@@ -284,7 +284,7 @@ router.get("/customerDigitalBranch/:idBranch", authRequired, async (req: Request
     try {
         const { userId } = req.user;
         const { idBranch } = req.params;
-        const serviceLayerResponse = await getCustomerDigitalBranchService(idBranch, userId);
+        const serviceLayerResponse = await getCustomerDigitalBranchService(userId, idBranch);
         if (Array.isArray(serviceLayerResponse.result)) {
             res.status(200).json(serviceLayerResponse.result);
         } else {
@@ -303,7 +303,7 @@ router.get("/customerDigital/:idCustomerDigital", authRequired, async (req: Requ
     try {
         const { userId } = req.user;
         const { idCustomerDigital } = req.params;
-        const serviceLayerResponse = await getCustomerDigitalService(idCustomerDigital, userId);
+        const serviceLayerResponse = await getCustomerDigitalService(userId, idCustomerDigital);
         res.status(serviceLayerResponse.code).json({ result: serviceLayerResponse.result });
     } catch (error) {
         const errorController = error as ServiceError;
@@ -319,7 +319,7 @@ router.put("/customerDigital/:idCustomerDigital", authRequired, validateSchema(s
         const { userId } = req.user;
         const { idCustomerDigital } = req.params;
         const body = req.body;
-        const serviceLayerResponse = await putSalesFunnelCustomerDigitalService(idCustomerDigital, body, userId);
+        const serviceLayerResponse = await putSalesFunnelCustomerDigitalService(body, userId, idCustomerDigital);
         res.status(serviceLayerResponse.code).json(serviceLayerResponse);
     } catch (error) {
         const errorController = error as ServiceError;
@@ -334,7 +334,7 @@ router.delete('/customerDigital/:idCustomerDigital', authRequired, async (req: R
     try {
         const { userId } = req.user;
         const { idCustomerDigital } = req.params;
-        const serviceLayerResponse = await deleteSalesFunnelCustomerDigitalService(idCustomerDigital, userId);  
+        const serviceLayerResponse = await deleteSalesFunnelCustomerDigitalService(userId, idCustomerDigital);  
         res.status(serviceLayerResponse.code).json(serviceLayerResponse.message);
     } catch (error) {
         const errorController = error as ServiceError;
