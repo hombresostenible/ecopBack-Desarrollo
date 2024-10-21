@@ -37,7 +37,7 @@ export const isBranchAssociatedUserSuperadminRole = async ( userId: string, type
 
 
 //VALIDA SI EL ROL ES SUPERADMIN O ADMINISTRADOR Y LA SEDE PERTENECE AL MISMO USER
-export const isBranchAssociatedWithUserRole = async (branchId: string, userId: string, typeRole: string): Promise<boolean> => {
+export const isBranchAssociatedWithUserRole = async (userId: string, typeRole: string, branchId: string): Promise<boolean> => {
     try {
         if (typeRole === 'Superadmin') {
             const branch = await Branch.findOne({
