@@ -12,6 +12,9 @@ import expressWs from 'express-ws';
 import session from 'express-session';
 import './helpers/POS/serialListener';
 
+import Notification from './schema/User/notifications/notification.schema';
+
+
 class Server {
     private app: expressWs.Application; 
     private port: string;
@@ -36,6 +39,11 @@ class Server {
             console.log('Base de datos conectada');
             await db.sync();
             // await db.sync({ force: true }); // En producción, puedes usar `await db.sync();` en lugar de `{ force: true }`,Esto elimina y recrea las tablas en cada reinicio
+
+            // NOTIFICACIONES
+            await Notification.sync({ alter: true });
+       
+
             console.log('Modelos sincronizados con la base de datos');
         } catch (error) {
             console.error('Error al conectar la base de datos:', error);
