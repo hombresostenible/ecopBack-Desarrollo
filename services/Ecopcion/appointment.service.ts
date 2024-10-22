@@ -7,7 +7,7 @@ import {
     getConsultAdAppointmentData,
 } from "../../data/Ecopcion/appointment.data";
 import { IAppointment } from "../../types/Ecopcion/appointment.types";
-import { ServiceError } from '../../types/Responses/responses.types';
+import { ServiceError } from "../../types/Responses/responses.types";
 import { IServiceLayerResponseAppointment } from '../../types/Ecopcion/responsesEcopcion.types';
 
 //SERVICE PARA CREAR UNA CITA PARA USER

@@ -1,6 +1,6 @@
-import AccountsReceivable from '../../../schema/User/accountsReceivable.schema';
-import { IAccountsBook } from '../../../types/User/accountsBook.types';
-import { IAccountsReceivable } from "../../../types/User/accountsReceivable.types";
+import AccountsReceivable from '../../../schema/UserPanel/accountsReceivable.schema';
+import { IAccountsBook } from '../../../types/UserPanel/accountsBook.types';
+import { IAccountsReceivable } from "../../../types/UserPanel/accountsReceivable.types";
 import { ServiceError } from '../../../types/Responses/responses.types';
 
 // Función para generar el número consecutivo basado en la fecha

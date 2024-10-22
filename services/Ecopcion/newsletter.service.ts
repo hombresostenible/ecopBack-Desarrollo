@@ -1,7 +1,7 @@
 import {  postNewsletterData } from "../../data/Ecopcion/newsletter.data";
 import { INewsletter } from "../../types/Ecopcion/newsletter.types";
 import { IServiceLayerResponseContactUs } from '../../types/Ecopcion/responsesEcopcion.types';
-import { ServiceError } from '../../types/Responses/responses.types';
+import { ServiceError } from "../../types/Responses/responses.types";
 
 //SERVICE PARA CREAR LA SUSCRIPCION A NEWSLETTERS
 export const postNewsletterService = async (body: INewsletter): Promise<IServiceLayerResponseContactUs> => {

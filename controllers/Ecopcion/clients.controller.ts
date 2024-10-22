@@ -2,8 +2,8 @@ import express, { Request, Response } from "express";
 import {
     getMerchandisesService,
 } from "../../services/User/merchandise.service";
-import { authRequired } from '../../middlewares/Token/Token.middleware';
-import { ServiceError } from '../../types/Responses/responses.types';
+import { authRequired } from "../../../../middlewares/Token/Token.middleware";
+import { ServiceError } from "../../../../types/Responses/responses.types";
 const router = express.Router();
 
 //OBTENER TODA LA MERCANCIA DEL USER

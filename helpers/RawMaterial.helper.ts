@@ -1,7 +1,7 @@
 import {
     getRawMaterialsByBranchData,
     getRawMaterialByIdData,
-} from "../data/User/rawMaterial.data";
+} from "../data/UserPanel/03Inventories/04InventoryRawMaterals/rawMaterial.data";
 import { ServiceError } from '../types/Responses/responses.types';
 
 //CHEQUEA SI LAS RAWMATERIAL PERTENECEN A LA SEDE DE USER

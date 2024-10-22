@@ -1,7 +1,7 @@
 import {
     getProductsBranchData,
     getProductByIdData,
-} from "../data/User/product.data";
+} from "../data/UserPanel/03Inventories/03InventoryProducts/product.data";
 import { ServiceError } from '../types/Responses/responses.types';
 
 //CHEQUEA SI LOS PRODUCTS PERTENECEN A LA SEDE DE USER

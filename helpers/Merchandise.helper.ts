@@ -1,7 +1,7 @@
 import {
     getMerchandiseBranchByIdData,
     getMerchandiseByIdData,
-} from "../data/User/merchandise.data";
+} from "../data/UserPanel/03Inventories/02InventoryMerchadises/merchandise.data";
 import { ServiceError } from '../types/Responses/responses.types';
 
 //CHEQUEA SI LAS MERCHANDISES PERTENECEN A LA SEDE DE USER

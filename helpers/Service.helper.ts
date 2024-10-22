@@ -1,7 +1,7 @@
 import {
     getServiceBranchByIdData,
     getServiceByIdData,
-} from "../data/User/services.data";
+} from "../data/UserPanel/03Inventories/05InventoryServices/services.data";
 import { ServiceError } from '../types/Responses/responses.types';
 
 //CHEQUEA SI LOS SERVICES PERTENECEN A LA SEDE DE USER

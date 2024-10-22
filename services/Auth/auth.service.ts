@@ -16,7 +16,7 @@ import {
     ILoginServiceLayerResponse,
     IUserServiceLayerResponse,
 } from '../../types/Responses/responses.types';
-import { IUser } from "../../types/User/users.types";
+import { IUser } from "../../types/UserPanel/users.types";
 const TOKEN_SECRET = process.env.TOKEN_SECRET || 'default_token_secret';
 
 //LOGIN DE USUARIOS

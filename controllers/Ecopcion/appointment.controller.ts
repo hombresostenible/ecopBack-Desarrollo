@@ -7,7 +7,7 @@ import {
     deleteAppointmentService,
     getConsultAdAppointmentService,
 } from "../../services/Ecopcion/appointment.service";
-import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
+import { validateSchema } from "../../middlewares/Schema/Schema.middleware";
 import { appointmentSchemaZod } from '../../validations/Ecopcion/appointment.zod';
 import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();

@@ -1,7 +1,7 @@
 import { postContactUsData } from "../../data/Ecopcion/contactUs.data";
 import { IContactUs } from "../../types/Ecopcion/contactUs.types";
 import { IServiceLayerResponseContactUs } from '../../types/Ecopcion/responsesEcopcion.types';
-import { ServiceError } from '../../types/Responses/responses.types';
+import { ServiceError } from "../../types/Responses/responses.types";
 
 //CREA REGISTRO DE CONTACTANOS
 export const postContactUsService = async (body: IContactUs): Promise<IServiceLayerResponseContactUs> => {

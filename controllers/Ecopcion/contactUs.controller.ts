@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import { postContactUsService } from "../../services/Ecopcion/contactUs.service";
-import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
+import { validateSchema } from "../../middlewares/Schema/Schema.middleware";
 import { contactUsSchema } from '../../validations/Ecopcion/contactUs.zod';
-import { ServiceError } from '../../types/Responses/responses.types';
+import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 
 //CREA REGISTRO DE CONTACTANOS
