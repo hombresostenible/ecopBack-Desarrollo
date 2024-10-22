@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import { postNewsletterService } from "../../services/Ecopcion/newsletter.service";
-import { validateSchema } from '../../middlewares/Schema/Schema.middleware';
+import { validateSchema } from "../../middlewares/Schema/Schema.middleware";
 import { newsletterSchema } from '../../validations/Ecopcion/newsletter.zod';
-import { ServiceError } from '../../types/Responses/responses.types';
+import { ServiceError } from "../../types/Responses/responses.types";
 const router = express.Router();
 
 //CONTROLLER PARA CREAR LA SUSCRIPCION A NEWSLETTERS

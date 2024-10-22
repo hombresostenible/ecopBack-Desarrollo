@@ -7,7 +7,7 @@ import {
     mailCancelAppointmentUser,
 } from '../../libs/nodemailer';
 import { IAppointment } from "../../types/Ecopcion/appointment.types";
-import { ServiceError } from '../../types/Responses/responses.types';
+import { ServiceError } from "../../types/Responses/responses.types";
 
 //DATA PARA CREAR UNA CITA PARA USER
 export const postAppointmentData = async (body: IAppointment): Promise<any> => {

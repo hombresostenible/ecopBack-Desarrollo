@@ -1,5 +1,5 @@
-import { getBranchByIdData } from "../data/User/branch.data";
-import Branch from '../schema/User/branch.schema';
+import { getBranchByIdData } from "../data/UserPanel/02Branch/branch.data";
+import Branch from '../schema/UserPanel/branch.schema';
 import { ServiceError } from '../types/Responses/responses.types';
 
 //CHEQUEA SI LA BRANCH PERTENECE A UN USER

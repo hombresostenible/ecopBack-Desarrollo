@@ -1,6 +1,6 @@
-import User from '../../schema/User/user.schema';
-import UserPlatform from '../../schema/User/userPlatform.schema';
-import { ServiceError } from '../../types/Responses/responses.types';
+import User from '../../schema/UserPanel/user.schema';
+import UserPlatform from '../../schema/UserPanel/userPlatform.schema';
+import { ServiceError } from "../../types/Responses/responses.types";
 
 //BUSCA EL CORREO DEL USER QUE SE DESEA LOGEAR
 export const searchUserByEmail = async (email: string) => {

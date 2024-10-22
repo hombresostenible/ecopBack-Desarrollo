@@ -1,7 +1,7 @@
 import { Optional } from 'sequelize/types';
 import Newsletter from '../../schema/Ecopcion/newsletter.schema';
 import { INewsletter } from "../../types/Ecopcion/newsletter.types";
-import { ServiceError } from '../../types/Responses/responses.types';
+import { ServiceError } from "../../types/Responses/responses.types";
 import {
     transporterZoho,
     mailSubscribeNewsletter,

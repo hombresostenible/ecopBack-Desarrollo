@@ -1,6 +1,6 @@
-import AccountsPayable from '../../../schema/User/accountsPayable.schema';
-import { IAccountsBook } from "../../../types/User/accountsBook.types";
-import { IAccountsPayable } from "../../../types/User/accountsPayable.types";
+import AccountsPayable from '../../../schema/UserPanel/accountsPayable.schema';
+import { IAccountsBook } from "../../../types/UserPanel/accountsBook.types";
+import { IAccountsPayable } from "../../../types/UserPanel/accountsPayable.types";
 import { ServiceError } from '../../../types/Responses/responses.types';
 
 // SE CREA LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA USER

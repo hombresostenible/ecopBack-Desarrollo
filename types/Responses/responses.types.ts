@@ -1,21 +1,21 @@
-import { IUser } from '../User/users.types';
-import { IUserPlatform } from '../User/userPlatform.types';
-import { IBranch } from "../User/branch.types";
-import { IAssets } from "../User/assets.types";
-import { IMerchandise } from "../User/merchandise.types";
-import { IProduct } from "../User/products.types";
-import { IRawMaterial } from "../User/rawMaterial.types";
-import { IService } from '../User/services.types';
-import { IAccountsBook } from "../User/accountsBook.types";
-import { ISustainability } from "../User/sustainability.types";
-import { IElectronicInvoicing } from "../User/electronicInvoicing.types";
-import { IInvoicingPOS } from "../User/invoicingPOS.types";
-import { ICrmClients } from '../User/crmClients.types';
-import { ICrmSuppliers } from '../User/crmSupplier.types';
-import { ISalesFunnelCustomerAcq, ISalesFunnelCustomerRet, ISalesFunnelSalesDigital } from "../User/salesFunnel.types";
-import { IContactUs } from "../User/contactUs.types";
-import { IAccountsPayable } from '../User/accountsPayable.types';
-import { IAccountsReceivable } from '../User/accountsReceivable.types';
+import { IUser } from '../UserPanel/users.types';
+import { IUserPlatform } from '../UserPanel/userPlatform.types';
+import { IBranch } from "../UserPanel/02Branch/branch.types";
+import { IAssets } from "../UserPanel/03Inventories/01InventoryAssets/assets.types";
+import { IMerchandise } from "../UserPanel/03Inventories/02InventoryMerchadises/merchandise.types";
+import { IProduct } from "../UserPanel/03Inventories/03InventoryProducts/products.types";
+import { IRawMaterial } from "../UserPanel/03Inventories/04InventoryRawMaterals/rawMaterial.types";
+import { IService } from '../UserPanel/03Inventories/05InventoryServices/services.types';
+import { IAccountsBook } from "../UserPanel/accountsBook.types";
+import { ISustainability } from "../UserPanel/sustainability.types";
+import { IElectronicInvoicing } from "../UserPanel/electronicInvoicing.types";
+import { IInvoicingPOS } from "../UserPanel/invoicingPOS.types";
+import { ICrmClients } from '../UserPanel/crmClients.types';
+import { ICrmSuppliers } from '../UserPanel/crmSupplier.types';
+import { ISalesFunnelCustomerAcq, ISalesFunnelCustomerRet, ISalesFunnelSalesDigital } from "../UserPanel/salesFunnel.types";
+import { IContactUs } from "../UserPanel/contactUs.types";
+import { IAccountsPayable } from '../UserPanel/accountsPayable.types';
+import { IAccountsReceivable } from '../UserPanel/accountsReceivable.types';
 
 //INTERFACE DE ERRORES
 export class ServiceError extends Error {

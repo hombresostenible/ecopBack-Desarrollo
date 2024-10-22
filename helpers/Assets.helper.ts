@@ -1,7 +1,7 @@
 import {
     getAssetBranchData,
     getAssetByIdData,
-} from "../data/User/assets.data";
+} from "../data/UserPanel/03Inventories/01InventoryAssets/assets.data";
 import { ServiceError } from "../types/Responses/responses.types";
 
 //CHEQUEA SI LOS EQUIPOS, HERRAMIENTAS O MAQUINAS PERTENECEN A LA SEDE DE USER

@@ -1,6 +1,6 @@
-import Product from "../../../schema/User/product.schema";
-import RawMaterial from "../../../schema/User/rawMaterial.schema";
-import { IItemsAccountsBook } from '../../../types/User/accountsBook.types';
+import Product from "../../../schema/UserPanel/product.schema";
+import RawMaterial from "../../../schema/UserPanel/rawMaterial.schema";
+import { IItemsAccountsBook } from '../../../types/UserPanel/accountsBook.types';
 import { ServiceError } from '../../../types/Responses/responses.types';
 
 export const incomeFromCashSaleProduct = async (item: IItemsAccountsBook, branchId: string, transactionType: string): Promise<any> => {

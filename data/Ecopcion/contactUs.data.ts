@@ -6,7 +6,7 @@ import {
     mailEcopcionContactUs,
 } from '../../libs/nodemailer';
 import { IContactUs } from "../../types/Ecopcion/contactUs.types";
-import { ServiceError } from '../../types/Responses/responses.types';
+import { ServiceError } from "../../types/Responses/responses.types";
 
 //CREA REGISTRO DE CONTACTANOS
 export const postContactUsData = async (body: IContactUs): Promise<any> => {
