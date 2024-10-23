@@ -13,6 +13,8 @@ class Notification extends Model {
     public executionDate!: Date | null; // Fecha programada de ejecución
     public userId!: string; // Usuario que recibirá la notificación
     public isRead!: boolean; // Indicador de si fue leída
+    public isDelete!: boolean; // Indicador de si fue eliminada
+    public isPending!:boolean; // Indicador de si está pendiente de ser enviada
 };
 
 Notification.init(
@@ -60,6 +62,16 @@ Notification.init(
         isRead: {
             type: DataTypes.BOOLEAN,
             defaultValue: false, // Por defecto, no se ha leído
+            allowNull: false,
+        },
+        isDelete: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false, // Por defecto, no se ha eliminado
+            allowNull: false,
+        },
+        isPending: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false, // Por defecto, no se ha eliminado
             allowNull: false,
         },
     },

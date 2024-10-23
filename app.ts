@@ -7,10 +7,12 @@ import morgan from 'morgan';
 import xml2js from 'xml2js';
 import db from './db';
 import { routerApi } from './controllers/routes';
-import websocketControllers  from './controllers/POS/websocket.controller';
+import websocketPOSController  from './controllers/POS/websocket.controller';
+import {websocketNotificationController}  from './controllers/User/notifications/websocketNotifications.controller';
 import expressWs from 'express-ws';
 import session from 'express-session';
 import './helpers/POS/serialListener';
+import './helpers/notifications/schedule.helper';
 
 import Notification from './schema/User/notifications/notification.schema';
 
@@ -52,7 +54,8 @@ class Server {
     };
 
     private routes() {
-        websocketControllers(this.app);
+        websocketPOSController(this.app);
+        websocketNotificationController(this.app);
         routerApi(this.app);
     };
 
