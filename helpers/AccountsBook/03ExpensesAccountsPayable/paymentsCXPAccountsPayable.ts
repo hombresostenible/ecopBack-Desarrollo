@@ -1,5 +1,5 @@
 import AccountsPayable from '../../../schema/UserPanel/accountsPayable.schema';
-import { IAccountsBook } from "../../../types/UserPanel/accountsBook.types";
+import { IAccountsBook } from "../../../types/UserPanel/04Accounts/accountsBook.types";
 
 // SE HACE EL PAGO A LA CXP EN LA TABLA ACCOUNTSPAYABLE PARA USER
 export const paymentsCXPAccountsPayable = async (body: IAccountsBook, userId: string): Promise<any> => {

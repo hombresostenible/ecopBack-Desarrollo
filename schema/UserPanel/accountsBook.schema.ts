@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import db from '../../db';
 import Branch from './branch.schema';
 import User from './user.schema';
-import { IItemsAccountsBook } from '../../types/UserPanel/accountsBook.types';
+import { IItemsAccountsBook } from '../../types/UserPanel/04Accounts/accountsBook.types';
 
 class AccountsBook extends Model {
     public id!: string;

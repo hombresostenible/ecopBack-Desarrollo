@@ -1,5 +1,5 @@
 import AccountsReceivable from '../../../schema/UserPanel/accountsReceivable.schema';
-import { IAccountsBook } from '../../../types/UserPanel/accountsBook.types';
+import { IAccountsBook } from '../../../types/UserPanel/04Accounts/accountsBook.types';
 import { IAccountsReceivable } from "../../../types/UserPanel/accountsReceivable.types";
 import { ServiceError } from '../../../types/Responses/responses.types';
 

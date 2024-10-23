@@ -1,5 +1,5 @@
 import AccountsPayable from '../../../schema/UserPanel/accountsPayable.schema';
-import { IAccountsBook } from "../../../types/UserPanel/accountsBook.types";
+import { IAccountsBook } from "../../../types/UserPanel/04Accounts/accountsBook.types";
 import { IAccountsPayable } from "../../../types/UserPanel/accountsPayable.types";
 import { ServiceError } from '../../../types/Responses/responses.types';
 

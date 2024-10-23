@@ -1,7 +1,7 @@
 import {
     getUserPlatformBranchByIdData,
     getUserPlatformByIdData,
-} from "../data/UserPanel/userPlatform.data";
+} from "../data/UserPanel/06ElectronicPayroll/userPlatform.data";
 import { ServiceError } from '../types/Responses/responses.types';
 
 //VALIDA QUE LOS USARIOS DE PLATAFORMA PERTENEZCAN A UNA SEDE DE UN USER

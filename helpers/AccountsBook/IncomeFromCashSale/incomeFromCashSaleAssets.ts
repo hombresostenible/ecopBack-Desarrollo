@@ -1,5 +1,5 @@
 import Assets from "../../../schema/UserPanel/assets.schema";
-import { IItemsAccountsBook } from '../../../types/UserPanel/accountsBook.types';
+import { IItemsAccountsBook } from '../../../types/UserPanel/04Accounts/accountsBook.types';
 import { ServiceError } from '../../../types/Responses/responses.types';
 
 export const incomeFromCashSaleAssets = async (item: IItemsAccountsBook, branchId: string, transactionType: string): Promise<any> => {
