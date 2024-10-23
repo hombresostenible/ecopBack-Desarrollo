@@ -1,5 +1,5 @@
 import AccountsReceivable from '../../../schema/UserPanel/accountsReceivable.schema';
-import { IAccountsBook } from "../../../types/UserPanel/accountsBook.types";
+import { IAccountsBook } from "../../../types/UserPanel/04Accounts/accountsBook.types";
 
 // SE HACE EL PAGO A LA CXC EN LA TABLA ACCOUNTSRECEIVABLE PARA USER
 export const paymentsCXCAccountsReceivable = async (body: IAccountsBook, userId: string): Promise<any> => {

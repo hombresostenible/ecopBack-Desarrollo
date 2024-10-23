@@ -6,16 +6,16 @@ import merchandiseControllers from "./UserPanel/03Inventories/02InventoryMerchad
 import productControllers from "./UserPanel/03Inventories/03InventoryProducts/product.controller";
 import rawMaterialControllers from "./UserPanel/03Inventories/04InventoryRawMaterals/rawMaterial.controller";
 import serviceControllers from "./UserPanel/03Inventories/05InventoryServices/services.controller";
-import allItemsControllers from "./UserPanel/allItems.controller";
-import accountsBookControllers from './UserPanel/accountsBook.controller';
-import electronicInvoicingControllers from "./UserPanel/electronicInvoicing.controller";
-import posInvoicingControllers from "./UserPanel/posInvoicing.controller";
-import userPlatformControllers from "./UserPanel/userPlatform.controller";
-import crmClientControllers from "./UserPanel/crmClients.controller";
-import crmSupplierControllers from "./UserPanel/crmSupplier.controller";
-import financialIndicatorsControllers from "./UserPanel/Indicators/financialIndicators.controller";
-import sustainabilityIndicatorsControllers from "./UserPanel/Indicators/sustainabilityIndicators.controller";
-import marketingIndicatorsControllers from "./UserPanel/Indicators/marketingIndicators.controller";
+import allItemsControllers from "./UserPanel/03Inventories/allItems.controller";
+import accountsBookControllers from './UserPanel/04Accounts/accountsBook.controller';
+import electronicInvoicingControllers from "./UserPanel/05ElectronicInvoicing/electronicInvoicing.controller";
+import posInvoicingControllers from "./UserPanel/05ElectronicInvoicing/posInvoicing.controller";
+import userPlatformControllers from "./UserPanel/06ElectronicPayroll/userPlatform.controller";
+import crmClientControllers from "./UserPanel/07CrmClients/crmClients.controller";
+import crmSupplierControllers from "./UserPanel/08CrmSuppliers/crmSupplier.controller";
+import financialIndicatorsControllers from "./UserPanel/10ReportsAndIndicators/01AccountsAndInventoryIndicators/accountsAndInventoryIndicators.controller";
+import sustainabilityIndicatorsControllers from "./UserPanel/10ReportsAndIndicators/03SustainabilityIndicators/sustainabilityIndicators.controller";
+import marketingIndicatorsControllers from "./UserPanel/10ReportsAndIndicators/02MarketingIndicators/marketingIndicators.controller";
 // LANDING
 import appointmentControllers from "./Ecopcion/appointment.controller";
 import contactUsControllers from "./Ecopcion/contactUs.controller";

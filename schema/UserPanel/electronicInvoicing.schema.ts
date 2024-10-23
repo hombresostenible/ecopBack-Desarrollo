@@ -12,7 +12,7 @@ import {
     IAgregadoComercial,
     ITotales,
     IElectronicInvoicing,
-} from '../../types/UserPanel/electronicInvoicing.types';
+} from '../../types/UserPanel/05ElectronicInvoicing/electronicInvoicing.types';
 
 //Solo con ingresos
 class ElectronicInvoicing extends Model<IElectronicInvoicing> {
