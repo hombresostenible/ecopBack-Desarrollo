@@ -12,11 +12,16 @@ const router = express.Router();
 router.post("/", authRequired, async (req: Request, res: Response) => {
     try {
         const body = req.body;
-        const serviceLayerResponse = await postElectronicInvoicingService(body);
-        res.status(serviceLayerResponse.code).json(serviceLayerResponse.result);
+        const { userId } = req.user;
+        const serviceLayerResponse = await postElectronicInvoicingService(body, userId);
+
+        // Asegúrate de que siempre haya un código de estado
+        const statusCode = serviceLayerResponse.code || 500; // Por si alguna vez falla
+        res.status(statusCode).json(serviceLayerResponse.result);
     } catch (error) {
         const errorController = error as ServiceError;
-        res.status(errorController.code).json(errorController.message);
+        const errorCode = errorController.code || 500; // Código de estado por defecto
+        res.status(errorCode).json(errorController.message);
     }
 }); //POST - http://localhost:3000/api/electronic-invoicing con 
 
