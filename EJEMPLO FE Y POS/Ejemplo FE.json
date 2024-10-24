@@ -148,6 +148,9 @@
         "CantidadLineas": 1.0,
         "CantidadLineasSpecified": true
     },
+
+
+
     "Terceros": {
         "TerceroProveedorContable": {
             "IdAdicional": [
@@ -170,7 +173,8 @@
                 ],
                 "NombreTercero": [
                     {
-                        "Value": "Todo Software SA"}
+                        "Value": "Todo Software SA"
+                    }
                 ],
                 "UbicacionFisica": {
                     "Direccion": {
@@ -195,7 +199,7 @@
                         "LineaDireccion": [
                             {
                                 "TextoLinea": {
-                                "Value": "Avenida Boyaca"
+                                    "Value": "Avenida Boyaca"
                                 }
                             }
                         ],
@@ -250,15 +254,15 @@
                                     }
                                 }
                             ],
-                        "Pais": {
-                            "Codigo": {
-                                "Value": "CO"
-                            },
-                            "Nombre": {
-                                "IdLenguaje": "es",
-                                "Value": "Colombia"
+                            "Pais": {
+                                "Codigo": {
+                                    "Value": "CO"
+                                },
+                                "Nombre": {
+                                    "IdLenguaje": "es",
+                                    "Value": "Colombia"
+                                }
                             }
-                        }
                         },
                         "EsquemaTributario": {
                             "Id": {
@@ -341,11 +345,11 @@
                             "Value": "11"
                         },
                         "LineaDireccion": [
-                        {
-                            "TextoLinea": {
-                                "Value": "Avenida Quito"
+                            {
+                                "TextoLinea": {
+                                    "Value": "Avenida Quito"
+                                }
                             }
-                        }
                         ],
                         "Pais": {
                             "Codigo": {
