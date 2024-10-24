@@ -160,7 +160,7 @@ export interface ITerceros {
             IndicaATravesDeSpecified: boolean;
             IndicaAtencionASpecified: boolean;
             CodigoClasificacionIndustria: {
-                Value: string;
+                Value: string;                              // PUEDE SER EL CIIU
             };
             IdTercero: {
                 SmaIdCodigo: string;                        //"0" DIGITO DE VERIFICACION DEL NIT
