@@ -256,7 +256,6 @@ export const postElectronicInvoicingService = async (body: any, userId: string):
         const dataLayerResponse = await axios.post(simbaEndpoint, updatedBody, {
             headers: { 'Content-Type': 'application/json' }
         }).catch((error) => {
-            console.log('Error: ', error)
             if (axios.isAxiosError(error)) throw new ServiceError(500, `Error en la solicitud a Simba: ${error.response?.data || error.message}`);
             throw error;
         });
@@ -270,8 +269,6 @@ export const postElectronicInvoicingService = async (body: any, userId: string):
     }
 };
 // console.log('updatedBody: ', JSON.stringify(updatedBody, null, 2))
-
-
 
 //CONTROLLER OBTENER TODAS LAS FACTURAS ELECTRÓNICAS
 export const getElectronicInvoicingService = async (): Promise<IServiceLayerResponseElectronicInvoicing> => {

@@ -1,27 +1,8 @@
 import AccountsReceivable from '../../../schema/UserPanel/accountsReceivable.schema';
 import { IAccountsBook } from '../../../types/UserPanel/04Accounts/accountsBook.types';
 import { IAccountsReceivable } from "../../../types/UserPanel/accountsReceivable.types";
+import { generateCreditNumber } from '../../../helpers/AccountsBook/generateCreditNumber';
 import { ServiceError } from '../../../types/Responses/responses.types';
-
-// Función para generar el número consecutivo basado en la fecha
-const generateCreditNumber = async (date: string | Date): Promise<string> => {
-    // Asegurarse de que `date` sea un objeto Date
-    const transactionDate = typeof date === 'string' ? new Date(date) : date;
-
-    const formattedDate = transactionDate.toISOString().slice(0, 10).replace(/-/g, ''); // AAAAMMDD
-
-    // Contamos cuántas cuentas por cobrar ya se crearon en esta fecha
-    const accountsCreatedToday = await AccountsReceivable.count({
-        where: {
-            transactionDate: transactionDate
-        }
-    });
-
-    // Incrementamos el contador para generar el número consecutivo
-    const consecutiveNumber = (accountsCreatedToday + 1).toString().padStart(4, '0'); // XXXX (rellena con ceros si es necesario)
-
-    return `${formattedDate}-${consecutiveNumber}`;
-};
 
 // SE CREA LA CXC EN LA TABLA ACCOUNTSRECEIVABLE PARA USER
 export const incomeCXCAccountsReceivable = async (body: IAccountsBook, newAccountsBookId: string, userId: string): Promise<any> => {
@@ -51,7 +32,7 @@ export const incomeCXCAccountsReceivable = async (body: IAccountsBook, newAccoun
                 accountsBookId: newAccountsBookId,
                 userId: userId,
             };
-    
+
             // Asignar seller solo si no es undefined
             if (body.seller !== undefined) accountReceivable.seller = body.seller;
 

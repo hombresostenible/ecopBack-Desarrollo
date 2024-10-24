@@ -11,7 +11,6 @@ export const incomeFromCashSaleMerchandises = async (item: IItemsAccountsBook, b
     if (transactionType === 'Ingreso') {
         if (item.quantity !== undefined) {
             // Validación de inventario suficiente
-            console.log('INgresa')
             if (merchandiseFound.inventory < item.quantity) throw new ServiceError(400, `El inventario es insuficiente para la venta. Inventario actual: ${merchandiseFound.inventory}, Cantidad solicitada: ${item.quantity}`);
             try {
                 merchandiseFound.inventory -= item.quantity;
