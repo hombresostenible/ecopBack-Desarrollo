@@ -8,30 +8,22 @@ import { wsAuthMiddleware } from '../../../middlewares/Token/wsAuthNotifications
 // Controlador WebSocket para las notificaciones
 export const websocketNotificationController = (app: Application) => {
     app.ws('/api/notifications/ws', (ws: WebSocket, req: Request) => {
-        // Aplicar el middleware de autenticación por WebSocket
         wsAuthMiddleware(ws, req, () => {
-            console.log('Cliente autenticado vía WebSocket');
-
-            // Recuperar el identificador (userId) desde el WebSocket autenticado
+    
             const identifier = (ws as any).identifier;
             if (identifier) {
                 handleClientRegistration(ws, identifier);
-
-                // Enviar notificaciones pendientes al usuario cuando se conecta
                 sendPendingNotifications(identifier);
             }
 
-            // Manejar mensajes desde el cliente WebSocket
             ws.on('message', (message: string) => {
                 console.log('Mensaje recibido:', message);
             });
 
-            // Manejar la desconexión del cliente
             ws.on('close', () => {
                 handleClientDisconnection(ws);
             });
 
-            // Manejar errores del WebSocket
             ws.on('error', (error) => {
                 handleClientDisconnection(ws);
             });
@@ -42,13 +34,9 @@ export const websocketNotificationController = (app: Application) => {
 
 // Controlador para enviar una notificación específica
 export const sendNotificationToClientsController = async (userId: string, notification: any) => {
-
     try {
-        // Enviar la notificación específica al usuario
         await sendNotificationToClient(userId, notification);
-   
     } catch (error) {
-        console.error('Error enviando notificación específica:', error);
-       
+       throw error;
     }
 };

@@ -8,11 +8,9 @@ interface Client extends WebSocket {
 // Mapa para almacenar los clientes conectados por identificador de usuario (userId)
 const clientsById: Map<string, Set<Client>> = new Map();
 
-/**
- * Manejar la registración de un cliente conectado.
- * @param ws El WebSocket del cliente.
- * @param identifier El identificador del usuario (userId).
- */
+
+ // Manejar la registración de un cliente conectado.
+
 export function handleClientRegistration(ws: Client, identifier: string) {
     ws.identifier = identifier;
 
@@ -21,16 +19,15 @@ export function handleClientRegistration(ws: Client, identifier: string) {
     }
     clientsById.get(identifier)!.add(ws);
 
-    console.log(`Cliente registrado: ${identifier}`);
+    //console.log(`Cliente registrado: ${identifier}`);
 
     // Enviar notificaciones pendientes al conectarse
     sendPendingNotifications(identifier);
 }
 
-/**
- * Manejar la desconexión del cliente.
- * @param ws El WebSocket del cliente.
- */
+
+ // Manejar la desconexión del cliente.
+
 export function handleClientDisconnection(ws: Client) {
     const identifier = ws.identifier;
     if (identifier && clientsById.has(identifier)) {
@@ -38,16 +35,13 @@ export function handleClientDisconnection(ws: Client) {
         if (clientsById.get(identifier)!.size === 0) {
             clientsById.delete(identifier);
         }
-        console.log(`Cliente desconectado: ${identifier}`);
+        //console.log(`Cliente desconectado: ${identifier}`);
     }
 }
 
-/**
- * Enviar notificaciones en tiempo real a los clientes conectados.
- * Si no hay clientes conectados, la notificación queda pendiente en la base de datos.
- * @param identifier El identificador del usuario (userId).
- * @param notification La notificación que se enviará.
- */
+
+ // Enviar notificaciones en tiempo real a los clientes conectados.
+
 export function sendNotificationToClients(identifier: string, notification: any) {
     const clients = clientsById.get(identifier);
 
@@ -58,11 +52,11 @@ export function sendNotificationToClients(identifier: string, notification: any)
                     event: 'new_notification',
                     data: notification,
                 }));
-                console.log(`Notificación enviada en tiempo real al usuario: ${identifier}`);
+               // console.log(`Notificación enviada en tiempo real al usuario: ${identifier}`);
             }
         });
     } else {
-        console.log(`Usuario ${identifier} no está conectado. Notificación pendiente.`);
+        //console.log(`Usuario ${identifier} no está conectado. Notificación pendiente.`);
         // Si no hay clientes conectados, se guarda la notificación como pendiente (no leída)
         notification.isRead = false;
         notification.save();
@@ -78,13 +72,9 @@ export async function sendPendingNotifications(identifier: string) {
     });
 
     const clients = clientsById.get(identifier);
-
-    
-
     if (clients) {
-      
         pendingNotifications.forEach(async (notification) => {
-            console.log("adios",pendingNotifications.length);
+            //console.log("adios",pendingNotifications.length);
             
             clients.forEach((client) => {
                 console.log(client.readyState === WebSocket.OPEN);
@@ -96,7 +86,7 @@ export async function sendPendingNotifications(identifier: string) {
                         event: 'new_notification',
                         data: notification,
                     }));
-                    console.log(`Notificación pendiente enviada al usuario: ${identifier}`);
+                    //console.log(`Notificación pendiente enviada al usuario: ${identifier}`);
                 }
             });
 
@@ -105,9 +95,7 @@ export async function sendPendingNotifications(identifier: string) {
 
             await notification.save();
         });
-    } else {
-        console.log(`Usuario ${identifier} no está conectado. No se enviaron notificaciones pendientes.`);
-    }
+    } 
 }
 
 // Función para enviar una notificación específica a los clientes conectados
@@ -122,16 +110,14 @@ export async function sendNotificationToClient(identifier: string, notification:
                     event: 'new_notification',
                     data: notification,
                 }));
-               
-                console.log(`Notificación enviada al usuario: ${identifier}`);
-                
+                //console.log(`Notificación enviada al usuario: ${identifier}`);
             }
         });
 
   
     } else {
         notification.isPending = true;
-        console.log(`Usuario ${identifier} no está conectado. La notificación quedará pendiente.`);
+        //console.log(`Usuario ${identifier} no está conectado. La notificación quedará pendiente.`);
        
     }
 }

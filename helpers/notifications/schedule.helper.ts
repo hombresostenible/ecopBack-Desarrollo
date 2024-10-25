@@ -2,9 +2,11 @@ import cron from "node-cron";
 
 import { sendNotificationToClientsController } from "../../controllers/User/notifications/websocketNotifications.controller";
 import {
+  createTaxBimestralNotificationController,
   cronNotifcationDailyController,
   cronNotifcationMonthlyController,
   cronNotifcationWeeklyController,
+  getIVATaxUsersController,
 } from "../../controllers/User/notifications/notifications.controller";
 
 // Función para sumar días a una fecha
@@ -26,8 +28,13 @@ const addMonthsFromToday = (today: Date, months: number) => {
   return result;
 };
 
+//************************** CRON PARA ENVIO DE NOTIFICACIONES AL CLIENTE **************************
+
+
+
+
 // CRON para notificaciones diarias
-cron.schedule("58 13 * * *", async () => {
+cron.schedule("0 9 * * *", async () => {
   const today = new Date();
   const notificationsToSend = await cronNotifcationDailyController(true, today);
 
@@ -86,4 +93,17 @@ cron.schedule("0 9 * * *", async () => {
       }
     }
   }
+});
+
+
+
+//----------------------- GENERACION DE NOTIFICACIONES ESTRATEGICAS------------------------
+
+// 01: Notificar calendarios de presentación y pago de IVA BIMESTRAL 
+cron.schedule("0 9 * * *", async () => { 
+    const users = await getIVATaxUsersController();
+
+    for (const user of users) {
+        await createTaxBimestralNotificationController(user);
+    }
 });

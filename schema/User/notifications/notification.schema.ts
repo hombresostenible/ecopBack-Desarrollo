@@ -1,20 +1,72 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import db from '../../../db';
 import User from '../user.schema';
 
-class Notification extends Model {
+// Definición de los enums para frecuencia, prioridad, y tipo
+export enum Frequency {
+    DAILY = 'daily',
+    WEEKLY = 'weekly',
+    MONTHLY = 'monthly',
+    YEARLY = 'yearly',
+    BIMONTHLY = 'bimonthly'
+}
+
+export enum Priority {
+    LOW = 'low',
+    NORMAL = 'normal',
+    HIGH = 'high',
+}
+
+export enum NotificationType {
+    TRIBUTARIAS = 'Tributarias y/o legales',
+    CUENTAS = 'Cuentas',
+    INVENTARIOS = 'Inventarios',
+    FACTURACION_POS = 'Facturación y POS',
+    MERCADO = 'Mercado',
+}
+
+// Definir la interfaz de los atributos de Notification
+interface NotificationAttributes {
+    id: string;
+    title: string;
+    message: string;
+    isTemporary: boolean;
+    frequency: Frequency;
+    startDate: Date | null;
+    endDate: Date;
+    executionDate: Date;
+    userId: string;
+    isRead: boolean;
+    isDelete: boolean;
+    isPending: boolean;
+    priority: Priority;
+    actionCall: string;
+    type: NotificationType;
+    idDescription:number
+}
+
+// Atributos opcionales para la creación de una nueva notificación
+export interface NotificationCreationAttributes extends Optional<NotificationAttributes, 'id' | 'startDate'> {}
+
+// Modelo Notification con Sequelize y tipado TypeScript
+class Notification extends Model<NotificationAttributes, NotificationCreationAttributes> 
+    implements NotificationAttributes {
     public id!: string;
     public title!: string;
     public message!: string;
     public isTemporary!: boolean;
-    public frequency!: 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly';
+    public frequency!: Frequency;
     public startDate!: Date | null;
-    public endDate!: Date | null;
-    public executionDate!: Date | null; // Fecha programada de ejecución
-    public userId!: string; // Usuario que recibirá la notificación
-    public isRead!: boolean; // Indicador de si fue leída
-    public isDelete!: boolean; // Indicador de si fue eliminada
-    public isPending!:boolean; // Indicador de si está pendiente de ser enviada
+    public endDate!: Date;
+    public executionDate!: Date;
+    public userId!: string;
+    public isRead!: boolean;
+    public isDelete!: boolean;
+    public isPending!: boolean;
+    public priority!: Priority;
+    public actionCall!: string;
+    public type!: NotificationType;
+    public idDescription!:number
 };
 
 Notification.init(
@@ -22,63 +74,79 @@ Notification.init(
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
-            allowNull: false,
+            allowNull: false,  // No puede ser nulo, es obligatorio
             primaryKey: true,
         },
         title: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false,  // Campo obligatorio
         },
         message: {
             type: DataTypes.TEXT,
-            allowNull: false,
+            allowNull: false,  // Campo obligatorio
         },
         isTemporary: {
             type: DataTypes.BOOLEAN,
-            defaultValue: true,
-            allowNull: false,
+            defaultValue: false,
+            allowNull: false,  // Campo obligatorio
         },
         frequency: {
-            type: DataTypes.ENUM('none', 'daily', 'weekly', 'monthly', 'yearly'),
-            defaultValue: 'none',
-            allowNull: false,
+            type: DataTypes.ENUM(...Object.values(Frequency)),
+            allowNull: false,  // Campo obligatorio, el valor debe estar en el enum
         },
         startDate: {
             type: DataTypes.DATE,
-            allowNull: true,
+            allowNull: true,  // Campo opcional, puede ser nulo
         },
         endDate: {
             type: DataTypes.DATE,
-            allowNull: true,
+            allowNull: false,  // Campo opcional, puede ser nulo
         },
         executionDate: {
             type: DataTypes.DATE,
-            allowNull: true, // Fecha en que se debe ejecutar la notificación
+            allowNull: false, 
         },
         userId: {
             type: DataTypes.UUID,
-            allowNull: false, // El usuario destinatario de la notificación
+            allowNull: false,  // Campo obligatorio, debe estar asociado a un usuario
         },
         isRead: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false, // Por defecto, no se ha leído
-            allowNull: false,
+            defaultValue: false,
+            allowNull: false,  // Campo obligatorio
         },
         isDelete: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false, // Por defecto, no se ha eliminado
-            allowNull: false,
+            defaultValue: false,
+            allowNull: false,  // Campo obligatorio
         },
         isPending: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false, // Por defecto, no se ha eliminado
-            allowNull: false,
+            defaultValue: false,
+            allowNull: false,  // Campo obligatorio
+        },
+        priority: {
+            type: DataTypes.ENUM(...Object.values(Priority)),
+            defaultValue: Priority.NORMAL,
+            allowNull: false,  // Campo obligatorio, debe ser uno de los valores del enum
+        },
+        actionCall: {
+            type: DataTypes.STRING,
+            allowNull: false,  
+        },
+        type: {
+            type: DataTypes.ENUM(...Object.values(NotificationType)),
+            allowNull: false,  
+        },
+        idDescription: {
+            type: DataTypes.INTEGER,
+            allowNull: false, 
         },
     },
     {
         sequelize: db,
         modelName: 'Notification',
-        tableName: 'Notification', // Define explícitamente el nombre de la tabla
+        tableName: 'Notification', 
     }
 );
 
@@ -89,58 +157,3 @@ Notification.belongsTo(User, {
 });
 
 export default Notification;
-
-
-// FRONT PARA QUE JUNTO CON EL CRON SE VERIFIQUE SI YA LEYO
-
-// 1 ENTRA AL CRON
-// 2 ONTIENE TODAS LAS QUE NO ESTAN LEIDAS
-// 3 ENVIA AL FRONT POR WEBSOCKET LAS QUE NO ESTAN LEAIDAS
-// 4 EL FRONT RECIBE LAS NOTIFICACIONES(SI EL USER ESTA CONECTADO) Y SE ENVIA AL BACK LA CONFIRMACION DE LEIDAS (HTTP POST)
-
-//EJEMPLO DE FRONT
-
-// En el cliente WebSocket, recibe la notificación en tiempo real
-// socket.on('new_notification', (notification) => {
-//     console.log('Nueva notificación:', notification);
-    
-//     // Mostrar la notificación al usuario (en un modal, banner, etc.)
-
-//     // Llamada para marcar la notificación como leída
-//     markAsRead(notification.id);
-// });
-
-// const markAsRead = (notificationId) => {
-//     fetch(`/api/notifications/${notificationId}/read`, {
-//         method: 'POST',
-//     });
-// };
-
-
-// EJEMPLO DE BACK
-// import cron from 'node-cron';
-// import Notification from '../models/notification.schema';
-// import { sendRealTimeNotification } from './websocket'; // Asume que tienes la función para WebSocket
-
-// // Cron que verifica las notificaciones programadas cada día a las 9:00 AM
-// cron.schedule('0 9 * * *', async () => {
-//     const today = new Date();
-
-//     // Encuentra todas las notificaciones programadas para hoy que no han sido leídas
-//     const notificationsToSend = await Notification.findAll({
-//         where: {
-//             executionDate: { [Op.lte]: today }, // Notificaciones que deben enviarse hoy o antes
-//             isRead: false,
-//         },
-//     });
-
-//     // Enviar notificaciones a los usuarios
-//     for (const notification of notificationsToSend) {
-//         const userId = notification.userId;
-
-//         // Intenta enviar la notificación en tiempo real usando WebSocket
-//         sendRealTimeNotification(userId, notification);
-
-//         // Si el usuario no está conectado, la notificación sigue pendiente (isRead = false)
-//     }
-// });
